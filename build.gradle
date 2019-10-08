@@ -1,0 +1,271 @@
+buildscript {
+    ext {
+        platformGroup = 'com.vntana.core'
+        platformVersion = '1.0-SNAPSHOT'
+        kotlinVersion = '1.3.50'
+        easymockVersion = '4.0.2'
+        testContainersVersion = '1.11.3'
+        orikaSpringBootVersion = "1.8.0"
+        springFoxSwaggerVersion = '2.9.2'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.1.7.RELEASE' apply false
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id "org.jetbrains.kotlin.plugin.spring" version "1.3.50"
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "org.jetbrains.kotlin.jvm"
+    apply plugin: "io.spring.dependency-management"
+
+    group = platformGroup
+    version = platformVersion
+    sourceCompatibility = '1.8'
+
+    task makePretty(type: Delete) {
+        delete 'out'
+    }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
+
+    dependencies {
+        implementation 'org.apache.commons:commons-lang3'
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:2.1.7.RELEASE") {
+                bomProperty("kotlin.version", "1.3.41")
+            }
+        }
+        dependencies {
+            dependency("org.easymock:easymock:$easymockVersion")
+            dependency("org.testcontainers:postgresql:$testContainersVersion")
+        }
+    }
+}
+
+project(":domain") {
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    }
+}
+
+project(":persistence:persistence-core") {
+
+    dependencies {
+        implementation project(":domain")
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    }
+}
+
+project(":persistence:persistence-impl") {
+
+    dependencies {
+        implementation project(":domain")
+        implementation project(":persistence:persistence-core")
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    }
+}
+
+project(":commons:persistence-utils") {
+
+    group = "${platformGroup}.persistence"
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    }
+
+}
+
+project(":migration:migration-library") {
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.flywaydb:flyway-core'
+        runtimeOnly 'org.postgresql:postgresql'
+    }
+
+}
+
+project(":migration:migration-executable") {
+
+    group = "${platformGroup}.migration"
+
+    apply plugin: "org.springframework.boot"
+
+    bootJar {
+        mainClassName = "${group}.boot.MigrationBootApplication"
+        manifest {
+            attributes(
+                    "Implementation-Version": platformVersion
+            )
+        }
+    }
+    dependencies {
+        implementation project(":migration:migration-library")
+        implementation "org.springframework.boot:spring-boot-starter"
+    }
+}
+
+project(":test-helper") {
+
+    dependencies {
+        implementation project(":domain")
+        implementation project(":service:service-core")
+        implementation 'org.springframework:spring-context'
+    }
+}
+
+project(":service:service-core") {
+
+    group = "${platformGroup}.service"
+
+    dependencies {
+        implementation project(":domain")
+    }
+}
+
+project(":service:service-impl") {
+
+    apply plugin: "kotlin-spring"
+
+    group = "${platformGroup}.service"
+
+    dependencies {
+        implementation project(":domain")
+        implementation project(":persistence:persistence-core")
+        implementation project(":persistence:persistence-impl")
+        implementation project(":commons:persistence-utils")
+        implementation project(":service:service-core")
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+        testImplementation project(":test-helper")
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.easymock:easymock"
+    }
+}
+
+project(":service:service-integration-test") {
+
+    group = "${platformGroup}.service"
+
+    apply plugin: "kotlin-spring"
+
+    dependencies {
+        testImplementation project(":test-helper")
+        testImplementation project(":domain")
+        testImplementation project(":service:service-core")
+        implementation project(":migration:migration-library")
+        runtimeOnly project(":service:service-impl")
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.springframework.boot:spring-boot-starter-data-jpa"
+        testImplementation "org.testcontainers:postgresql"
+        testImplementation "org.postgresql:postgresql"
+    }
+}
+
+project(":commons:api-models") {
+
+}
+
+project(":api:rest:rest-model") {
+
+    dependencies {
+        api project(":commons:api-models")
+        implementation "com.fasterxml.jackson.core:jackson-annotations"
+    }
+}
+
+project(":api:rest:rest-facade") {
+
+    group = "${platformGroup}.rest.facade"
+
+    dependencies {
+        implementation project(":api:rest:rest-model")
+        implementation project(":service:service-core")
+        runtimeOnly project(":service:service-impl")
+        implementation project(":domain")
+        implementation "net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}"
+        implementation "org.springframework:spring-context"
+    }
+}
+
+project(":api:rest:rest-resource") {
+
+    group = "${platformGroup}.rest.resource"
+
+    dependencies {
+        api project(":api:rest:rest-facade")
+        api project(":api:rest:rest-model")
+        api "org.springframework.boot:spring-boot-starter-web"
+    }
+}
+
+project(":api:rest:rest-resource-executable") {
+
+    group = "${platformGroup}.rest.resource"
+
+    apply plugin: "org.springframework.boot"
+
+    bootJar {
+        mainClassName = "${platformGroup}.rest.resource.boot.VntanaSpringBootWebApplication"
+        manifest {
+            attributes(
+                    "Implementation-Version": platformVersion
+            )
+        }
+    }
+
+    dependencies {
+        implementation project(":api:rest:rest-resource")
+        implementation "org.springframework.data:spring-data-mongodb"
+        implementation "io.springfox:springfox-swagger2:$springFoxSwaggerVersion"
+        implementation "org.postgresql:postgresql"
+    }
+}
+
+project(":api:rest:rest-resource-integration-test") {
+
+    apply plugin: "kotlin-spring"
+
+    dependencies {
+        testImplementation project(":api:rest:rest-resource")
+        testImplementation project(":migration:migration-library")
+        implementation "org.springframework.boot:spring-boot-starter"
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation 'org.springframework.data:spring-data-jpa'
+        testImplementation "org.testcontainers:postgresql"
+        testImplementation "org.postgresql:postgresql"
+    }
+}
