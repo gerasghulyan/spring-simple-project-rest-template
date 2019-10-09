@@ -1,11 +1,10 @@
 package com.vntana.core.rest.facade.user.impl;
 
 
-import com.vntana.core.api.models.response.ResultResponseModel;
-import com.vntana.core.domain.User;
-import com.vntana.core.models.user.request.UserCreateResponseModel;
-import com.vntana.core.models.user.request.UserCreateResultResponseModel;
-import com.vntana.core.models.user.response.UserCreateRequest;
+import com.vntana.core.domain.user.User;
+import com.vntana.core.model.user.request.UserCreateRequest;
+import com.vntana.core.model.user.response.UserCreateResponseModel;
+import com.vntana.core.model.user.response.UserCreateResultResponse;
 import com.vntana.core.rest.facade.user.UserFacade;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.UserCreateDto;
@@ -35,12 +34,12 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public ResultResponseModel<UserCreateResponseModel> createUser(final UserCreateRequest request) {
+    public UserCreateResultResponse createUser(final UserCreateRequest request) {
         LOGGER.debug("Processing Facade createUser method for request - {}", request);
         Assert.notNull(request, "The USerCreateRequest should not be null");
         final UserCreateDto userCreateDto = mapperFacade.map(request, UserCreateDto.class);
         final User user = userService.createUser(userCreateDto);
         LOGGER.debug("Successfully processed Facade createUser method for request - {}", request);
-        return new UserCreateResultResponseModel(new UserCreateResponseModel(user.getUuid()));
+        return new UserCreateResultResponse(new UserCreateResponseModel(user.getUuid()));
     }
 }

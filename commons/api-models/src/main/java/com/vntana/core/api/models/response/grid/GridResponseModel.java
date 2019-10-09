@@ -1,6 +1,5 @@
 package com.vntana.core.api.models.response.grid;
 
-
 import com.vntana.core.api.models.response.single.ResponseModel;
 
 import java.util.List;

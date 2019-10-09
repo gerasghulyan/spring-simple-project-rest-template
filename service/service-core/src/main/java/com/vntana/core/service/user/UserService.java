@@ -1,6 +1,6 @@
 package com.vntana.core.service.user;
 
-import com.vntana.core.domain.User;
+import com.vntana.core.domain.user.User;
 import com.vntana.core.service.user.dto.UserCreateDto;
 
 /**

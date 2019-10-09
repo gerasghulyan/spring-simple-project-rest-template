@@ -1,6 +1,6 @@
 package com.vntana.core.service.user.impl.test
 
-import com.vntana.core.domain.User
+import com.vntana.core.domain.user.User
 import com.vntana.core.service.user.impl.AbstractUserServiceUnitTest
 import org.assertj.core.api.Assertions
 import org.easymock.EasyMock

@@ -1,7 +1,7 @@
 package com.vntana.core.rest.resource
 
-import com.vntana.core.rest.resource.configuration.IntegrationTestConfiguration
 import com.vntana.core.rest.resource.boot.WebApplication
+import com.vntana.core.rest.resource.conf.IntegrationTestConfiguration
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

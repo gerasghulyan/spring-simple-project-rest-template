@@ -1,6 +1,6 @@
 package com.vntana.core.persistence.user;
 
-import com.vntana.core.domain.User;
+import com.vntana.core.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

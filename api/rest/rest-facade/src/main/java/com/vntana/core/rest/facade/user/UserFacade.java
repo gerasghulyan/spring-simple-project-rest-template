@@ -1,8 +1,7 @@
 package com.vntana.core.rest.facade.user;
 
-import com.vntana.core.api.models.response.ResultResponseModel;
-import com.vntana.core.models.user.request.UserCreateResponseModel;
-import com.vntana.core.models.user.response.UserCreateRequest;
+import com.vntana.core.model.user.request.UserCreateRequest;
+import com.vntana.core.model.user.response.UserCreateResultResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -10,6 +9,5 @@ import com.vntana.core.models.user.response.UserCreateRequest;
  * Time: 6:35 PM
  */
 public interface UserFacade {
-
-    ResultResponseModel<UserCreateResponseModel> createUser(final UserCreateRequest request);
+    UserCreateResultResponse createUser(final UserCreateRequest request);
 }

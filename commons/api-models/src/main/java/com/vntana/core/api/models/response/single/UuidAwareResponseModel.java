@@ -6,6 +6,5 @@ package com.vntana.core.api.models.response.single;
  * Time: 11:37 AM
  */
 public interface UuidAwareResponseModel extends ResponseModel {
-
     String uuid();
 }

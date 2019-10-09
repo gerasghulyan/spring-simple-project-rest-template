@@ -60,6 +60,8 @@ allprojects {
     dependencies {
         implementation 'org.apache.commons:commons-lang3'
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        testImplementation "junit:junit"
+        testImplementation "org.assertj:assertj-core"
     }
 
     dependencyManagement {
@@ -144,6 +146,7 @@ project(":test-helper") {
     dependencies {
         implementation project(":domain")
         implementation project(":service:service-core")
+        implementation project(":api:rest:rest-model")
         implementation 'org.springframework:spring-context'
     }
 }
@@ -218,6 +221,10 @@ project(":api:rest:rest-facade") {
         implementation project(":domain")
         implementation "net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}"
         implementation "org.springframework:spring-context"
+        implementation "org.aspectj:aspectjrt"
+        implementation "org.aspectj:aspectjweaver"
+        testImplementation project(":test-helper")
+        testImplementation "org.easymock:easymock"
     }
 }
 
@@ -260,9 +267,10 @@ project(":api:rest:rest-resource-integration-test") {
     apply plugin: "kotlin-spring"
 
     dependencies {
+        implementation "org.springframework.boot:spring-boot-starter"
         testImplementation project(":api:rest:rest-resource")
         testImplementation project(":migration:migration-library")
-        implementation "org.springframework.boot:spring-boot-starter"
+        testImplementation project(":test-helper")
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation 'org.springframework.data:spring-data-jpa'
         testImplementation "org.testcontainers:postgresql"
