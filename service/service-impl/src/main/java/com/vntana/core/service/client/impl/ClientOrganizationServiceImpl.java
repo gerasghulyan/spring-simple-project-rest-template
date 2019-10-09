@@ -42,6 +42,7 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
     @Transactional(readOnly = true)
     @Override
     public Optional<ClientOrganization> findByUuid(final String uuid) {
+        Assert.hasText(uuid, "The client organization uuid should not be null");
         LOGGER.debug("Trying to find client organization with uuid - {}", uuid);
         return clientOrganizationRepository.findByUuid(uuid);
     }
@@ -49,6 +50,7 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
     @Transactional(readOnly = true)
     @Override
     public Optional<ClientOrganization> findBySlug(final String slug) {
+        Assert.hasText(slug, "The client organization slug should not be null");
         LOGGER.debug("Trying to find client organization for slug - {}", slug);
         return clientOrganizationRepository.findBySlug(slug);
     }

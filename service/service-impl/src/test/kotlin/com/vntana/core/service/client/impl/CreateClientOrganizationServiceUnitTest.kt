@@ -1,7 +1,7 @@
-package com.bntana.core.service.client.impl
+package com.vntana.core.service.client.impl
 
-import com.bntana.core.service.client.AbstractClientOrganizationServiceUnitTest
 import com.vntana.core.domain.client.ClientOrganization
+import com.vntana.core.service.client.AbstractClientOrganizationServiceUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.*

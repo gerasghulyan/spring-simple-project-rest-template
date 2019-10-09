@@ -17,5 +17,5 @@ class ClientOrganizationIntegrationTestHelper : ClientOrganizationCommonTestHelp
     @Autowired
     private lateinit var clientOrganizationService: ClientOrganizationService
 
-    fun persistClientOrganization(dto: CreateClientOrganizationDto): ClientOrganization = clientOrganizationService.create(dto)
+    fun persistClientOrganization(dto: CreateClientOrganizationDto = buildCreateClientOrganizationDto()): ClientOrganization = clientOrganizationService.create(dto)
 }

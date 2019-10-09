@@ -12,7 +12,7 @@ import org.junit.Test
 class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
     @Test
     fun `test create`() {
-        val createDto = testHelper.buildUserCreateDto()
+        val createDto = integrationTestHelper.buildUserCreateDto()
         userService.createUser(createDto).let {
             assertThat(it).isNotNull
             assertThat(it.firstName).isEqualTo(createDto.firstName)

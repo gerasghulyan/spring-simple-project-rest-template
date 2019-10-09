@@ -1,4 +1,4 @@
-package com.bntana.core.service
+package com.vntana.core.service
 
 import org.easymock.EasyMockRunner
 import org.easymock.EasyMockSupport

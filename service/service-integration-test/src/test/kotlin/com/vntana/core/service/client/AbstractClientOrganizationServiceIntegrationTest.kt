@@ -1,6 +1,7 @@
 package com.vntana.core.service.client
 
 import com.vntana.core.helper.common.client.ClientOrganizationCommonTestHelper
+import com.vntana.core.helper.integration.ClientOrganizationIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -10,13 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired
  * Time: 10:46 AM
  */
 abstract class AbstractClientOrganizationServiceIntegrationTest : AbstractServiceIntegrationTest() {
-
     @Autowired
     protected lateinit var clientOrganizationService: ClientOrganizationService
 
     @Autowired
-    protected lateinit var integrationTestHelper: ClientOrganizationCommonTestHelper
+    protected lateinit var integrationTestHelper: ClientOrganizationIntegrationTestHelper
 
     protected val commonTestHelper: ClientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
-
 }
