@@ -11,7 +11,7 @@ import org.junit.Test
  * Date: 10/4/19
  * Time: 11:22 AM
  */
-class UserCreateUnitTest : AbstractUserServiceUnitTest() {
+class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
@@ -27,7 +27,7 @@ class UserCreateUnitTest : AbstractUserServiceUnitTest() {
     }
 
     @Test
-    fun `test`() {
+    fun `test create`() {
         val createDto = helper.buildUserCreateDto()
         resetAll()
         EasyMock.expect(userRepository.save(EasyMock.isA(User::class.java))).andAnswer { EasyMock.getCurrentArguments()[0] as User }

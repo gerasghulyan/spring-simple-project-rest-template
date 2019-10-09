@@ -10,7 +10,6 @@ import java.util.*
  * Date: 10/1/19
  * Time: 3:07 PM
  */
-
 @RunWith(EasyMockRunner::class)
 abstract class AbstractServiceUnitTest : EasyMockSupport() {
 

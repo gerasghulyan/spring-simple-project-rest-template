@@ -16,15 +16,14 @@ import org.junit.Before
 abstract class AbstractUserServiceUnitTest : AbstractServiceUnitTest() {
 
     @Mock
-    lateinit var userRepository: UserRepository
+    protected lateinit var userRepository: UserRepository
 
-    lateinit var userService: UserService
+    protected lateinit var userService: UserService
 
-    lateinit var helper: UserCommonTestHelper
+    protected val helper: UserCommonTestHelper = UserCommonTestHelper()
 
     @Before
     fun beforeTest() {
         userService = UserServiceImpl(userRepository)
-        helper = UserCommonTestHelper()
     }
 }

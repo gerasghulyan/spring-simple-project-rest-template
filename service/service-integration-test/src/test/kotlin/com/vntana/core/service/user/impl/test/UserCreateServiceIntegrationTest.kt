@@ -1,6 +1,6 @@
 package com.vntana.core.service.user.impl.test
 
-import com.vntana.core.service.user.impl.AbstractUserIntegrationTest
+import com.vntana.core.service.user.impl.AbstractUserServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -9,10 +9,10 @@ import org.junit.Test
  * Date: 10/4/19
  * Time: 2:27 PM
  */
-class UserCreateIntegrationTest : AbstractUserIntegrationTest() {
+class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
 
     @Test
-    fun `test`() {
+    fun `test create`() {
         val createDto = testHelper.buildUserCreateDto()
         userService.createUser(createDto).let {
             assertThat(it).isNotNull

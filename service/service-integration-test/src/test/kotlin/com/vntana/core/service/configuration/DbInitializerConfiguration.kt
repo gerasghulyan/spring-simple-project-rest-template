@@ -23,7 +23,7 @@ class DbInitializerConfiguration {
             System.setProperty("spring.flyway.user", postgreSQLContainer.getUsername())
             System.setProperty("spring.flyway.password", postgreSQLContainer.getPassword())
             System.setProperty("spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation", "true")
-            //System.setProperty("spring.jpa.hibernate.ddl-auto", "create")
+//            System.setProperty("spring.jpa.hibernate.ddl-auto", "create")
             System.setProperty("spring.jpa.show-sql", "true")
         }
     }

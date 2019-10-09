@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
  * Date: 10/4/19
  * Time: 2:26 PM
  */
-abstract class AbstractUserIntegrationTest : AbstractServiceIntegrationTest() {
+abstract class AbstractUserServiceIntegrationTest : AbstractServiceIntegrationTest() {
 
     @Autowired
     lateinit var testHelper: UserIntegrationTestHelper
