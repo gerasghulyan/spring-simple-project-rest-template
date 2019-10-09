@@ -16,7 +16,7 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class AbstractUuidAwareDomainEntity extends AbstractDomainEntity {
 
-    @Column(name = "uuid", updatable = false, nullable = false)
+    @Column(name = "uuid", updatable = false, nullable = false, unique = true)
     private String uuid = UUID.randomUUID().toString();
 
     public AbstractUuidAwareDomainEntity() {

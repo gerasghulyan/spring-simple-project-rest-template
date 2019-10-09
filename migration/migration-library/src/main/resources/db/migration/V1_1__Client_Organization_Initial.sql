@@ -10,4 +10,7 @@ create table client_organization
 );
 
 alter table client_organization
+    add constraint UK_client_organization_uuid unique (uuid);
+
+alter table client_organization
     add constraint UK_client_organization_slug unique (client_organization_slug);

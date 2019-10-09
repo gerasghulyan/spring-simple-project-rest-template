@@ -1,6 +1,6 @@
 package com.vntana.core.service
 
-import com.vntana.core.service.configuration.DbInitializerConfiguration
+import com.vntana.core.service.configuration.ServiceIntegrationTestDbInitializerConfiguration
 import com.vntana.core.service.configuration.TestConfiguration
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -18,7 +18,7 @@ import javax.persistence.PersistenceContext
  */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = [DbInitializerConfiguration::class, TestConfiguration::class])
+@ContextConfiguration(classes = [ServiceIntegrationTestDbInitializerConfiguration::class, TestConfiguration::class])
 abstract class AbstractServiceIntegrationTest : AbstractTransactionalJUnit4SpringContextTests() {
 
     @PersistenceContext

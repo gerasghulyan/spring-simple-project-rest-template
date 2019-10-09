@@ -10,7 +10,6 @@ import org.junit.Test
  * Time: 2:27 PM
  */
 class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
-
     @Test
     fun `test create`() {
         val createDto = testHelper.buildUserCreateDto()

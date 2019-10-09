@@ -9,7 +9,7 @@ import org.testcontainers.containers.PostgreSQLContainer
  * Time: 3:00 PM
  */
 @Configuration
-class DbInitializerConfiguration {
+class ResResourceIntegrationTestDbInitializerConfiguration {
     companion object {
         init {
             val postgreSQLContainer: PostgreSQLContainer<*> = PostgreSQLContainer<Nothing>()
