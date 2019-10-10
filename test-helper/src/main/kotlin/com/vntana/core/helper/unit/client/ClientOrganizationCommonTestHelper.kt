@@ -1,7 +1,7 @@
-package com.vntana.core.helper.common.client
+package com.vntana.core.helper.unit.client
 
 import com.vntana.core.domain.client.ClientOrganization
-import com.vntana.core.helper.common.AbstractCommonTestHelper
+import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto
 
 /**

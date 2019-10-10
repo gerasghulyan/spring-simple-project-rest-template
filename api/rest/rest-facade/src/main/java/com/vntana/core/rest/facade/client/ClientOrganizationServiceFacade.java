@@ -1,7 +1,9 @@
 package com.vntana.core.rest.facade.client;
 
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
+import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
+import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -10,4 +12,6 @@ import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlu
  */
 public interface ClientOrganizationServiceFacade {
     CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableClientOrganizationSlugRequest request);
+
+    CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request);
 }

@@ -1,7 +1,7 @@
 package com.vntana.core.helper.integration
 
 import com.vntana.core.domain.client.ClientOrganization
-import com.vntana.core.helper.common.client.ClientOrganizationCommonTestHelper
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto
 import org.springframework.beans.factory.annotation.Autowired

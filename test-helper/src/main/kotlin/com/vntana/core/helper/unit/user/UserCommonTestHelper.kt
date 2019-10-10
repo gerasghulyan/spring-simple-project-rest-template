@@ -1,6 +1,6 @@
-package com.vntana.core.helper.common.user
+package com.vntana.core.helper.unit.user
 
-import com.vntana.core.helper.common.AbstractCommonTestHelper
+import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.user.dto.UserCreateDto
 
 /**

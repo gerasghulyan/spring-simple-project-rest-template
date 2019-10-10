@@ -1,6 +1,6 @@
-package com.vntana.core.helper.rest
+package com.vntana.core.helper.rest.user
 
-import com.vntana.core.helper.common.AbstractCommonTestHelper
+import com.vntana.core.helper.rest.AbstractRestUnitTestHelper
 import com.vntana.core.model.user.request.UserCreateRequest
 
 /**
@@ -8,7 +8,7 @@ import com.vntana.core.model.user.request.UserCreateRequest
  * Date: 10/2/19
  * Time: 11:27 AM
  */
-class UserRestTestHelper : AbstractCommonTestHelper() {
+class UserRestTestHelper : AbstractRestUnitTestHelper() {
     fun buildCreateUserRequest(
             firstName: String? = uuid(),
             secondName: String? = uuid()

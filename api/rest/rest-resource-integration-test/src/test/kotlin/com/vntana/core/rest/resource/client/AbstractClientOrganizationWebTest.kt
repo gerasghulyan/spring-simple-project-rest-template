@@ -1,6 +1,6 @@
 package com.vntana.core.rest.resource.client
 
-import com.vntana.core.helper.rest.ClientOrganizationRestTestHelper
+import com.vntana.core.helper.rest.client.ClientOrganizationRestTestHelper
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 
 /**

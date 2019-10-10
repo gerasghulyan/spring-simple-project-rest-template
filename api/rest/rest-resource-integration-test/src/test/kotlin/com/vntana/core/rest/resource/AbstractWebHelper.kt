@@ -8,6 +8,5 @@ import java.util.*
  * Time: 11:26 AM
  */
 abstract class AbstractWebHelper {
-
     fun uuid(): String = UUID.randomUUID().toString()
 }

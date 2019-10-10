@@ -22,7 +22,7 @@ class CheckSlugAvailabilityClientOrganizationServiceFacadeImplTest : AbstractCli
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request)
-        assertBasicResultResponse(resultResponse)
+        restHelper.assertBasicSuccessResultResponse(resultResponse)
         assertThat(resultResponse.response().isAvailable).isTrue()
         assertThat(resultResponse.response().suggested).isEqualTo(request.slug)
         verifyAll()
@@ -43,7 +43,7 @@ class CheckSlugAvailabilityClientOrganizationServiceFacadeImplTest : AbstractCli
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request)
-        assertBasicResultResponse(resultResponse)
+        restHelper.assertBasicSuccessResultResponse(resultResponse)
         assertThat(resultResponse.response().isAvailable).isFalse()
         assertThat(resultResponse.response().suggested).isEqualTo("${slug}3")
         verifyAll()

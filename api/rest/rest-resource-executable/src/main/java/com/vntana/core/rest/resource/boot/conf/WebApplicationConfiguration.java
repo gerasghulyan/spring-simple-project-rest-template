@@ -1,4 +1,4 @@
-package com.vntana.core.rest.resource.boot.configuration;
+package com.vntana.core.rest.resource.boot.conf;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -9,6 +9,6 @@ import org.springframework.context.annotation.PropertySource;
  * Time: 5:23 PM
  */
 @Configuration
-@PropertySource("classpath:rest-application.properties")
+@PropertySource("classpath:application.properties")
 public class WebApplicationConfiguration {
 }

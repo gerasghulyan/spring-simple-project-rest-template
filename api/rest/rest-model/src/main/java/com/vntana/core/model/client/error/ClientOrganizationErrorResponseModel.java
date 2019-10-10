@@ -8,6 +8,7 @@ import com.vntana.core.api.models.response.error.ErrorResponseModel;
  * Time: 2:56 PM
  */
 public enum ClientOrganizationErrorResponseModel implements ErrorResponseModel {
+    MISSING_NAME,
     MISSING_SLUG,
     SLUG_ALREADY_EXISTS
 }

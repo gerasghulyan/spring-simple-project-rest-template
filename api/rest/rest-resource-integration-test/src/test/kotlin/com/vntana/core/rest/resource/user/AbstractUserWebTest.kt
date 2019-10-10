@@ -1,6 +1,6 @@
 package com.vntana.core.rest.resource.user
 
-import com.vntana.core.helper.rest.UserRestTestHelper
+import com.vntana.core.helper.rest.user.UserRestTestHelper
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 
 /**

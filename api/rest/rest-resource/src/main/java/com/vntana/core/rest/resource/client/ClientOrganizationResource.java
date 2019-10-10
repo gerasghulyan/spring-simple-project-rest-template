@@ -1,7 +1,9 @@
 package com.vntana.core.rest.resource.client;
 
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
+import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
+import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,14 @@ public class ClientOrganizationResource {
         LOGGER.debug("Checking slug availability for request - {}", request);
         final CheckAvailableClientOrganizationSlugResultResponse resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request);
         LOGGER.debug("Successfully checked slug availability with response - {}", resultResponse);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @PostMapping(path = "/create")
+    public ResponseEntity<CreateClientOrganizationResultResponse> createUser(@RequestBody final CreateClientOrganizationRequest request) {
+        LOGGER.debug("Creating client organization for request - {}", request);
+        final CreateClientOrganizationResultResponse resultResponse = clientOrganizationServiceFacade.create(request);
+        LOGGER.debug("Successfully created client organization with response - {}", resultResponse);
         return ResponseEntity.ok(resultResponse);
     }
 }

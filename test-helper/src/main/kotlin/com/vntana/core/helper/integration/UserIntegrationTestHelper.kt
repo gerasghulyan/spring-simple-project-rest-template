@@ -1,6 +1,6 @@
 package com.vntana.core.helper.integration
 
-import com.vntana.core.helper.common.user.UserCommonTestHelper
+import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import org.springframework.stereotype.Component
 
 /**

@@ -147,6 +147,7 @@ project(":test-helper") {
         implementation project(":domain")
         implementation project(":service:service-core")
         implementation project(":api:rest:rest-model")
+        implementation "org.assertj:assertj-core"
         implementation 'org.springframework:spring-context'
     }
 }
@@ -199,7 +200,6 @@ project(":service:service-integration-test") {
 }
 
 project(":commons:api-models") {
-
 }
 
 project(":api:rest:rest-model") {
@@ -256,8 +256,9 @@ project(":api:rest:rest-resource-executable") {
 
     dependencies {
         implementation project(":api:rest:rest-resource")
-        implementation "org.springframework.data:spring-data-mongodb"
         implementation "io.springfox:springfox-swagger2:$springFoxSwaggerVersion"
+        implementation "io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion"
+        implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
         implementation "org.postgresql:postgresql"
     }
 }
@@ -275,5 +276,6 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation 'org.springframework.data:spring-data-jpa'
         testImplementation "org.testcontainers:postgresql"
         testImplementation "org.postgresql:postgresql"
+        testImplementation "com.fasterxml.jackson.module:jackson-module-kotlin"
     }
 }

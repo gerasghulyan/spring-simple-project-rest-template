@@ -1,6 +1,6 @@
 package com.vntana.core.service.client
 
-import com.vntana.core.helper.common.client.ClientOrganizationCommonTestHelper
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.persistence.client.ClientOrganizationRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.client.impl.ClientOrganizationServiceImpl

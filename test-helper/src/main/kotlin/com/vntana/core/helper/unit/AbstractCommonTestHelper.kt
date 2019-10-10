@@ -1,4 +1,4 @@
-package com.vntana.core.helper.common
+package com.vntana.core.helper.unit
 
 import com.vntana.core.helper.AbstractTestHelper
 

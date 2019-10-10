@@ -18,7 +18,7 @@ class CheckSlugAvailabilityClientOrganizationWebTest : AbstractClientOrganizatio
     override fun endpointMapping(): String = baseMapping() + "/slug-availability"
 
     @Test
-    fun `test checkSlugAvailability when error happens`() {
+    fun `test checkSlugAvailability when slug is missing`() {
         val request = restTestHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = null)
         val response: ResponseEntity<CheckAvailableClientOrganizationSlugResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
