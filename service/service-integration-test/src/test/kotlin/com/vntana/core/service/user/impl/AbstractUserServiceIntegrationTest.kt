@@ -1,6 +1,6 @@
 package com.vntana.core.service.user.impl
 
-import com.vntana.core.helper.integration.UserIntegrationTestHelper
+import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
 import com.vntana.core.service.user.UserService

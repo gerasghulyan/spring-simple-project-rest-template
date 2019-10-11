@@ -8,6 +8,6 @@ import com.vntana.core.model.user.response.UserCreateResultResponse;
  * Date: 10/1/19
  * Time: 6:35 PM
  */
-public interface UserFacade {
-    UserCreateResultResponse createUser(final UserCreateRequest request);
+public interface UserServiceFacade {
+    UserCreateResultResponse create(final UserCreateRequest request);
 }

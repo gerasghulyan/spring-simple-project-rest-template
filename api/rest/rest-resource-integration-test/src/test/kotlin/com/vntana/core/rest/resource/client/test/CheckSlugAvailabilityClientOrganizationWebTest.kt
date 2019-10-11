@@ -21,9 +21,7 @@ class CheckSlugAvailabilityClientOrganizationWebTest : AbstractClientOrganizatio
     fun `test checkSlugAvailability when slug is missing`() {
         val request = restTestHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = null)
         val response: ResponseEntity<CheckAvailableClientOrganizationSlugResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body!!.success()).isFalse()
-        assertThat(response.body!!.errors()).contains(ClientOrganizationErrorResponseModel.MISSING_SLUG)
+        restTestHelper.assertBasicErrorResultResponse(response.body!!, ClientOrganizationErrorResponseModel.MISSING_SLUG)
     }
 
     @Test

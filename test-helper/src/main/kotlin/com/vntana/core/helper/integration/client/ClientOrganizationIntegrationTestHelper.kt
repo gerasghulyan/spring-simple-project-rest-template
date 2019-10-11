@@ -1,4 +1,4 @@
-package com.vntana.core.helper.integration
+package com.vntana.core.helper.integration.client
 
 import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper

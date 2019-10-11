@@ -1,13 +1,18 @@
 package com.vntana.core.domain.user;
 
+import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static java.lang.String.format;
 
 /**
  * Created by Arthur Asatryan.
@@ -18,36 +23,80 @@ import javax.persistence.Table;
 @Table(name = "user_")
 public class User extends AbstractUuidAwareDomainEntity {
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
 
-    @Column(name = "second_name")
-    private String secondName;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserClientOrganizationRole> roles;
 
     public User() {
-        super();
     }
 
-    public User(final String firstName, final String secondName) {
-        super();
-        this.firstName = firstName;
-        this.secondName = secondName;
+    public User(final String fullName, final String email, final String password) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void grant(final ClientOrganization clientOrganization, final UserRole userRole) {
+        if (roleOf(clientOrganization).isPresent()) {
+            throw new IllegalStateException(format("User - %s already has role in client organization - %s", this, clientOrganization));
+        }
+        final UserClientOrganizationRole role = new UserClientOrganizationRole(this, clientOrganization, userRole);
+        mutableRoles().add(role);
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
+    public void revoke(final ClientOrganization clientOrganization) {
+        final UserClientOrganizationRole role = roleOf(clientOrganization)
+                .orElseThrow(() -> new IllegalStateException(format("User - %s does not have role in client organization - %s", this, clientOrganization)));
+        mutableRoles().remove(immutableRoles().indexOf(role));
     }
 
-    public String getSecondName() {
-        return secondName;
+    public Optional<UserClientOrganizationRole> roleOf(final ClientOrganization clientOrganization) {
+        return immutableRoles().stream()
+                .filter(role -> role.getClientOrganization().equals(clientOrganization))
+                .findAny();
     }
 
-    public void setSecondName(final String secondName) {
-        this.secondName = secondName;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(final String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
+    private List<UserClientOrganizationRole> mutableRoles() {
+        if (roles == null) {
+            roles = new ArrayList<>();
+            return roles;
+        } else {
+            return roles;
+        }
+    }
+
+    private List<UserClientOrganizationRole> immutableRoles() {
+        return Optional.ofNullable(roles)
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
     }
 
     @Override
@@ -60,26 +109,22 @@ public class User extends AbstractUuidAwareDomainEntity {
         }
         final User user = (User) o;
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(firstName, user.firstName)
-                .append(secondName, user.secondName)
+                .append(getUuid(), user.getUuid())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
-                .append(firstName)
-                .append(secondName)
+                .append(getUuid())
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("firstName", firstName)
-                .append("secondName", secondName)
+                .append("fullName", fullName)
+                .append("email", email)
                 .toString();
     }
 }

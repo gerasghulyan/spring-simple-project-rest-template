@@ -1,9 +1,8 @@
 package com.vntana.core.rest.resource.user;
 
-import com.vntana.core.api.models.response.ResultResponseModel;
 import com.vntana.core.model.user.request.UserCreateRequest;
-import com.vntana.core.model.user.response.UserCreateResponseModel;
-import com.vntana.core.rest.facade.user.UserFacade;
+import com.vntana.core.model.user.response.UserCreateResultResponse;
+import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +25,17 @@ public class UserResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
-    private final UserFacade userFacade;
+    private final UserServiceFacade userServiceFacade;
 
-    public UserResource(final UserFacade userFacade) {
+    public UserResource(final UserServiceFacade userServiceFacade) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
-        this.userFacade = userFacade;
+        this.userServiceFacade = userServiceFacade;
     }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<ResultResponseModel<UserCreateResponseModel>> createUser(@RequestBody final UserCreateRequest request) {
+    public ResponseEntity<UserCreateResultResponse> createUser(@RequestBody final UserCreateRequest request) {
         LOGGER.debug("Processing resource create for request - {}", request);
-        final ResultResponseModel<UserCreateResponseModel> resultResponse = userFacade.createUser(request);
+        final UserCreateResultResponse resultResponse = userServiceFacade.create(request);
         LOGGER.debug("Successfully processed resource create for request - {}", request);
         return ResponseEntity.ok(resultResponse);
     }

@@ -1,9 +1,9 @@
 package com.vntana.core.model.client.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vntana.core.api.models.request.RequestModel;
 import com.vntana.core.api.models.request.ValidatableRequest;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
+import com.vntana.core.model.commons.request.AbstractRequestModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 10/10/19
  * Time: 10:40 AM
  */
-public class CreateClientOrganizationRequest implements RequestModel, ValidatableRequest<ClientOrganizationErrorResponseModel> {
+public class CreateClientOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<ClientOrganizationErrorResponseModel> {
     @JsonProperty("name")
     private String name;
 

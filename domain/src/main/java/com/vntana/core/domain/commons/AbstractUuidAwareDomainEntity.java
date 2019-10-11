@@ -20,11 +20,9 @@ public abstract class AbstractUuidAwareDomainEntity extends AbstractDomainEntity
     private String uuid = UUID.randomUUID().toString();
 
     public AbstractUuidAwareDomainEntity() {
-        super();
     }
 
     public AbstractUuidAwareDomainEntity(final String uuid) {
-        super();
         this.uuid = uuid;
     }
 

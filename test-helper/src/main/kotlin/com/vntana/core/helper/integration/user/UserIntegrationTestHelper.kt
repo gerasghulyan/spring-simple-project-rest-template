@@ -1,4 +1,4 @@
-package com.vntana.core.helper.integration
+package com.vntana.core.helper.integration.user
 
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import org.springframework.stereotype.Component

@@ -1,32 +1,68 @@
 package com.vntana.core.model.user.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vntana.core.api.models.request.RequestModel;
+import com.vntana.core.api.models.request.ValidatableRequest;
+import com.vntana.core.model.commons.request.AbstractRequestModel;
+import com.vntana.core.model.user.error.UserErrorResponseModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.List;
 
 /**
  * Created by Arthur Asatryan.
  * Date: 10/1/19
  * Time: 6:40 PM
  */
-public class UserCreateRequest implements RequestModel {
+public class UserCreateRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
-    @JsonProperty("firstName")
-    private String firstName;
+    @JsonProperty("name")
+    private String clientName;
 
-    @JsonProperty("secondName")
-    private String secondName;
+    @JsonProperty("slug")
+    private String clientSlug;
+
+    @JsonProperty("fullName")
+    private String fullName;
+
+    @JsonProperty("email")
+    private String email;
+
+    @JsonProperty("password")
+    private String password;
 
     public UserCreateRequest() {
-        super();
     }
 
-    public UserCreateRequest(final String firstName, final String secondName) {
-        super();
-        this.firstName = firstName;
-        this.secondName = secondName;
+    public UserCreateRequest(final String clientName, final String clientSlug, final String fullName, final String email, final String password) {
+        this.clientName = clientName;
+        this.clientSlug = clientSlug;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+    }
+
+    @Override
+    public List<UserErrorResponseModel> validate() {
+        final List<UserErrorResponseModel> errors = initializeNew();
+        if (StringUtils.isBlank(clientName)) {
+            errors.add(UserErrorResponseModel.MISSING_CLIENT_NAME);
+        }
+        if (StringUtils.isBlank(clientSlug)) {
+            errors.add(UserErrorResponseModel.MISSING_CLIENT_SLUG);
+        }
+        if (StringUtils.isBlank(fullName)) {
+            errors.add(UserErrorResponseModel.MISSING_FULL_NAME);
+        }
+        if (StringUtils.isBlank(email)) {
+            errors.add(UserErrorResponseModel.MISSING_EMAIL);
+        }
+        if (StringUtils.isBlank(password)) {
+            errors.add(UserErrorResponseModel.MISSING_PASSWORD);
+        }
+        return errors;
     }
 
     @Override
@@ -39,40 +75,73 @@ public class UserCreateRequest implements RequestModel {
         }
         final UserCreateRequest that = (UserCreateRequest) o;
         return new EqualsBuilder()
-                .append(firstName, that.firstName)
-                .append(secondName, that.secondName)
+                .append(clientName, that.clientName)
+                .append(clientSlug, that.clientSlug)
+                .append(fullName, that.fullName)
+                .append(email, that.email)
+                .append(password, that.password)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(firstName)
-                .append(secondName)
+                .append(clientName)
+                .append(clientSlug)
+                .append(fullName)
+                .append(email)
+                .append(password)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("firstName", firstName)
-                .append("secondName", secondName)
+                .append("clientName", clientName)
+                .append("clientSlug", clientSlug)
+                .append("fullName", fullName)
+                .append("email", email)
+                .append("password", password)
                 .toString();
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
+    public void setClientName(final String clientName) {
+        this.clientName = clientName;
     }
 
-    public String getSecondName() {
-        return secondName;
+    public String getClientSlug() {
+        return clientSlug;
     }
 
-    public void setSecondName(final String secondName) {
-        this.secondName = secondName;
+    public void setClientSlug(final String clientSlug) {
+        this.clientSlug = clientSlug;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(final String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
     }
 }

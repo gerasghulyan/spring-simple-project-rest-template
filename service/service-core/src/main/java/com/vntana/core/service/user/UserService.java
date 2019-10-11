@@ -9,6 +9,5 @@ import com.vntana.core.service.user.dto.UserCreateDto;
  * Time: 6:36 PM
  */
 public interface UserService {
-
-    User createUser(final UserCreateDto dto);
+    User create(final UserCreateDto dto);
 }

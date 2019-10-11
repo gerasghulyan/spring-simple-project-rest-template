@@ -26,8 +26,10 @@ public abstract class AbstractDomainEntity {
     @Column(name = "updated")
     private LocalDateTime updated;
 
+    @Column(name = "removed")
+    private LocalDateTime removed;
+
     public AbstractDomainEntity() {
-        super();
     }
 
     public <T extends AbstractDomainEntity> Long getIdOrNull(T entity) {
@@ -54,6 +56,14 @@ public abstract class AbstractDomainEntity {
         this.updated = updated;
     }
 
+    public LocalDateTime getRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(final LocalDateTime removed) {
+        this.removed = removed;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -67,6 +77,7 @@ public abstract class AbstractDomainEntity {
                 .append(id, that.id)
                 .append(created, that.created)
                 .append(updated, that.updated)
+                .append(removed, that.removed)
                 .isEquals();
     }
 
@@ -76,6 +87,7 @@ public abstract class AbstractDomainEntity {
                 .append(id)
                 .append(created)
                 .append(updated)
+                .append(removed)
                 .toHashCode();
     }
 
@@ -85,6 +97,7 @@ public abstract class AbstractDomainEntity {
                 .append("id", id)
                 .append("created", created)
                 .append("updated", updated)
+                .append("removed", removed)
                 .toString();
     }
 }

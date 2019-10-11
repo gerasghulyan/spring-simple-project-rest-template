@@ -11,15 +11,15 @@ import org.assertj.core.api.Assertions.assertThat
  * Time: 11:46 AM
  */
 abstract class AbstractRestUnitTestHelper : AbstractCommonTestHelper() {
-    fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*>) {
+    fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {
         assertThat(resultResponse).isNotNull
         assertThat(resultResponse.success()).isTrue()
-        assertThat(resultResponse.errors<ErrorResponseModel>()).isEmpty()
+        assertThat(resultResponse.errors()).isEmpty()
     }
 
-    fun assertBasicErrorResultResponse(resultResponse: ResultResponseModel<*>, vararg errors: ErrorResponseModel) {
+    fun assertBasicErrorResultResponse(resultResponse: ResultResponseModel<*, *>, vararg errors: ErrorResponseModel) {
         assertThat(resultResponse).isNotNull
         assertThat(resultResponse.success()).isFalse()
-        assertThat(resultResponse.errors<ErrorResponseModel>()).isNotEmpty.containsExactlyInAnyOrder(*errors)
+        assertThat(resultResponse.errors()).isNotEmpty.containsExactlyInAnyOrder(*errors)
     }
 }

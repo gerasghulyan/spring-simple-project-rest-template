@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
  * Date: 1/16/15
  * Time: 6:15 PM
  */
-@Service(value = "singleTransactionAwarePersistenceUtilityServiceImpl")
+@Service(value = "singleTransactionAwarePersistenceUtilityService")
 public class SingleTransactionAwarePersistenceUtilityServiceImpl implements PersistenceUtilityService {
 
     public SingleTransactionAwarePersistenceUtilityServiceImpl() {

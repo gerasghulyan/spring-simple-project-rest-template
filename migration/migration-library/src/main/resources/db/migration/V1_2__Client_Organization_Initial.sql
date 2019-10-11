@@ -2,6 +2,7 @@ create table client_organization
 (
     id                       int8         not null,
     created                  timestamp    not null,
+    removed                  timestamp,
     updated                  timestamp,
     uuid                     varchar(255) not null,
     client_organization_name varchar(255) not null,

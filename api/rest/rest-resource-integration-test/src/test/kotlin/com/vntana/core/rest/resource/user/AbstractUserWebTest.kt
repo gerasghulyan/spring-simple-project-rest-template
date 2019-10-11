@@ -9,7 +9,7 @@ import com.vntana.core.rest.resource.AbstractWebIntegrationTest
  * Time: 11:24 AM
  */
 abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
-    protected val userTestHelper: UserRestTestHelper = UserRestTestHelper()
+    protected val restHelper: UserRestTestHelper = UserRestTestHelper()
 
     override fun baseMapping(): String = "http://localhost:${port}/users/"
 }

@@ -217,6 +217,7 @@ project(":api:rest:rest-facade") {
     dependencies {
         implementation project(":api:rest:rest-model")
         implementation project(":service:service-core")
+        implementation project(":commons:persistence-utils")
         runtimeOnly project(":service:service-impl")
         implementation project(":domain")
         implementation "net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}"

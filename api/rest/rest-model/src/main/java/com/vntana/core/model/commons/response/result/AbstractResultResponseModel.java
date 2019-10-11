@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 10/1/19
  * Time: 6:44 PM
  */
-public class AbstractResultResponseModel<T extends ResponseModel, E extends ErrorResponseModel> implements ResultResponseModel<T> {
+public class AbstractResultResponseModel<T extends ResponseModel, E extends ErrorResponseModel> implements ResultResponseModel<T, E> {
 
     @JsonProperty("success")
     private boolean success;
@@ -52,6 +52,7 @@ public class AbstractResultResponseModel<T extends ResponseModel, E extends Erro
         return errors;
     }
 
+    @Override
     public void errors(final List<E> errors) {
         this.errors = errors;
     }

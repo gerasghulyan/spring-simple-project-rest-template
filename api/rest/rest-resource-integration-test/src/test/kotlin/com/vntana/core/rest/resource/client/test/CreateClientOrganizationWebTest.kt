@@ -18,21 +18,11 @@ class CreateClientOrganizationWebTest : AbstractClientOrganizationWebTest() {
     override fun endpointMapping(): String = baseMapping() + "/create"
 
     @Test
-    fun `test create when slug is missing`() {
-        val request = restTestHelper.buildCreateClientOrganizationRequest(slug = null)
-        val response: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body!!.success()).isFalse()
-        assertThat(response.body!!.errors()).contains(ClientOrganizationErrorResponseModel.MISSING_SLUG)
-    }
-
-    @Test
-    fun `test create when name is missing`() {
-        val request = restTestHelper.buildCreateClientOrganizationRequest(name = null)
-        val response: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body!!.success()).isFalse()
-        assertThat(response.body!!.errors()).contains(ClientOrganizationErrorResponseModel.MISSING_NAME)
+    fun `test create with invalid arguments`() {
+        val response1: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restTestHelper.buildCreateClientOrganizationRequest(slug = null))
+        restTestHelper.assertBasicErrorResultResponse(response1.body!!, ClientOrganizationErrorResponseModel.MISSING_SLUG)
+        val response2: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restTestHelper.buildCreateClientOrganizationRequest(name = null))
+        restTestHelper.assertBasicErrorResultResponse(response2.body!!, ClientOrganizationErrorResponseModel.MISSING_NAME)
     }
 
     @Test

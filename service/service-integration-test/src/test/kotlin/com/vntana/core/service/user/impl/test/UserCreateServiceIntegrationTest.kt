@@ -1,8 +1,10 @@
 package com.vntana.core.service.user.impl.test
 
+import com.vntana.core.helper.integration.client.ClientOrganizationIntegrationTestHelper
 import com.vntana.core.service.user.impl.AbstractUserServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * Created by Arthur Asatryan.
@@ -10,13 +12,23 @@ import org.junit.Test
  * Time: 2:27 PM
  */
 class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
+
+    @Autowired
+    private lateinit var clientOrganizationIntegrationTestHelper: ClientOrganizationIntegrationTestHelper
+
     @Test
     fun `test create`() {
-        val createDto = integrationTestHelper.buildUserCreateDto()
-        userService.createUser(createDto).let {
+        val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
+        flushAndClear()
+        val createDto = integrationTestHelper.buildUserCreateDto(clientOrganizationUuid = clientOrganization.uuid)
+        userService.create(createDto).let {
+            flush()
             assertThat(it).isNotNull
-            assertThat(it.firstName).isEqualTo(createDto.firstName)
-            assertThat(it.secondName).isEqualTo(createDto.secondName)
+            assertThat(it.fullName).isEqualTo(createDto.fullName)
+            assertThat(it.email).isEqualTo(createDto.email)
+            val role = it.roleOf(clientOrganization).get()
+            assertThat(role.clientOrganization).isEqualTo(clientOrganization)
+            assertThat(role.user).isEqualTo(it)
         }
     }
 }

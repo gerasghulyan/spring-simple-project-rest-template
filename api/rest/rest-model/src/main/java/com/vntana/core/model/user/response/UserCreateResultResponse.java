@@ -1,7 +1,7 @@
 package com.vntana.core.model.user.response;
 
-import com.vntana.core.api.models.response.error.ErrorResponseModel;
 import com.vntana.core.model.commons.response.result.AbstractResultResponseModel;
+import com.vntana.core.model.user.error.UserErrorResponseModel;
 
 import java.util.List;
 
@@ -10,17 +10,17 @@ import java.util.List;
  * Date: 10/1/19
  * Time: 6:44 PM
  */
-public class UserCreateResultResponse extends AbstractResultResponseModel<UserCreateResponseModel, ErrorResponseModel> {
+public class UserCreateResultResponse extends AbstractResultResponseModel<UserCreateResponseModel, UserErrorResponseModel> {
 
-    private UserCreateResultResponse() {
+    public UserCreateResultResponse() {
         super();
     }
 
-    public UserCreateResultResponse(final boolean success, final List<ErrorResponseModel> errors, final UserCreateResponseModel response) {
+    public UserCreateResultResponse(final boolean success, final List<UserErrorResponseModel> errors, final UserCreateResponseModel response) {
         super(success, errors, response);
     }
 
-    public UserCreateResultResponse(final List<ErrorResponseModel> errors) {
+    public UserCreateResultResponse(final List<UserErrorResponseModel> errors) {
         super(errors);
     }
 

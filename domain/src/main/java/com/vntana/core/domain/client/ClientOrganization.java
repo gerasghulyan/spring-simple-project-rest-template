@@ -1,13 +1,13 @@
 package com.vntana.core.domain.client;
 
 import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
+import com.vntana.core.domain.user.UserClientOrganizationRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Arthur Asatryan.
@@ -23,6 +23,9 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
 
     @Column(name = "client_organization_slug", nullable = false, updatable = false, unique = true)
     private String slug;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clientOrganization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserClientOrganizationRole> clientOrganizations;
 
     public ClientOrganization() {
     }
