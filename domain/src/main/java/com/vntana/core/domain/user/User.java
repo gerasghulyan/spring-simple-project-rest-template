@@ -33,7 +33,7 @@ public class User extends AbstractUuidAwareDomainEntity {
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserClientOrganizationRole> roles;
+    private List<UserClientOrganizationRole> clientRoles;
 
     public User() {
     }
@@ -44,22 +44,22 @@ public class User extends AbstractUuidAwareDomainEntity {
         this.password = password;
     }
 
-    public void grant(final ClientOrganization clientOrganization, final UserRole userRole) {
-        if (roleOf(clientOrganization).isPresent()) {
+    public void grantClientRole(final ClientOrganization clientOrganization, final UserRole userRole) {
+        if (roleOfClient(clientOrganization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in client organization - %s", this, clientOrganization));
         }
         final UserClientOrganizationRole role = new UserClientOrganizationRole(this, clientOrganization, userRole);
-        mutableRoles().add(role);
+        mutableClientRoles().add(role);
     }
 
-    public void revoke(final ClientOrganization clientOrganization) {
-        final UserClientOrganizationRole role = roleOf(clientOrganization)
+    public void revokeClientRole(final ClientOrganization clientOrganization) {
+        final UserClientOrganizationRole role = roleOfClient(clientOrganization)
                 .orElseThrow(() -> new IllegalStateException(format("User - %s does not have role in client organization - %s", this, clientOrganization)));
-        mutableRoles().remove(immutableRoles().indexOf(role));
+        mutableClientRoles().remove(immutableClientRoles().indexOf(role));
     }
 
-    public Optional<UserClientOrganizationRole> roleOf(final ClientOrganization clientOrganization) {
-        return immutableRoles().stream()
+    public Optional<UserClientOrganizationRole> roleOfClient(final ClientOrganization clientOrganization) {
+        return immutableClientRoles().stream()
                 .filter(role -> role.getClientOrganization().equals(clientOrganization))
                 .findAny();
     }
@@ -84,17 +84,17 @@ public class User extends AbstractUuidAwareDomainEntity {
         this.password = password;
     }
 
-    private List<UserClientOrganizationRole> mutableRoles() {
-        if (roles == null) {
-            roles = new ArrayList<>();
-            return roles;
+    private List<UserClientOrganizationRole> mutableClientRoles() {
+        if (clientRoles == null) {
+            clientRoles = new ArrayList<>();
+            return clientRoles;
         } else {
-            return roles;
+            return clientRoles;
         }
     }
 
-    private List<UserClientOrganizationRole> immutableRoles() {
-        return Optional.ofNullable(roles)
+    private List<UserClientOrganizationRole> immutableClientRoles() {
+        return Optional.ofNullable(clientRoles)
                 .map(Collections::unmodifiableList)
                 .orElseGet(Collections::emptyList);
     }

@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         final ClientOrganization clientOrganization = getClientOrganization(dto);
         final User user = new User(dto.getFullName(), dto.getEmail(), dto.getPassword());
         final User savedUser = userRepository.save(user);
-        savedUser.grant(clientOrganization, dto.getRole());
+        savedUser.grantClientRole(clientOrganization, dto.getRole());
         LOGGER.debug("Successfully created user for dto - {}", dto);
         return savedUser;
     }

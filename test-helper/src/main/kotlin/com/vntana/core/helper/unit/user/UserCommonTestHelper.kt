@@ -31,7 +31,7 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
             clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
     ): User {
         val user = User(fullName, email, password)
-        user.grant(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
         return user
     }
 }

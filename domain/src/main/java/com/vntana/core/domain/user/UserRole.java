@@ -6,6 +6,8 @@ package com.vntana.core.domain.user;
  * Time: 4:57 PM
  */
 public enum UserRole {
+    SUPER_ADMIN,
+    ORGANIZATION_ADMIN,
     CLIENT_ADMIN,
     ASSET_MANAGER
 }

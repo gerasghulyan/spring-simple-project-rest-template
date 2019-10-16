@@ -16,7 +16,7 @@ class UserDomainRevokeUnitTest : AbstractDomainUnitTest() {
     fun `test revoke when user does not have role in client organization`() {
         val clientOrganization = ClientOrganization()
         val user = User(uuid(), uuid(), uuid())
-        assertThatThrownBy { user.revoke(clientOrganization) }
+        assertThatThrownBy { user.revokeClientRole(clientOrganization) }
                 .isExactlyInstanceOf(IllegalStateException::class.java)
     }
 
@@ -24,8 +24,8 @@ class UserDomainRevokeUnitTest : AbstractDomainUnitTest() {
     fun `test revoke`() {
         val clientOrganization = ClientOrganization()
         val user = User(uuid(), uuid(), uuid())
-        user.grant(clientOrganization, UserRole.CLIENT_ADMIN)
-        user.revoke(clientOrganization)
-        assertThat(user.roleOf(clientOrganization)).isEmpty
+        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.revokeClientRole(clientOrganization)
+        assertThat(user.roleOfClient(clientOrganization)).isEmpty
     }
 }
