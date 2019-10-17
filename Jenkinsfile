@@ -15,4 +15,19 @@ pipeline {
             }
         }
     }
+        stage("Push Docker") {
+            steps {
+                withCredentials(
+                    [
+                        usernamePassword(
+                            credentialsId: 'nexus',
+                            usernameVariable: 'DOCKER_REGISTRY_USERNAME',
+                            passwordVariable: 'DOCKER_REGISTRY_PASSWORD'
+                        )
+                    ]
+                ) {
+                    sh "./gradlew --exclude-task test pushDockerTags --project-prop dockerRegistry=$DOCKER_REGISTRY --project-prop removeImage"
+                }
+            }
+        }
 }
