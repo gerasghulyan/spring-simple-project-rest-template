@@ -14,7 +14,6 @@ pipeline {
                 sh './gradlew clean build'
             }
         }
-    }
         stage("Push Docker") {
             steps {
                 withCredentials(
@@ -30,4 +29,5 @@ pipeline {
                 }
             }
         }
+    }
 }
