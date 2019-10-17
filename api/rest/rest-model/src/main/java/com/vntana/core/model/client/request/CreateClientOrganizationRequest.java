@@ -17,6 +17,10 @@ import java.util.List;
  * Time: 10:40 AM
  */
 public class CreateClientOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<ClientOrganizationErrorResponseModel> {
+
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
+
     @JsonProperty("name")
     private String name;
 
@@ -26,7 +30,8 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
     public CreateClientOrganizationRequest() {
     }
 
-    public CreateClientOrganizationRequest(final String name, final String slug) {
+    public CreateClientOrganizationRequest(final String organizationUuid, final String name, final String slug) {
+        this.organizationUuid = organizationUuid;
         this.name = name;
         this.slug = slug;
     }
@@ -34,6 +39,9 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
     @Override
     public List<ClientOrganizationErrorResponseModel> validate() {
         final List<ClientOrganizationErrorResponseModel> errors = initializeNew();
+        if (StringUtils.isBlank(organizationUuid)) {
+            errors.add(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
         if (StringUtils.isBlank(name)) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_NAME);
         }
@@ -53,6 +61,7 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
         }
         final CreateClientOrganizationRequest that = (CreateClientOrganizationRequest) o;
         return new EqualsBuilder()
+                .append(organizationUuid, that.organizationUuid)
                 .append(name, that.name)
                 .append(slug, that.slug)
                 .isEquals();
@@ -61,6 +70,7 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .append(organizationUuid)
                 .append(name)
                 .append(slug)
                 .toHashCode();
@@ -69,9 +79,18 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("organizationUuid", organizationUuid)
                 .append("name", name)
                 .append("slug", slug)
                 .toString();
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
+    }
+
+    public void setOrganizationUuid(final String organizationUuid) {
+        this.organizationUuid = organizationUuid;
     }
 
     public String getName() {

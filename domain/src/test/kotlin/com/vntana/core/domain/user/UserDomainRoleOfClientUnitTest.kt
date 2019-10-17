@@ -10,7 +10,7 @@ import org.junit.Test
  * Date: 10/11/19
  * Time: 3:42 PM
  */
-class UserDomainRoleOfUnitTest : AbstractDomainUnitTest() {
+class UserDomainRoleOfClientUnitTest : AbstractDomainUnitTest() {
     @Test
     fun `test roleOf when not found`() {
         val clientOrganization = ClientOrganization()

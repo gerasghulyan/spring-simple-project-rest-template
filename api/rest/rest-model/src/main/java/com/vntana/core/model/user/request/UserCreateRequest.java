@@ -18,6 +18,9 @@ import java.util.List;
  */
 public class UserCreateRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
+
     @JsonProperty("name")
     private String clientName;
 
@@ -36,7 +39,8 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     public UserCreateRequest() {
     }
 
-    public UserCreateRequest(final String clientName, final String clientSlug, final String fullName, final String email, final String password) {
+    public UserCreateRequest(final String organizationUuid, final String clientName, final String clientSlug, final String fullName, final String email, final String password) {
+        this.organizationUuid = organizationUuid;
         this.clientName = clientName;
         this.clientSlug = clientSlug;
         this.fullName = fullName;
@@ -47,6 +51,9 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     @Override
     public List<UserErrorResponseModel> validate() {
         final List<UserErrorResponseModel> errors = initializeNew();
+        if (StringUtils.isBlank(organizationUuid)) {
+            errors.add(UserErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
         if (StringUtils.isBlank(clientName)) {
             errors.add(UserErrorResponseModel.MISSING_CLIENT_NAME);
         }
@@ -75,6 +82,7 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
         }
         final UserCreateRequest that = (UserCreateRequest) o;
         return new EqualsBuilder()
+                .append(organizationUuid, that.organizationUuid)
                 .append(clientName, that.clientName)
                 .append(clientSlug, that.clientSlug)
                 .append(fullName, that.fullName)
@@ -86,6 +94,7 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .append(organizationUuid)
                 .append(clientName)
                 .append(clientSlug)
                 .append(fullName)
@@ -97,12 +106,20 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("organizationUuid", organizationUuid)
                 .append("clientName", clientName)
                 .append("clientSlug", clientSlug)
                 .append("fullName", fullName)
                 .append("email", email)
-                .append("password", password)
                 .toString();
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
+    }
+
+    public void setOrganizationUuid(final String organizationUuid) {
+        this.organizationUuid = organizationUuid;
     }
 
     public String getClientName() {

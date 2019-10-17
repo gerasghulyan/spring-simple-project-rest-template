@@ -1,9 +1,11 @@
 package com.vntana.core.service.client.impl;
 
 import com.vntana.core.domain.client.ClientOrganization;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.persistence.client.ClientOrganizationRepository;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
+import com.vntana.core.service.organization.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,13 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOrganizationServiceImpl.class);
 
+    private final OrganizationService organizationService;
+
     private final ClientOrganizationRepository clientOrganizationRepository;
 
-    public ClientOrganizationServiceImpl(final ClientOrganizationRepository clientOrganizationRepository) {
+    public ClientOrganizationServiceImpl(final OrganizationService organizationService, final ClientOrganizationRepository clientOrganizationRepository) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+        this.organizationService = organizationService;
         this.clientOrganizationRepository = clientOrganizationRepository;
     }
 
@@ -36,7 +41,8 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
     public ClientOrganization create(final CreateClientOrganizationDto dto) {
         assertCreateClientOrganizationDto(dto);
         assertNotExistsForSlug(dto.getSlug());
-        return clientOrganizationRepository.save(new ClientOrganization(dto.getName(), dto.getSlug()));
+        final Organization organization = getOrganization(dto.getOrganizationUuid());
+        return clientOrganizationRepository.save(new ClientOrganization(dto.getName(), dto.getSlug(), organization));
     }
 
     @Transactional(readOnly = true)
@@ -65,6 +71,13 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         findBySlug(slug).ifPresent(it -> {
             LOGGER.error("Client with slug - {} already exists", slug);
             throw new IllegalStateException(format("Client with slug - %s already exists", slug));
+        });
+    }
+
+    private Organization getOrganization(final String organizationUuid) {
+        return organizationService.findByUuid(organizationUuid).orElseThrow(() -> {
+            LOGGER.error("Can not find organization for uuid - {}", organizationUuid);
+            return new IllegalStateException(format("Can not find organization for uuid - %s", organizationUuid));
         });
     }
 }

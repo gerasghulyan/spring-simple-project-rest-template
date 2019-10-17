@@ -1,13 +1,12 @@
 package com.vntana.core.domain.client;
 
 import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
-import com.vntana.core.domain.user.UserClientOrganizationRole;
+import com.vntana.core.domain.organization.Organization;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by Arthur Asatryan.
@@ -24,15 +23,17 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     @Column(name = "client_organization_slug", nullable = false, updatable = false, unique = true)
     private String slug;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clientOrganization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserClientOrganizationRole> clientOrganizations;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organization_id"), updatable = false)
+    private Organization organization;
 
     public ClientOrganization() {
     }
 
-    public ClientOrganization(final String name, final String slug) {
+    public ClientOrganization(final String name, final String slug, final Organization organization) {
         this.name = name;
         this.slug = slug;
+        this.organization = organization;
     }
 
     @Override
@@ -70,5 +71,9 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
 
     public String getSlug() {
         return slug;
+    }
+
+    public Organization getOrganization() {
+        return organization;
     }
 }

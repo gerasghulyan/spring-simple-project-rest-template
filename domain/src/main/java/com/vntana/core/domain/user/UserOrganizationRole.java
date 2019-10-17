@@ -1,6 +1,5 @@
 package com.vntana.core.domain.user;
 
-import com.vntana.core.domain.commons.AbstractDomainEntity;
 import com.vntana.core.domain.organization.Organization;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,35 +13,25 @@ import javax.persistence.*;
  * Time: 4:53 PM
  */
 @Entity
-@Table(name = "user_organization_role",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        columnNames = {"organization_id", "user_id"},
-                        name = "uk_user_id_and_organization_id"
-                )
-        }
-)
-public class UserOrganizationRole extends AbstractDomainEntity {
+@Table(name = "user_role_organization")
+@DiscriminatorValue("ORGANIZATION_ROLE")
+public class UserOrganizationRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_id"))
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organization_id"))
+    @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organization_id"), updatable = false)
     private Organization organization;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_role", nullable = false)
-    private UserRole userRole;
-
-    public UserOrganizationRole() {
+    UserOrganizationRole() {
     }
 
-    public UserOrganizationRole(final User user, final Organization organization, final UserRole userRole) {
-        this.user = user;
+    public UserOrganizationRole(final User user, final Organization organization) {
+        super(user, UserRole.ORGANIZATION_ADMIN);
         this.organization = organization;
-        this.userRole = userRole;
+    }
+
+    @Override
+    public UserRoleType getType() {
+        return UserRoleType.ORGANIZATION_ROLE;
     }
 
     @Override
@@ -56,6 +45,7 @@ public class UserOrganizationRole extends AbstractDomainEntity {
         final UserOrganizationRole that = (UserOrganizationRole) o;
         return new EqualsBuilder()
                 .append(getId(), that.getId())
+                .append(getIdOrNull(organization), that.getIdOrNull(organization))
                 .isEquals();
     }
 
@@ -63,31 +53,18 @@ public class UserOrganizationRole extends AbstractDomainEntity {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(getId())
+                .append(getIdOrNull(organization))
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("user_id", getIdOrNull(user))
                 .append("organization_id", getIdOrNull(organization))
-                .append("userRole", userRole)
                 .toString();
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public Organization getOrganization() {
         return organization;
-    }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(final UserRole userRole) {
-        this.userRole = userRole;
     }
 }

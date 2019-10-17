@@ -1,9 +1,9 @@
 package com.vntana.core.service.user.impl;
 
-import com.vntana.core.domain.client.ClientOrganization;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.persistence.user.UserRepository;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.UserCreateDto;
 import org.slf4j.Logger;
@@ -26,12 +26,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationService organizationService;
 
-    public UserServiceImpl(final UserRepository userRepository, final ClientOrganizationService clientOrganizationService) {
+    public UserServiceImpl(final UserRepository userRepository, final OrganizationService organizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userRepository = userRepository;
-        this.clientOrganizationService = clientOrganizationService;
+        this.organizationService = organizationService;
     }
 
     @Transactional
@@ -39,10 +39,10 @@ public class UserServiceImpl implements UserService {
     public User create(final UserCreateDto dto) {
         assertCreateDto(dto);
         LOGGER.debug("Creating user for dto - {}", dto);
-        final ClientOrganization clientOrganization = getClientOrganization(dto);
+        final Organization organization = getOrganization(dto);
         final User user = new User(dto.getFullName(), dto.getEmail(), dto.getPassword());
         final User savedUser = userRepository.save(user);
-        savedUser.grantClientRole(clientOrganization, dto.getRole());
+        savedUser.grantOrganizationRole(organization);
         LOGGER.debug("Successfully created user for dto - {}", dto);
         return savedUser;
     }
@@ -52,14 +52,14 @@ public class UserServiceImpl implements UserService {
         Assert.hasText(dto.getFullName(), "The user full name should not be null or empty");
         Assert.hasText(dto.getEmail(), "The user email should not be null or empty");
         Assert.hasText(dto.getPassword(), "The user password should not be null or empty");
-        Assert.hasText(dto.getClientOrganizationUuid(), "The user client organization uuid should not be null or empty");
+        Assert.hasText(dto.getOrganizationUuid(), "The organization uuid should not be null or empty");
         Assert.notNull(dto.getRole(), "The user role should not be null");
     }
 
-    private ClientOrganization getClientOrganization(final UserCreateDto dto) {
-        return clientOrganizationService.findByUuid(dto.getClientOrganizationUuid()).orElseThrow(() -> {
-            LOGGER.error("Can not find client organization for uuid - {}", dto.getClientOrganizationUuid());
-            return new IllegalStateException(format("Can not find client organization for uuid - %s", dto.getClientOrganizationUuid()));
+    private Organization getOrganization(final UserCreateDto dto) {
+        return organizationService.findByUuid(dto.getOrganizationUuid()).orElseThrow(() -> {
+            LOGGER.error("Can not find organization for uuid - {}", dto.getOrganizationUuid());
+            return new IllegalStateException(format("Can not find organization for uuid - %s", dto.getOrganizationUuid()));
         });
     }
 }

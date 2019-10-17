@@ -1,13 +1,13 @@
 package com.vntana.core.domain.organization;
 
 import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
-import com.vntana.core.domain.user.UserOrganizationRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by Arthur Asatryan.
@@ -24,8 +24,8 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     @Column(name = "organization_slug", nullable = false, updatable = false, unique = true)
     private String slug;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserOrganizationRole> organizations;
+    public Organization() {
+    }
 
     public Organization(final String name, final String slug) {
         this.name = name;

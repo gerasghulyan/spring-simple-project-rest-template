@@ -9,30 +9,23 @@ import org.junit.Test
 /**
  * Created by Arthur Asatryan.
  * Date: 10/11/19
- * Time: 3:26 PM
+ * Time: 3:39 PM
  */
-class UserDomainGrantUnitTest : AbstractDomainUnitTest() {
+class UserDomainRevokeClientRoleUnitTest : AbstractDomainUnitTest() {
     @Test
-    fun `test grant when user already has role in given client organization`() {
+    fun `test revoke when user does not have role in client organization`() {
         val clientOrganization = ClientOrganization()
         val user = User(uuid(), uuid(), uuid())
-        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
-        assertThatThrownBy { user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN) }
+        assertThatThrownBy { user.revokeClientRole(clientOrganization) }
                 .isExactlyInstanceOf(IllegalStateException::class.java)
     }
 
     @Test
-    fun `test grant`() {
+    fun `test revoke`() {
         val clientOrganization = ClientOrganization()
         val user = User(uuid(), uuid(), uuid())
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
-        val role = user.roleOfClient(clientOrganization).get()
-        assertThat(role.user).isEqualTo(user)
-        assertThat(role.clientOrganization).isEqualTo(clientOrganization)
-        assertThat(role.userRole).isEqualTo(UserRole.CLIENT_ADMIN)
-    }
-
-    @Test
-    fun `test revoke`() {
+        user.revokeClientRole(clientOrganization)
+        assertThat(user.roleOfClient(clientOrganization)).isEmpty
     }
 }

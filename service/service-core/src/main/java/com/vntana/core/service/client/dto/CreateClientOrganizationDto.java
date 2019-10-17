@@ -15,12 +15,15 @@ public class CreateClientOrganizationDto {
 
     private String slug;
 
+    private String organizationUuid;
+
     public CreateClientOrganizationDto() {
     }
 
-    public CreateClientOrganizationDto(final String name, final String slug) {
+    public CreateClientOrganizationDto(final String name, final String slug, final String organizationUuid) {
         this.name = name;
         this.slug = slug;
+        this.organizationUuid = organizationUuid;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class CreateClientOrganizationDto {
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -43,6 +47,7 @@ public class CreateClientOrganizationDto {
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -51,6 +56,7 @@ public class CreateClientOrganizationDto {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
+                .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
@@ -60,5 +66,9 @@ public class CreateClientOrganizationDto {
 
     public String getSlug() {
         return slug;
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 }

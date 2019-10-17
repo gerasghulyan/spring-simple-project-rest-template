@@ -15,7 +15,8 @@ class ClientOrganizationRestTestHelper : AbstractRestUnitTestHelper() {
     ): CheckAvailableClientOrganizationSlugRequest = CheckAvailableClientOrganizationSlugRequest(slug)
 
     fun buildCreateClientOrganizationRequest(
+            organizationUuid: String? = uuid(),
             name: String? = uuid(),
             slug: String? = uuid()
-    ): CreateClientOrganizationRequest = CreateClientOrganizationRequest(name, slug)
+    ): CreateClientOrganizationRequest = CreateClientOrganizationRequest(organizationUuid, name, slug)
 }

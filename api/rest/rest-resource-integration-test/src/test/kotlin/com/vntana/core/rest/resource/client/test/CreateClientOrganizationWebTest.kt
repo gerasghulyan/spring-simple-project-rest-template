@@ -19,6 +19,8 @@ class CreateClientOrganizationWebTest : AbstractClientOrganizationWebTest() {
 
     @Test
     fun `test create with invalid arguments`() {
+        val response0: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restTestHelper.buildCreateClientOrganizationRequest(organizationUuid = null))
+        restTestHelper.assertBasicErrorResultResponse(response0.body!!, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
         val response1: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restTestHelper.buildCreateClientOrganizationRequest(slug = null))
         restTestHelper.assertBasicErrorResultResponse(response1.body!!, ClientOrganizationErrorResponseModel.MISSING_SLUG)
         val response2: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restTestHelper.buildCreateClientOrganizationRequest(name = null))

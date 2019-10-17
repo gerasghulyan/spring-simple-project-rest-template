@@ -55,14 +55,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         persistenceUtilityService.runInNewTransaction(() -> {
             LOGGER.debug("Creating a client organization for request - {}", request);
             final ClientOrganization clientOrganization = clientOrganizationService.create(
-                    new CreateClientOrganizationDto(request.getClientName(), request.getClientSlug())
+                    new CreateClientOrganizationDto(request.getClientName(), request.getClientSlug(), request.getOrganizationUuid())
             );
             final User user = userService.create(new UserCreateDto(
                     request.getFullName(),
                     request.getEmail(),
                     request.getPassword(),
                     clientOrganization.getUuid(),
-                    UserRole.CLIENT_ADMIN
+                    UserRole.ORGANIZATION_ADMIN
             ));
             mutableUserUuid.setValue(user.getUuid());
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);

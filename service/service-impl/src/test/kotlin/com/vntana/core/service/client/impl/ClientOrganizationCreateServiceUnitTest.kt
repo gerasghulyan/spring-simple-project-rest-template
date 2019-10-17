@@ -13,7 +13,7 @@ import java.util.*
  * Date: 10/8/19
  * Time: 6:04 PM
  */
-class CreateClientOrganizationServiceUnitTest : AbstractClientOrganizationServiceUnitTest() {
+class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServiceUnitTest() {
     @Test
     fun `test create with invalid arguments`() {
         // test data
@@ -55,7 +55,9 @@ class CreateClientOrganizationServiceUnitTest : AbstractClientOrganizationServic
         resetAll()
         val slug = uuid()
         val dto = helper.buildCreateClientOrganizationDto(slug = slug)
+        val organization = organizationTestHelper.buildOrganization()
         // expectations
+        expect(organizationService.findByUuid(dto.organizationUuid)).andReturn(Optional.of(organization))
         expect(clientOrganizationRepository.findBySlug(slug)).andReturn(Optional.empty())
         expect(clientOrganizationRepository.save(isA(ClientOrganization::class.java)))
                 .andAnswer { getCurrentArguments()[0] as ClientOrganization }
@@ -64,6 +66,7 @@ class CreateClientOrganizationServiceUnitTest : AbstractClientOrganizationServic
         assertThat(clientOrganizationService.create(dto))
                 .hasFieldOrPropertyWithValue("name", dto.name)
                 .hasFieldOrPropertyWithValue("slug", dto.slug)
+                .hasFieldOrPropertyWithValue("organization", organization)
         verifyAll()
     }
 }

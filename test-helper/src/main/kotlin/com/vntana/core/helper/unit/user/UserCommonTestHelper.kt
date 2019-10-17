@@ -1,10 +1,10 @@
 package com.vntana.core.helper.unit.user
 
-import com.vntana.core.domain.client.ClientOrganization
+import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
-import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
+import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.service.user.dto.UserCreateDto
 
 /**
@@ -14,24 +14,24 @@ import com.vntana.core.service.user.dto.UserCreateDto
  */
 open class UserCommonTestHelper : AbstractCommonTestHelper() {
 
-    private val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
+    private val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
     fun buildUserCreateDto(
             fullName: String? = uuid(),
             email: String? = uuid(),
             password: String? = uuid(),
-            clientOrganizationUuid: String? = uuid(),
+            organizationUuid: String? = uuid(),
             role: UserRole? = UserRole.CLIENT_ADMIN
-    ): UserCreateDto = UserCreateDto(fullName, email, password, clientOrganizationUuid, role)
+    ): UserCreateDto = UserCreateDto(fullName, email, password, organizationUuid, role)
 
     fun buildUser(
             fullName: String? = uuid(),
             email: String? = uuid(),
             password: String? = uuid(),
-            clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
+            clientOrganization: Organization? = organizationCommonTestHelper.buildOrganization()
     ): User {
         val user = User(fullName, email, password)
-        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.grantOrganizationRole(clientOrganization)
         return user
     }
 }

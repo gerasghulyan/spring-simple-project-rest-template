@@ -1,9 +1,8 @@
-package com.vntana.core.service.user.impl
+package com.vntana.core.service.user
 
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
-import com.vntana.core.service.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 
 /**

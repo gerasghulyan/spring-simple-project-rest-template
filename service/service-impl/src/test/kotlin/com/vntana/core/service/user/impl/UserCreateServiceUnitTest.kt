@@ -27,7 +27,7 @@ class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { userService.create(helper.buildUserCreateDto(password = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.create(helper.buildUserCreateDto(clientOrganizationUuid = null)) }
+        assertThatThrownBy { userService.create(helper.buildUserCreateDto(organizationUuid = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { userService.create(helper.buildUserCreateDto(role = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
@@ -38,7 +38,7 @@ class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
     fun `test create when client organization not exists`() {
         val createDto = helper.buildUserCreateDto()
         resetAll()
-        expect(clientOrganizationService.findByUuid(createDto.clientOrganizationUuid)).andReturn(Optional.empty())
+        expect(organizationService.findByUuid(createDto.organizationUuid)).andReturn(Optional.empty())
         replayAll()
         assertThatThrownBy { userService.create(createDto) }.isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
@@ -47,17 +47,17 @@ class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
     @Test
     fun `test create`() {
         val createDto = helper.buildUserCreateDto()
-        val clientOrganization = clientOrganizationHelper.buildClientOrganization()
+        val organization = organizationHelper.buildOrganization()
         resetAll()
-        expect(clientOrganizationService.findByUuid(createDto.clientOrganizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(organizationService.findByUuid(createDto.organizationUuid)).andReturn(Optional.of(organization))
         expect(userRepository.save(isA(User::class.java))).andAnswer { getCurrentArguments()[0] as User }
         replayAll()
         userService.create(createDto).let {
             assertThat(it).isNotNull
             assertThat(it.fullName).isEqualTo(createDto.fullName)
             assertThat(it.email).isEqualTo(createDto.email)
-            val role = it.roleOfClient(clientOrganization).get()
-            assertThat(role.clientOrganization).isEqualTo(clientOrganization)
+            val role = it.roleOfOrganization(organization).get()
+            assertThat(role.organization).isEqualTo(organization)
             assertThat(role.user).isEqualTo(it)
         }
         verifyAll()

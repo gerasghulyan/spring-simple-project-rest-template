@@ -2,6 +2,7 @@ package com.vntana.core.domain.user;
 
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
+import com.vntana.core.domain.organization.Organization;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -33,9 +35,9 @@ public class User extends AbstractUuidAwareDomainEntity {
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserClientOrganizationRole> clientRoles;
+    private List<AbstractUserRole> roles;
 
-    public User() {
+    User() {
     }
 
     public User(final String fullName, final String email, final String password) {
@@ -44,24 +46,54 @@ public class User extends AbstractUuidAwareDomainEntity {
         this.password = password;
     }
 
+    //region Public methods
     public void grantClientRole(final ClientOrganization clientOrganization, final UserRole userRole) {
         if (roleOfClient(clientOrganization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in client organization - %s", this, clientOrganization));
         }
-        final UserClientOrganizationRole role = new UserClientOrganizationRole(this, clientOrganization, userRole);
-        mutableClientRoles().add(role);
+        final AbstractUserRole role = new UserClientOrganizationRole(this, userRole, clientOrganization);
+        mutableRoles().add(role);
+    }
+
+    public void grantOrganizationRole(final Organization organization) {
+        if (roleOfOrganization(organization).isPresent()) {
+            throw new IllegalStateException(format("User - %s already has role in organization - %s", this, organization));
+        }
+        final AbstractUserRole role = new UserOrganizationRole(this, organization);
+        mutableRoles().add(role);
+    }
+
+    public void grantSuperAdminRole() {
+        roleOfSuperAdmin().ifPresent(role -> {
+            throw new IllegalStateException(format("User - %s already has super admin role - %s", this, role));
+        });
+        final AbstractUserRole role = new UserSuperAdminRole(this);
+        mutableRoles().add(role);
     }
 
     public void revokeClientRole(final ClientOrganization clientOrganization) {
         final UserClientOrganizationRole role = roleOfClient(clientOrganization)
                 .orElseThrow(() -> new IllegalStateException(format("User - %s does not have role in client organization - %s", this, clientOrganization)));
-        mutableClientRoles().remove(immutableClientRoles().indexOf(role));
+        mutableRoles().remove(role);
     }
 
     public Optional<UserClientOrganizationRole> roleOfClient(final ClientOrganization clientOrganization) {
         return immutableClientRoles().stream()
                 .filter(role -> role.getClientOrganization().equals(clientOrganization))
                 .findAny();
+    }
+
+    public Optional<UserOrganizationRole> roleOfOrganization(final Organization organization) {
+        return immutableOrganizationRoles().stream()
+                .filter(role -> role.getOrganization().equals(organization))
+                .findAny();
+    }
+
+    public Optional<UserSuperAdminRole> roleOfSuperAdmin() {
+        return immutableRoles().stream()
+                .filter(role -> role.getType().equals(UserRoleType.SUPER_ADMIN_ROLE))
+                .findAny()
+                .map(UserSuperAdminRole.class::cast);
     }
 
     public String getFullName() {
@@ -83,21 +115,46 @@ public class User extends AbstractUuidAwareDomainEntity {
     public void setPassword(final String password) {
         this.password = password;
     }
+    //endregion
 
-    private List<UserClientOrganizationRole> mutableClientRoles() {
-        if (clientRoles == null) {
-            clientRoles = new ArrayList<>();
-            return clientRoles;
+    //region Utility methods
+    private List<AbstractUserRole> mutableRoles() {
+        if (roles == null) {
+            roles = new ArrayList<>();
+            return roles;
         } else {
-            return clientRoles;
+            return roles;
         }
     }
 
     private List<UserClientOrganizationRole> immutableClientRoles() {
-        return Optional.ofNullable(clientRoles)
+        return Optional.ofNullable(roles)
+                .map(theRoles -> theRoles.stream()
+                        .filter(UserClientOrganizationRole.class::isInstance)
+                        .map(UserClientOrganizationRole.class::cast)
+                        .collect(Collectors.toList())
+                )
                 .map(Collections::unmodifiableList)
                 .orElseGet(Collections::emptyList);
     }
+
+    private List<UserOrganizationRole> immutableOrganizationRoles() {
+        return Optional.ofNullable(roles)
+                .map(theRoles -> theRoles.stream()
+                        .filter(UserOrganizationRole.class::isInstance)
+                        .map(UserOrganizationRole.class::cast)
+                        .collect(Collectors.toList())
+                )
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
+    }
+
+    private List<AbstractUserRole> immutableRoles() {
+        return Optional.ofNullable(roles)
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
+    }
+    //endregion
 
     @Override
     public boolean equals(final Object o) {

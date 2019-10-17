@@ -25,7 +25,7 @@ class CreateUserServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
         // expectations
         expect(persistenceUtilityService.runInNewTransaction(isA(Executable::class.java)))
                 .andAnswer { (getCurrentArguments()[0] as Executable).execute() }
-        expect(clientOrganizationService.create(CreateClientOrganizationDto(request.clientName, request.clientSlug))).andReturn(clientOrganization)
+        expect(clientOrganizationService.create(CreateClientOrganizationDto(request.clientName, request.clientSlug, request.organizationUuid))).andReturn(clientOrganization)
         expect(userService.create(UserCreateDto(
                 request.fullName,
                 request.email,

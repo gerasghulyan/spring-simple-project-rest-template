@@ -18,15 +18,15 @@ public class UserCreateDto {
 
     private final String password;
 
-    private final String clientOrganizationUuid;
+    private final String organizationUuid;
 
     private final UserRole role;
 
-    public UserCreateDto(final String fullName, final String email, final String password, final String clientOrganizationUuid, final UserRole role) {
+    public UserCreateDto(final String fullName, final String email, final String password, final String organizationUuid, final UserRole role) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.clientOrganizationUuid = clientOrganizationUuid;
+        this.organizationUuid = organizationUuid;
         this.role = role;
     }
 
@@ -43,7 +43,7 @@ public class UserCreateDto {
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(password, that.password)
-                .append(clientOrganizationUuid, that.clientOrganizationUuid)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -53,7 +53,7 @@ public class UserCreateDto {
                 .append(fullName)
                 .append(email)
                 .append(password)
-                .append(clientOrganizationUuid)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -62,7 +62,7 @@ public class UserCreateDto {
         return new ToStringBuilder(this)
                 .append("fullName", fullName)
                 .append("email", email)
-                .append("clientOrganizationUuid", clientOrganizationUuid)
+                .append("clientOrganizationUuid", organizationUuid)
                 .toString();
     }
 
@@ -78,8 +78,8 @@ public class UserCreateDto {
         return password;
     }
 
-    public String getClientOrganizationUuid() {
-        return clientOrganizationUuid;
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 
     public UserRole getRole() {

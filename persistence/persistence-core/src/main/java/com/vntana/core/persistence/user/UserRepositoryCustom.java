@@ -6,5 +6,4 @@ package com.vntana.core.persistence.user;
  * Time: 6:32 PM
  */
 public interface UserRepositoryCustom {
-
 }

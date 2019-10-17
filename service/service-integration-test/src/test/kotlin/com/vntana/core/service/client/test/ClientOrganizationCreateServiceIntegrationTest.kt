@@ -9,11 +9,13 @@ import org.junit.Test
  * Date: 10/9/19
  * Time: 10:51 AM
  */
-class CreateClientOrganizationServiceIntegrationTest : AbstractClientOrganizationServiceIntegrationTest() {
+class ClientOrganizationCreateServiceIntegrationTest : AbstractClientOrganizationServiceIntegrationTest() {
     @Test
     fun `test create`() {
         // given
-        commonTestHelper.buildCreateClientOrganizationDto().let { dto ->
+        commonTestHelper.buildCreateClientOrganizationDto(
+                organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid
+        ).let { dto ->
             // when
             clientOrganizationService.create(dto).let { clientOrganization ->
                 // then
