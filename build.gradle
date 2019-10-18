@@ -115,6 +115,7 @@ allprojects {
             mavenBom("org.springframework.boot:spring-boot-dependencies:2.1.8.RELEASE") {
                 bomProperty("kotlin.version", kotlinVersion)
             }
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE'
         }
         dependencies {
             dependency("org.easymock:easymock:$easymockVersion")
@@ -255,7 +256,16 @@ project(":api:rest:rest-model") {
 
     dependencies {
         api project(":commons:api-models")
-        implementation "com.fasterxml.jackson.core:jackson-annotations"
+        api "com.fasterxml.jackson.core:jackson-annotations"
+    }
+}
+
+project(":api:rest:rest-client") {
+    apply plugin: 'maven'
+
+    dependencies {
+        api project(":api:rest:rest-model")
+        api "org.springframework.cloud:spring-cloud-starter-openfeign"
     }
 }
 
@@ -319,6 +329,7 @@ project(":api:rest:rest-resource-integration-test") {
     apply plugin: "kotlin-spring"
 
     dependencies {
+        implementation project(":api:rest:rest-client")
         implementation "org.springframework.boot:spring-boot-starter"
         testImplementation project(":api:rest:rest-resource")
         testImplementation project(":migration:migration-library")

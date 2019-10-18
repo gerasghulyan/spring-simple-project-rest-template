@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.conf
 
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
@@ -10,8 +11,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
  * Date: 10/2/19
  * Time: 11:46 AM
  */
-@TestConfiguration
-@ComponentScan("com.vntana.core", "com.vntana.core.rest.resource")
+@EnableFeignClients
+@ComponentScan("com.vntana.core")
 @EnableJpaRepositories("com.vntana.core")
 @EntityScan("com.vntana.core")
-class IntegrationTestConfiguration
+@TestConfiguration
+class WebIntegrationTestConfiguration
