@@ -36,6 +36,7 @@ class UserCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test create`() {
+        val organizationResponse: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restHelper.buildCreateUserRequest(organizationUuid = null))
         val createRequest = restHelper.buildCreateUserRequest()
         val response: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), createRequest)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)

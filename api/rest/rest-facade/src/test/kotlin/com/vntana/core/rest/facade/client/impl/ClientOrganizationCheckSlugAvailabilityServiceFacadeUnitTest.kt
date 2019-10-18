@@ -11,7 +11,7 @@ import java.util.*
  * Date: 10/9/19
  * Time: 3:54 PM
  */
-class CheckSlugAvailabilityClientOrganizationServiceFacadeImplTest : AbstractClientOrganizationServiceFacadeUnitTest() {
+class ClientOrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
     @Test
     fun `test checkSlugAvailability when is available at first iteration`() {
         // test data

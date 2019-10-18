@@ -13,7 +13,7 @@ import java.util.*
  * Date: 10/10/19
  * Time: 11:35 AM
  */
-class CreateClientOrganizationServiceFacadeImplTest : AbstractClientOrganizationServiceFacadeUnitTest() {
+class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
     @Test
     fun `test create when client organization already exists for slug`() {
         // test data
