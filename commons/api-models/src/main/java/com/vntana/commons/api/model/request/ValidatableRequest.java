@@ -1,6 +1,6 @@
-package com.vntana.core.api.models.request;
+package com.vntana.commons.api.model.request;
 
-import com.vntana.core.api.models.response.error.ErrorResponseModel;
+import com.vntana.commons.api.model.response.ErrorResponseModel;
 
 import java.util.ArrayList;
 import java.util.Collections;

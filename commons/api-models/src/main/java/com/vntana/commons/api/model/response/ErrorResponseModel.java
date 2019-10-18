@@ -1,4 +1,4 @@
-package com.vntana.core.api.models.response.error;
+package com.vntana.commons.api.model.response;
 
 /**
  * Created by Arthur Asatryan.

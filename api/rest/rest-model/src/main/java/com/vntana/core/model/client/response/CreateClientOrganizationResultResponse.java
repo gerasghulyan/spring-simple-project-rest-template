@@ -1,7 +1,7 @@
 package com.vntana.core.model.client.response;
 
+import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
-import com.vntana.core.model.commons.response.result.AbstractResultResponseModel;
 
 import java.util.List;
 

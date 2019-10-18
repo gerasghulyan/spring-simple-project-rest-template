@@ -1,6 +1,6 @@
 package com.vntana.core.model.organization.response;
 
-import com.vntana.core.model.commons.response.result.AbstractResultResponseModel;
+import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 
 import java.util.List;

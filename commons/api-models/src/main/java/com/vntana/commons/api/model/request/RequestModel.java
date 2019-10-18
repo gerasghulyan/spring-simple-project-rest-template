@@ -1,4 +1,4 @@
-package com.vntana.core.api.models.request;
+package com.vntana.commons.api.model.request;
 
 /**
  * Created by Arthur Asatryan.

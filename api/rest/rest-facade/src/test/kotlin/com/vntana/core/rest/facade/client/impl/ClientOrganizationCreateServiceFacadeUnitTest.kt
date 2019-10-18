@@ -46,7 +46,7 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.create(request)
         restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.response().uuid()).isEqualTo(clientOrganization.uuid)
+        assertThat(resultResponse.response().getUuid()).isEqualTo(clientOrganization.uuid)
         verifyAll()
     }
 }

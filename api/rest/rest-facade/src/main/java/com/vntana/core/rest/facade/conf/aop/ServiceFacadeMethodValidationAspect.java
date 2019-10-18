@@ -1,7 +1,7 @@
 package com.vntana.core.rest.facade.conf.aop;
 
-import com.vntana.core.api.models.request.ValidatableRequest;
-import com.vntana.core.model.commons.response.result.AbstractResultResponseModel;
+import com.vntana.commons.api.model.request.ValidatableRequest;
+import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

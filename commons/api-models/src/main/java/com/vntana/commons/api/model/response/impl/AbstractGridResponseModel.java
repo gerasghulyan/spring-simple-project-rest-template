@@ -1,8 +1,8 @@
-package com.vntana.core.model.commons.response.model;
+package com.vntana.commons.api.model.response.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vntana.core.api.models.response.grid.GridResponseModel;
-import com.vntana.core.api.models.response.single.ResponseModel;
+import com.vntana.commons.api.model.response.GridResponseModel;
+import com.vntana.commons.api.model.response.ResponseModel;
 
 import java.util.List;
 

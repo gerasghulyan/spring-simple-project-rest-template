@@ -37,7 +37,7 @@ class CreateUserServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
         // test scenario
         val resultResponse = userServiceFacade.create(request)
         restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.response().uuid()).isEqualTo(user.uuid)
+        assertThat(resultResponse.response().getUuid()).isEqualTo(user.uuid)
         verifyAll()
     }
 }

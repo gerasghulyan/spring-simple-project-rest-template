@@ -47,11 +47,11 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
                 "${targetUrl()}/organizations/create",
                 organizationRestTestHelper.buildCreateOrganizationRequest()
         )
-        val organizationUuid = response0.body!!.response().uuid()
+        val organizationUuid = response0.body!!.response().getUuid()
         val request = restTestHelper.buildCreateClientOrganizationRequest(organizationUuid = organizationUuid)
         val response: ResponseEntity<CreateClientOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body!!.success()).isTrue()
-        assertThat(response.body!!.response().uuid()).isNotBlank()
+        assertThat(response.body!!.response().getUuid()).isNotBlank()
     }
 }

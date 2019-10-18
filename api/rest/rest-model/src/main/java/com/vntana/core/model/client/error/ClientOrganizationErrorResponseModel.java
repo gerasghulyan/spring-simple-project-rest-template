@@ -1,6 +1,6 @@
 package com.vntana.core.model.client.error;
 
-import com.vntana.core.api.models.response.error.ErrorResponseModel;
+import com.vntana.commons.api.model.response.ErrorResponseModel;
 
 /**
  * Created by Arthur Asatryan.

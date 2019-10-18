@@ -1,7 +1,7 @@
 package com.vntana.core.model.client.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vntana.core.api.models.response.single.ResponseModel;
+import com.vntana.commons.api.model.response.ResponseModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

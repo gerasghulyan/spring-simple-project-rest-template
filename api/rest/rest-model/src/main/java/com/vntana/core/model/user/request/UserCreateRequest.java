@@ -1,8 +1,8 @@
 package com.vntana.core.model.user.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vntana.core.api.models.request.ValidatableRequest;
-import com.vntana.core.model.commons.request.AbstractRequestModel;
+import com.vntana.commons.api.model.request.ValidatableRequest;
+import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;

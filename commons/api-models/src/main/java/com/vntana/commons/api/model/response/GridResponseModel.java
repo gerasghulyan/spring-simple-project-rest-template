@@ -1,6 +1,4 @@
-package com.vntana.core.api.models.response.grid;
-
-import com.vntana.core.api.models.response.single.ResponseModel;
+package com.vntana.commons.api.model.response;
 
 import java.util.List;
 

@@ -243,6 +243,10 @@ project(":service:service-integration-test") {
 
 project(":commons:api-models") {
     apply plugin: 'maven'
+
+    dependencies {
+        api "com.fasterxml.jackson.core:jackson-annotations"
+    }
 }
 
 project(":api:rest:rest-model") {

@@ -1,6 +1,6 @@
-package com.vntana.core.model.commons.request;
+package com.vntana.commons.api.model.request.impl;
 
-import com.vntana.core.api.models.request.RequestModel;
+import com.vntana.commons.api.model.request.RequestModel;
 
 /**
  * Created by Arthur Asatryan.

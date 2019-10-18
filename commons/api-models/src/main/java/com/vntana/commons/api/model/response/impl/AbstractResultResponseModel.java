@@ -1,10 +1,10 @@
-package com.vntana.core.model.commons.response.result;
+package com.vntana.commons.api.model.response.impl;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vntana.core.api.models.response.ResultResponseModel;
-import com.vntana.core.api.models.response.error.ErrorResponseModel;
-import com.vntana.core.api.models.response.single.ResponseModel;
+import com.vntana.commons.api.model.response.ErrorResponseModel;
+import com.vntana.commons.api.model.response.ResponseModel;
+import com.vntana.commons.api.model.response.ResultResponseModel;
 
 import java.util.Collections;
 import java.util.List;

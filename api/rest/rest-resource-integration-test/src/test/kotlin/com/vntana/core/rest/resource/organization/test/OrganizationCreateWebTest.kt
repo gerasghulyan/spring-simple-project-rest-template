@@ -38,6 +38,6 @@ class OrganizationCreateWebTest : AbstractOrganizationWebTest() {
         val response: ResponseEntity<CreateOrganizationResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body!!.success()).isTrue()
-        assertThat(response.body!!.response().uuid()).isNotBlank()
+        assertThat(response.body!!.response().getUuid()).isNotBlank()
     }
 }

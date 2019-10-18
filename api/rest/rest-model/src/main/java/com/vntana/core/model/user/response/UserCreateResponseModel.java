@@ -1,6 +1,6 @@
 package com.vntana.core.model.user.response;
 
-import com.vntana.core.model.commons.response.model.AbstractUuidAwareResponseModel;
+import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel;
 
 /**
  * Created by Arthur Asatryan.

@@ -38,6 +38,6 @@ class UserCreateWebTest : AbstractUserWebTest() {
         val response: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), createRequest)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body!!.success()).isTrue()
-        assertThat(response.body!!.response().uuid()).isNotEmpty()
+        assertThat(response.body!!.response().getUuid()).isNotEmpty()
     }
 }

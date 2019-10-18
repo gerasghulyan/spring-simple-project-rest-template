@@ -1,7 +1,7 @@
 package com.vntana.core.helper.rest
 
-import com.vntana.core.api.models.response.ResultResponseModel
-import com.vntana.core.api.models.response.error.ErrorResponseModel
+import com.vntana.commons.api.model.response.ErrorResponseModel
+import com.vntana.commons.api.model.response.ResultResponseModel
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import org.assertj.core.api.Assertions.assertThat
 
