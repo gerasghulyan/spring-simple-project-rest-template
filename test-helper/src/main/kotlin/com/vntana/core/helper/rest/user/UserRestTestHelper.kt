@@ -10,11 +10,10 @@ import com.vntana.core.model.user.request.UserCreateRequest
  */
 class UserRestTestHelper : AbstractRestUnitTestHelper() {
     fun buildCreateUserRequest(
-            organizationUuid: String? = uuid(),
             clientName: String? = uuid(),
             clientSlug: String? = uuid(),
             fullName: String? = uuid(),
             email: String? = uuid(),
             password: String? = uuid()
-    ): UserCreateRequest = UserCreateRequest(organizationUuid, clientName, clientSlug, fullName, email, password)
+    ): UserCreateRequest = UserCreateRequest(clientName, clientSlug, fullName, email, password)
 }

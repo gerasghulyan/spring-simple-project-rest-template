@@ -1,7 +1,6 @@
 package com.vntana.core.rest.facade.user.impl;
 
-
-import com.vntana.core.domain.client.ClientOrganization;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.request.UserCreateRequest;
@@ -9,8 +8,8 @@ import com.vntana.core.model.user.response.UserCreateResponseModel;
 import com.vntana.core.model.user.response.UserCreateResultResponse;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
-import com.vntana.core.service.client.ClientOrganizationService;
-import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
+import com.vntana.core.service.organization.OrganizationService;
+import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.UserCreateDto;
 import ma.glasnost.orika.MapperFacade;
@@ -33,17 +32,17 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     private final UserService userService;
     private final MapperFacade mapperFacade;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
 
     public UserServiceFacadeImpl(final UserService userService,
                                  final MapperFacade mapperFacade,
-                                 final ClientOrganizationService clientOrganizationService,
+                                 final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.mapperFacade = mapperFacade;
-        this.clientOrganizationService = clientOrganizationService;
+        this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
     }
 
@@ -53,15 +52,15 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         Assert.notNull(request, "The USerCreateRequest should not be null");
         final Mutable<String> mutableUserUuid = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
-            LOGGER.debug("Creating a client organization for request - {}", request);
-            final ClientOrganization clientOrganization = clientOrganizationService.create(
-                    new CreateClientOrganizationDto(request.getClientName(), request.getClientSlug(), request.getOrganizationUuid())
+            LOGGER.debug("Creating a organization for request - {}", request);
+            final Organization organization = organizationService.create(
+                    new CreateOrganizationDto(request.getOrganizationName(), request.getOrganizationSlug())
             );
             final User user = userService.create(new UserCreateDto(
                     request.getFullName(),
                     request.getEmail(),
                     request.getPassword(),
-                    clientOrganization.getUuid(),
+                    organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN
             ));
             mutableUserUuid.setValue(user.getUuid());

@@ -11,5 +11,5 @@ import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 abstract class AbstractClientOrganizationWebTest : AbstractWebIntegrationTest() {
     protected val restTestHelper = ClientOrganizationRestTestHelper()
 
-    override fun baseMapping(): String = "http://localhost:${port}/clients"
+    override fun baseMapping(): String = "${targetUrl()}/clients"
 }

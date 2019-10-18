@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity
  * Date: 10/9/19
  * Time: 5:53 PM
  */
-class CheckSlugAvailabilityClientOrganizationWebTest : AbstractClientOrganizationWebTest() {
+class ClientOrganizationCheckSlugAvailabilityWebTest : AbstractClientOrganizationWebTest() {
     override fun endpointMapping(): String = baseMapping() + "/slug-availability"
 
     @Test

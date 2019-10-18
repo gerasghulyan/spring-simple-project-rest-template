@@ -3,7 +3,7 @@ package com.vntana.core.rest.facade.user.impl
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
-import com.vntana.core.service.client.dto.CreateClientOrganizationDto
+import com.vntana.core.service.organization.dto.CreateOrganizationDto
 import com.vntana.core.service.user.dto.UserCreateDto
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.*
@@ -19,19 +19,19 @@ class CreateUserServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
     fun `test create`() {
         // test data
         val request = restHelper.buildCreateUserRequest()
-        val clientOrganization = clientOrganizationHelper.buildClientOrganization()
+        val organization = organizationHelper.buildOrganization()
         val user = userHelper.buildUser()
         resetAll()
         // expectations
         expect(persistenceUtilityService.runInNewTransaction(isA(Executable::class.java)))
                 .andAnswer { (getCurrentArguments()[0] as Executable).execute() }
-        expect(clientOrganizationService.create(CreateClientOrganizationDto(request.clientName, request.clientSlug, request.organizationUuid))).andReturn(clientOrganization)
+        expect(organizationService.create(CreateOrganizationDto(request.organizationName, request.organizationSlug))).andReturn(organization)
         expect(userService.create(UserCreateDto(
                 request.fullName,
                 request.email,
                 request.password,
-                clientOrganization.uuid,
-                UserRole.CLIENT_ADMIN
+                organization.uuid,
+                UserRole.ORGANIZATION_ADMIN
         ))).andReturn(user)
         replayAll()
         // test scenario

@@ -20,8 +20,6 @@ class UserCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test create with invalid arguments`() {
-        val response0: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restHelper.buildCreateUserRequest(organizationUuid = null))
-        restHelper.assertBasicErrorResultResponse(response0.body!!, UserErrorResponseModel.MISSING_ORGANIZATION_UUID)
         val response1: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restHelper.buildCreateUserRequest(clientName = null))
         restHelper.assertBasicErrorResultResponse(response1.body!!, UserErrorResponseModel.MISSING_CLIENT_NAME)
         val response2: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restHelper.buildCreateUserRequest(clientSlug = null))
@@ -36,7 +34,6 @@ class UserCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test create`() {
-        val organizationResponse: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), restHelper.buildCreateUserRequest(organizationUuid = null))
         val createRequest = restHelper.buildCreateUserRequest()
         val response: ResponseEntity<UserCreateResultResponse> = testRestTemplate.postForEntity(endpointMapping(), createRequest)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)

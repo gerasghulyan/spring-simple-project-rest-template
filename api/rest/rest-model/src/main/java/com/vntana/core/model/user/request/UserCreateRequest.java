@@ -18,14 +18,11 @@ import java.util.List;
  */
 public class UserCreateRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
-    @JsonProperty("organizationUuid")
-    private String organizationUuid;
+    @JsonProperty("organizationName")
+    private String organizationName;
 
-    @JsonProperty("name")
-    private String clientName;
-
-    @JsonProperty("slug")
-    private String clientSlug;
+    @JsonProperty("organizationSlug")
+    private String organizationSlug;
 
     @JsonProperty("fullName")
     private String fullName;
@@ -39,10 +36,9 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     public UserCreateRequest() {
     }
 
-    public UserCreateRequest(final String organizationUuid, final String clientName, final String clientSlug, final String fullName, final String email, final String password) {
-        this.organizationUuid = organizationUuid;
-        this.clientName = clientName;
-        this.clientSlug = clientSlug;
+    public UserCreateRequest(final String organizationName, final String organizationSlug, final String fullName, final String email, final String password) {
+        this.organizationName = organizationName;
+        this.organizationSlug = organizationSlug;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
@@ -51,13 +47,10 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     @Override
     public List<UserErrorResponseModel> validate() {
         final List<UserErrorResponseModel> errors = initializeNew();
-        if (StringUtils.isBlank(organizationUuid)) {
-            errors.add(UserErrorResponseModel.MISSING_ORGANIZATION_UUID);
-        }
-        if (StringUtils.isBlank(clientName)) {
+        if (StringUtils.isBlank(organizationName)) {
             errors.add(UserErrorResponseModel.MISSING_CLIENT_NAME);
         }
-        if (StringUtils.isBlank(clientSlug)) {
+        if (StringUtils.isBlank(organizationSlug)) {
             errors.add(UserErrorResponseModel.MISSING_CLIENT_SLUG);
         }
         if (StringUtils.isBlank(fullName)) {
@@ -82,9 +75,8 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
         }
         final UserCreateRequest that = (UserCreateRequest) o;
         return new EqualsBuilder()
-                .append(organizationUuid, that.organizationUuid)
-                .append(clientName, that.clientName)
-                .append(clientSlug, that.clientSlug)
+                .append(organizationName, that.organizationName)
+                .append(organizationSlug, that.organizationSlug)
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(password, that.password)
@@ -94,9 +86,8 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(organizationUuid)
-                .append(clientName)
-                .append(clientSlug)
+                .append(organizationName)
+                .append(organizationSlug)
                 .append(fullName)
                 .append(email)
                 .append(password)
@@ -106,36 +97,27 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("organizationUuid", organizationUuid)
-                .append("clientName", clientName)
-                .append("clientSlug", clientSlug)
+                .append("clientName", organizationName)
+                .append("clientSlug", organizationSlug)
                 .append("fullName", fullName)
                 .append("email", email)
                 .toString();
     }
 
-    public String getOrganizationUuid() {
-        return organizationUuid;
+    public String getOrganizationName() {
+        return organizationName;
     }
 
-    public void setOrganizationUuid(final String organizationUuid) {
-        this.organizationUuid = organizationUuid;
+    public void setOrganizationName(final String organizationName) {
+        this.organizationName = organizationName;
     }
 
-    public String getClientName() {
-        return clientName;
+    public String getOrganizationSlug() {
+        return organizationSlug;
     }
 
-    public void setClientName(final String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientSlug() {
-        return clientSlug;
-    }
-
-    public void setClientSlug(final String clientSlug) {
-        this.clientSlug = clientSlug;
+    public void setOrganizationSlug(final String organizationSlug) {
+        this.organizationSlug = organizationSlug;
     }
 
     public String getFullName() {

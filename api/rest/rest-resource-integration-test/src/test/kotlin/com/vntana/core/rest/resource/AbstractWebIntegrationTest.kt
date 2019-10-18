@@ -29,6 +29,8 @@ abstract class AbstractWebIntegrationTest : AbstractTransactionalJUnit4SpringCon
 
     fun uuid(): String = UUID.randomUUID().toString()
 
+    fun targetUrl(): String = "http://localhost:${port}"
+
     abstract fun baseMapping(): String
 
     abstract fun endpointMapping(): String
