@@ -306,6 +306,7 @@ project(":api:rest:rest-resource-executable") {
 
     dependencies {
         implementation project(":api:rest:rest-resource")
+        implementation 'org.springframework.data:spring-data-jpa'
         implementation "io.springfox:springfox-swagger2:$springFoxSwaggerVersion"
         implementation "io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion"
         implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
