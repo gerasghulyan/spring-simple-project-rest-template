@@ -1,7 +1,7 @@
 package com.vntana.core.rest.client.user;
 
-import com.vntana.core.model.user.request.UserCreateRequest;
-import com.vntana.core.model.user.response.UserCreateResultResponse;
+import com.vntana.core.model.user.request.CreateUserRequest;
+import com.vntana.core.model.user.response.CreateUserResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,5 +14,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "coreUsers", path = "users", url = "${ms.core.url}")
 public interface UserResourceClient {
     @PostMapping(path = "/create")
-    UserCreateResultResponse createUser(@RequestBody final UserCreateRequest request);
+    CreateUserResultResponse createUser(@RequestBody final CreateUserRequest request);
 }

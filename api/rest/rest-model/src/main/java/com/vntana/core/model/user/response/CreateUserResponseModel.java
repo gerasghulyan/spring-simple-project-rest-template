@@ -7,13 +7,13 @@ import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel
  * Date: 10/1/19
  * Time: 6:43 PM
  */
-public class UserCreateResponseModel extends AbstractUuidAwareResponseModel {
+public class CreateUserResponseModel extends AbstractUuidAwareResponseModel {
 
-    private UserCreateResponseModel() {
+    private CreateUserResponseModel() {
         super();
     }
 
-    public UserCreateResponseModel(final String uuid) {
+    public CreateUserResponseModel(final String uuid) {
         super(uuid);
     }
 }

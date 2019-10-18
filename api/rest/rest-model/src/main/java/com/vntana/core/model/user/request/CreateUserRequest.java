@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 10/1/19
  * Time: 6:40 PM
  */
-public class UserCreateRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
+public class CreateUserRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
     @JsonProperty("organizationName")
     private String organizationName;
@@ -33,10 +33,10 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
     @JsonProperty("password")
     private String password;
 
-    public UserCreateRequest() {
+    public CreateUserRequest() {
     }
 
-    public UserCreateRequest(final String organizationName, final String organizationSlug, final String fullName, final String email, final String password) {
+    public CreateUserRequest(final String organizationName, final String organizationSlug, final String fullName, final String email, final String password) {
         this.organizationName = organizationName;
         this.organizationSlug = organizationSlug;
         this.fullName = fullName;
@@ -70,10 +70,10 @@ public class UserCreateRequest extends AbstractRequestModel implements Validatab
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserCreateRequest)) {
+        if (!(o instanceof CreateUserRequest)) {
             return false;
         }
-        final UserCreateRequest that = (UserCreateRequest) o;
+        final CreateUserRequest that = (CreateUserRequest) o;
         return new EqualsBuilder()
                 .append(organizationName, that.organizationName)
                 .append(organizationSlug, that.organizationSlug)

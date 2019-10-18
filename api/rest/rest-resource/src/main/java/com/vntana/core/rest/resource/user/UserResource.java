@@ -1,7 +1,7 @@
 package com.vntana.core.rest.resource.user;
 
-import com.vntana.core.model.user.request.UserCreateRequest;
-import com.vntana.core.model.user.response.UserCreateResultResponse;
+import com.vntana.core.model.user.request.CreateUserRequest;
+import com.vntana.core.model.user.response.CreateUserResultResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,9 @@ public class UserResource {
     }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<UserCreateResultResponse> createUser(@RequestBody final UserCreateRequest request) {
+    public ResponseEntity<CreateUserResultResponse> createUser(@RequestBody final CreateUserRequest request) {
         LOGGER.debug("Processing resource create for request - {}", request);
-        final UserCreateResultResponse resultResponse = userServiceFacade.create(request);
+        final CreateUserResultResponse resultResponse = userServiceFacade.create(request);
         LOGGER.debug("Successfully processed resource create for request - {}", request);
         return ResponseEntity.ok(resultResponse);
     }

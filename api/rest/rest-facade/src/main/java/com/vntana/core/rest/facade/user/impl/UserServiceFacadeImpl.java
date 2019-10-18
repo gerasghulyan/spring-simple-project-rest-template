@@ -3,9 +3,9 @@ package com.vntana.core.rest.facade.user.impl;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
-import com.vntana.core.model.user.request.UserCreateRequest;
-import com.vntana.core.model.user.response.UserCreateResponseModel;
-import com.vntana.core.model.user.response.UserCreateResultResponse;
+import com.vntana.core.model.user.request.CreateUserRequest;
+import com.vntana.core.model.user.response.CreateUserResponseModel;
+import com.vntana.core.model.user.response.CreateUserResultResponse;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.service.organization.OrganizationService;
@@ -47,7 +47,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     }
 
     @Override
-    public UserCreateResultResponse create(final UserCreateRequest request) {
+    public CreateUserResultResponse create(final CreateUserRequest request) {
         LOGGER.debug("Processing Facade createUser method for request - {}", request);
         Assert.notNull(request, "The USerCreateRequest should not be null");
         final Mutable<String> mutableUserUuid = new MutableObject<>();
@@ -66,6 +66,6 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             mutableUserUuid.setValue(user.getUuid());
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
-        return new UserCreateResultResponse(new UserCreateResponseModel(mutableUserUuid.getValue()));
+        return new CreateUserResultResponse(new CreateUserResponseModel(mutableUserUuid.getValue()));
     }
 }
