@@ -12,23 +12,21 @@ import org.junit.Test
  */
 class OrganizationCreateWebTest : AbstractOrganizationWebTest() {
 
-    override fun endpointMapping(): String = baseMapping() + "/create"
-
     @Test
     fun `test create with invalid arguments`() {
         val response1 = organizationResourceClient.create(
-                restTestHelper.buildCreateOrganizationRequest(slug = null)
+                restHelper.buildCreateOrganizationRequest(slug = null)
         )
-        restTestHelper.assertBasicErrorResultResponse(response1, OrganizationErrorResponseModel.MISSING_SLUG)
+        restHelper.assertBasicErrorResultResponse(response1, OrganizationErrorResponseModel.MISSING_SLUG)
         val response2 = organizationResourceClient.create(
-                restTestHelper.buildCreateOrganizationRequest(name = null)
+                restHelper.buildCreateOrganizationRequest(name = null)
         )
-        restTestHelper.assertBasicErrorResultResponse(response2, OrganizationErrorResponseModel.MISSING_NAME)
+        restHelper.assertBasicErrorResultResponse(response2, OrganizationErrorResponseModel.MISSING_NAME)
     }
 
     @Test
     fun `test create`() {
-        val request = restTestHelper.buildCreateOrganizationRequest()
+        val request = restHelper.buildCreateOrganizationRequest()
         val response = organizationResourceClient.create(request)
         assertThat(response.success()).isTrue()
         assertThat(response.response().uuid).isNotBlank()

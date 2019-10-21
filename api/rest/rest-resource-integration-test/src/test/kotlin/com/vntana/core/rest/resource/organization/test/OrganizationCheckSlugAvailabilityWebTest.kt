@@ -11,20 +11,18 @@ import org.junit.Test
  * Time: 5:53 PM
  */
 class OrganizationCheckSlugAvailabilityWebTest : AbstractOrganizationWebTest() {
-    override fun endpointMapping(): String = baseMapping() + "/slug-availability"
-
     @Test
     fun `test checkSlugAvailability when slug is missing`() {
-        val request = restTestHelper.buildCheckAvailableOrganizationSlugRequest(slug = null)
+        val request = restHelper.buildCheckAvailableOrganizationSlugRequest(slug = null)
         val response = organizationResourceClient.checkSlugAvailability(request)
-        restTestHelper.assertBasicErrorResultResponse(response, OrganizationErrorResponseModel.MISSING_SLUG)
+        restHelper.assertBasicErrorResultResponse(response, OrganizationErrorResponseModel.MISSING_SLUG)
     }
 
     @Test
     fun `test checkSlugAvailability`() {
-        val request = restTestHelper.buildCheckAvailableOrganizationSlugRequest()
+        val request = restHelper.buildCheckAvailableOrganizationSlugRequest()
         val response = organizationResourceClient.checkSlugAvailability(request)
-        assertThat(response.success()).isTrue()
+        restHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().isAvailable).isTrue()
         assertThat(response.response().suggested).isEqualTo(request.slug)
     }

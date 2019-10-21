@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
     protected val restHelper: UserRestTestHelper = UserRestTestHelper()
 
-    override fun baseMapping(): String = "http://localhost:${port}/users/"
-
     @Autowired
     protected lateinit var userResourceClient: UserResourceClient
 }

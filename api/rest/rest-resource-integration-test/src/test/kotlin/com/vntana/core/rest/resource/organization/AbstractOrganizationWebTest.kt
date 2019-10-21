@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
  * Time: 5:51 PM
  */
 abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
-    protected val restTestHelper = OrganizationRestTestHelper()
-
-    override fun baseMapping(): String = "${targetUrl()}/organizations"
+    protected val restHelper = OrganizationRestTestHelper()
 
     @Autowired
     protected lateinit var organizationResourceClient: OrganizationResourceClient

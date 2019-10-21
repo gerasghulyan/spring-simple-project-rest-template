@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
  * Time: 5:51 PM
  */
 abstract class AbstractClientOrganizationWebTest : AbstractWebIntegrationTest() {
-    protected val restTestHelper = ClientOrganizationRestTestHelper()
-
-    override fun baseMapping(): String = "${targetUrl()}/clients"
+    protected val restHelper = ClientOrganizationRestTestHelper()
 
     @Autowired
     protected lateinit var clientOrganizationResourceClient: ClientOrganizationResourceClient

@@ -15,22 +15,20 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
 
     private val organizationRestTestHelper = OrganizationRestTestHelper()
 
-    override fun endpointMapping(): String = baseMapping() + "/create"
-
     @Test
     fun `test create with invalid arguments`() {
         val response0 = clientOrganizationResourceClient.create(
-                restTestHelper.buildCreateClientOrganizationRequest(organizationUuid = null)
+                restHelper.buildCreateClientOrganizationRequest(organizationUuid = null)
         )
-        restTestHelper.assertBasicErrorResultResponse(response0, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
+        restHelper.assertBasicErrorResultResponse(response0, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
         val response1 = clientOrganizationResourceClient.create(
-                restTestHelper.buildCreateClientOrganizationRequest(slug = null)
+                restHelper.buildCreateClientOrganizationRequest(slug = null)
         )
-        restTestHelper.assertBasicErrorResultResponse(response1, ClientOrganizationErrorResponseModel.MISSING_SLUG)
+        restHelper.assertBasicErrorResultResponse(response1, ClientOrganizationErrorResponseModel.MISSING_SLUG)
         val response2 = clientOrganizationResourceClient.create(
-                restTestHelper.buildCreateClientOrganizationRequest(name = null)
+                restHelper.buildCreateClientOrganizationRequest(name = null)
         )
-        restTestHelper.assertBasicErrorResultResponse(response2, ClientOrganizationErrorResponseModel.MISSING_NAME)
+        restHelper.assertBasicErrorResultResponse(response2, ClientOrganizationErrorResponseModel.MISSING_NAME)
     }
 
     @Test
@@ -39,9 +37,9 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
                 organizationRestTestHelper.buildCreateOrganizationRequest()
         )
         val organizationUuid = response0.response().uuid
-        val request = restTestHelper.buildCreateClientOrganizationRequest(organizationUuid = organizationUuid)
+        val request = restHelper.buildCreateClientOrganizationRequest(organizationUuid = organizationUuid)
         val response = clientOrganizationResourceClient.create(request)
-        assertThat(response.success()).isTrue()
+        restHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isNotBlank()
     }
 }

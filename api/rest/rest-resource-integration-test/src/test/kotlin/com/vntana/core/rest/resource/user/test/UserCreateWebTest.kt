@@ -12,8 +12,6 @@ import org.junit.Test
  */
 class UserCreateWebTest : AbstractUserWebTest() {
 
-    override fun endpointMapping(): String = baseMapping() + "/create"
-
     @Test
     fun `test create with invalid arguments`() {
         val response1 = userResourceClient.createUser(restHelper.buildCreateUserRequest(clientName = null))
@@ -32,7 +30,7 @@ class UserCreateWebTest : AbstractUserWebTest() {
     fun `test create`() {
         val createRequest = restHelper.buildCreateUserRequest()
         val response = userResourceClient.createUser(createRequest)
-        assertThat(response.success()).isTrue()
+        restHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isNotEmpty()
     }
 }

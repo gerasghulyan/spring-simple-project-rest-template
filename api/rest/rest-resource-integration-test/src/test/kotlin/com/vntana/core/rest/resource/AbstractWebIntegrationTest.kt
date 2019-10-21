@@ -24,10 +24,4 @@ abstract class AbstractWebIntegrationTest {
     var port: Int = 0
 
     fun uuid(): String = UUID.randomUUID().toString()
-
-    fun targetUrl(): String = "http://localhost:${port}"
-
-    abstract fun baseMapping(): String
-
-    abstract fun endpointMapping(): String
 }

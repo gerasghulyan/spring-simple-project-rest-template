@@ -1,7 +1,9 @@
 package com.vntana.core.rest.client.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
+import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.response.CreateUserResultResponse;
+import com.vntana.core.model.user.response.FindUserByEmailResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,4 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserResourceClient {
     @PostMapping(path = "/create")
     CreateUserResultResponse createUser(@RequestBody final CreateUserRequest request);
+
+    @PostMapping(path = "/by-email")
+    FindUserByEmailResultResponse findByEmail(final FindUserByEmailRequest request);
 }
