@@ -14,4 +14,6 @@ public interface UserService {
     User create(final CreateUserDto dto);
 
     Optional<User> findByEmail(final String email);
+
+    Optional<User> findByUuid(final String uuid);
 }

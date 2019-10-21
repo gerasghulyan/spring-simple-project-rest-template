@@ -12,6 +12,5 @@ import java.util.*
  */
 @RunWith(EasyMockRunner::class)
 abstract class AbstractServiceUnitTest : EasyMockSupport() {
-
     fun uuid(): String = UUID.randomUUID().toString()
 }

@@ -56,6 +56,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public Optional<User> findByUuid(final String uuid) {
+        Assert.notNull(uuid, "The user uuid should not be null");
+        return userRepository.findByUuid(uuid);
+    }
+
     private void assertCreateDto(final CreateUserDto dto) {
         Assert.notNull(dto, "The user creation dto should not be null");
         Assert.hasText(dto.getFullName(), "The user full name should not be null or empty");

@@ -12,7 +12,7 @@ import org.junit.Test
  */
 class OrganizationCheckSlugAvailabilityWebTest : AbstractOrganizationWebTest() {
     @Test
-    fun `test checkSlugAvailability when slug is missing`() {
+    fun `test checkSlugAvailability with invalid arguments`() {
         val request = restHelper.buildCheckAvailableOrganizationSlugRequest(slug = null)
         val response = organizationResourceClient.checkSlugAvailability(request)
         restHelper.assertBasicErrorResultResponse(response, OrganizationErrorResponseModel.MISSING_SLUG)
