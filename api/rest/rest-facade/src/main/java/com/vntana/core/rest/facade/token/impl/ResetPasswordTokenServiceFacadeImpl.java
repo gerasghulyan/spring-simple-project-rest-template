@@ -4,8 +4,7 @@ import com.vntana.core.model.token.error.TokenErrorResponseModel;
 import com.vntana.core.model.token.request.ResetPasswordRequest;
 import com.vntana.core.model.token.response.ResetPasswordResultResponse;
 import com.vntana.core.rest.facade.token.ResetPasswordTokenServiceFacade;
-import com.vntana.core.service.token.ResetPasswordTokenService;
-import com.vntana.core.service.token.dto.CreateResetPasswordTokenDto;
+import com.vntana.core.rest.facade.token.component.CreateResetPasswordTokenMediator;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +24,19 @@ public class ResetPasswordTokenServiceFacadeImpl implements ResetPasswordTokenSe
 
     private final UserService userService;
 
-    private final ResetPasswordTokenService resetPasswordTokenService;
+    private final CreateResetPasswordTokenMediator createResetPasswordTokenMediator;
 
-    public ResetPasswordTokenServiceFacadeImpl(final UserService userService, final ResetPasswordTokenService resetPasswordTokenService) {
+    public ResetPasswordTokenServiceFacadeImpl(final UserService userService, final CreateResetPasswordTokenMediator createResetPasswordTokenMediator) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
-        this.resetPasswordTokenService = resetPasswordTokenService;
+        this.createResetPasswordTokenMediator = createResetPasswordTokenMediator;
     }
 
     @Override
     public ResetPasswordResultResponse reset(final ResetPasswordRequest request) {
         return userService.findByEmail(request.getEmail())
                 .map(user -> {
-                    resetPasswordTokenService.create(new CreateResetPasswordTokenDto(user.getUuid()));
+                    createResetPasswordTokenMediator.create(user.getUuid());
                     return new ResetPasswordResultResponse();
                 })
                 .orElseGet(() -> new ResetPasswordResultResponse(Collections.singletonList(TokenErrorResponseModel.USER_NOT_FOUND)));

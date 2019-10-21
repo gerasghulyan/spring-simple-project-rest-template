@@ -2,7 +2,11 @@ package com.vntana.core.rest.facade.token.impl
 
 import com.vntana.core.model.token.error.TokenErrorResponseModel
 import com.vntana.core.rest.facade.token.AbstractTokenServiceFacadeUnitTest
+import com.vntana.core.rest.facade.token.ResetPasswordTokenServiceFacade
+import com.vntana.core.rest.facade.token.component.CreateResetPasswordTokenMediator
 import org.easymock.EasyMock.expect
+import org.easymock.Mock
+import org.junit.Before
 import org.junit.Test
 import java.util.*
 
@@ -12,6 +16,17 @@ import java.util.*
  * Time: 3:31 PM
  */
 class ResetPasswordTokenResetServiceFacadeUnitTest : AbstractTokenServiceFacadeUnitTest() {
+
+    private lateinit var resetPasswordTokenServiceFacade: ResetPasswordTokenServiceFacade
+
+    @Mock
+    private lateinit var createResetPasswordTokenMediator: CreateResetPasswordTokenMediator
+
+    @Before
+    fun beforeThis() {
+        resetPasswordTokenServiceFacade = ResetPasswordTokenServiceFacadeImpl(userService, createResetPasswordTokenMediator)
+    }
+
     @Test
     fun `test reset when user not found`() {
         // test data
@@ -31,10 +46,9 @@ class ResetPasswordTokenResetServiceFacadeUnitTest : AbstractTokenServiceFacadeU
         resetAll()
         val request = restTestHelper.buildResetPasswordRequest()
         val user = userUnitTestHelper.buildUser()
-        val resetPasswordToken = unitTestHelper.buildResetPasswordToken()
         // expectations
         expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
-        expect(resetPasswordTokenService.create(unitTestHelper.buildCreateResetPasswordTokenDto(userUuid = user.uuid))).andReturn(resetPasswordToken)
+        createResetPasswordTokenMediator.create(user.uuid)
         replayAll()
         // test scenario
         restTestHelper.assertBasicSuccessResultResponse(resetPasswordTokenServiceFacade.reset(request))
