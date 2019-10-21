@@ -1,13 +1,9 @@
 package com.vntana.core.rest.resource.client.test
 
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel
-import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse
 import com.vntana.core.rest.resource.client.AbstractClientOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.springframework.boot.test.web.client.postForEntity
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 
 /**
  * Created by Arthur Asatryan.
@@ -20,17 +16,16 @@ class ClientOrganizationCheckSlugAvailabilityWebTest : AbstractClientOrganizatio
     @Test
     fun `test checkSlugAvailability when slug is missing`() {
         val request = restTestHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = null)
-        val response: ResponseEntity<CheckAvailableClientOrganizationSlugResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
-        restTestHelper.assertBasicErrorResultResponse(response.body!!, ClientOrganizationErrorResponseModel.MISSING_SLUG)
+        val response = clientOrganizationResourceClient.checkSlugAvailability(request)
+        restTestHelper.assertBasicErrorResultResponse(response, ClientOrganizationErrorResponseModel.MISSING_SLUG)
     }
 
     @Test
     fun `test checkSlugAvailability`() {
         val request = restTestHelper.buildCheckAvailableClientOrganizationSlugRequest()
-        val response: ResponseEntity<CheckAvailableClientOrganizationSlugResultResponse> = testRestTemplate.postForEntity(endpointMapping(), request)
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body!!.success()).isTrue()
-        assertThat(response.body!!.response().isAvailable).isTrue()
-        assertThat(response.body!!.response().suggested).isEqualTo(request.slug)
+        val response = clientOrganizationResourceClient.checkSlugAvailability(request)
+        assertThat(response.success()).isTrue()
+        assertThat(response.response().isAvailable).isTrue()
+        assertThat(response.response().suggested).isEqualTo(request.slug)
     }
 }

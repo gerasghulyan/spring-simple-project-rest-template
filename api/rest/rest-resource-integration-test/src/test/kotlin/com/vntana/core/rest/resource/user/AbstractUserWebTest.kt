@@ -1,7 +1,7 @@
 package com.vntana.core.rest.resource.user
 
-import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.rest.user.UserRestTestHelper
+import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -16,5 +16,5 @@ abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
     override fun baseMapping(): String = "http://localhost:${port}/users/"
 
     @Autowired
-    protected lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper
+    protected lateinit var userResourceClient: UserResourceClient
 }

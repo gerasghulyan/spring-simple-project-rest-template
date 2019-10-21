@@ -35,7 +35,7 @@ public class OrganizationResource {
     }
 
     @PostMapping(path = "/slug-availability")
-    public ResponseEntity<CheckAvailableOrganizationSlugResultResponse> createUser(@RequestBody final CheckAvailableOrganizationSlugRequest request) {
+    public ResponseEntity<CheckAvailableOrganizationSlugResultResponse> checkSlugAvailability(@RequestBody final CheckAvailableOrganizationSlugRequest request) {
         LOGGER.debug("Checking slug availability for request - {}", request);
         final CheckAvailableOrganizationSlugResultResponse resultResponse = organizationServiceFacade.checkSlugAvailability(request);
         LOGGER.debug("Successfully checked slug availability with response - {}", resultResponse);
@@ -43,7 +43,7 @@ public class OrganizationResource {
     }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<CreateOrganizationResultResponse> createUser(@RequestBody final CreateOrganizationRequest request) {
+    public ResponseEntity<CreateOrganizationResultResponse> create(@RequestBody final CreateOrganizationRequest request) {
         LOGGER.debug("Creating organization for request - {}", request);
         final CreateOrganizationResultResponse resultResponse = organizationServiceFacade.create(request);
         LOGGER.debug("Successfully created organization with response - {}", resultResponse);

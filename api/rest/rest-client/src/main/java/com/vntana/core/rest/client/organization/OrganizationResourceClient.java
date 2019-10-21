@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "coreOrganizations", path = "organizations", url = "${ms.core.url}")
 public interface OrganizationResourceClient {
     @PostMapping(path = "/slug-availability")
-    CheckAvailableOrganizationSlugResultResponse createUser(@RequestBody final CheckAvailableOrganizationSlugRequest request);
+    CheckAvailableOrganizationSlugResultResponse checkSlugAvailability(@RequestBody final CheckAvailableOrganizationSlugRequest request);
 
     @PostMapping(path = "/create")
-    CreateOrganizationResultResponse createUser(@RequestBody final CreateOrganizationRequest request);
+    CreateOrganizationResultResponse create(@RequestBody final CreateOrganizationRequest request);
 }
