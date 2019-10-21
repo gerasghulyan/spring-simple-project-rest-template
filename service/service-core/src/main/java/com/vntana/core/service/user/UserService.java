@@ -1,7 +1,9 @@
 package com.vntana.core.service.user;
 
 import com.vntana.core.domain.user.User;
-import com.vntana.core.service.user.dto.UserCreateDto;
+import com.vntana.core.service.user.dto.CreateUserDto;
+
+import java.util.Optional;
 
 /**
  * Created by Arthur Asatryan.
@@ -9,5 +11,7 @@ import com.vntana.core.service.user.dto.UserCreateDto;
  * Time: 6:36 PM
  */
 public interface UserService {
-    User create(final UserCreateDto dto);
+    User create(final CreateUserDto dto);
+
+    Optional<User> findByEmail(final String email);
 }

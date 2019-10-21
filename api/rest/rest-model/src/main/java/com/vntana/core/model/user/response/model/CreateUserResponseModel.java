@@ -1,4 +1,4 @@
-package com.vntana.core.model.user.response;
+package com.vntana.core.model.user.response.model;
 
 import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel;
 

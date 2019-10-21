@@ -1,7 +1,9 @@
 package com.vntana.core.rest.resource.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
+import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.response.CreateUserResultResponse;
+import com.vntana.core.model.user.response.FindUserByEmailResultResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,14 @@ public class UserResource {
         LOGGER.debug("Processing resource create for request - {}", request);
         final CreateUserResultResponse resultResponse = userServiceFacade.create(request);
         LOGGER.debug("Successfully processed resource create for request - {}", request);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @PostMapping(path = "/by-email")
+    public ResponseEntity<FindUserByEmailResultResponse> createUser(@RequestBody final FindUserByEmailRequest request) {
+        LOGGER.debug("Processing find user by email request - {}", request);
+        final FindUserByEmailResultResponse resultResponse = userServiceFacade.findByEmail(request);
+        LOGGER.debug("Successfully proceeded find user by email request with response - {}", resultResponse);
         return ResponseEntity.ok(resultResponse);
     }
 }

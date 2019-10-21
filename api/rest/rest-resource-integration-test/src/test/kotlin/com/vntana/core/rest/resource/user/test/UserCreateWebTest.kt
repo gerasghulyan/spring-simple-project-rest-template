@@ -36,8 +36,8 @@ class UserCreateWebTest : AbstractUserWebTest() {
     fun `test create`() {
         val createRequest = restHelper.buildCreateUserRequest()
         val response: ResponseEntity<CreateUserResultResponse> = testRestTemplate.postForEntity(endpointMapping(), createRequest)
+        restHelper.assertBasicSuccessResultResponse(response.body!!)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body!!.success()).isTrue()
-        assertThat(response.body!!.response().getUuid()).isNotEmpty()
+        assertThat(response.body!!.response().uuid).isNotEmpty()
     }
 }

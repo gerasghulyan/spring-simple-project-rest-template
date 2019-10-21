@@ -3,15 +3,18 @@ package com.vntana.core.rest.facade.user.impl;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.CreateUserRequest;
-import com.vntana.core.model.user.response.CreateUserResponseModel;
+import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.response.CreateUserResultResponse;
+import com.vntana.core.model.user.response.FindUserByEmailResultResponse;
+import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.user.UserService;
-import com.vntana.core.service.user.dto.UserCreateDto;
+import com.vntana.core.service.user.dto.CreateUserDto;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -19,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
+import java.util.Collections;
 
 /**
  * Created by Arthur Asatryan.
@@ -56,7 +61,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             final Organization organization = organizationService.create(
                     new CreateOrganizationDto(request.getOrganizationName(), request.getOrganizationSlug())
             );
-            final User user = userService.create(new UserCreateDto(
+            final User user = userService.create(new CreateUserDto(
                     request.getFullName(),
                     request.getEmail(),
                     request.getPassword(),
@@ -67,5 +72,12 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
         return new CreateUserResultResponse(new CreateUserResponseModel(mutableUserUuid.getValue()));
+    }
+
+    @Override
+    public FindUserByEmailResultResponse findByEmail(final FindUserByEmailRequest request) {
+        return userService.findByEmail(request.getEmail())
+                .map(user -> new FindUserByEmailResultResponse(true))
+                .orElseGet(() -> new FindUserByEmailResultResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
     }
 }

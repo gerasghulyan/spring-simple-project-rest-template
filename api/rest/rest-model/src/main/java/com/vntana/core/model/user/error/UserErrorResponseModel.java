@@ -12,5 +12,6 @@ public enum UserErrorResponseModel implements ErrorResponseModel {
     MISSING_CLIENT_SLUG,
     MISSING_FULL_NAME,
     MISSING_EMAIL,
-    MISSING_PASSWORD
+    MISSING_PASSWORD,
+    NOT_FOUND_FOR_EMAIL
 }

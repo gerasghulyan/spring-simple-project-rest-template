@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 10/3/19
  * Time: 6:38 PM
  */
-public class UserCreateDto {
+public class CreateUserDto {
 
     private final String fullName;
 
@@ -22,7 +22,7 @@ public class UserCreateDto {
 
     private final UserRole role;
 
-    public UserCreateDto(final String fullName, final String email, final String password, final String organizationUuid, final UserRole role) {
+    public CreateUserDto(final String fullName, final String email, final String password, final String organizationUuid, final UserRole role) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
@@ -35,10 +35,10 @@ public class UserCreateDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserCreateDto)) {
+        if (!(o instanceof CreateUserDto)) {
             return false;
         }
-        final UserCreateDto that = (UserCreateDto) o;
+        final CreateUserDto that = (CreateUserDto) o;
         return new EqualsBuilder()
                 .append(fullName, that.fullName)
                 .append(email, that.email)

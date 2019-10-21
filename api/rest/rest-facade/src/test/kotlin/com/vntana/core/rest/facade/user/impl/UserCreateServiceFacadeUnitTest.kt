@@ -4,7 +4,7 @@ import com.vntana.core.domain.user.UserRole
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
-import com.vntana.core.service.user.dto.UserCreateDto
+import com.vntana.core.service.user.dto.CreateUserDto
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.*
 import org.junit.Test
@@ -14,7 +14,7 @@ import org.junit.Test
  * Date: 10/11/19
  * Time: 4:38 PM
  */
-class CreateUserServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
+class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
     @Test
     fun `test create`() {
         // test data
@@ -26,7 +26,7 @@ class CreateUserServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
         expect(persistenceUtilityService.runInNewTransaction(isA(Executable::class.java)))
                 .andAnswer { (getCurrentArguments()[0] as Executable).execute() }
         expect(organizationService.create(CreateOrganizationDto(request.organizationName, request.organizationSlug))).andReturn(organization)
-        expect(userService.create(UserCreateDto(
+        expect(userService.create(CreateUserDto(
                 request.fullName,
                 request.email,
                 request.password,

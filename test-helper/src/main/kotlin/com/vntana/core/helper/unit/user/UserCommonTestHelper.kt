@@ -5,7 +5,7 @@ import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
-import com.vntana.core.service.user.dto.UserCreateDto
+import com.vntana.core.service.user.dto.CreateUserDto
 
 /**
  * Created by Arthur Asatryan.
@@ -22,7 +22,7 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
             password: String? = uuid(),
             organizationUuid: String? = uuid(),
             role: UserRole? = UserRole.CLIENT_ADMIN
-    ): UserCreateDto = UserCreateDto(fullName, email, password, organizationUuid, role)
+    ): CreateUserDto = CreateUserDto(fullName, email, password, organizationUuid, role)
 
     fun buildUser(
             fullName: String? = uuid(),
