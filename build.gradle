@@ -256,7 +256,7 @@ project(":api:rest:rest-model") {
     apply plugin: 'maven'
 
     dependencies {
-        api project(":commons:api-models")
+        compile project(":commons:api-models")
         api "com.fasterxml.jackson.core:jackson-annotations"
     }
 }
@@ -265,8 +265,8 @@ project(":api:rest:rest-client") {
     apply plugin: 'maven'
 
     dependencies {
-        api project(":api:rest:rest-model")
-        api "org.springframework.cloud:spring-cloud-starter-openfeign"
+        compile project(":api:rest:rest-model")
+        compile "org.springframework.cloud:spring-cloud-starter-openfeign"
     }
 }
 
