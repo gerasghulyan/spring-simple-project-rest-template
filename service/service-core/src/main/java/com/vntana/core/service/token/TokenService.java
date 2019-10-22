@@ -11,4 +11,6 @@ import java.util.Optional;
  */
 public interface TokenService {
     Optional<AbstractToken> findByToken(final String token);
+
+    Optional<AbstractToken> findByUuid(final String uuid);
 }

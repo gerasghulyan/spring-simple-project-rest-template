@@ -338,6 +338,7 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation project(":api:rest:rest-resource")
         testImplementation project(":migration:migration-library")
         testImplementation project(":test-helper")
+        testImplementation "com.sflpro.notifier:api-client-library:$sflNotifierVersion"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation 'org.springframework.data:spring-data-jpa'
         testImplementation "org.testcontainers:postgresql"

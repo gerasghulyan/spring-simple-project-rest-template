@@ -1,11 +1,18 @@
 package com.vntana.core.rest.resource.token.test
 
+import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient
+import com.sflpro.notifier.api.model.common.result.ResultResponseModel
+import com.sflpro.notifier.api.model.email.response.CreateEmailNotificationResponse
 import com.vntana.core.helper.rest.user.UserRestTestHelper
 import com.vntana.core.model.token.error.TokenErrorResponseModel
 import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.resource.token.AbstractTokenWebTest
 import org.junit.Test
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.mock.mockito.MockBean
+
 
 /**
  * Created by Arthur Asatryan.
@@ -17,6 +24,9 @@ class ResetPasswordTokenResetWebTest : AbstractTokenWebTest() {
     private lateinit var userResourceClient: UserResourceClient
 
     private val userRestTestHelper = UserRestTestHelper()
+
+    @MockBean
+    private lateinit var emailNotificationResourceClient: EmailNotificationResourceClient
 
     @Test
     fun `test reset with invalid arguments`() {
@@ -30,9 +40,11 @@ class ResetPasswordTokenResetWebTest : AbstractTokenWebTest() {
 
     @Test
     fun `test reset`() {
+        Mockito.`when`(emailNotificationResourceClient.createEmailNotification(ArgumentMatchers.any())).thenReturn(ResultResponseModel<CreateEmailNotificationResponse>())
         val email = uuid()
         userResourceClient.createUser(userRestTestHelper.buildCreateUserRequest(email = email))
         val response = resetPasswordTokenResourceClient.reset(restTestHelper.buildResetPasswordRequest(email = email))
+        Mockito.verify(emailNotificationResourceClient).createEmailNotification(ArgumentMatchers.any())
         restTestHelper.assertBasicSuccessResultResponse(response)
     }
 }

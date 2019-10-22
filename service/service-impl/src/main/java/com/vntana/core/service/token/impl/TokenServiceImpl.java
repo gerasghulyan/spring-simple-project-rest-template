@@ -35,4 +35,11 @@ public class TokenServiceImpl implements TokenService {
         LOGGER.debug("Trying to find token entity for token - {}", token);
         return tokenRepository.findByToken(token);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<AbstractToken> findByUuid(final String uuid) {
+        Assert.notNull(uuid, "The uuid should not be null");
+        return tokenRepository.findByUuid(uuid);
+    }
 }
