@@ -100,10 +100,6 @@ public class User extends AbstractUuidAwareDomainEntity {
         return fullName;
     }
 
-    public void setFullName(final String fullName) {
-        this.fullName = fullName;
-    }
-
     public String getEmail() {
         return email;
     }
