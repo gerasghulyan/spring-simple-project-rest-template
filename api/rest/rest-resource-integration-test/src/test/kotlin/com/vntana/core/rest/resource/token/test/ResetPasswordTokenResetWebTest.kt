@@ -2,7 +2,7 @@ package com.vntana.core.rest.resource.token.test
 
 import com.sflpro.notifier.api.model.common.result.ResultResponseModel
 import com.sflpro.notifier.api.model.email.response.CreateEmailNotificationResponse
-import com.vntana.core.helper.rest.user.UserRestTestHelper
+import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.model.token.error.TokenErrorResponseModel
 import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.resource.token.AbstractTokenWebTest
@@ -21,7 +21,7 @@ class ResetPasswordTokenResetWebTest : AbstractTokenWebTest() {
     @Autowired
     private lateinit var userResourceClient: UserResourceClient
 
-    private val userRestTestHelper = UserRestTestHelper()
+    private val userRestTestHelper = UserResourceTestHelper()
 
     @Test
     fun `test reset with invalid arguments`() {

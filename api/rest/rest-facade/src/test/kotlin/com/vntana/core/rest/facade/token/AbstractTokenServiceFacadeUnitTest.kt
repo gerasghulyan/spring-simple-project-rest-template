@@ -1,6 +1,6 @@
 package com.vntana.core.rest.facade.token
 
-import com.vntana.core.helper.rest.token.TokenRestTestHelper
+import com.vntana.core.helper.token.TokenRestTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest

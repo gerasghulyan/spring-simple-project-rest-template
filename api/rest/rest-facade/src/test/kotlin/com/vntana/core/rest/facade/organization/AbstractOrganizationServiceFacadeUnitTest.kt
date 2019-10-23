@@ -1,6 +1,6 @@
 package com.vntana.core.rest.facade.organization
 
-import com.vntana.core.helper.rest.organization.OrganizationRestTestHelper
+import com.vntana.core.helper.organization.OrganizationRestTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.rest.facade.organization.impl.OrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest

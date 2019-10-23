@@ -1,6 +1,6 @@
 package com.vntana.core.rest.resource.token
 
-import com.vntana.core.helper.rest.token.TokenRestTestHelper
+import com.vntana.core.helper.token.TokenResorceTestHelper
 import com.vntana.core.rest.client.token.ResetPasswordTokenResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
  * Time: 3:51 PM
  */
 abstract class AbstractTokenWebTest : AbstractWebIntegrationTest() {
-    protected val restTestHelper = TokenRestTestHelper()
+    protected val restTestHelper = TokenResorceTestHelper()
 
     @Autowired
     protected lateinit var resetPasswordTokenResourceClient: ResetPasswordTokenResourceClient

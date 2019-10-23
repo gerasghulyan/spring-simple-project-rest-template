@@ -1,6 +1,6 @@
-package com.vntana.core.helper.rest.user
+package com.vntana.core.helper.user
 
-import com.vntana.core.helper.rest.AbstractRestUnitTestHelper
+import com.vntana.core.helper.AbstractRestTestHelper
 import com.vntana.core.model.user.request.CreateUserRequest
 import com.vntana.core.model.user.request.FindUserByEmailRequest
 
@@ -9,7 +9,7 @@ import com.vntana.core.model.user.request.FindUserByEmailRequest
  * Date: 10/2/19
  * Time: 11:27 AM
  */
-class UserRestTestHelper : AbstractRestUnitTestHelper() {
+open class UserRestTestHelper : AbstractRestTestHelper() {
     fun buildCreateUserRequest(
             clientName: String? = uuid(),
             clientSlug: String? = uuid(),

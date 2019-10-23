@@ -121,6 +121,10 @@ allprojects {
         dependencies {
             dependency("org.easymock:easymock:$easymockVersion")
             dependency("org.testcontainers:postgresql:$testContainersVersion")
+            dependency("com.sflpro.notifier:api-client-library:$sflNotifierVersion")
+            dependency("net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}")
+            dependency("io.springfox:springfox-swagger2:$springFoxSwaggerVersion")
+            dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
         }
     }
 }
@@ -187,7 +191,7 @@ project(":migration:migration-executable") {
     }
 }
 
-project(":test-helper") {
+project(":helper:test-helper") {
 
     dependencies {
         implementation project(":domain")
@@ -195,6 +199,36 @@ project(":test-helper") {
         implementation project(":api:rest:rest-model")
         implementation "org.assertj:assertj-core"
         implementation 'org.springframework:spring-context'
+    }
+}
+
+project(":helper:rest-test-helper") {
+
+    group = "${platformGroup}.helper"
+    apply plugin: "kotlin-spring"
+
+    dependencies {
+        implementation project(":domain")
+        api project(":helper:test-helper")
+        implementation project(":api:rest:rest-model")
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework:spring-context'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+        api "org.assertj:assertj-core"
+    }
+}
+
+project(":helper:rest-resource-test-helper") {
+
+    group = "${platformGroup}.helper"
+    apply plugin: "kotlin-spring"
+
+    dependencies {
+        api project(":helper:rest-test-helper")
+        implementation project(":api:rest:rest-model")
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework:spring-context'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     }
 }
 
@@ -219,7 +253,7 @@ project(":service:service-impl") {
         implementation project(":persistence:persistence-impl")
         implementation project(":commons:persistence-utils")
         implementation project(":service:service-core")
-        testImplementation project(":test-helper")
+        testImplementation project(":helper::test-helper")
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation "org.easymock:easymock"
     }
@@ -232,7 +266,7 @@ project(":service:service-integration-test") {
     apply plugin: "kotlin-spring"
 
     dependencies {
-        testImplementation project(":test-helper")
+        testImplementation project(":helper:test-helper")
         testImplementation project(":domain")
         testImplementation project(":service:service-core")
         implementation project(":migration:migration-library")
@@ -280,12 +314,13 @@ project(":api:rest:rest-facade") {
         implementation project(":commons:persistence-utils")
         runtimeOnly project(":service:service-impl")
         implementation project(":domain")
-        implementation "net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}"
+        implementation "net.rakugakibox.spring.boot:orika-spring-boot-starter"
         implementation "org.springframework:spring-context"
         implementation "org.aspectj:aspectjrt"
         implementation "org.aspectj:aspectjweaver"
-        implementation "com.sflpro.notifier:api-client-library:$sflNotifierVersion"
-        testImplementation project(":test-helper")
+        implementation "com.sflpro.notifier:api-client-library"
+        testImplementation project(":helper:test-helper")
+        testImplementation project(":helper:rest-test-helper")
         testImplementation "org.easymock:easymock"
     }
 }
@@ -319,11 +354,11 @@ project(":api:rest:rest-resource-executable") {
     dependencies {
         implementation project(":api:rest:rest-resource")
         implementation 'org.springframework.data:spring-data-jpa'
-        implementation "io.springfox:springfox-swagger2:$springFoxSwaggerVersion"
-        implementation "io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion"
+        implementation "io.springfox:springfox-swagger2"
+        implementation "io.springfox:springfox-swagger-ui"
         implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
         implementation "org.postgresql:postgresql"
-        implementation "com.sflpro.notifier:api-client-library:$sflNotifierVersion"
+        implementation "com.sflpro.notifier:api-client-library"
         implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
     }
 }
@@ -337,8 +372,8 @@ project(":api:rest:rest-resource-integration-test") {
         implementation "org.springframework.boot:spring-boot-starter"
         testImplementation project(":api:rest:rest-resource")
         testImplementation project(":migration:migration-library")
-        testImplementation project(":test-helper")
-        testImplementation "com.sflpro.notifier:api-client-library:$sflNotifierVersion"
+        testImplementation project(":helper:rest-resource-test-helper")
+        testImplementation "com.sflpro.notifier:api-client-library"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation 'org.springframework.data:spring-data-jpa'
         testImplementation "org.testcontainers:postgresql"

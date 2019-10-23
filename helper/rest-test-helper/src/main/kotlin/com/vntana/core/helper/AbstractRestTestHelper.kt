@@ -1,16 +1,18 @@
-package com.vntana.core.helper.rest
+package com.vntana.core.helper
 
 import com.vntana.commons.api.model.response.ErrorResponseModel
 import com.vntana.commons.api.model.response.ResultResponseModel
-import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import org.assertj.core.api.Assertions.assertThat
+import java.util.*
 
 /**
- * Created by Arthur Asatryan.
- * Date: 10/10/19
- * Time: 11:46 AM
+ * Created by Arman Gevorgyan.
+ * Date: 10/23/19
+ * Time: 4:57 PM
  */
-abstract class AbstractRestUnitTestHelper : AbstractCommonTestHelper() {
+abstract class AbstractRestTestHelper {
+    fun uuid(): String = UUID.randomUUID().toString()
+
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {
         assertThat(resultResponse).isNotNull
         assertThat(resultResponse.success()).isTrue()

@@ -1,6 +1,6 @@
-package com.vntana.core.helper.rest.organization
+package com.vntana.core.helper.organization
 
-import com.vntana.core.helper.rest.AbstractRestUnitTestHelper
+import com.vntana.core.helper.AbstractRestTestHelper
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest
 import com.vntana.core.model.organization.request.CreateOrganizationRequest
 
@@ -9,7 +9,7 @@ import com.vntana.core.model.organization.request.CreateOrganizationRequest
  * Date: 10/9/19
  * Time: 4:04 PM
  */
-class OrganizationRestTestHelper : AbstractRestUnitTestHelper() {
+open class OrganizationRestTestHelper : AbstractRestTestHelper() {
     fun buildCheckAvailableOrganizationSlugRequest(
             slug: String? = uuid()
     ): CheckAvailableOrganizationSlugRequest = CheckAvailableOrganizationSlugRequest(slug)

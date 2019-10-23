@@ -1,6 +1,6 @@
 package com.vntana.core.rest.resource.client.test
 
-import com.vntana.core.helper.rest.organization.OrganizationRestTestHelper
+import com.vntana.core.helper.organization.OrganizationRestTestHelper
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel
 import com.vntana.core.rest.resource.client.AbstractClientOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat

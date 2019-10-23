@@ -1,6 +1,6 @@
 package com.vntana.core.rest.facade.client
 
-import com.vntana.core.helper.rest.client.ClientOrganizationRestTestHelper
+import com.vntana.core.helper.client.ClientOrganizationRestTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.rest.facade.client.impl.ClientOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
