@@ -16,6 +16,5 @@ include 'api:rest:rest-client'
 include 'api:rest:rest-resource'
 include 'api:rest:rest-resource-executable'
 include 'api:rest:rest-resource-integration-test'
-include 'commons:api-models'
 include 'commons:persistence-utils'
 

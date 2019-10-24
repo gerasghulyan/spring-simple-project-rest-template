@@ -8,6 +8,7 @@ buildscript {
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
         sflNotifierVersion = '1.7.0'
+        commonsApiModelsVersion = '1.0'
     }
 
     repositories {
@@ -94,6 +95,7 @@ allprojects {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter()
         maven {
@@ -125,6 +127,7 @@ allprojects {
             dependency("net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}")
             dependency("io.springfox:springfox-swagger2:$springFoxSwaggerVersion")
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
+            dependency("com.vntana.commons:api-models:$commonsApiModelsVersion")
         }
     }
 }
@@ -277,21 +280,13 @@ project(":service:service-integration-test") {
     }
 }
 
-project(":commons:api-models") {
-    apply plugin: 'maven'
-
-    dependencies {
-        api "com.fasterxml.jackson.core:jackson-annotations"
-    }
-}
-
 project(":api:rest:rest-model") {
 
     apply plugin: 'maven'
 
     dependencies {
-        compile project(":commons:api-models")
         api "com.fasterxml.jackson.core:jackson-annotations"
+        compile "com.vntana.commons:api-models"
     }
 }
 
