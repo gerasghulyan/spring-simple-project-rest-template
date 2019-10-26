@@ -311,8 +311,6 @@ project(":api:rest:rest-facade") {
         implementation project(":domain")
         implementation "net.rakugakibox.spring.boot:orika-spring-boot-starter"
         implementation "org.springframework:spring-context"
-        implementation "org.aspectj:aspectjrt"
-        implementation "org.aspectj:aspectjweaver"
         implementation "com.sflpro.notifier:api-client-library"
         testImplementation project(":helper:test-helper")
         testImplementation project(":helper:rest-test-helper")
@@ -328,6 +326,8 @@ project(":api:rest:rest-resource") {
         api project(":api:rest:rest-facade")
         api project(":api:rest:rest-model")
         api "org.springframework.boot:spring-boot-starter-web"
+        api "org.aspectj:aspectjrt"
+        api "org.aspectj:aspectjweaver"
     }
 }
 

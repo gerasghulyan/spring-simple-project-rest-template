@@ -1,4 +1,4 @@
-package com.vntana.core.rest.facade.conf.aop;
+package com.vntana.core.rest.resource.conf.aop;
 
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
