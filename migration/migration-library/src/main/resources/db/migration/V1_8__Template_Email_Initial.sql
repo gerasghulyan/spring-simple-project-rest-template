@@ -15,4 +15,4 @@ alter table template_email add constraint UK_template_email_type_template_name u
 alter table template_email add constraint UK_template_email_uuid unique (uuid);
 
 insert into template_email (id, created, removed, updated, uuid, template_name, type)
-        VALUES (nextval('sequence'), now(), null, now(), uuid_generate_v4(), 'template1', 'FORGET_PASSWORD');
+        VALUES (nextval('sequence'), now(), null, now(), uuid_generate_v4(), 'template1', 'FORGOT_PASSWORD');
