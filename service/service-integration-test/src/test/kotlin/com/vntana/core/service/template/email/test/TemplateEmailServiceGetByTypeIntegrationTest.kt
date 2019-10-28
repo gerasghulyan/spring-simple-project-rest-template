@@ -14,8 +14,8 @@ class TemplateEmailServiceGetByTypeIntegrationTest : AbstractTemplateEmailServic
 
     @Test
     fun `test`() {
-        templateEmailService.getByType(TemplateEmailType.FORGET_PASSWORD).let {
-            assertThat(it.type).isEqualTo(TemplateEmailType.FORGET_PASSWORD)
+        templateEmailService.getByType(TemplateEmailType.FORGOT_PASSWORD).let {
+            assertThat(it.type).isEqualTo(TemplateEmailType.FORGOT_PASSWORD)
             assertThat(it.templateName).isNotNull()
         }
     }

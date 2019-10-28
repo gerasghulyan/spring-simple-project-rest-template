@@ -6,5 +6,5 @@ package com.vntana.core.domain.template.email;
  * Time: 10:30 AM
  */
 public enum TemplateEmailType {
-    FORGET_PASSWORD
+    FORGOT_PASSWORD
 }

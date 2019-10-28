@@ -28,7 +28,7 @@ class TemplateEmailServiceGetByTypeUnitTest : AbstractTemplateEmailServiceUnitTe
 
     @Test
     fun `test when does not exist`() {
-        val type = TemplateEmailType.FORGET_PASSWORD
+        val type = TemplateEmailType.FORGOT_PASSWORD
         resetAll()
         expect(templateEmailRepository.findByType(type)).andReturn(Optional.empty())
         replayAll()
@@ -39,7 +39,7 @@ class TemplateEmailServiceGetByTypeUnitTest : AbstractTemplateEmailServiceUnitTe
 
     @Test
     fun `test`() {
-        val type = TemplateEmailType.FORGET_PASSWORD
+        val type = TemplateEmailType.FORGOT_PASSWORD
         val templateEmailName = uuid()
         val templateEmail = TemplateEmail(type, templateEmailName)
         resetAll()

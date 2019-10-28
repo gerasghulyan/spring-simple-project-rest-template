@@ -14,12 +14,12 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "template_email", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"type", "template_name"}, name = "UK_template_email_type_template_name")
+        @UniqueConstraint(columnNames = {"type", "template_name"}, name = "uk_template_email_type_template_name")
 })
 public class TemplateEmail extends AbstractUuidAwareDomainEntity {
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "type", nullable = false)
+    @Column(name = "type", nullable = false, updatable = false)
     private TemplateEmailType type;
 
     @Column(name = "template_name", nullable = false)
