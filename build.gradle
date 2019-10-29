@@ -49,6 +49,19 @@ def environmentPlatformVersion() {
     }
 }
 
+def versionPostfix() {
+    switch (grgit.getBranch().current().name) {
+        case "develop":
+            return "-SNAPSHOT"
+        case "release":
+            return "-release-SNAPSHOT"
+        case "master":
+            return ""
+        default:
+            return ""
+    }
+}
+
 task printEnvVersion() {
     doLast {
         println version
@@ -125,7 +138,7 @@ allprojects {
             dependency("net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}")
             dependency("io.springfox:springfox-swagger2:$springFoxSwaggerVersion")
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
-            dependency("com.vntana.commons:api-models:$commonsApiModelsVersion")
+            dependency("com.vntana.commons:api-models:$commonsApiModelsVersion${versionPostfix()}")
         }
     }
 }
