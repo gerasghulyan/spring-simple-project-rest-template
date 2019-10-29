@@ -11,7 +11,17 @@ pipeline {
                 }
             }
             steps {
+                withCredentials(
+                    [
+                        usernamePassword(
+                            credentialsId: 'nexus',
+                            usernameVariable: 'SONATYPE_USERNAME',
+                            passwordVariable: 'SONATYPE_PASSWORD'
+                        )
+                    ]
+                ) {
                 sh './gradlew clean build'
+               }
             }
         }
         stage("Upload Maven") {
