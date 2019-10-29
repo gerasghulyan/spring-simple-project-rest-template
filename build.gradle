@@ -8,11 +8,14 @@ buildscript {
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
         sflNotifierVersion = '1.7.0'
-        commonsApiModelsVersion = '1.0'
+        commonsApiModelsVersion = '0.1.0'
     }
 
     repositories {
         mavenCentral()
+        maven {
+            url 'https://nexus.vntana.com/repository/maven-public'
+        }
     }
 
     dependencies {
@@ -39,19 +42,6 @@ def environmentPlatformVersion() {
             return platformVersion
         default:
             return platformVersion
-    }
-}
-
-def versionPostfix() {
-    switch (grgit.getBranch().current().name) {
-        case "develop":
-            return "-SNAPSHOT"
-        case "release":
-            return "-release-SNAPSHOT"
-        case "master":
-            return ""
-        default:
-            return ""
     }
 }
 
@@ -99,10 +89,10 @@ allprojects {
         mavenCentral()
         jcenter()
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url 'https://nexus.vntana.com/repository/maven-public'
         }
         maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
+            url "https://plugins.gradle.org/m2/"
         }
     }
 
@@ -191,6 +181,17 @@ project(":migration:migration-executable") {
     dependencies {
         implementation project(":migration:migration-library")
         implementation "org.springframework.boot:spring-boot-starter"
+    }
+}
+
+project(":notification") {
+
+    dependencies {
+        implementation "com.sflpro.notifier:api-client-library"
+        implementation 'org.springframework:spring-context'
+        implementation 'org.glassfish.jersey.inject:jersey-hk2'
+        implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
+        testImplementation "org.easymock:easymock"
     }
 }
 
@@ -284,6 +285,25 @@ project(":api:rest:rest-model") {
 
     apply plugin: 'maven'
 
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+
+                repository(url: "https://nexus.vntana.com/repository/maven-releases/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                snapshotRepository(url: "https://nexus.vntana.com/repository/maven-snapshots/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                pom.version = environmentPlatformVersion()
+                pom.artifactId = "rest-client"
+                pom.groupId = platformGroup
+            }
+        }
+    }
+
     dependencies {
         api "com.fasterxml.jackson.core:jackson-annotations"
         compile "com.vntana.commons:api-models"
@@ -292,6 +312,27 @@ project(":api:rest:rest-model") {
 
 project(":api:rest:rest-client") {
     apply plugin: 'maven'
+
+    apply plugin: 'maven'
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+
+                repository(url: "https://nexus.vntana.com/repository/maven-releases/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                snapshotRepository(url: "https://nexus.vntana.com/repository/maven-snapshots/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                pom.version = environmentPlatformVersion()
+                pom.artifactId = "rest-client"
+                pom.groupId = platformGroup
+            }
+        }
+    }
 
     dependencies {
         compile project(":api:rest:rest-model")
@@ -405,7 +446,7 @@ configure(subprojects.findAll {
         from 'openjdk:8-jre-alpine'
         label(
                 [
-                        'maintainer': 'qup@sfl.am',
+                        'maintainer': 'vntana@sfl.am',
                 ]
         )
         copyFile("${jar.archiveName}", "/")

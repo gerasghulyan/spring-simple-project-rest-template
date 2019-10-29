@@ -17,4 +17,5 @@ include 'api:rest:rest-resource'
 include 'api:rest:rest-resource-executable'
 include 'api:rest:rest-resource-integration-test'
 include 'commons:persistence-utils'
+include 'notification'
 

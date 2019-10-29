@@ -14,6 +14,28 @@ pipeline {
                 sh './gradlew clean build'
             }
         }
+        stage("Upload Maven") {
+            when {
+                anyOf {
+                    branch 'master';
+                    branch 'release';
+                    branch 'develop'
+                }
+            }
+            steps {
+                withCredentials(
+                    [
+                        usernamePassword(
+                            credentialsId: 'nexus',
+                            usernameVariable: 'SONATYPE_USERNAME',
+                            passwordVariable: 'SONATYPE_PASSWORD'
+                        )
+                    ]
+                ) {
+                    sh "./gradlew :api:rest:rest-model:upload :api:rest:rest-client:upload"
+                }
+            }
+        }
         stage("Push Docker") {
             steps {
                 withCredentials(
