@@ -37,6 +37,13 @@ pipeline {
             }
         }
         stage("Push Docker") {
+            when {
+                anyOf {
+                    branch 'master';
+                    branch 'release';
+                    branch 'develop'
+                }
+            }
             steps {
                 withCredentials(
                     [
