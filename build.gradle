@@ -86,7 +86,7 @@ allprojects {
     apply plugin: "io.spring.dependency-management"
 
     group = platformGroup
-    version = platformVersion
+    version = environmentPlatformVersion()
     sourceCompatibility = '1.8'
 
     task makePretty(type: Delete) {
