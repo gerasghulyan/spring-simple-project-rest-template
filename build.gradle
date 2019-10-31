@@ -324,7 +324,7 @@ project(":api:rest:rest-model") {
                 }
 
                 pom.version = environmentPlatformVersion()
-                pom.artifactId = "rest-client"
+                pom.artifactId = "rest-model"
                 pom.groupId = platformGroup
             }
         }
@@ -337,8 +337,6 @@ project(":api:rest:rest-model") {
 }
 
 project(":api:rest:rest-client") {
-    apply plugin: 'maven'
-
     apply plugin: 'maven'
 
     uploadArchives {
