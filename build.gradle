@@ -3,6 +3,7 @@ buildscript {
         platformGroup = 'com.vntana.core'
         platformVersion = '0.1.0'
         kotlinVersion = '1.3.50'
+        vavrVersion = '0.10.2'
         easymockVersion = '4.0.2'
         testContainersVersion = '1.11.3'
         orikaSpringBootVersion = "1.8.0"
@@ -120,6 +121,7 @@ allprojects {
     dependencies {
         implementation 'org.apache.commons:commons-lang3'
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        implementation "io.vavr:vavr"
         testImplementation "junit:junit"
         testImplementation "org.assertj:assertj-core"
     }
@@ -133,6 +135,7 @@ allprojects {
         }
         dependencies {
             dependency("org.easymock:easymock:$easymockVersion")
+            dependency("io.vavr:vavr:$vavrVersion")
             dependency("org.testcontainers:postgresql:$testContainersVersion")
             dependency("com.sflpro.notifier:api-client-library:$sflNotifierVersion")
             dependency("net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}")
