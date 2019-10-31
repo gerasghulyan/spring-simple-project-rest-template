@@ -13,7 +13,7 @@ import org.junit.Test
 class TemplateEmailServiceGetByTypeIntegrationTest : AbstractTemplateEmailServiceIntegrationTest() {
 
     @Test
-    fun `test`() {
+    fun `test getByType`() {
         templateEmailService.getByType(TemplateEmailType.FORGOT_PASSWORD).let {
             assertThat(it.type).isEqualTo(TemplateEmailType.FORGOT_PASSWORD)
             assertThat(it.templateName).isNotNull()

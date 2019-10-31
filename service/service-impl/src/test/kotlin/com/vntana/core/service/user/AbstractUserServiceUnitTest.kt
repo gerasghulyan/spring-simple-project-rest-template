@@ -8,6 +8,7 @@ import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.impl.UserServiceImpl
 import org.easymock.Mock
 import org.junit.Before
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 /**
  * Created by Arthur Asatryan.
@@ -27,6 +28,9 @@ abstract class AbstractUserServiceUnitTest : AbstractServiceUnitTest() {
     protected val helper = UserCommonTestHelper()
 
     protected val organizationHelper = OrganizationCommonTestHelper()
+
+    @Mock
+    protected lateinit var passwordEncoder: BCryptPasswordEncoder
 
     @Before
     fun beforeTest() {

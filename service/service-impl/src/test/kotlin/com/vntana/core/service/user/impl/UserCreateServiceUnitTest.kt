@@ -48,14 +48,17 @@ class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
     fun `test create`() {
         val createDto = helper.buildUserCreateDto()
         val organization = organizationHelper.buildOrganization()
+        val encodedPassword = uuid()
         resetAll()
         expect(organizationService.findByUuid(createDto.organizationUuid)).andReturn(Optional.of(organization))
+        expect(passwordEncoder.encode(createDto.password)).andReturn(encodedPassword)
         expect(userRepository.save(isA(User::class.java))).andAnswer { getCurrentArguments()[0] as User }
         replayAll()
         userService.create(createDto).let {
             assertThat(it).isNotNull
             assertThat(it.fullName).isEqualTo(createDto.fullName)
             assertThat(it.email).isEqualTo(createDto.email)
+            assertThat(it.password).isEqualTo(encodedPassword)
             val role = it.roleOfOrganization(organization).get()
             assertThat(role.organization).isEqualTo(organization)
             assertThat(role.user).isEqualTo(it)

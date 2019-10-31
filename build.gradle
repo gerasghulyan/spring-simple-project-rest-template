@@ -281,7 +281,7 @@ project(":service:service-impl") {
         implementation project(":persistence:persistence-impl")
         implementation project(":commons:persistence-utils")
         implementation project(":service:service-core")
-        implementation("org.springframework.security:spring-security-crypto")
+        implementation "org.springframework.security:spring-security-crypto"
         testImplementation project(":helper::test-helper")
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation "org.easymock:easymock"
@@ -301,6 +301,7 @@ project(":service:service-integration-test") {
         implementation project(":migration:migration-library")
         runtimeOnly project(":service:service-impl")
         testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.springframework.security:spring-security-crypto"
         testImplementation "org.testcontainers:postgresql"
         testImplementation "org.postgresql:postgresql"
     }
