@@ -46,7 +46,7 @@ def environmentPlatformVersion() {
         case "master":
             return platformVersion
         default:
-            return platformVersion
+            return "$platformVersion-SNAPSHOT"
     }
 }
 
@@ -59,7 +59,7 @@ def versionPostfix() {
         case "master":
             return ""
         default:
-            return ""
+            return "-SNAPSHOT"
     }
 }
 
