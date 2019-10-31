@@ -30,6 +30,6 @@ abstract class AbstractUserServiceUnitTest : AbstractServiceUnitTest() {
 
     @Before
     fun beforeTest() {
-        userService = UserServiceImpl(userRepository, organizationService)
+        userService = UserServiceImpl(userRepository, organizationService, passwordEncoder)
     }
 }

@@ -3,12 +3,14 @@ package com.vntana.core.rest.facade.user.impl;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.response.CreateUserResultResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResultResponse;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
+import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.service.organization.OrganizationService;
@@ -77,7 +79,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     @Override
     public FindUserByEmailResultResponse findByEmail(final FindUserByEmailRequest request) {
         return userService.findByEmail(request.getEmail())
-                .map(user -> new FindUserByEmailResultResponse(true))
+                .map(user -> new FindUserByEmailResultResponse(
+                        new FindUserByEmailResponseModel(
+                                true,
+                                user.getEmail(),
+                                UserRoleModel.ASSET_MANAGER
+                        )
+                ))
                 .orElseGet(() -> new FindUserByEmailResultResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
     }
 }

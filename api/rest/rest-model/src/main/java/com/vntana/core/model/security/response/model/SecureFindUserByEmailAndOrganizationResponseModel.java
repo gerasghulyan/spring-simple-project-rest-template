@@ -1,4 +1,4 @@
-package com.vntana.core.model.user.response.model;
+package com.vntana.core.model.security.response.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.ResponseModel;
@@ -12,10 +12,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 10/18/19
  * Time: 5:08 PM
  */
-public class FindUserByEmailResponseModel implements ResponseModel {
+public class SecureFindUserByEmailAndOrganizationResponseModel implements ResponseModel {
 
-    @JsonProperty("exists")
-    private boolean exists;
+    //region Properties
+    @JsonProperty("uuid")
+    private String uuid;
 
     @JsonProperty("username")
     private String username;
@@ -23,55 +24,68 @@ public class FindUserByEmailResponseModel implements ResponseModel {
     @JsonProperty("userRole")
     private UserRoleModel userRole;
 
-    public FindUserByEmailResponseModel() {
+    @JsonProperty("password")
+    private String password;
+    //endregion
+
+    //region Constructors
+    public SecureFindUserByEmailAndOrganizationResponseModel() {
     }
 
-    public FindUserByEmailResponseModel(final boolean exists, final String username, final UserRoleModel userRole) {
-        this.exists = exists;
+    public SecureFindUserByEmailAndOrganizationResponseModel(final String uuid, final String username, final UserRoleModel userRole, final String password) {
+        this.uuid = uuid;
         this.username = username;
         this.userRole = userRole;
+        this.password = password;
     }
+    //endregion
 
+    //region Equals, HashCode and ToString
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FindUserByEmailResponseModel)) {
+        if (!(o instanceof SecureFindUserByEmailAndOrganizationResponseModel)) {
             return false;
         }
-        final FindUserByEmailResponseModel that = (FindUserByEmailResponseModel) o;
+        final SecureFindUserByEmailAndOrganizationResponseModel that = (SecureFindUserByEmailAndOrganizationResponseModel) o;
         return new EqualsBuilder()
-                .append(exists, that.exists)
+                .append(uuid, that.uuid)
                 .append(username, that.username)
                 .append(userRole, that.userRole)
+                .append(password, that.password)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(exists)
+                .append(uuid)
                 .append(username)
                 .append(userRole)
+                .append(password)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("exists", exists)
+                .append("uuid", uuid)
                 .append("username", username)
                 .append("userRole", userRole)
+                .append("password", password)
                 .toString();
     }
+    //endregion
 
-    public boolean isExists() {
-        return exists;
+    //region Properties getters and setters
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setExists(final boolean exists) {
-        this.exists = exists;
+    public void setUuid(final String uuid) {
+        this.uuid = uuid;
     }
 
     public String getUsername() {
@@ -89,4 +103,14 @@ public class FindUserByEmailResponseModel implements ResponseModel {
     public void setUserRole(final UserRoleModel userRole) {
         this.userRole = userRole;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+    //endregion
+
 }
