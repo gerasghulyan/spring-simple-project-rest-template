@@ -8,6 +8,7 @@ import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -30,10 +31,16 @@ public class UserServiceImpl implements UserService {
 
     private final OrganizationService organizationService;
 
-    public UserServiceImpl(final UserRepository userRepository, final OrganizationService organizationService) {
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(
+            final UserRepository userRepository,
+            final OrganizationService organizationService,
+            final BCryptPasswordEncoder passwordEncoder) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userRepository = userRepository;
         this.organizationService = organizationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -42,7 +49,8 @@ public class UserServiceImpl implements UserService {
         assertCreateDto(dto);
         LOGGER.debug("Creating user for dto - {}", dto);
         final Organization organization = getOrganization(dto);
-        final User user = new User(dto.getFullName(), dto.getEmail(), dto.getPassword());
+        final String password = passwordEncoder.encode(dto.getPassword());
+        final User user = new User(dto.getFullName(), dto.getEmail(), password);
         final User savedUser = userRepository.save(user);
         savedUser.grantOrganizationRole(organization);
         LOGGER.debug("Successfully created user for dto - {}", dto);

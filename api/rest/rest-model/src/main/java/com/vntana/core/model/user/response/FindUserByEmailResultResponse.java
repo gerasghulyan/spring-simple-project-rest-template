@@ -15,8 +15,8 @@ public class FindUserByEmailResultResponse extends AbstractResultResponseModel<F
     public FindUserByEmailResultResponse() {
     }
 
-    public FindUserByEmailResultResponse(final boolean exists) {
-        super(new FindUserByEmailResponseModel(exists));
+    public FindUserByEmailResultResponse(final FindUserByEmailResponseModel response) {
+        super(response);
     }
 
     public FindUserByEmailResultResponse(final List<UserErrorResponseModel> errors) {

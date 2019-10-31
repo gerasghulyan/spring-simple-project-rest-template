@@ -5,6 +5,7 @@ import com.vntana.core.service.user.AbstractUserServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 /**
  * Created by Arthur Asatryan.
@@ -15,6 +16,9 @@ class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
 
     @Autowired
     private lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper
+
+    @Autowired
+    private lateinit var passwordEncoder: BCryptPasswordEncoder
 
     @Test
     fun `test create`() {
@@ -28,7 +32,9 @@ class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
             assertThat(it.email).isEqualTo(createDto.email)
             val role = it.roleOfOrganization(organization).get()
             assertThat(role.organization).isEqualTo(organization)
-            assertThat(role.user).isEqualTo(it)
+            assertThat(role.user.fullName).isEqualTo(it.fullName)
+            assertThat(passwordEncoder.matches(role.user.password, passwordEncoder.encode(it.password))).isTrue()
+            assertThat(role.user.email).isEqualTo(it.email)
         }
     }
 }

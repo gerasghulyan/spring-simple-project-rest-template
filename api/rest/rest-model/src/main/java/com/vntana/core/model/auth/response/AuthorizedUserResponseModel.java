@@ -1,21 +1,17 @@
-package com.vntana.core.model.user.response.model;
+package com.vntana.core.model.auth.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.ResponseModel;
-import com.vntana.core.model.auth.response.UserRoleModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Created by Arthur Asatryan.
- * Date: 10/18/19
- * Time: 5:08 PM
+ * Created by Geras Ghulyan.
+ * Date: 10/1/19
+ * Time: 6:43 PM
  */
-public class FindUserByEmailResponseModel implements ResponseModel {
-
-    @JsonProperty("exists")
-    private boolean exists;
+public class AuthorizedUserResponseModel implements ResponseModel {
 
     @JsonProperty("username")
     private String username;
@@ -23,13 +19,21 @@ public class FindUserByEmailResponseModel implements ResponseModel {
     @JsonProperty("userRole")
     private UserRoleModel userRole;
 
-    public FindUserByEmailResponseModel() {
+    @JsonProperty("userRoleType")
+    private UserRoleTypeModel userRoleType;
+
+    @JsonProperty("password")
+    private String password;
+
+    private AuthorizedUserResponseModel() {
+        super();
     }
 
-    public FindUserByEmailResponseModel(final boolean exists, final String username, final UserRoleModel userRole) {
-        this.exists = exists;
+    public AuthorizedUserResponseModel(final String username, final UserRoleModel userRole, final UserRoleTypeModel userRoleType, final String password) {
         this.username = username;
         this.userRole = userRole;
+        this.userRoleType = userRoleType;
+        this.password = password;
     }
 
     @Override
@@ -37,41 +41,36 @@ public class FindUserByEmailResponseModel implements ResponseModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FindUserByEmailResponseModel)) {
+        if (!(o instanceof AuthorizedUserResponseModel)) {
             return false;
         }
-        final FindUserByEmailResponseModel that = (FindUserByEmailResponseModel) o;
+        final AuthorizedUserResponseModel that = (AuthorizedUserResponseModel) o;
         return new EqualsBuilder()
-                .append(exists, that.exists)
                 .append(username, that.username)
                 .append(userRole, that.userRole)
+                .append(userRoleType, that.userRoleType)
+                .append(password, that.password)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(exists)
                 .append(username)
                 .append(userRole)
+                .append(userRoleType)
+                .append(password)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("exists", exists)
                 .append("username", username)
                 .append("userRole", userRole)
+                .append("userRoleType", userRoleType)
+                .append("password", password)
                 .toString();
-    }
-
-    public boolean isExists() {
-        return exists;
-    }
-
-    public void setExists(final boolean exists) {
-        this.exists = exists;
     }
 
     public String getUsername() {
@@ -88,5 +87,21 @@ public class FindUserByEmailResponseModel implements ResponseModel {
 
     public void setUserRole(final UserRoleModel userRole) {
         this.userRole = userRole;
+    }
+
+    public UserRoleTypeModel getUserRoleType() {
+        return userRoleType;
+    }
+
+    public void setUserRoleType(final UserRoleTypeModel userRoleType) {
+        this.userRoleType = userRoleType;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
     }
 }
