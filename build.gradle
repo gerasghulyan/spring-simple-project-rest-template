@@ -337,6 +337,7 @@ project(":api:rest:rest-model") {
 }
 
 project(":api:rest:rest-client") {
+
     apply plugin: 'maven'
 
     uploadArchives {
