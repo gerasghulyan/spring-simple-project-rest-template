@@ -9,7 +9,7 @@ buildscript {
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
         sflNotifierVersion = '1.7.0'
-        commonsApiModelsVersion = '0.1.0'
+        commonsApiModelsVersion = '0.1.2'
     }
 
     repositories {
