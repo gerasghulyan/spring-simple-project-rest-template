@@ -1,4 +1,4 @@
-package com.vntana.core.configuration;
+package com.vntana.core.service.conf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
