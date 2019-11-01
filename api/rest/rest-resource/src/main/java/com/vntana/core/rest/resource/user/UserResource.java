@@ -43,7 +43,7 @@ public class UserResource {
     }
 
     @PostMapping(path = "/by-email")
-    public ResponseEntity<FindUserByEmailResultResponse> createUser(@RequestBody final FindUserByEmailRequest request) {
+    public ResponseEntity<FindUserByEmailResultResponse> findByEmail(@RequestBody final FindUserByEmailRequest request) {
         LOGGER.debug("Processing find user by email request - {}", request);
         final FindUserByEmailResultResponse resultResponse = userServiceFacade.findByEmail(request);
         LOGGER.debug("Successfully proceeded find user by email request with response - {}", resultResponse);
