@@ -3,7 +3,6 @@ package com.vntana.core.rest.resource.token;
 import com.vntana.core.model.token.request.ResetPasswordRequest;
 import com.vntana.core.model.token.response.ResetPasswordResultResponse;
 import com.vntana.core.rest.facade.token.ResetPasswordTokenServiceFacade;
-import com.vntana.core.rest.resource.user.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class ResetPasswordTokenResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResetPasswordTokenResource.class);
 
     private final ResetPasswordTokenServiceFacade resetPasswordTokenServiceFacade;
 
