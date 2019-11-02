@@ -24,6 +24,34 @@ pipeline {
                }
             }
         }
+        stage("Quality Analysis") {
+            agent {
+                docker {
+                    image "openjdk:8"
+                }
+            }
+            steps {
+                withCredentials(
+                    [
+                        string(
+                            credentialsId: 'sonar',
+                            variable: 'SONAR_TOKEN'
+                        ),
+                        usernamePassword(
+                            credentialsId: 'nexus',
+                            usernameVariable: 'SONATYPE_USERNAME',
+                            passwordVariable: 'SONATYPE_PASSWORD'
+                        )
+                    ]
+                ) {
+                sh './gradlew sonarqube \
+                      -Dsonar.projectKey=vntanaplatform2_vntana-core \
+                      -Dsonar.organization=vntanaplatform2 \
+                      -Dsonar.host.url=https://sonarcloud.io \
+                      -Dsonar.login=$SONAR_TOKEN'
+               }
+            }
+        }
         stage("Upload Maven") {
             when {
                 anyOf {
