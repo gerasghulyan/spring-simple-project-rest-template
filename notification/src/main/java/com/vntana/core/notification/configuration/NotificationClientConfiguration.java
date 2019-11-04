@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient;
 import com.sflpro.notifier.api.client.notification.email.impl.EmailNotificationResourceClientImpl;
-import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.ws.rs.client.Client;
+
+import static org.glassfish.jersey.client.JerseyClientBuilder.newClient;
 
 /**
  * Created by Arman Gevorgyan.
@@ -42,7 +43,6 @@ public class NotificationClientConfiguration {
 
     @Bean
     public Client client() {
-        return JerseyClientBuilder.newClient()
-                .register(new JacksonJsonProvider(objectMapper));
+        return newClient().register(new JacksonJsonProvider(objectMapper));
     }
 }
