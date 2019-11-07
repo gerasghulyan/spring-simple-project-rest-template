@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired
  * Time: 11:24 AM
  */
 abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
-    protected val restHelper = UserResourceTestHelper()
+    @Autowired
+    protected lateinit var resourceHelper: UserResourceTestHelper
 
     @Autowired
-    protected lateinit var userResourceClient: UserResourceClient
+    lateinit var userResourceClient: UserResourceClient
 }

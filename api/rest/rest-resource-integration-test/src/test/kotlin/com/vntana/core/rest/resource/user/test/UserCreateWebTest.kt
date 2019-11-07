@@ -14,23 +14,33 @@ class UserCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test create with invalid arguments`() {
-        val response1 = userResourceClient.createUser(restHelper.buildCreateUserRequest(clientName = null))
-        restHelper.assertBasicErrorResultResponse(response1, UserErrorResponseModel.MISSING_CLIENT_NAME)
-        val response2 = userResourceClient.createUser(restHelper.buildCreateUserRequest(clientSlug = null))
-        restHelper.assertBasicErrorResultResponse(response2, UserErrorResponseModel.MISSING_CLIENT_SLUG)
-        val response3 = userResourceClient.createUser(restHelper.buildCreateUserRequest(fullName = null))
-        restHelper.assertBasicErrorResultResponse(response3, UserErrorResponseModel.MISSING_FULL_NAME)
-        val response4 = userResourceClient.createUser(restHelper.buildCreateUserRequest(email = null))
-        restHelper.assertBasicErrorResultResponse(response4, UserErrorResponseModel.MISSING_EMAIL)
-        val response5 = userResourceClient.createUser(restHelper.buildCreateUserRequest(password = null))
-        restHelper.assertBasicErrorResultResponse(response5, UserErrorResponseModel.MISSING_PASSWORD)
+        val response1 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(clientName = null))
+        resourceHelper.assertBasicErrorResultResponse(response1, UserErrorResponseModel.MISSING_CLIENT_NAME)
+        val response2 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(clientSlug = null))
+        resourceHelper.assertBasicErrorResultResponse(response2, UserErrorResponseModel.MISSING_CLIENT_SLUG)
+        val response3 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(fullName = null))
+        resourceHelper.assertBasicErrorResultResponse(response3, UserErrorResponseModel.MISSING_FULL_NAME)
+        val response4 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(email = null))
+        resourceHelper.assertBasicErrorResultResponse(response4, UserErrorResponseModel.MISSING_EMAIL)
+        val response5 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(password = null))
+        resourceHelper.assertBasicErrorResultResponse(response5, UserErrorResponseModel.MISSING_PASSWORD)
     }
 
     @Test
     fun `test create`() {
-        val createRequest = restHelper.buildCreateUserRequest()
+        val createRequest = resourceHelper.buildCreateUserRequest()
         val response = userResourceClient.createUser(createRequest)
-        restHelper.assertBasicSuccessResultResponse(response)
+        resourceHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isNotEmpty()
+    }
+
+    @Test
+    fun `test create with existing email`() {
+//         persist user
+        val userRequest = resourceHelper.buildCreateUserRequest()
+        assertThat(resourceHelper.persistUser(userRequest).response().uuid).isNotEmpty()
+
+//         retry to persist existing user
+        resourceHelper.assertBasicErrorResultResponse(userResourceClient.createUser(userRequest), UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL)
     }
 }
