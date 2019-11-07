@@ -57,6 +57,9 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     public CreateUserResultResponse create(final CreateUserRequest request) {
         LOGGER.debug("Processing Facade createUser method for request - {}", request);
         Assert.notNull(request, "The USerCreateRequest should not be null");
+        if (userService.findByEmail(request.getEmail()).isPresent()) {
+            return new CreateUserResultResponse(Collections.singletonList(UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL));
+        }
         final Mutable<String> mutableUserUuid = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
             LOGGER.debug("Creating a organization for request - {}", request);

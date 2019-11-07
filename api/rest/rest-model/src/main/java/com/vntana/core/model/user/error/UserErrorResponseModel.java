@@ -17,4 +17,5 @@ public enum UserErrorResponseModel implements ErrorResponseModel {
     NOT_FOUND_FOR_EMAIL,
     NOT_FOUND_FOR_ORGANIZATION,
     NOT_FOUND_FOR_ROLE,
+    SIGN_UP_WITH_EXISTING_EMAIL
 }
