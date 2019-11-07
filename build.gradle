@@ -254,6 +254,7 @@ project(":helper:rest-resource-test-helper") {
 
     dependencies {
         api project(":helper:rest-test-helper")
+        implementation project(":api:rest:rest-client")
         implementation project(":api:rest:rest-model")
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework:spring-context'
