@@ -14,18 +14,18 @@ class UserFindByEmailWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test with invalid arguments`() {
-        val response1 = userResourceClient.findByEmail(restHelper.buildFindUserByEmailRequest(email = null))
-        restHelper.assertBasicErrorResultResponse(response1, UserErrorResponseModel.MISSING_EMAIL)
+        val response1 = userResourceClient.findByEmail(resourceHelper.buildFindUserByEmailRequest(email = null))
+        resourceHelper.assertBasicErrorResultResponse(response1, UserErrorResponseModel.MISSING_EMAIL)
     }
 
     @Test
     fun `test findByEmail`() {
         val email = uuid()
-        val createRequest = restHelper.buildCreateUserRequest(email = email)
+        val createRequest = resourceHelper.buildCreateUserRequest(email = email)
         userResourceClient.createUser(createRequest)
-        val findUserByEmailRequest = restHelper.buildFindUserByEmailRequest(email = email)
+        val findUserByEmailRequest = resourceHelper.buildFindUserByEmailRequest(email = email)
         val response = userResourceClient.findByEmail(findUserByEmailRequest)
-        restHelper.assertBasicSuccessResultResponse(response)
+        resourceHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().isExists).isTrue()
     }
 }
