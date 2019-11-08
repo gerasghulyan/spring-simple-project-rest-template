@@ -3,6 +3,7 @@ package com.vntana.core.service.organization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,4 +17,8 @@ public interface OrganizationService {
     Optional<Organization> findByUuid(final String uuid);
 
     Optional<Organization> findBySlug(final String slug);
+
+    List<Organization> getAll();
+
+    Organization getByUuid(final String uuid);
 }

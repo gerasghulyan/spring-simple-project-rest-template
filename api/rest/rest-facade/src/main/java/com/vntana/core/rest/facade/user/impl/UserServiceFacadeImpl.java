@@ -17,7 +17,6 @@ import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
-import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
@@ -38,17 +37,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceFacadeImpl.class);
 
     private final UserService userService;
-    private final MapperFacade mapperFacade;
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
 
     public UserServiceFacadeImpl(final UserService userService,
-                                 final MapperFacade mapperFacade,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
-        this.mapperFacade = mapperFacade;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
     }

@@ -111,6 +111,10 @@ public class User extends AbstractUuidAwareDomainEntity {
     public void setPassword(final String password) {
         this.password = password;
     }
+
+    public List<AbstractUserRole> roles() {
+        return immutableRoles();
+    }
     //endregion
 
     //region Utility methods

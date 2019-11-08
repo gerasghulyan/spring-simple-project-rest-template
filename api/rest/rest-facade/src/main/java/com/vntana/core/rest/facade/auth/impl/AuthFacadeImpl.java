@@ -1,15 +1,17 @@
 package com.vntana.core.rest.facade.auth.impl;
 
+import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
-import com.vntana.core.model.security.request.FindUserByEmailAndOrganizationRequest;
-import com.vntana.core.model.security.response.SecureFindUserByEmailAndOrganizationResponse;
+import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest;
+import com.vntana.core.model.security.response.SecureFindUserByUuidAndOrganizationResponse;
 import com.vntana.core.model.security.response.SecureFindUserByEmailResponse;
 import com.vntana.core.model.security.response.model.SecureFindUserByEmailAndOrganizationResponseModel;
 import com.vntana.core.model.security.response.model.SecureFindUserByEmailResponseModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
-import com.vntana.core.rest.facade.auth.AuthServiceFacade;
+import com.vntana.core.rest.facade.auth.AuthFacade;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.apache.commons.lang3.mutable.Mutable;
@@ -26,9 +28,9 @@ import java.util.Collections;
  * Time: 6:35 PM
  */
 @Component
-public class AuthServiceFacadeImpl implements AuthServiceFacade {
+public class AuthFacadeImpl implements AuthFacade {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceFacadeImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthFacadeImpl.class);
 
     private final UserService userService;
 
@@ -36,7 +38,7 @@ public class AuthServiceFacadeImpl implements AuthServiceFacade {
 
     private final PersistenceUtilityService persistenceUtilityService;
 
-    public AuthServiceFacadeImpl(
+    public AuthFacadeImpl(
             final UserService userService,
             final OrganizationService organizationService,
             final PersistenceUtilityService persistenceUtilityService) {
@@ -65,30 +67,28 @@ public class AuthServiceFacadeImpl implements AuthServiceFacade {
     }
 
     @Override
-    public SecureFindUserByEmailAndOrganizationResponse findByEmailAndOrganization(final FindUserByEmailAndOrganizationRequest request) {
-        final Mutable<SecureFindUserByEmailAndOrganizationResponse> mutableResponse = new MutableObject<>();
+    public SecureFindUserByUuidAndOrganizationResponse findByUserAndOrganization(final FindUserByUuidAndOrganizationRequest request) {
+        final Mutable<SecureFindUserByUuidAndOrganizationResponse> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInPersistenceSession(() -> {
-            final SecureFindUserByEmailAndOrganizationResponse response = userService.findByEmail(request.getEmail())
-                    .map(user -> organizationService.findByUuid(request.getOrganizationUuid())
-                            .map(organization -> user.roleOfOrganization(organization)
-                                    .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
-                                    .map(userRoleModel -> new SecureFindUserByEmailAndOrganizationResponse(
-                                                    new SecureFindUserByEmailAndOrganizationResponseModel(
-                                                            user.getUuid(),
-                                                            user.getEmail(),
-                                                            userRoleModel,
-                                                            user.getPassword()
-                                                    )
-                                            )
-                                    ).orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_ROLE)))
-                            .orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)))
-                    .orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL));
+            final User user = userService.getByUuid(request.getUuid());
+            final Organization organization = organizationService.getByUuid(request.getOrganizationUuid());
+            final SecureFindUserByUuidAndOrganizationResponse response = user.roleOfOrganization(organization)
+                    .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
+                    .map(userRoleModel -> new SecureFindUserByUuidAndOrganizationResponse(
+                                    new SecureFindUserByEmailAndOrganizationResponseModel(
+                                            user.getUuid(),
+                                            user.getEmail(),
+                                            userRoleModel,
+                                            user.getPassword()
+                                    )
+                            )
+                    ).orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_ROLE));
             mutableResponse.setValue(response);
         });
         return mutableResponse.getValue();
     }
 
-    private SecureFindUserByEmailAndOrganizationResponse errorFindByEmailAndOrganization(final UserErrorResponseModel notFoundForOrganization) {
-        return new SecureFindUserByEmailAndOrganizationResponse(Collections.singletonList(notFoundForOrganization));
+    private SecureFindUserByUuidAndOrganizationResponse errorFindByEmailAndOrganization(final UserErrorResponseModel notFoundForOrganization) {
+        return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(notFoundForOrganization));
     }
 }

@@ -14,6 +14,7 @@ public enum UserErrorResponseModel implements ErrorResponseModel {
     MISSING_EMAIL,
     MISSING_PASSWORD,
     MISSING_ORGANIZATION,
+    MISSING_UUID,
     NOT_FOUND_FOR_EMAIL,
     NOT_FOUND_FOR_ORGANIZATION,
     NOT_FOUND_FOR_ROLE,

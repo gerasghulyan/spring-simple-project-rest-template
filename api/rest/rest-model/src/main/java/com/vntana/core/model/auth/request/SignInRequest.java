@@ -18,16 +18,12 @@ public class SignInRequest {
     @JsonProperty("password")
     private String password;
 
-    @JsonProperty("organizationUuid")
-    private String organizationUuid;
-
     public SignInRequest() {
     }
 
-    public SignInRequest(final String email, final String password, final String organizationUuid) {
+    public SignInRequest(final String email, final String password) {
         this.email = email;
         this.password = password;
-        this.organizationUuid = organizationUuid;
     }
 
     @Override
@@ -42,7 +38,6 @@ public class SignInRequest {
         return new EqualsBuilder()
                 .append(email, that.email)
                 .append(password, that.password)
-                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -51,7 +46,6 @@ public class SignInRequest {
         return new HashCodeBuilder()
                 .append(email)
                 .append(password)
-                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -77,13 +71,5 @@ public class SignInRequest {
 
     public void setPassword(final String password) {
         this.password = password;
-    }
-
-    public String getOrganizationUuid() {
-        return organizationUuid;
-    }
-
-    public void setOrganizationUuid(final String organizationUuid) {
-        this.organizationUuid = organizationUuid;
     }
 }
