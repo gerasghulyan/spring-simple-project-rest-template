@@ -13,6 +13,7 @@ import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
+import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.user.UserService;
@@ -39,20 +40,26 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final UserService userService;
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
+    private final EmailValidationComponent emailValidationComponent;
 
     public UserServiceFacadeImpl(final UserService userService,
                                  final OrganizationService organizationService,
-                                 final PersistenceUtilityService persistenceUtilityService) {
+                                 final PersistenceUtilityService persistenceUtilityService,
+                                 final EmailValidationComponent emailValidationComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
+        this.emailValidationComponent = emailValidationComponent;
     }
 
     @Override
     public CreateUserResponse create(final CreateUserRequest request) {
         LOGGER.debug("Processing Facade createUser method for request - {}", request);
         Assert.notNull(request, "The USerCreateRequest should not be null");
+        if (!emailValidationComponent.isValid(request.getEmail())) {
+            return new CreateUserResponse(Collections.singletonList(UserErrorResponseModel.INVALID_EMAIL_FORMAT));
+        }
         if (userService.findByEmail(request.getEmail()).isPresent()) {
             return new CreateUserResponse(Collections.singletonList(UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL));
         }
