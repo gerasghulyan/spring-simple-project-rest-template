@@ -34,4 +34,6 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
         user.grantOrganizationRole(clientOrganization)
         return user
     }
+
+    fun buildUserInvalidEmail(): String = uuid()
 }

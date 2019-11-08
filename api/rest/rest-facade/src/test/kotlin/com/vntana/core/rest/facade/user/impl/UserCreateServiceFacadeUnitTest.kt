@@ -27,6 +27,8 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
         val user = userHelper.buildUser()
         resetAll()
         // expectations
+        expect(emailValidationComponent.isValid(request.email))
+                .andReturn(true)
         expect(userService.findByEmail(request.email))
                 .andReturn(Optional.empty())
         expect(persistenceUtilityService.runInNewTransaction(isA(Executable::class.java)))
@@ -48,17 +50,34 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
     }
 
     @Test
-    fun `create user with existing email`() {
+    fun `test create user with existing email`() {
         val request = restHelper.buildCreateUserRequest()
         val user = userHelper.buildUser()
         resetAll()
         // expectations
+        expect(emailValidationComponent.isValid(request.email))
+                .andReturn(true)
         expect(userService.findByEmail(request.email))
                 .andReturn(Optional.of(user))
         replayAll()
         //test scenario
         userServiceFacade.create(request).let {
             restHelper.assertBasicErrorResultResponse(it, UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test create user by invalid email`() {
+        val request = restHelper.buildCreateUserRequest(email = userHelper.buildUserInvalidEmail())
+        resetAll()
+        // expectations
+        expect(emailValidationComponent.isValid(request.email))
+                .andReturn(false)
+        replayAll()
+        //test scenario
+        userServiceFacade.create(request).let {
+            restHelper.assertBasicErrorResultResponse(it, UserErrorResponseModel.INVALID_EMAIL_FORMAT)
         }
         verifyAll()
     }
