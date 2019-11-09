@@ -11,17 +11,17 @@ import java.util.List;
  * Date: 10/1/19
  * Time: 6:44 PM
  */
-public class CreateUserResultResponse extends AbstractResultResponseModel<CreateUserResponseModel, UserErrorResponseModel> {
+public class CreateUserResponse extends AbstractResultResponseModel<CreateUserResponseModel, UserErrorResponseModel> {
 
-    public CreateUserResultResponse() {
+    public CreateUserResponse() {
         super();
     }
 
-    public CreateUserResultResponse(final CreateUserResponseModel response) {
+    public CreateUserResponse(final CreateUserResponseModel response) {
         super(response);
     }
 
-    public CreateUserResultResponse(final List<UserErrorResponseModel> errors) {
+    public CreateUserResponse(final List<UserErrorResponseModel> errors) {
         super(errors);
     }
 }

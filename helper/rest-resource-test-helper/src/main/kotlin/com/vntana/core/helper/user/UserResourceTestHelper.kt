@@ -1,7 +1,7 @@
 package com.vntana.core.helper.user
 
 import com.vntana.core.model.user.request.CreateUserRequest
-import com.vntana.core.model.user.response.CreateUserResultResponse
+import com.vntana.core.model.user.response.CreateUserResponse
 import com.vntana.core.rest.client.user.UserResourceClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -17,7 +17,7 @@ class UserResourceTestHelper : UserRestTestHelper() {
     @Autowired
     lateinit var userResourceClient: UserResourceClient
 
-    fun persistUser(createUserRequest: CreateUserRequest = buildCreateUserRequest()): CreateUserResultResponse {
+    fun persistUser(createUserRequest: CreateUserRequest = buildCreateUserRequest()): CreateUserResponse {
         return userResourceClient.createUser(createUserRequest)
     }
 

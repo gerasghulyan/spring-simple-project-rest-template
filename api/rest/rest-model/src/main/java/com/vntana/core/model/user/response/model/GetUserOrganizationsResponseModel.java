@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 04.11.19
  * Time: 16:33
  */
-public class GetUserOrganizationsResultResponseModel implements ResponseModel {
+public class GetUserOrganizationsResponseModel implements ResponseModel {
 
     @JsonProperty("uuid")
     private String uuid;
@@ -23,10 +23,10 @@ public class GetUserOrganizationsResultResponseModel implements ResponseModel {
     @JsonProperty("role")
     private UserRoleModel role;
 
-    public GetUserOrganizationsResultResponseModel() {
+    public GetUserOrganizationsResponseModel() {
     }
 
-    public GetUserOrganizationsResultResponseModel(final String uuid, final String name, final UserRoleModel role) {
+    public GetUserOrganizationsResponseModel(final String uuid, final String name, final UserRoleModel role) {
         this.uuid = uuid;
         this.name = name;
         this.role = role;
@@ -37,10 +37,10 @@ public class GetUserOrganizationsResultResponseModel implements ResponseModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof GetUserOrganizationsResultResponseModel)) {
+        if (!(o instanceof GetUserOrganizationsResponseModel)) {
             return false;
         }
-        final GetUserOrganizationsResultResponseModel that = (GetUserOrganizationsResultResponseModel) o;
+        final GetUserOrganizationsResponseModel that = (GetUserOrganizationsResponseModel) o;
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
                 .append(name, that.name)

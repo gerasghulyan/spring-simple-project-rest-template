@@ -7,8 +7,8 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.response.CreateUserResultResponse;
-import com.vntana.core.model.user.response.FindUserByEmailResultResponse;
+import com.vntana.core.model.user.response.CreateUserResponse;
+import com.vntana.core.model.user.response.FindUserByEmailResponse;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
@@ -50,11 +50,11 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     }
 
     @Override
-    public CreateUserResultResponse create(final CreateUserRequest request) {
+    public CreateUserResponse create(final CreateUserRequest request) {
         LOGGER.debug("Processing Facade createUser method for request - {}", request);
         Assert.notNull(request, "The USerCreateRequest should not be null");
         if (userService.findByEmail(request.getEmail()).isPresent()) {
-            return new CreateUserResultResponse(Collections.singletonList(UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL));
+            return new CreateUserResponse(Collections.singletonList(UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL));
         }
         final Mutable<String> mutableUserUuid = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
@@ -72,19 +72,19 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             mutableUserUuid.setValue(user.getUuid());
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
-        return new CreateUserResultResponse(new CreateUserResponseModel(mutableUserUuid.getValue()));
+        return new CreateUserResponse(new CreateUserResponseModel(mutableUserUuid.getValue()));
     }
 
     @Override
-    public FindUserByEmailResultResponse findByEmail(final FindUserByEmailRequest request) {
+    public FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request) {
         return userService.findByEmail(request.getEmail())
-                .map(user -> new FindUserByEmailResultResponse(
+                .map(user -> new FindUserByEmailResponse(
                         new FindUserByEmailResponseModel(
                                 true,
                                 user.getEmail(),
                                 UserRoleModel.ASSET_MANAGER
                         )
                 ))
-                .orElseGet(() -> new FindUserByEmailResultResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
+                .orElseGet(() -> new FindUserByEmailResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
     }
 }

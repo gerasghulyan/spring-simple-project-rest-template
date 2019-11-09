@@ -10,8 +10,9 @@ import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlug
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
-import com.vntana.core.model.user.response.model.GetUserOrganizationsResultResponseModel;
-import com.vntana.core.model.user.response.model.UserOrganizationResultResponse;
+import com.vntana.core.model.user.response.model.GetUserOrganizationsGridResponseModel;
+import com.vntana.core.model.user.response.model.GetUserOrganizationsResponseModel;
+import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import com.vntana.core.service.organization.OrganizationService;
@@ -85,34 +86,37 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     }
 
     @Override
-    public UserOrganizationResultResponse getUserOrganizations(final String uuid) {
-        final Mutable<List<GetUserOrganizationsResultResponseModel>> mutableResponse = new MutableObject<>();
+    public UserOrganizationResponse getUserOrganizations(final String userUuid) {
+        LOGGER.debug("Retrieving user organizations by user uuid - {}", userUuid);
+        final Mutable<List<GetUserOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
-            final User user = userService.getByUuid(uuid);
-            final List<GetUserOrganizationsResultResponseModel> response = user.roleOfSuperAdmin()
-                    .map(userSuperAdminRole -> getOrganizationsWhenAdmin())
+            final User user = userService.getByUuid(userUuid);
+            final List<GetUserOrganizationsResponseModel> response = user.roleOfSuperAdmin()
+                    .map(userSuperAdminRole -> getOrganizationsWhenAdmin(userUuid))
                     .orElseGet(() -> getOrganizationsWhenNotAdmin(user));
             mutableResponse.setValue(response);
         });
-        final List<GetUserOrganizationsResultResponseModel> response = mutableResponse.getValue();
-        return new UserOrganizationResultResponse(response.size(), response);
+        final List<GetUserOrganizationsResponseModel> response = mutableResponse.getValue();
+        return new UserOrganizationResponse(new GetUserOrganizationsGridResponseModel(response.size(), response));
     }
 
-    private List<GetUserOrganizationsResultResponseModel> getOrganizationsWhenNotAdmin(final User user) {
+    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotAdmin(final User user) {
+        LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {}", user.getUuid());
         return user.roles()
                 .stream()
                 .map(userRole -> {
+                    LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {} and role - {}", user.getUuid(), userRole.getType().name());
                     switch (userRole.getType()) {
                         case ORGANIZATION_ROLE:
                             final UserOrganizationRole userOrganizationRole = (UserOrganizationRole) userRole;
-                            return new GetUserOrganizationsResultResponseModel(
+                            return new GetUserOrganizationsResponseModel(
                                     userOrganizationRole.getOrganization().getUuid(),
                                     userOrganizationRole.getOrganization().getName(),
                                     UserRoleModel.valueOf(userOrganizationRole.getUserRole().name())
                             );
                         case CLIENT_ROLE:
                             final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
-                            return new GetUserOrganizationsResultResponseModel(
+                            return new GetUserOrganizationsResponseModel(
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getName(),
                                     UserRoleModel.valueOf(userClientOrganizationRole.getUserRole().name())
@@ -124,9 +128,10 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .collect(Collectors.toList());
     }
 
-    private List<GetUserOrganizationsResultResponseModel> getOrganizationsWhenAdmin() {
+    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenAdmin(final String userUuid) {
+        LOGGER.debug("Retrieving user organizations for system admin user with uuid - {}", userUuid);
         return organizationService.getAll().stream()
-                .map(organization -> new GetUserOrganizationsResultResponseModel(
+                .map(organization -> new GetUserOrganizationsResponseModel(
                         organization.getUuid(),
                         organization.getName(),
                         UserRoleModel.SUPER_ADMIN

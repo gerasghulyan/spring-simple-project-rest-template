@@ -4,7 +4,7 @@ import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlug
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
-import com.vntana.core.model.user.response.model.UserOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserOrganizationResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -16,5 +16,5 @@ public interface OrganizationServiceFacade {
 
     CreateOrganizationResultResponse create(final CreateOrganizationRequest request);
 
-    UserOrganizationResultResponse getUserOrganizations(final String uuid);
+    UserOrganizationResponse getUserOrganizations(final String userUuid);
 }
