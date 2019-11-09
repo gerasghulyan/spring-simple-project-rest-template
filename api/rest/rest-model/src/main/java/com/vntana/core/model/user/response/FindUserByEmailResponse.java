@@ -11,15 +11,15 @@ import java.util.List;
  * Date: 10/18/19
  * Time: 5:07 PM
  */
-public class FindUserByEmailResultResponse extends AbstractResultResponseModel<FindUserByEmailResponseModel, UserErrorResponseModel> {
-    public FindUserByEmailResultResponse() {
+public class FindUserByEmailResponse extends AbstractResultResponseModel<FindUserByEmailResponseModel, UserErrorResponseModel> {
+    public FindUserByEmailResponse() {
     }
 
-    public FindUserByEmailResultResponse(final FindUserByEmailResponseModel response) {
+    public FindUserByEmailResponse(final FindUserByEmailResponseModel response) {
         super(response);
     }
 
-    public FindUserByEmailResultResponse(final List<UserErrorResponseModel> errors) {
+    public FindUserByEmailResponse(final List<UserErrorResponseModel> errors) {
         super(errors);
     }
 }

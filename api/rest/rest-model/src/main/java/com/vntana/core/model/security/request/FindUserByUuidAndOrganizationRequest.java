@@ -16,27 +16,27 @@ import java.util.List;
  * Date: 10/18/19
  * Time: 5:06 PM
  */
-public class FindUserByEmailAndOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
+public class FindUserByUuidAndOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
-    @JsonProperty("email")
-    private String email;
+    @JsonProperty("uuid")
+    private String uuid;
 
     @JsonProperty("organizationUuid")
     private String organizationUuid;
 
-    public FindUserByEmailAndOrganizationRequest() {
+    public FindUserByUuidAndOrganizationRequest() {
     }
 
-    public FindUserByEmailAndOrganizationRequest(final String email, final String organizationUuid) {
-        this.email = email;
+    public FindUserByUuidAndOrganizationRequest(final String uuid, final String organizationUuid) {
+        this.uuid = uuid;
         this.organizationUuid = organizationUuid;
     }
 
     @Override
     public List<UserErrorResponseModel> validate() {
         final List<UserErrorResponseModel> errors = initializeNew();
-        if (StringUtils.isBlank(email)) {
-            errors.add(UserErrorResponseModel.MISSING_EMAIL);
+        if (StringUtils.isBlank(uuid)) {
+            errors.add(UserErrorResponseModel.MISSING_UUID);
         }
         if (StringUtils.isBlank(organizationUuid)) {
             errors.add(UserErrorResponseModel.MISSING_ORGANIZATION);
@@ -49,12 +49,12 @@ public class FindUserByEmailAndOrganizationRequest extends AbstractRequestModel 
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FindUserByEmailAndOrganizationRequest)) {
+        if (!(o instanceof FindUserByUuidAndOrganizationRequest)) {
             return false;
         }
-        final FindUserByEmailAndOrganizationRequest that = (FindUserByEmailAndOrganizationRequest) o;
+        final FindUserByUuidAndOrganizationRequest that = (FindUserByUuidAndOrganizationRequest) o;
         return new EqualsBuilder()
-                .append(email, that.email)
+                .append(uuid, that.uuid)
                 .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
@@ -62,7 +62,7 @@ public class FindUserByEmailAndOrganizationRequest extends AbstractRequestModel 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(email)
+                .append(uuid)
                 .append(organizationUuid)
                 .toHashCode();
     }
@@ -70,17 +70,17 @@ public class FindUserByEmailAndOrganizationRequest extends AbstractRequestModel 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("email", email)
+                .append("uuid", uuid)
                 .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
-    public String getEmail() {
-        return email;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
+    public void setUuid(final String uuid) {
+        this.uuid = uuid;
     }
 
     public String getOrganizationUuid() {

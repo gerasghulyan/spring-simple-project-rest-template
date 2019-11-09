@@ -70,6 +70,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUuid(uuid);
     }
 
+    @Override
+    public User getByUuid(final String uuid) {
+        Assert.notNull(uuid, "The user uuid should not be null");
+        return (findByUuid(uuid)).orElseThrow(() -> {
+            LOGGER.error("Can not find user for uuid - {}", uuid);
+            return new IllegalStateException(format("Can not find user for uuid - %s", uuid));
+        });
+    }
+
     private void assertCreateDto(final CreateUserDto dto) {
         Assert.notNull(dto, "The user creation dto should not be null");
         Assert.hasText(dto.getFullName(), "The user full name should not be null or empty");

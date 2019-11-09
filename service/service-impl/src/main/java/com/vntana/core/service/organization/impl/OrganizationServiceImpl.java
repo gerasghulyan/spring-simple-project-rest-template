@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -53,6 +54,20 @@ public class OrganizationServiceImpl implements OrganizationService {
         Assert.hasText(slug, "The organization slug should not be null");
         LOGGER.debug("Trying to find organization for slug - {}", slug);
         return organizationRepository.findBySlug(slug);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Organization> getAll() {
+        LOGGER.debug("Trying to find all organization");
+        return organizationRepository.findAll();
+    }
+
+    @Override
+    public Organization getByUuid(final String uuid) {
+        return findByUuid(uuid).orElseThrow(() -> {
+            LOGGER.error("Can not find organization for uuid - {}", uuid);
+            return new IllegalStateException(format("Can not find organization for uuid - %s", uuid));
+        });
     }
 
     private void assertCreateOrganizationDto(final CreateOrganizationDto dto) {

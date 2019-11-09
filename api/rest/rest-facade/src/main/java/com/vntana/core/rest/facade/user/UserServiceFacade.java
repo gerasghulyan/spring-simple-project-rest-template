@@ -2,8 +2,8 @@ package com.vntana.core.rest.facade.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.response.CreateUserResultResponse;
-import com.vntana.core.model.user.response.FindUserByEmailResultResponse;
+import com.vntana.core.model.user.response.CreateUserResponse;
+import com.vntana.core.model.user.response.FindUserByEmailResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -11,7 +11,7 @@ import com.vntana.core.model.user.response.FindUserByEmailResultResponse;
  * Time: 6:35 PM
  */
 public interface UserServiceFacade {
-    CreateUserResultResponse create(final CreateUserRequest request);
+    CreateUserResponse create(final CreateUserRequest request);
 
-    FindUserByEmailResultResponse findByEmail(final FindUserByEmailRequest request);
+    FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 }

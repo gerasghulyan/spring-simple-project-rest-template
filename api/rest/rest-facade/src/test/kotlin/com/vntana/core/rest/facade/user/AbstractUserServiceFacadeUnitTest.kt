@@ -8,7 +8,6 @@ import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.rest.facade.user.impl.UserServiceFacadeImpl
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
-import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
 import org.junit.Before
 
@@ -31,9 +30,6 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
     protected lateinit var userService: UserService
 
     @Mock
-    protected lateinit var mapperFacade: MapperFacade
-
-    @Mock
     protected lateinit var organizationService: OrganizationService
 
     @Mock
@@ -41,6 +37,6 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
 
     @Before
     fun before() {
-        userServiceFacade = UserServiceFacadeImpl(userService, mapperFacade, organizationService, persistenceUtilityService)
+        userServiceFacade = UserServiceFacadeImpl(userService, organizationService, persistenceUtilityService)
     }
 }

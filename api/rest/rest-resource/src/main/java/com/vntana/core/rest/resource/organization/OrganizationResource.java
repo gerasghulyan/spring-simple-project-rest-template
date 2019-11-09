@@ -4,14 +4,12 @@ import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlug
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arthur Asatryan.
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/organizations",
-        consumes = "application/json",
         produces = "application/json"
 )
 public class OrganizationResource {
@@ -47,6 +44,14 @@ public class OrganizationResource {
         LOGGER.debug("Creating organization for request - {}", request);
         final CreateOrganizationResultResponse resultResponse = organizationServiceFacade.create(request);
         LOGGER.debug("Successfully created organization with response - {}", resultResponse);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @GetMapping(path = "/users/{uuid}")
+    public ResponseEntity<UserOrganizationResponse> getUserOrganizations(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Processing find organizations by user uuid - {}", uuid);
+        final UserOrganizationResponse resultResponse = organizationServiceFacade.getUserOrganizations(uuid);
+        LOGGER.debug("Successfully proceeded find organizations by user uuid with response - {}", resultResponse);
         return ResponseEntity.ok(resultResponse);
     }
 }
