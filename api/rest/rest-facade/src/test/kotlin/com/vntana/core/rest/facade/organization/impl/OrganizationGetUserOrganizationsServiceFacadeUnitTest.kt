@@ -31,13 +31,13 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         replayAll()
         // test scenario
         organizationServiceFacade.getUserOrganizations(user.uuid).let {
-            assertThat(it.totalCount()).isEqualTo(2)
-            assertThat(it.items()[0].uuid).isEqualTo(organization.uuid)
-            assertThat(it.items()[0].name).isEqualTo(organization.name)
-            assertThat(it.items()[0].role).isEqualTo(UserRoleModel.SUPER_ADMIN)
-            assertThat(it.items()[1].uuid).isEqualTo(organization2.uuid)
-            assertThat(it.items()[1].name).isEqualTo(organization2.name)
-            assertThat(it.items()[1].role).isEqualTo(UserRoleModel.SUPER_ADMIN)
+            assertThat(it.response().totalCount()).isEqualTo(2)
+            assertThat(it.response().items()[0].uuid).isEqualTo(organization.uuid)
+            assertThat(it.response().items()[0].name).isEqualTo(organization.name)
+            assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.SUPER_ADMIN)
+            assertThat(it.response().items()[1].uuid).isEqualTo(organization2.uuid)
+            assertThat(it.response().items()[1].name).isEqualTo(organization2.name)
+            assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.SUPER_ADMIN)
         }
         verifyAll()
     }
@@ -59,13 +59,13 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         replayAll()
         // test scenario
         organizationServiceFacade.getUserOrganizations(user.uuid).let {
-            assertThat(it.totalCount()).isEqualTo(2)
-            assertThat(it.items()[0].uuid).isEqualTo(organization.uuid)
-            assertThat(it.items()[0].name).isEqualTo(organization.name)
-            assertThat(it.items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
-            assertThat(it.items()[1].uuid).isEqualTo(clientOrganization.organization.uuid)
-            assertThat(it.items()[1].name).isEqualTo(clientOrganization.organization.name)
-            assertThat(it.items()[1].role).isEqualTo(UserRoleModel.CLIENT_ADMIN)
+            assertThat(it.response().totalCount()).isEqualTo(2)
+            assertThat(it.response().items()[0].uuid).isEqualTo(organization.uuid)
+            assertThat(it.response().items()[0].name).isEqualTo(organization.name)
+            assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(it.response().items()[1].uuid).isEqualTo(clientOrganization.organization.uuid)
+            assertThat(it.response().items()[1].name).isEqualTo(clientOrganization.organization.name)
+            assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.CLIENT_ADMIN)
         }
         verifyAll()
     }
