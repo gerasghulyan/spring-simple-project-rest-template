@@ -4,7 +4,10 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,4 +23,8 @@ public interface ClientOrganizationResourceClient {
 
     @PostMapping(path = "/create")
     CreateClientOrganizationResultResponse create(@RequestBody final CreateClientOrganizationRequest request);
+
+    @GetMapping(path = "/users/{userUuid}/organizations/{userOrganizationUuid}")
+    UserClientOrganizationResponse getUserClientOrganizations(@PathVariable("userUuid") final String userUuid,
+                                                              @PathVariable("userOrganizationUuid") final String userOrganizationUuid);
 }

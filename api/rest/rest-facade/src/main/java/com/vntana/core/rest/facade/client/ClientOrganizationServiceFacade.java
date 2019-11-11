@@ -4,6 +4,7 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -14,4 +15,6 @@ public interface ClientOrganizationServiceFacade {
     CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableClientOrganizationSlugRequest request);
 
     CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request);
+
+    UserClientOrganizationResponse getUserClientOrganizations(final String userUuid, final String userOrganizationUuid);
 }

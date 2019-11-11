@@ -71,7 +71,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (userService.findByEmail(request.getEmail()).isPresent()) {
             return new CreateUserResponse(Collections.singletonList(UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL));
         }
-        final Mutable<String> mutableUserUuid = new MutableObject<>();
+        final Mutable<CreateUserResponseModel> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
             LOGGER.debug("Creating a organization for request - {}", request);
             final Organization organization = organizationService.create(
@@ -84,11 +84,11 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN
             ));
-            mutableUserUuid.setValue(user.getUuid());
+            mutableResponse.setValue(new CreateUserResponseModel(user.getUuid(), organization.getUuid()));
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
-        userVerificationSenderComponent.sendVerificationEmail(new SendUserVerificationRequest(mutableUserUuid.getValue(), request.getToken()));
-        return new CreateUserResponse(new CreateUserResponseModel(mutableUserUuid.getValue()));
+        userVerificationSenderComponent.sendVerificationEmail(new SendUserVerificationRequest(mutableResponse.getValue().getUuid(), request.getToken()));
+        return new CreateUserResponse(mutableResponse.getValue());
     }
 
     @Override
