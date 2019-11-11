@@ -36,11 +36,16 @@ class UserCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test create with existing email`() {
-//         persist user
+        // persist user
         val userRequest = resourceHelper.buildCreateUserRequest()
         assertThat(resourceHelper.persistUser(userRequest).response().uuid).isNotEmpty()
-
-//         retry to persist existing user
+        // retry to persist existing user
         resourceHelper.assertBasicErrorResultResponse(userResourceClient.createUser(userRequest), UserErrorResponseModel.SIGN_UP_WITH_EXISTING_EMAIL)
+    }
+
+    @Test
+    fun `test create user by invalid email`() {
+        val userRequest = resourceHelper.buildCreateUserRequest(email = resourceHelper.buildUserInvalidEmail())
+        resourceHelper.assertBasicErrorResultResponse(userResourceClient.createUser(userRequest), UserErrorResponseModel.INVALID_EMAIL_FORMAT)
     }
 }

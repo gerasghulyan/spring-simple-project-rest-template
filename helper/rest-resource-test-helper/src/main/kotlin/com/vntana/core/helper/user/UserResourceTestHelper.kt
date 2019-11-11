@@ -21,4 +21,5 @@ class UserResourceTestHelper : UserRestTestHelper() {
         return userResourceClient.createUser(createUserRequest)
     }
 
+    fun buildUserInvalidEmail(): String = uuid()
 }

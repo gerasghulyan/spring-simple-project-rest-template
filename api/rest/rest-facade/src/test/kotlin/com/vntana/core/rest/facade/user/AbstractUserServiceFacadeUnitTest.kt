@@ -6,6 +6,7 @@ import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.rest.facade.user.impl.UserServiceFacadeImpl
+import com.vntana.core.service.email.EmailValidationComponent
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
@@ -35,8 +36,11 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
     @Mock
     protected lateinit var persistenceUtilityService: PersistenceUtilityService
 
+    @Mock
+    protected lateinit var emailValidationComponent: EmailValidationComponent
+
     @Before
     fun before() {
-        userServiceFacade = UserServiceFacadeImpl(userService, organizationService, persistenceUtilityService)
+        userServiceFacade = UserServiceFacadeImpl(userService, organizationService, persistenceUtilityService, emailValidationComponent)
     }
 }

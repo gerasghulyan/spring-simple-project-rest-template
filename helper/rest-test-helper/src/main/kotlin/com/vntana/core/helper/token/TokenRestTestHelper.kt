@@ -9,5 +9,5 @@ import com.vntana.core.model.token.request.ResetPasswordRequest
  * Time: 3:32 PM
  */
 open class TokenRestTestHelper : AbstractRestTestHelper() {
-    fun buildResetPasswordRequest(email: String? = uuid()): ResetPasswordRequest = ResetPasswordRequest(email)
+    fun buildResetPasswordRequest(email: String? = "${uuid()}@mail.com"): ResetPasswordRequest = ResetPasswordRequest(email)
 }
