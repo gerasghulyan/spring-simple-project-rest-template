@@ -2,9 +2,11 @@ package com.vntana.core.rest.resource.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
+import com.vntana.core.model.user.request.VerifyUserRequest;
 import com.vntana.core.model.user.response.AccountUserResponse;
 import com.vntana.core.model.user.response.CreateUserResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResponse;
+import com.vntana.core.model.user.response.VerifyUserResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,5 +57,13 @@ public class UserResource {
         final AccountUserResponse response = userServiceFacade.accountDetails(uuid, organizationUuid);
         LOGGER.debug("Successfully proceeded find user account with response - {}", response);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping(path = "/verify")
+    public ResponseEntity<VerifyUserResponse> verify(@RequestBody final VerifyUserRequest request) {
+        LOGGER.debug("Processing user resource verify method for request - {}", request);
+        final VerifyUserResponse resultResponse = userServiceFacade.verify(request.getUuid());
+        LOGGER.debug("Successfully processed user resource verify method for request - {}", request);
+        return ResponseEntity.ok(resultResponse);
     }
 }

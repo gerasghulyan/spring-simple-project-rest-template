@@ -5,6 +5,7 @@ import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.response.AccountUserResponse;
 import com.vntana.core.model.user.response.CreateUserResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResponse;
+import com.vntana.core.model.user.response.VerifyUserResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -17,4 +18,6 @@ public interface UserServiceFacade {
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
     AccountUserResponse accountDetails(final String uuid, final String organizationUuid);
+
+    VerifyUserResponse verify(final String uuid);
 }

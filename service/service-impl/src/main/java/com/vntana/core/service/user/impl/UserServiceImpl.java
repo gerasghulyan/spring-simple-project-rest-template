@@ -6,6 +6,8 @@ import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
+import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -75,8 +77,22 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(uuid, "The user uuid should not be null");
         return (findByUuid(uuid)).orElseThrow(() -> {
             LOGGER.error("Can not find user for uuid - {}", uuid);
-            return new IllegalStateException(format("Can not find user for uuid - %s", uuid));
+            return new UserNotFoundForUuidException(uuid, User.class);
         });
+    }
+
+    @Override
+    public User makeVerified(final String uuid) {
+        LOGGER.debug("Making user verified having uuid - {}", uuid);
+        Assert.hasText(uuid, "The user uuid should not be null or empty");
+        final User user = getByUuid(uuid);
+        if (user.getVerified()) {
+            throw new UserAlreadyVerifiedException(String.format("The user having %s uuid is already verified", uuid));
+        }
+        user.setVerified(true);
+        final User updatedUser = userRepository.save(user);
+        LOGGER.debug("Successfully made user verified having uuid - {}", uuid);
+        return updatedUser;
     }
 
     private void assertCreateDto(final CreateUserDto dto) {
