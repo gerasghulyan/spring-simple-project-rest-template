@@ -102,18 +102,27 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final Mutable<AccountUserResponse> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInPersistenceSession(() -> {
             final User user = userService.getByUuid(uuid);
-            final Organization organization = organizationService.getByUuid(organizationUuid);
-            final AccountUserResponse response = user.roleOfOrganization(organization)
-                    .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
-                    .map(userRoleModel -> new AccountUserResponse(
-                                    new AccountUserResponseModel(
-                                            user.getUuid(),
-                                            user.getFullName(),
-                                            user.getEmail(),
-                                            userRoleModel
-                                    )
-                            )
-                    ).orElseGet(this::errorFindByEmailAndOrganization);
+            final AccountUserResponse response = user.roleOfSuperAdmin()
+                    .map(userSuperAdminRole -> new AccountUserResponse(new AccountUserResponseModel(
+                            user.getUuid(),
+                            user.getFullName(),
+                            user.getEmail(),
+                            UserRoleModel.SUPER_ADMIN))
+                    )
+                    .orElseGet(() -> {
+                        final Organization organization = organizationService.getByUuid(organizationUuid);
+                        return user.roleOfOrganization(organization)
+                                .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
+                                .map(userRoleModel -> new AccountUserResponse(
+                                                new AccountUserResponseModel(
+                                                        user.getUuid(),
+                                                        user.getFullName(),
+                                                        user.getEmail(),
+                                                        userRoleModel
+                                                )
+                                        )
+                                ).orElseGet(this::errorFindByEmailAndOrganization);
+                    });
             mutableResponse.setValue(response);
         });
         return mutableResponse.getValue();

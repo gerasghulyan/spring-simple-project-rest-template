@@ -58,4 +58,26 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
         verifyAll()
     }
 
+    @Test
+    fun `test when found and role is super admin`() {
+        // test data
+        val user = userHelper.buildUser()
+        val organization = organizationHelper.buildOrganization()
+        user.grantSuperAdminRole()
+        resetAll()
+        // expectations
+        expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
+                .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
+        expect(userService.getByUuid(user.uuid)).andReturn(user)
+        replayAll()
+        // test scenario
+        val resultResponse = userServiceFacade.accountDetails(user.uuid, organization.uuid)
+        restHelper.assertBasicSuccessResultResponse(resultResponse)
+        assertThat(resultResponse.response().uuid).isEqualTo(user.uuid)
+        assertThat(resultResponse.response().email).isEqualTo(user.email)
+        assertThat(resultResponse.response().role).isEqualTo(UserRoleModel.SUPER_ADMIN)
+        assertThat(resultResponse.response().getfullName()).isEqualTo(user.fullName)
+        verifyAll()
+    }
+
 }
