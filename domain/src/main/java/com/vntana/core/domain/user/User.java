@@ -34,6 +34,9 @@ public class User extends AbstractUuidAwareDomainEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "verified", nullable = false)
+    private Boolean verified;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AbstractUserRole> roles;
 
@@ -44,6 +47,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
+        this.verified = false;
     }
 
     //region Public methods
@@ -110,6 +114,14 @@ public class User extends AbstractUuidAwareDomainEntity {
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(final Boolean verified) {
+        this.verified = verified;
     }
 
     public List<AbstractUserRole> roles() {
@@ -182,6 +194,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         return new ToStringBuilder(this)
                 .append("fullName", fullName)
                 .append("email", email)
+                .append("verified", verified)
                 .toString();
     }
 }

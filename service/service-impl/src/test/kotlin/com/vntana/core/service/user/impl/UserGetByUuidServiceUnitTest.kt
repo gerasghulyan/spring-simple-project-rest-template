@@ -1,6 +1,7 @@
 package com.vntana.core.service.user.impl
 
 import com.vntana.core.service.user.AbstractUserServiceUnitTest
+import com.vntana.core.service.user.exception.UserNotFoundForUuidException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
@@ -33,7 +34,7 @@ class UserGetByUuidServiceUnitTest : AbstractUserServiceUnitTest() {
         expect(userRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
-        assertThatThrownBy { userService.getByUuid(uuid) }.isExactlyInstanceOf(IllegalStateException::class.java)
+        assertThatThrownBy { userService.getByUuid(uuid) }.isExactlyInstanceOf(UserNotFoundForUuidException::class.java)
         verifyAll()
     }
 

@@ -18,4 +18,6 @@ public interface UserService {
     Optional<User> findByUuid(final String uuid);
 
     User getByUuid(final String uuid);
+
+    User makeVerified(final String uuid);
 }

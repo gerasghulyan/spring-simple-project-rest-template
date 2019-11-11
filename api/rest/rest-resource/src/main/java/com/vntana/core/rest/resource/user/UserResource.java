@@ -2,16 +2,15 @@ package com.vntana.core.rest.resource.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
+import com.vntana.core.model.user.request.VerifyUserRequest;
 import com.vntana.core.model.user.response.CreateUserResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResponse;
+import com.vntana.core.model.user.response.VerifyUserResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arthur Asatryan.
@@ -46,6 +45,14 @@ public class UserResource {
         LOGGER.debug("Processing find user by email request - {}", request);
         final FindUserByEmailResponse resultResponse = userServiceFacade.findByEmail(request);
         LOGGER.debug("Successfully proceeded find user by email request with response - {}", resultResponse);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @PutMapping(path = "/verify")
+    public ResponseEntity<VerifyUserResponse> verify(@RequestBody final VerifyUserRequest request) {
+        LOGGER.debug("Processing user resource verify method for request - {}", request);
+        final VerifyUserResponse resultResponse = userServiceFacade.verify(request.getUuid());
+        LOGGER.debug("Successfully processed user resource verify method for request - {}", request);
         return ResponseEntity.ok(resultResponse);
     }
 }

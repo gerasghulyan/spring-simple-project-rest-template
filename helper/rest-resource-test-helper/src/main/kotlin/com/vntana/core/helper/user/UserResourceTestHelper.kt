@@ -21,5 +21,10 @@ class UserResourceTestHelper : UserRestTestHelper() {
         return userResourceClient.createUser(createUserRequest)
     }
 
+    fun persistVerifiedUser(): String {
+        val userUuid = persistUser().response().uuid
+        return userResourceClient.verify(buildVerifyUserRequest(uuid = userUuid)).response().uuid
+    }
+
     fun buildUserInvalidEmail(): String = uuid()
 }

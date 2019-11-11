@@ -9,6 +9,7 @@ import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.response.CreateUserResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResponse;
+import com.vntana.core.model.user.response.VerifyUserResponse;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
@@ -18,6 +19,7 @@ import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
@@ -26,6 +28,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Arthur Asatryan.
@@ -93,5 +97,31 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                         )
                 ))
                 .orElseGet(() -> new FindUserByEmailResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
+    }
+
+    @Override
+    public VerifyUserResponse verify(final String uuid) {
+        LOGGER.debug("Processing user facade verify method for uuid - {}", uuid);
+        final List<UserErrorResponseModel> errorsList = checkVerifyForPossibleErrors(uuid);
+        if (!errorsList.isEmpty()) {
+            return new VerifyUserResponse(errorsList);
+        }
+        final User user = userService.makeVerified(uuid);
+        LOGGER.debug("Successfully processed user facade verify method for uuid - {}", uuid);
+        return new VerifyUserResponse(user.getUuid());
+    }
+
+    private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String uuid) {
+        if (StringUtils.isBlank(uuid)) {
+            return Collections.singletonList(UserErrorResponseModel.MISSING_UUID);
+        }
+        final Optional<User> user = userService.findByUuid(uuid);
+        if (!user.isPresent()) {
+            return Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_UUID);
+        }
+        if (user.get().getVerified()) {
+            return Collections.singletonList(UserErrorResponseModel.USER_ALREADY_VERIFIED);
+        }
+        return Collections.emptyList();
     }
 }
