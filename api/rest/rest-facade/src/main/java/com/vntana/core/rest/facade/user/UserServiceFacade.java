@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
+import com.vntana.core.model.user.response.AccountUserResponse;
 import com.vntana.core.model.user.response.CreateUserResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResponse;
 import com.vntana.core.model.user.response.VerifyUserResponse;
@@ -15,6 +16,8 @@ public interface UserServiceFacade {
     CreateUserResponse create(final CreateUserRequest request);
 
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
+
+    AccountUserResponse accountDetails(final String uuid, final String organizationUuid);
 
     VerifyUserResponse verify(final String uuid);
 }

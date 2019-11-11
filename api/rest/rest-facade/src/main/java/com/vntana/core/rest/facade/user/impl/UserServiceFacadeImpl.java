@@ -7,8 +7,10 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
+import com.vntana.core.model.user.response.AccountUserResponse;
 import com.vntana.core.model.user.response.CreateUserResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResponse;
+import com.vntana.core.model.user.response.model.AccountUserResponseModel;
 import com.vntana.core.model.user.response.VerifyUserResponse;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
@@ -98,6 +100,42 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 ))
                 .orElseGet(() -> new FindUserByEmailResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
     }
+
+    @Override
+    public AccountUserResponse accountDetails(final String uuid, final String organizationUuid) {
+        final Mutable<AccountUserResponse> mutableResponse = new MutableObject<>();
+        persistenceUtilityService.runInPersistenceSession(() -> {
+            final User user = userService.getByUuid(uuid);
+            final AccountUserResponse response = user.roleOfSuperAdmin()
+                    .map(userSuperAdminRole -> new AccountUserResponse(new AccountUserResponseModel(
+                            user.getUuid(),
+                            user.getFullName(),
+                            user.getEmail(),
+                            UserRoleModel.SUPER_ADMIN))
+                    )
+                    .orElseGet(() -> {
+                        final Organization organization = organizationService.getByUuid(organizationUuid);
+                        return user.roleOfOrganization(organization)
+                                .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
+                                .map(userRoleModel -> new AccountUserResponse(
+                                                new AccountUserResponseModel(
+                                                        user.getUuid(),
+                                                        user.getFullName(),
+                                                        user.getEmail(),
+                                                        userRoleModel
+                                                )
+                                        )
+                                ).orElseGet(this::errorFindByEmailAndOrganization);
+                    });
+            mutableResponse.setValue(response);
+        });
+        return mutableResponse.getValue();
+    }
+
+    private AccountUserResponse errorFindByEmailAndOrganization() {
+        return new AccountUserResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION));
+    }
+
 
     @Override
     public VerifyUserResponse verify(final String uuid) {
