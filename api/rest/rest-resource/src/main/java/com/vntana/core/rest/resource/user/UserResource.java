@@ -2,16 +2,14 @@ package com.vntana.core.rest.resource.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
+import com.vntana.core.model.user.response.AccountUserResponse;
 import com.vntana.core.model.user.response.CreateUserResponse;
 import com.vntana.core.model.user.response.FindUserByEmailResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arthur Asatryan.
@@ -47,5 +45,15 @@ public class UserResource {
         final FindUserByEmailResponse resultResponse = userServiceFacade.findByEmail(request);
         LOGGER.debug("Successfully proceeded find user by email request with response - {}", resultResponse);
         return ResponseEntity.ok(resultResponse);
+    }
+
+    @GetMapping(path = "/{uuid}/account-details/organizations/{organizationUuid}")
+    public ResponseEntity<AccountUserResponse> accountDetails(
+            @PathVariable("uuid") final String uuid,
+            @PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing find user account by uuid - {} and organizationUuid - {}", uuid, organizationUuid);
+        final AccountUserResponse response = userServiceFacade.accountDetails(uuid, organizationUuid);
+        LOGGER.debug("Successfully proceeded find user account with response - {}", response);
+        return ResponseEntity.ok(response);
     }
 }
