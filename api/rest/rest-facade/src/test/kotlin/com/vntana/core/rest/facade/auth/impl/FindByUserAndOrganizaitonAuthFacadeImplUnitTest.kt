@@ -21,8 +21,8 @@ class FindByUserAndOrganizaitonAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
     fun `test findByUserAndOrganization`() {
         // test data
         val user = userHelper.buildUser()
-        val secureUser = SecureUserOrganizationResponseModel(user.uuid, user.email, UserRoleModel.ORGANIZATION_ADMIN, user.password)
         val organization = organizationCommonTestHelper.buildOrganization()
+        val secureUser = SecureUserOrganizationResponseModel(user.uuid, user.email, UserRoleModel.ORGANIZATION_ADMIN, organization.uuid)
         user.grantOrganizationRole(organization)
         resetAll()
         // expectations
