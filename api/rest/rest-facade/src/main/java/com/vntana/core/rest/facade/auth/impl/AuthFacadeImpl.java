@@ -6,7 +6,7 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest;
 import com.vntana.core.model.security.response.SecureFindUserByUuidAndOrganizationResponse;
 import com.vntana.core.model.security.response.SecureFindUserByEmailResponse;
-import com.vntana.core.model.security.response.model.SecureFindUserByEmailAndOrganizationResponseModel;
+import com.vntana.core.model.security.response.model.SecureUserOrganizationResponseModel;
 import com.vntana.core.model.security.response.model.SecureFindUserByEmailResponseModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
@@ -75,11 +75,11 @@ public class AuthFacadeImpl implements AuthFacade {
             final SecureFindUserByUuidAndOrganizationResponse response = user.roleOfOrganization(organization)
                     .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
                     .map(userRoleModel -> new SecureFindUserByUuidAndOrganizationResponse(
-                                    new SecureFindUserByEmailAndOrganizationResponseModel(
+                                    new SecureUserOrganizationResponseModel(
                                             user.getUuid(),
                                             user.getEmail(),
                                             userRoleModel,
-                                            user.getPassword()
+                                            organization.getUuid()
                                     )
                             )
                     ).orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_ROLE));

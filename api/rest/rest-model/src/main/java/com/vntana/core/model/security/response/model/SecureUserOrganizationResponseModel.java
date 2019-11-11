@@ -12,9 +12,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 10/18/19
  * Time: 5:08 PM
  */
-public class SecureFindUserByEmailAndOrganizationResponseModel implements ResponseModel {
+public class SecureUserOrganizationResponseModel implements ResponseModel {
 
-    //region Properties
     @JsonProperty("uuid")
     private String uuid;
 
@@ -24,37 +23,33 @@ public class SecureFindUserByEmailAndOrganizationResponseModel implements Respon
     @JsonProperty("userRole")
     private UserRoleModel userRole;
 
-    @JsonProperty("password")
-    private String password;
-    //endregion
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
 
-    //region Constructors
-    public SecureFindUserByEmailAndOrganizationResponseModel() {
+    public SecureUserOrganizationResponseModel() {
     }
 
-    public SecureFindUserByEmailAndOrganizationResponseModel(final String uuid, final String username, final UserRoleModel userRole, final String password) {
+    public SecureUserOrganizationResponseModel(final String uuid, final String username, final UserRoleModel userRole, final String organizationUuid) {
         this.uuid = uuid;
         this.username = username;
         this.userRole = userRole;
-        this.password = password;
+        this.organizationUuid = organizationUuid;
     }
-    //endregion
 
-    //region Equals, HashCode and ToString
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SecureFindUserByEmailAndOrganizationResponseModel)) {
+        if (!(o instanceof SecureUserOrganizationResponseModel)) {
             return false;
         }
-        final SecureFindUserByEmailAndOrganizationResponseModel that = (SecureFindUserByEmailAndOrganizationResponseModel) o;
+        final SecureUserOrganizationResponseModel that = (SecureUserOrganizationResponseModel) o;
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
                 .append(username, that.username)
                 .append(userRole, that.userRole)
-                .append(password, that.password)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -64,7 +59,7 @@ public class SecureFindUserByEmailAndOrganizationResponseModel implements Respon
                 .append(uuid)
                 .append(username)
                 .append(userRole)
-                .append(password)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -74,12 +69,10 @@ public class SecureFindUserByEmailAndOrganizationResponseModel implements Respon
                 .append("uuid", uuid)
                 .append("username", username)
                 .append("userRole", userRole)
-                .append("password", password)
+                .append("organizationUuid", organizationUuid)
                 .toString();
     }
-    //endregion
 
-    //region Properties getters and setters
     public String getUuid() {
         return uuid;
     }
@@ -104,13 +97,11 @@ public class SecureFindUserByEmailAndOrganizationResponseModel implements Respon
         this.userRole = userRole;
     }
 
-    public String getPassword() {
-        return password;
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 
-    public void setPassword(final String password) {
-        this.password = password;
+    public void setOrganizationUuid(final String organizationUuid) {
+        this.organizationUuid = organizationUuid;
     }
-    //endregion
-
 }

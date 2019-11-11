@@ -1,7 +1,7 @@
 package com.vntana.core.model.security.response;
 
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
-import com.vntana.core.model.security.response.model.SecureFindUserByEmailAndOrganizationResponseModel;
+import com.vntana.core.model.security.response.model.SecureUserOrganizationResponseModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 
 import java.util.List;
@@ -11,11 +11,11 @@ import java.util.List;
  * Date: 10/18/19
  * Time: 5:07 PM
  */
-public class SecureFindUserByUuidAndOrganizationResponse extends AbstractResultResponseModel<SecureFindUserByEmailAndOrganizationResponseModel, UserErrorResponseModel> {
+public class SecureFindUserByUuidAndOrganizationResponse extends AbstractResultResponseModel<SecureUserOrganizationResponseModel, UserErrorResponseModel> {
     public SecureFindUserByUuidAndOrganizationResponse() {
     }
 
-    public SecureFindUserByUuidAndOrganizationResponse(final SecureFindUserByEmailAndOrganizationResponseModel response) {
+    public SecureFindUserByUuidAndOrganizationResponse(final SecureUserOrganizationResponseModel response) {
         super(response);
     }
 

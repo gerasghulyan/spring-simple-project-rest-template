@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.auth.impl
 
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest
-import com.vntana.core.model.security.response.model.SecureFindUserByEmailAndOrganizationResponseModel
+import com.vntana.core.model.security.response.model.SecureUserOrganizationResponseModel
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.auth.AbstractAuthFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +21,7 @@ class FindByUserAndOrganizaitonAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
     fun `test findByUserAndOrganization`() {
         // test data
         val user = userHelper.buildUser()
-        val secureUser = SecureFindUserByEmailAndOrganizationResponseModel(user.uuid, user.email, UserRoleModel.ORGANIZATION_ADMIN, user.password)
+        val secureUser = SecureUserOrganizationResponseModel(user.uuid, user.email, UserRoleModel.ORGANIZATION_ADMIN, user.password)
         val organization = organizationCommonTestHelper.buildOrganization()
         user.grantOrganizationRole(organization)
         resetAll()
