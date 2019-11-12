@@ -1,8 +1,6 @@
 package com.vntana.core.rest.facade.user.impl;
 
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.template.email.TemplateEmail;
-import com.vntana.core.domain.template.email.TemplateEmailType;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
@@ -14,14 +12,12 @@ import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.model.AccountUserResponseModel;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
-import com.vntana.core.notification.EmailSenderService;
-import com.vntana.core.notification.payload.verification.VerificationEmailSendPayload;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
+import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent;
 import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
-import com.vntana.core.service.template.email.TemplateEmailService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +25,6 @@ import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -51,25 +46,19 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final EmailValidationComponent emailValidationComponent;
-    private final EmailSenderService emailSenderService;
-    private final TemplateEmailService templateEmailService;
-
-    @Value("${verification.website.url}")
-    private String verificationUrlPrefix;
+    private final UserVerificationSenderComponent userVerificationSenderComponent;
 
     public UserServiceFacadeImpl(final UserService userService,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService,
                                  final EmailValidationComponent emailValidationComponent,
-                                 final EmailSenderService emailSenderService,
-                                 final TemplateEmailService templateEmailService) {
+                                 final UserVerificationSenderComponent userVerificationSenderComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.emailValidationComponent = emailValidationComponent;
-        this.emailSenderService = emailSenderService;
-        this.templateEmailService = templateEmailService;
+        this.userVerificationSenderComponent = userVerificationSenderComponent;
     }
 
     @Override
@@ -164,23 +153,10 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     @Override
     public SendUserVerificationResponse sendVerificationEmail(final SendUserVerificationRequest request) {
-        final Optional<User> userOptional = userService.findByUuid(request.getUuid());
-        if (!userOptional.isPresent()) {
-            return new SendUserVerificationResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_UUID));
-        }
-        final User user = userOptional.get();
-        if (user.getVerified()) {
-            return new SendUserVerificationResponse(Collections.singletonList(UserErrorResponseModel.USER_ALREADY_VERIFIED));
-        }
-        final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_VERIFICATION);
-        final VerificationEmailSendPayload payload = new VerificationEmailSendPayload(
-                templateEmail.getTemplateName(),
-                user.getEmail(),
-                "Confirm your e-mail address",
-                String.format("%s/%s", verificationUrlPrefix, request.getToken())
-        );
-        emailSenderService.sendEmail(payload);
-        return new SendUserVerificationResponse(request.getUuid());
+        LOGGER.debug("Processing facade sendVerificationEmail for request - {}", request);
+        final SendUserVerificationResponse sendUserVerificationResponse = userVerificationSenderComponent.sendVerificationEmail(request);
+        LOGGER.debug("Successfully processed facade sendVerificationEmail for request - {}", request);
+        return sendUserVerificationResponse;
     }
 
     private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String uuid) {

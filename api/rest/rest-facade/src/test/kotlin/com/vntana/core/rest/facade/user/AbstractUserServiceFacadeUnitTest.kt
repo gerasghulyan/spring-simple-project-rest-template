@@ -3,13 +3,12 @@ package com.vntana.core.rest.facade.user
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.user.UserRestTestHelper
-import com.vntana.core.notification.EmailSenderService
 import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent
 import com.vntana.core.rest.facade.user.impl.UserServiceFacadeImpl
 import com.vntana.core.service.email.EmailValidationComponent
 import com.vntana.core.service.organization.OrganizationService
-import com.vntana.core.service.template.email.TemplateEmailService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before
@@ -42,13 +41,10 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
     protected lateinit var emailValidationComponent: EmailValidationComponent
 
     @Mock
-    protected lateinit var emailSenderService: EmailSenderService
-
-    @Mock
-    protected lateinit var templateEmailService: TemplateEmailService
+    protected lateinit var userVerificationSenderComponent: UserVerificationSenderComponent
 
     @Before
     fun before() {
-        userServiceFacade = UserServiceFacadeImpl(userService, organizationService, persistenceUtilityService, emailValidationComponent, emailSenderService, templateEmailService)
+        userServiceFacade = UserServiceFacadeImpl(userService, organizationService, persistenceUtilityService, emailValidationComponent, userVerificationSenderComponent)
     }
 }

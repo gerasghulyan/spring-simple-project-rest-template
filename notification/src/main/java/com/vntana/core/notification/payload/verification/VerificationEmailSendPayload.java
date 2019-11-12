@@ -4,7 +4,6 @@ import com.vntana.core.notification.payload.TemplateEmailSendPayload;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,19 +18,18 @@ public class VerificationEmailSendPayload implements TemplateEmailSendPayload {
 
     private final String templateName;
     private final String recipientsEmail;
-
-    @Value("email.send.from")
-    private String senderEmail;
-
+    private final String senderEmail;
     private final String subject;
     private final String verificationLinkAddress;
 
     public VerificationEmailSendPayload(final String templateName,
                                         final String recipientsEmail,
+                                        final String senderEmail,
                                         final String subject,
                                         final String verificationLinkAddress) {
         this.templateName = templateName;
         this.recipientsEmail = recipientsEmail;
+        this.senderEmail = senderEmail;
         this.subject = subject;
         this.verificationLinkAddress = verificationLinkAddress;
     }
