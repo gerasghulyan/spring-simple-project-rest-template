@@ -89,6 +89,11 @@ pipeline {
                             credentialsId: 'nexus',
                             usernameVariable: 'DOCKER_REGISTRY_USERNAME',
                             passwordVariable: 'DOCKER_REGISTRY_PASSWORD'
+                        ),
+                        usernamePassword(
+                            credentialsId: 'nexus',
+                            usernameVariable: 'DOCKER_REGISTRY_USERNAME',
+                            passwordVariable: 'DOCKER_REGISTRY_PASSWORD'
                         )
                     ]
                 ) {
