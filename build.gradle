@@ -378,6 +378,7 @@ project(":api:rest:rest-facade") {
     dependencies {
         implementation project(":api:rest:rest-model")
         implementation project(":service:service-core")
+        implementation project(":notification")
         implementation project(":commons:persistence-utils")
         runtimeOnly project(":service:service-impl")
         implementation project(":domain")

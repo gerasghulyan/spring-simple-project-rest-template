@@ -2,10 +2,8 @@ package com.vntana.core.rest.facade.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.response.AccountUserResponse;
-import com.vntana.core.model.user.response.CreateUserResponse;
-import com.vntana.core.model.user.response.FindUserByEmailResponse;
-import com.vntana.core.model.user.response.VerifyUserResponse;
+import com.vntana.core.model.user.request.SendUserVerificationRequest;
+import com.vntana.core.model.user.response.*;
 
 /**
  * Created by Arthur Asatryan.
@@ -20,4 +18,6 @@ public interface UserServiceFacade {
     AccountUserResponse accountDetails(final String uuid, final String organizationUuid);
 
     VerifyUserResponse verify(final String uuid);
+
+    SendUserVerificationResponse sendVerificationEmail(final SendUserVerificationRequest request);
 }
