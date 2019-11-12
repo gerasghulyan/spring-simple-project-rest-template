@@ -1,6 +1,6 @@
 package com.vntana.core.service.token.test
 
-import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
+import com.vntana.core.helper.integration.user.UserServiceIntegrationTestHelper
 import com.vntana.core.service.token.AbstractTokenServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class ResetPasswordTokenCreateServiceIntegrationTest : AbstractTokenServiceIntegrationTest() {
 
     @Autowired
-    private lateinit var userIntegrationTestHelper: UserIntegrationTestHelper
+    private lateinit var userIntegrationTestHelper: UserServiceIntegrationTestHelper
 
     @Test
     fun `test create`() {

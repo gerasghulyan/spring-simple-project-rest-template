@@ -34,6 +34,7 @@ class UserCreateWebTest : AbstractUserWebTest() {
         val response = userResourceClient.createUser(createRequest)
         resourceHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isNotEmpty()
+        assertThat(response.response().organizationUuid).isNotEmpty()
     }
 
     @Test

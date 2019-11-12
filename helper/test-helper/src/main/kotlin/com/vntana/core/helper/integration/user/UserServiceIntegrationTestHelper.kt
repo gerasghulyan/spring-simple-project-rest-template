@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
  * Time: 2:35 PM
  */
 @Component
-class UserIntegrationTestHelper : UserCommonTestHelper() {
+class UserServiceIntegrationTestHelper : UserCommonTestHelper() {
 
     @Autowired
     private lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper

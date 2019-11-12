@@ -15,15 +15,15 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
     @Test
     fun `test create with invalid arguments`() {
         val response0 = clientOrganizationResourceClient.create(
-                helper.buildCreateClientOrganizationRequest(organizationUuid = null)
+                clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(organizationUuid = null)
         )
         assertBasicErrorResultResponse(response0, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
         val response1 = clientOrganizationResourceClient.create(
-                helper.buildCreateClientOrganizationRequest(slug = null)
+                clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(slug = null)
         )
         assertBasicErrorResultResponse(response1, ClientOrganizationErrorResponseModel.MISSING_SLUG)
         val response2 = clientOrganizationResourceClient.create(
-                helper.buildCreateClientOrganizationRequest(name = null)
+                clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(name = null)
         )
         assertBasicErrorResultResponse(response2, ClientOrganizationErrorResponseModel.MISSING_NAME)
     }
@@ -32,8 +32,8 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
     fun `test when slug name already exists for same organization`() {
         val slugName = uuid()
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        helper.persistClientOrganization(organizationUuid = organizationUuid, slug = slugName)
-        val request = helper.buildCreateClientOrganizationRequest(organizationUuid = organizationUuid, slug = slugName)
+        clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid, slug = slugName)
+        val request = clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(organizationUuid = organizationUuid, slug = slugName)
         clientOrganizationResourceClient.create(request).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS)
         }
@@ -42,11 +42,11 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
     @Test
     fun `test create same slug different organizations`() {
         val slugName = uuid()
-        helper.persistClientOrganization(slug = slugName)
+        clientOrganizationResourceTestHelper.persistClientOrganization(slug = slugName)
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val request = helper.buildCreateClientOrganizationRequest(organizationUuid = organizationUuid, slug = slugName)
+        val request = clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(organizationUuid = organizationUuid, slug = slugName)
         val response = clientOrganizationResourceClient.create(request)
-        helper.assertBasicSuccessResultResponse(response)
+        clientOrganizationResourceTestHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isNotBlank()
     }
 }
