@@ -313,6 +313,8 @@ project(":api:rest:rest-model") {
 
     apply plugin: 'maven'
 
+    archivesBaseName = 'rest-model-core'
+
     uploadArchives {
         repositories {
             mavenDeployer {
@@ -326,7 +328,7 @@ project(":api:rest:rest-model") {
                 }
 
                 pom.version = environmentPlatformVersion()
-                pom.artifactId = "rest-model"
+                pom.artifactId = "rest-model-core"
                 pom.groupId = platformGroup
             }
         }
@@ -342,6 +344,8 @@ project(":api:rest:rest-client") {
 
     apply plugin: 'maven'
 
+    archivesBaseName = 'rest-client-core'
+
     uploadArchives {
         repositories {
             mavenDeployer {
@@ -355,7 +359,7 @@ project(":api:rest:rest-client") {
                 }
 
                 pom.version = environmentPlatformVersion()
-                pom.artifactId = "rest-client"
+                pom.artifactId = "rest-client-core"
                 pom.groupId = platformGroup
             }
         }
