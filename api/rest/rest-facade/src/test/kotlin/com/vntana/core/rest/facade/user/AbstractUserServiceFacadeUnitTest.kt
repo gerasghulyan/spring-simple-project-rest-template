@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent
 import com.vntana.core.rest.facade.user.impl.UserServiceFacadeImpl
 import com.vntana.core.service.email.EmailValidationComponent
 import com.vntana.core.service.organization.OrganizationService
@@ -39,8 +40,11 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
     @Mock
     protected lateinit var emailValidationComponent: EmailValidationComponent
 
+    @Mock
+    protected lateinit var userVerificationSenderComponent: UserVerificationSenderComponent
+
     @Before
     fun before() {
-        userServiceFacade = UserServiceFacadeImpl(userService, organizationService, persistenceUtilityService, emailValidationComponent)
+        userServiceFacade = UserServiceFacadeImpl(userService, organizationService, persistenceUtilityService, emailValidationComponent, userVerificationSenderComponent)
     }
 }

@@ -2,11 +2,9 @@ package com.vntana.core.rest.client.user;
 
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
+import com.vntana.core.model.user.request.SendUserVerificationRequest;
 import com.vntana.core.model.user.request.VerifyUserRequest;
-import com.vntana.core.model.user.response.AccountUserResponse;
-import com.vntana.core.model.user.response.CreateUserResponse;
-import com.vntana.core.model.user.response.FindUserByEmailResponse;
-import com.vntana.core.model.user.response.VerifyUserResponse;
+import com.vntana.core.model.user.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,4 +29,8 @@ public interface UserResourceClient {
 
     @PutMapping(path = "/verify")
     VerifyUserResponse verify(@RequestBody final VerifyUserRequest request);
+
+    @PostMapping(path = "/send-verification")
+    SendUserVerificationResponse sendVerification(@RequestBody final SendUserVerificationRequest request);
+
 }

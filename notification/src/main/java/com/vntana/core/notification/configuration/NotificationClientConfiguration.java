@@ -1,17 +1,9 @@
 package com.vntana.core.notification.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient;
-import com.sflpro.notifier.api.client.notification.email.impl.EmailNotificationResourceClientImpl;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
-import javax.ws.rs.client.Client;
-
-import static org.glassfish.jersey.client.JerseyClientBuilder.newClient;
 
 /**
  * Created by Arman Gevorgyan.
@@ -34,15 +26,5 @@ public class NotificationClientConfiguration {
         threadPoolTaskExecutor.setCorePoolSize(64);
         threadPoolTaskExecutor.setQueueCapacity(1024);
         return threadPoolTaskExecutor;
-    }
-
-    @Bean
-    public EmailNotificationResourceClient emailNotificationResourceClient(@Value("${vntana.notification.url}") final String apiPath) {
-        return new EmailNotificationResourceClientImpl(client(), apiPath);
-    }
-
-    @Bean
-    public Client client() {
-        return newClient().register(new JacksonJsonProvider(objectMapper));
     }
 }

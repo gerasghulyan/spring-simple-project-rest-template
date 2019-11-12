@@ -7,15 +7,14 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.CreateUserRequest;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.response.AccountUserResponse;
-import com.vntana.core.model.user.response.CreateUserResponse;
-import com.vntana.core.model.user.response.FindUserByEmailResponse;
+import com.vntana.core.model.user.request.SendUserVerificationRequest;
+import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.model.AccountUserResponseModel;
-import com.vntana.core.model.user.response.VerifyUserResponse;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
+import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent;
 import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
@@ -47,16 +46,19 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final EmailValidationComponent emailValidationComponent;
+    private final UserVerificationSenderComponent userVerificationSenderComponent;
 
     public UserServiceFacadeImpl(final UserService userService,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService,
-                                 final EmailValidationComponent emailValidationComponent) {
+                                 final EmailValidationComponent emailValidationComponent,
+                                 final UserVerificationSenderComponent userVerificationSenderComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.emailValidationComponent = emailValidationComponent;
+        this.userVerificationSenderComponent = userVerificationSenderComponent;
     }
 
     @Override
@@ -147,6 +149,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final User user = userService.makeVerified(uuid);
         LOGGER.debug("Successfully processed user facade verify method for uuid - {}", uuid);
         return new VerifyUserResponse(user.getUuid());
+    }
+
+    @Override
+    public SendUserVerificationResponse sendVerificationEmail(final SendUserVerificationRequest request) {
+        LOGGER.debug("Processing facade sendVerificationEmail for request - {}", request);
+        final SendUserVerificationResponse sendUserVerificationResponse = userVerificationSenderComponent.sendVerificationEmail(request);
+        LOGGER.debug("Successfully processed facade sendVerificationEmail for request - {}", request);
+        return sendUserVerificationResponse;
     }
 
     private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String uuid) {

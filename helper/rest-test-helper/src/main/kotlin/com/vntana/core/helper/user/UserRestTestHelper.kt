@@ -3,6 +3,7 @@ package com.vntana.core.helper.user
 import com.vntana.core.helper.AbstractRestTestHelper
 import com.vntana.core.model.user.request.CreateUserRequest
 import com.vntana.core.model.user.request.FindUserByEmailRequest
+import com.vntana.core.model.user.request.SendUserVerificationRequest
 import com.vntana.core.model.user.request.VerifyUserRequest
 
 /**
@@ -22,6 +23,9 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
     fun buildFindUserByEmailRequest(email: String? = "${uuid()}@mail.com"): FindUserByEmailRequest = FindUserByEmailRequest(email)
 
     fun buildVerifyUserRequest(uuid: String? = uuid()): VerifyUserRequest = VerifyUserRequest(uuid)
+
+    fun buildSendUserVerificationRequest(uuid: String? = uuid(), token: String? = uuid()
+    ): SendUserVerificationRequest = SendUserVerificationRequest(uuid, token)
 
     fun buildUserValidEmail(): String = "${uuid()}@mail.com"
 }
