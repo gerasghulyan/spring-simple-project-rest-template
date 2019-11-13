@@ -38,13 +38,15 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
     fun `test create when client with slug already exists`() {
         // test data
         resetAll()
-        val slug = uuid()
         val clientOrganization = helper.buildClientOrganization()
+        val slug = clientOrganization.slug
+        val organizationUuid = clientOrganization.organization.uuid
+        val dto = helper.buildCreateClientOrganizationDto(slug = slug, organizationUuid = organizationUuid)
         // expectations
-        expect(clientOrganizationRepository.findBySlug(slug)).andReturn(Optional.of(clientOrganization))
+        expect(clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organizationUuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
-        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(slug = slug)) }
+        assertThatThrownBy { clientOrganizationService.create(dto) }
                 .isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
     }
@@ -54,11 +56,11 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
         // test data
         resetAll()
         val slug = uuid()
-        val dto = helper.buildCreateClientOrganizationDto(slug = slug)
         val organization = organizationTestHelper.buildOrganization()
+        val dto = helper.buildCreateClientOrganizationDto(slug = slug, organizationUuid = organization.uuid)
         // expectations
-        expect(organizationService.findByUuid(dto.organizationUuid)).andReturn(Optional.of(organization))
-        expect(clientOrganizationRepository.findBySlug(slug)).andReturn(Optional.empty())
+        expect(clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organization.uuid)).andReturn(Optional.empty())
+        expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
         expect(clientOrganizationRepository.save(isA(ClientOrganization::class.java)))
                 .andAnswer { getCurrentArguments()[0] as ClientOrganization }
         replayAll()

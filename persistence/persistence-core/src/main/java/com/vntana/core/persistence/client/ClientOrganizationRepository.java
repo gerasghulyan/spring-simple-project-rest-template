@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 @Repository
 public interface ClientOrganizationRepository extends JpaRepository<ClientOrganization, Long> {
-    Optional<ClientOrganization> findBySlug(final String slug);
+    Optional<ClientOrganization> findBySlugAndOrganizationUuid(final String slug, final String organizationUuid);
 
     Optional<ClientOrganization> findByUuid(final String uuid);
 }

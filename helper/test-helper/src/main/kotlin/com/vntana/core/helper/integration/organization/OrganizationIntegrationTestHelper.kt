@@ -1,5 +1,6 @@
 package com.vntana.core.helper.integration.organization
 
+import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.service.organization.OrganizationService

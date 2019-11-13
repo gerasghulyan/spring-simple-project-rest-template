@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.client.impl
 
+import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel
 import com.vntana.core.rest.facade.client.AbstractClientOrganizationServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
@@ -12,13 +13,13 @@ import java.util.*
  * Time: 3:54 PM
  */
 class ClientOrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
-    @Test
+        @Test
     fun `test checkSlugAvailability when is available at first iteration`() {
         // test data
         resetAll()
         val request = restHelper.buildCheckAvailableClientOrganizationSlugRequest()
         // expectations
-        expect(clientOrganizationService.findBySlug(request.slug)).andReturn(Optional.empty())
+        expect(clientOrganizationService.findBySlugAndOrganization(request.slug, request.organizationUuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request)
@@ -36,10 +37,10 @@ class ClientOrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractCli
         val clientOrganization = commonTestHelper.buildClientOrganization()
         val request = restHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = slug)
         // expectations
-        expect(clientOrganizationService.findBySlug(slug)).andReturn(Optional.of(clientOrganization))
-        expect(clientOrganizationService.findBySlug("${slug}1")).andReturn(Optional.of(clientOrganization))
-        expect(clientOrganizationService.findBySlug("${slug}2")).andReturn(Optional.of(clientOrganization))
-        expect(clientOrganizationService.findBySlug("${slug}3")).andReturn(Optional.empty())
+        expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(clientOrganizationService.findBySlugAndOrganization("${slug}1", request.organizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(clientOrganizationService.findBySlugAndOrganization("${slug}2", request.organizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(clientOrganizationService.findBySlugAndOrganization("${slug}3", request.organizationUuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request)

@@ -40,8 +40,8 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
     @Override
     public ClientOrganization create(final CreateClientOrganizationDto dto) {
         assertCreateClientOrganizationDto(dto);
-        assertNotExistsForSlug(dto.getSlug());
-        final Organization organization = getOrganization(dto.getOrganizationUuid());
+        assertNotExistsForSlugAndOrganization(dto.getSlug(), dto.getOrganizationUuid());
+        final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         return clientOrganizationRepository.save(new ClientOrganization(dto.getName(), dto.getSlug(), organization));
     }
 
@@ -55,10 +55,11 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<ClientOrganization> findBySlug(final String slug) {
+    public Optional<ClientOrganization> findBySlugAndOrganization(final String slug, final String organizationUuid) {
         Assert.hasText(slug, "The client organization slug should not be null");
+        Assert.hasText(organizationUuid, "The client organization uuid should not be null");
         LOGGER.debug("Trying to find client organization for slug - {}", slug);
-        return clientOrganizationRepository.findBySlug(slug);
+        return clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organizationUuid);
     }
 
     private void assertCreateClientOrganizationDto(final CreateClientOrganizationDto dto) {
@@ -67,17 +68,10 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         Assert.hasText(dto.getSlug(), "The client slug should contain text");
     }
 
-    private void assertNotExistsForSlug(final String slug) {
-        findBySlug(slug).ifPresent(it -> {
+    private void assertNotExistsForSlugAndOrganization(final String slug, final String organizationUuid) {
+        findBySlugAndOrganization(slug, organizationUuid).ifPresent(it -> {
             LOGGER.error("Client with slug - {} already exists", slug);
             throw new IllegalStateException(format("Client with slug - %s already exists", slug));
-        });
-    }
-
-    private Organization getOrganization(final String organizationUuid) {
-        return organizationService.findByUuid(organizationUuid).orElseThrow(() -> {
-            LOGGER.error("Can not find organization for uuid - {}", organizationUuid);
-            return new IllegalStateException(format("Can not find organization for uuid - %s", organizationUuid));
         });
     }
 }

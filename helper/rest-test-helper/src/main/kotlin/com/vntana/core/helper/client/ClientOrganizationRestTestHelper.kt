@@ -11,8 +11,9 @@ import com.vntana.core.model.client.request.CreateClientOrganizationRequest
  */
 open class ClientOrganizationRestTestHelper : AbstractRestTestHelper() {
     fun buildCheckAvailableClientOrganizationSlugRequest(
-            slug: String? = uuid()
-    ): CheckAvailableClientOrganizationSlugRequest = CheckAvailableClientOrganizationSlugRequest(slug)
+            slug: String? = uuid(),
+            organizationUuid: String? = uuid()
+    ): CheckAvailableClientOrganizationSlugRequest = CheckAvailableClientOrganizationSlugRequest(slug, organizationUuid)
 
     fun buildCreateClientOrganizationRequest(
             organizationUuid: String? = uuid(),
