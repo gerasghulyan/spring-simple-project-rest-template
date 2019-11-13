@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.rest.facade.client.impl.ClientOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.client.ClientOrganizationService
+import com.vntana.core.service.organization.OrganizationService
 import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
 import org.junit.Before
@@ -23,12 +24,15 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractService
     @Mock
     protected lateinit var clientOrganizationService: ClientOrganizationService
 
+    @Mock
+    protected lateinit var organizationService: OrganizationService
+
     protected val restHelper = ClientOrganizationRestTestHelper()
 
     protected val commonTestHelper = ClientOrganizationCommonTestHelper()
 
     @Before
     fun before() {
-        clientOrganizationServiceFacade = ClientOrganizationServiceFacadeImpl(mapperFacade, clientOrganizationService)
+        clientOrganizationServiceFacade = ClientOrganizationServiceFacadeImpl(mapperFacade, clientOrganizationService, organizationService)
     }
 }

@@ -15,5 +15,5 @@ public interface ClientOrganizationService {
 
     Optional<ClientOrganization> findByUuid(final String uuid);
 
-    Optional<ClientOrganization> findBySlug(final String slug);
+    Optional<ClientOrganization> findBySlugAndOrganization(final String slug, final String organizationUuid);
 }

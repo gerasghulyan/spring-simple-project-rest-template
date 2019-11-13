@@ -1,0 +1,2 @@
+alter table client_organization drop constraint if exists UK_ha1179ul5wbqymo5h85uc0p6e;
+alter table client_organization add constraint uk_client_organization_slug_organization_id unique (client_organization_slug, organization_id);

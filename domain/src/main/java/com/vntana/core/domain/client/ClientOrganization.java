@@ -14,13 +14,15 @@ import javax.persistence.*;
  * Time: 5:05 PM
  */
 @Entity
-@Table(name = "client_organization")
+@Table(name = "client_organization", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_client_organization_slug_organization_id", columnNames = {"client_organization_slug", "organization_id"})
+})
 public class ClientOrganization extends AbstractUuidAwareDomainEntity {
 
     @Column(name = "client_organization_name", nullable = false)
     private String name;
 
-    @Column(name = "client_organization_slug", nullable = false, updatable = false, unique = true)
+    @Column(name = "client_organization_slug", nullable = false, updatable = false)
     private String slug;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

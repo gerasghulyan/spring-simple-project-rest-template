@@ -21,11 +21,16 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
     @JsonProperty("slug")
     private String slug;
 
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
+
     public CheckAvailableClientOrganizationSlugRequest() {
+        super();
     }
 
-    public CheckAvailableClientOrganizationSlugRequest(final String slug) {
+    public CheckAvailableClientOrganizationSlugRequest(final String slug, final String organizationUuid) {
         this.slug = slug;
+        this.organizationUuid = organizationUuid;
     }
 
     @Override
@@ -33,6 +38,9 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
         final List<ClientOrganizationErrorResponseModel> errors = initializeNew();
         if (StringUtils.isBlank(slug)) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
+        }
+        if (StringUtils.isBlank(organizationUuid)) {
+            errors.add(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
         }
         return errors;
     }
@@ -48,6 +56,7 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
         final CheckAvailableClientOrganizationSlugRequest that = (CheckAvailableClientOrganizationSlugRequest) o;
         return new EqualsBuilder()
                 .append(slug, that.slug)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -55,6 +64,7 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(slug)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -62,6 +72,7 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
     public String toString() {
         return new ToStringBuilder(this)
                 .append("slug", slug)
+                .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
@@ -71,5 +82,13 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
 
     public void setSlug(final String slug) {
         this.slug = slug;
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
+    }
+
+    public void setOrganizationUuid(final String organizationUuid) {
+        this.organizationUuid = organizationUuid;
     }
 }

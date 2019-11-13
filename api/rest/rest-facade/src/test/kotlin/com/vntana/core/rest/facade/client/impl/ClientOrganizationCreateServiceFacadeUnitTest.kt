@@ -14,6 +14,22 @@ import java.util.*
  * Time: 11:35 AM
  */
 class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
+
+    @Test
+    fun `test when organization not found`() {
+        // test data
+        val request = restHelper.buildCreateClientOrganizationRequest()
+        resetAll()
+        // expectations
+        expect(organizationService.findByUuid(request.organizationUuid)).andReturn(Optional.empty())
+        replayAll()
+        // test scenario
+        clientOrganizationServiceFacade.create(request).let {
+            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND)
+        }
+        verifyAll()
+    }
+
     @Test
     fun `test create when client organization already exists for slug`() {
         // test data
@@ -22,7 +38,8 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         val request = restHelper.buildCreateClientOrganizationRequest(slug = slug)
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
-        expect(clientOrganizationService.findBySlug(slug)).andReturn(Optional.of(clientOrganization))
+        expect(organizationService.findByUuid(request.organizationUuid)).andReturn(Optional.of(clientOrganization.organization))
+        expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.create(request)
@@ -39,14 +56,15 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         val dto = commonTestHelper.buildCreateClientOrganizationDto()
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
-        expect(clientOrganizationService.findBySlug(slug)).andReturn(Optional.empty())
+        expect(organizationService.findByUuid(request.organizationUuid)).andReturn(Optional.of(clientOrganization.organization))
+        expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.empty())
         expect(mapperFacade.map(request, CreateClientOrganizationDto::class.java)).andReturn(dto)
         expect(clientOrganizationService.create(dto)).andReturn(clientOrganization)
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.create(request)
         restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.response().getUuid()).isEqualTo(clientOrganization.uuid)
+        assertThat(resultResponse.response().uuid).isEqualTo(clientOrganization.uuid)
         verifyAll()
     }
 }
