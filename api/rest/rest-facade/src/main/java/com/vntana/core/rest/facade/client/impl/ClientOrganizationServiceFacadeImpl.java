@@ -1,15 +1,22 @@
 package com.vntana.core.rest.facade.client.impl;
 
 import com.vntana.core.domain.client.ClientOrganization;
+import com.vntana.core.domain.user.User;
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserClientOrganizationResponse;
+import com.vntana.core.model.user.response.model.GetUserClientOrganizationsGridResponseModel;
+import com.vntana.core.model.user.response.model.GetUserClientOrganizationsResponseModel;
+import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
 import com.vntana.core.service.organization.OrganizationService;
+import com.vntana.core.service.user.UserService;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -19,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -33,14 +42,22 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOrganizationServiceFacadeImpl.class);
 
     private final MapperFacade mapperFacade;
+    private final PersistenceUtilityService persistenceUtilityService;
     private final ClientOrganizationService clientOrganizationService;
     private final OrganizationService organizationService;
+    private final UserService userService;
 
-    public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade, final ClientOrganizationService clientOrganizationService, final OrganizationService organizationService) {
+    public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade,
+                                               final PersistenceUtilityService persistenceUtilityService,
+                                               final ClientOrganizationService clientOrganizationService,
+                                               final OrganizationService organizationService,
+                                               final UserService userService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.mapperFacade = mapperFacade;
+        this.persistenceUtilityService = persistenceUtilityService;
         this.clientOrganizationService = clientOrganizationService;
         this.organizationService = organizationService;
+        this.userService = userService;
     }
 
     @Override
@@ -71,5 +88,28 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                     final ClientOrganization clientOrganization = clientOrganizationService.create(dto);
                     return new CreateClientOrganizationResultResponse(clientOrganization.getUuid());
                 });
+    }
+
+    @Override
+    public UserClientOrganizationResponse getUserClientOrganizations(final String userUuid, final String userOrganizationUuid) {
+        LOGGER.debug("Retrieving user organization's client organizations by user uuid - {} and by user organization uuid - {}", userUuid, userOrganizationUuid);
+        final Mutable<List<GetUserClientOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
+        persistenceUtilityService.runInPersistenceSession(() -> {
+            final User user = userService.getByUuid(userUuid);
+            mutableResponse.setValue(user.roleOfOrganization(organizationService.getByUuid(userOrganizationUuid))
+                    .map(userOrganizationRole -> userOrganizationRole
+                            .getOrganization()
+                            .getClientOrganizations()
+                            .stream()
+                            .map(clientOrganization -> new GetUserClientOrganizationsResponseModel(
+                                    clientOrganization.getUuid(),
+                                    clientOrganization.getName(),
+                                    UserRoleModel.valueOf(userOrganizationRole.getUserRole().name())
+                            ))
+                            .collect(Collectors.toList())
+                    ).orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints")));
+        });
+        final List<GetUserClientOrganizationsResponseModel> response = mutableResponse.getValue();
+        return new UserClientOrganizationResponse(new GetUserClientOrganizationsGridResponseModel(response.size(), response));
     }
 }

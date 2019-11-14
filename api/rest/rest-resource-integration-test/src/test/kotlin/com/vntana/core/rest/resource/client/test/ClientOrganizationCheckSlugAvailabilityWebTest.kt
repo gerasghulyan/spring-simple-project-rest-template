@@ -14,34 +14,34 @@ class ClientOrganizationCheckSlugAvailabilityWebTest : AbstractClientOrganizatio
 
     @Test
     fun `test checkSlugAvailability with invalid arguments`() {
-        clientOrganizationResourceClient.checkSlugAvailability(helper.buildCheckAvailableClientOrganizationSlugRequest(slug = null)).let {
+        clientOrganizationResourceClient.checkSlugAvailability(clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = null)).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_SLUG)
         }
-        clientOrganizationResourceClient.checkSlugAvailability(helper.buildCheckAvailableClientOrganizationSlugRequest(slug = "")).let {
+        clientOrganizationResourceClient.checkSlugAvailability(clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = "")).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_SLUG)
         }
-        clientOrganizationResourceClient.checkSlugAvailability(helper.buildCheckAvailableClientOrganizationSlugRequest(organizationUuid = null)).let {
+        clientOrganizationResourceClient.checkSlugAvailability(clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(organizationUuid = null)).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
         }
-        clientOrganizationResourceClient.checkSlugAvailability(helper.buildCheckAvailableClientOrganizationSlugRequest(organizationUuid = "")).let {
+        clientOrganizationResourceClient.checkSlugAvailability(clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(organizationUuid = "")).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
         }
     }
 
     @Test
     fun `test checkSlugAvailability when organization not found`() {
-        val request = helper.buildCheckAvailableClientOrganizationSlugRequest()
+        val request = clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest()
         val response = clientOrganizationResourceClient.checkSlugAvailability(request)
-        helper.assertBasicSuccessResultResponse(response)
+        clientOrganizationResourceTestHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().isAvailable).isTrue()
         assertThat(response.response().suggested).isEqualTo(request.slug)
     }
 
     @Test
     fun `test checkSlugAvailability when available`() {
-        val request = helper.buildCheckAvailableClientOrganizationSlugRequest()
+        val request = clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest()
         val response = clientOrganizationResourceClient.checkSlugAvailability(request)
-        helper.assertBasicSuccessResultResponse(response)
+        clientOrganizationResourceTestHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().isAvailable).isTrue()
         assertThat(response.response().suggested).isEqualTo(request.slug)
     }
@@ -51,10 +51,10 @@ class ClientOrganizationCheckSlugAvailabilityWebTest : AbstractClientOrganizatio
         val slugName = uuid()
         val suggestedSlugName = "${slugName}1"
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        helper.persistClientOrganization(organizationUuid = organizationUuid, slug = slugName)
-        val request = helper.buildCheckAvailableClientOrganizationSlugRequest(slug = slugName, organizationUuid = organizationUuid)
+        clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid, slug = slugName)
+        val request = clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = slugName, organizationUuid = organizationUuid)
         val response = clientOrganizationResourceClient.checkSlugAvailability(request)
-        helper.assertBasicSuccessResultResponse(response)
+        clientOrganizationResourceTestHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().isAvailable).isFalse()
         assertThat(response.response().suggested).isEqualTo(suggestedSlugName)
     }

@@ -4,14 +4,17 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * Created by Arthur Asatryan.
@@ -20,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/clients",
-        consumes = "application/json",
         produces = "application/json"
 )
 public class ClientOrganizationResource {
@@ -48,5 +50,14 @@ public class ClientOrganizationResource {
         final CreateClientOrganizationResultResponse resultResponse = clientOrganizationServiceFacade.create(request);
         LOGGER.debug("Successfully created client organization with response - {}", resultResponse);
         return ResponseEntity.ok(resultResponse);
+    }
+
+    @GetMapping(path = "/users/{userUuid}/organizations/{userOrganizationUuid}")
+    public ResponseEntity<UserClientOrganizationResponse> getUserClientOrganizations(@PathVariable("userUuid") final String userUuid,
+                                                                                     @PathVariable("userOrganizationUuid") final String userOrganizationUuid) {
+        LOGGER.debug("Processing find client organization by user uuid - {} and by organization uuid - {}", userUuid, userOrganizationUuid);
+        final UserClientOrganizationResponse userClientOrganizationResponse = clientOrganizationServiceFacade.getUserClientOrganizations(userUuid, userOrganizationUuid);
+        LOGGER.debug("Successfully proceeded find client organizations by user uuid and by organization uuid with response - {}", userClientOrganizationResponse);
+        return ResponseEntity.ok(userClientOrganizationResponse);
     }
 }
