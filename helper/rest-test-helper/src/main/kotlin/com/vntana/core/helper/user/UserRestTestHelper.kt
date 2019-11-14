@@ -17,8 +17,9 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
             clientSlug: String? = uuid(),
             fullName: String? = uuid(),
             email: String? = "${uuid()}@mail.com",
-            password: String? = uuid()
-    ): CreateUserRequest = CreateUserRequest(clientName, clientSlug, fullName, email, password)
+            password: String? = uuid(),
+            token: String? = uuid()
+    ): CreateUserRequest = CreateUserRequest(clientName, clientSlug, fullName, email, password, token)
 
     fun buildFindUserByEmailRequest(email: String? = "${uuid()}@mail.com"): FindUserByEmailRequest = FindUserByEmailRequest(email)
 

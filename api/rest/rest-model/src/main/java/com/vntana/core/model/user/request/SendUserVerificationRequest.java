@@ -1,5 +1,6 @@
 package com.vntana.core.model.user.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractUuidAwareRequestModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 public class SendUserVerificationRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
+    @JsonProperty("token")
     private String token;
 
     public SendUserVerificationRequest() {

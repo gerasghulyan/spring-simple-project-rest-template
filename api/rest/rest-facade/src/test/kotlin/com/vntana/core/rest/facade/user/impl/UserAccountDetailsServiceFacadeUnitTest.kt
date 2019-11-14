@@ -22,7 +22,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
         val user = userHelper.buildUser()
         val organization = organizationHelper.buildOrganization()
         resetAll()
-        val request = restHelper.buildFindUserByEmailRequest()
+        restHelper.buildFindUserByEmailRequest()
         // expectations
         expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
                 .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }

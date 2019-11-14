@@ -87,6 +87,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             mutableUserUuid.setValue(user.getUuid());
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
+        userVerificationSenderComponent.sendVerificationEmail(new SendUserVerificationRequest(mutableUserUuid.getValue(), request.getToken()));
         return new CreateUserResponse(new CreateUserResponseModel(mutableUserUuid.getValue()));
     }
 
@@ -113,31 +114,24 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                             user.getUuid(),
                             user.getFullName(),
                             user.getEmail(),
-                            UserRoleModel.SUPER_ADMIN))
-                    )
+                            UserRoleModel.SUPER_ADMIN
+                    )))
                     .orElseGet(() -> {
                         final Organization organization = organizationService.getByUuid(organizationUuid);
                         return user.roleOfOrganization(organization)
                                 .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
-                                .map(userRoleModel -> new AccountUserResponse(
-                                                new AccountUserResponseModel(
-                                                        user.getUuid(),
-                                                        user.getFullName(),
-                                                        user.getEmail(),
-                                                        userRoleModel
-                                                )
-                                        )
-                                ).orElseGet(this::errorFindByEmailAndOrganization);
+                                .map(userRoleModel -> new AccountUserResponse(new AccountUserResponseModel(
+                                        user.getUuid(),
+                                        user.getFullName(),
+                                        user.getEmail(),
+                                        userRoleModel
+                                )))
+                                .orElseGet(() -> new AccountUserResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)));
                     });
             mutableResponse.setValue(response);
         });
         return mutableResponse.getValue();
     }
-
-    private AccountUserResponse errorFindByEmailAndOrganization() {
-        return new AccountUserResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION));
-    }
-
 
     @Override
     public VerifyUserResponse verify(final String uuid) {
@@ -167,7 +161,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (!user.isPresent()) {
             return Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_UUID);
         }
-        if (user.get().getVerified()) {
+        if (Boolean.TRUE.equals(user.get().getVerified())) {
             return Collections.singletonList(UserErrorResponseModel.USER_ALREADY_VERIFIED);
         }
         return Collections.emptyList();

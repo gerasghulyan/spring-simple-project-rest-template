@@ -2,16 +2,16 @@ package com.vntana.core.rest.facade.user.impl
 
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.user.error.UserErrorResponseModel
+import com.vntana.core.model.user.request.SendUserVerificationRequest
+import com.vntana.core.model.user.response.SendUserVerificationResponse
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
 import com.vntana.core.service.user.dto.CreateUserDto
 import org.assertj.core.api.Assertions.assertThat
-import org.easymock.EasyMock.expect;
-import org.easymock.EasyMock.isA;
-import org.easymock.EasyMock.getCurrentArguments;
+import org.easymock.EasyMock.*
 import org.junit.Test
-import java.util.Optional
+import java.util.*
 
 /**
  * Created by Arthur Asatryan.
@@ -41,11 +41,12 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
                 organization.uuid,
                 UserRole.ORGANIZATION_ADMIN
         ))).andReturn(user)
+        expect(userVerificationSenderComponent.sendVerificationEmail(SendUserVerificationRequest(user.uuid, request.token))).andReturn(SendUserVerificationResponse(user.uuid))
         replayAll()
         // test scenario
         val resultResponse = userServiceFacade.create(request)
         restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.response().getUuid()).isEqualTo(user.uuid)
+        assertThat(resultResponse.response().uuid).isEqualTo(user.uuid)
         verifyAll()
     }
 

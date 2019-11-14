@@ -33,15 +33,19 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
     @JsonProperty("password")
     private String password;
 
+    @JsonProperty("token")
+    private String token;
+
     public CreateUserRequest() {
     }
 
-    public CreateUserRequest(final String organizationName, final String organizationSlug, final String fullName, final String email, final String password) {
+    public CreateUserRequest(final String organizationName, final String organizationSlug, final String fullName, final String email, final String password, final String token) {
         this.organizationName = organizationName;
         this.organizationSlug = organizationSlug;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
+        this.token = token;
     }
 
     @Override
@@ -62,6 +66,9 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
         if (StringUtils.isBlank(password)) {
             errors.add(UserErrorResponseModel.MISSING_PASSWORD);
         }
+        if (StringUtils.isBlank(token)) {
+            errors.add(UserErrorResponseModel.MISSING_VERIFICATION_TOKEN);
+        }
         return errors;
     }
 
@@ -80,6 +87,7 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(password, that.password)
+                .append(token, that.token)
                 .isEquals();
     }
 
@@ -91,6 +99,7 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
                 .append(fullName)
                 .append(email)
                 .append(password)
+                .append(token)
                 .toHashCode();
     }
 
@@ -101,6 +110,7 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
                 .append("clientSlug", organizationSlug)
                 .append("fullName", fullName)
                 .append("email", email)
+                .append("token", token)
                 .toString();
     }
 
@@ -142,5 +152,13 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(final String token) {
+        this.token = token;
     }
 }

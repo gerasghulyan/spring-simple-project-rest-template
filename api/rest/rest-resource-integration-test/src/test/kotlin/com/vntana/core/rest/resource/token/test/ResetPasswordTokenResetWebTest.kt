@@ -9,6 +9,7 @@ import com.vntana.core.rest.resource.token.AbstractTokenWebTest
 import org.junit.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.Mockito.times
 import org.springframework.beans.factory.annotation.Autowired
 
 
@@ -40,7 +41,7 @@ class ResetPasswordTokenResetWebTest : AbstractTokenWebTest() {
         val email = userRestTestHelper.buildUserValidEmail()
         userResourceClient.createUser(userRestTestHelper.buildCreateUserRequest(email = email))
         val response = resetPasswordTokenResourceClient.reset(restTestHelper.buildResetPasswordRequest(email = email))
-        Mockito.verify(emailNotificationResourceClient).createEmailNotification(ArgumentMatchers.any())
+        Mockito.verify(emailNotificationResourceClient, times(2)).createEmailNotification(ArgumentMatchers.any())
         restTestHelper.assertBasicSuccessResultResponse(response)
     }
 }

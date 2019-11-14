@@ -24,6 +24,8 @@ class UserCreateWebTest : AbstractUserWebTest() {
         resourceHelper.assertBasicErrorResultResponse(response4, UserErrorResponseModel.MISSING_EMAIL)
         val response5 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(password = null))
         resourceHelper.assertBasicErrorResultResponse(response5, UserErrorResponseModel.MISSING_PASSWORD)
+        val response6 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(token = null))
+        resourceHelper.assertBasicErrorResultResponse(response6, UserErrorResponseModel.MISSING_VERIFICATION_TOKEN)
     }
 
     @Test
