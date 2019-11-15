@@ -16,21 +16,6 @@ import java.util.*
 class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
 
     @Test
-    fun `test when organization not found`() {
-        // test data
-        val request = restHelper.buildCreateClientOrganizationRequest()
-        resetAll()
-        // expectations
-        expect(organizationService.findByUuid(request.organizationUuid)).andReturn(Optional.empty())
-        replayAll()
-        // test scenario
-        clientOrganizationServiceFacade.create(request).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND)
-        }
-        verifyAll()
-    }
-
-    @Test
     fun `test create when client organization already exists for slug`() {
         // test data
         resetAll()
@@ -38,7 +23,6 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         val request = restHelper.buildCreateClientOrganizationRequest(slug = slug)
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
-        expect(organizationService.findByUuid(request.organizationUuid)).andReturn(Optional.of(clientOrganization.organization))
         expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
@@ -56,7 +40,6 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         val dto = commonTestHelper.buildCreateClientOrganizationDto()
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
-        expect(organizationService.findByUuid(request.organizationUuid)).andReturn(Optional.of(clientOrganization.organization))
         expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.empty())
         expect(mapperFacade.map(request, CreateClientOrganizationDto::class.java)).andReturn(dto)
         expect(clientOrganizationService.create(dto)).andReturn(clientOrganization)

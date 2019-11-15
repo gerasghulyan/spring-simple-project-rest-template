@@ -14,8 +14,6 @@ import java.util.Optional;
 public interface OrganizationService {
     Organization create(final CreateOrganizationDto dto);
 
-    Optional<Organization> findByUuid(final String uuid);
-
     Optional<Organization> findBySlug(final String slug);
 
     List<Organization> getAll();

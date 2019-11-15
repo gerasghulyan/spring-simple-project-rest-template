@@ -1,6 +1,7 @@
 package com.vntana.core.service.organization.impl
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceUnitTest
+import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
@@ -20,9 +21,9 @@ class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTes
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { organizationService.findByUuid(null) }
+        assertThatThrownBy { organizationService.getByUuid(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationService.findByUuid(" ") }
+        assertThatThrownBy { organizationService.getByUuid(StringUtils.EMPTY) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -36,7 +37,8 @@ class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTes
         expect(organizationRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
-        assertThat(organizationService.findByUuid(uuid)).isEmpty
+        assertThatThrownBy { organizationService.getByUuid(uuid) }
+                .isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
     }
 
@@ -50,7 +52,9 @@ class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTes
         expect(organizationRepository.findByUuid(uuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
-        assertThat(organizationService.findByUuid(uuid)).isNotEmpty.hasValue(clientOrganization)
+        organizationService.getByUuid(uuid).let {
+            assertThat(it).isEqualTo(clientOrganization)
+        }
         verifyAll()
     }
 }

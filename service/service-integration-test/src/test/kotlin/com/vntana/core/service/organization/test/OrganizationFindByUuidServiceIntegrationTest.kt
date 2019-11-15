@@ -2,6 +2,7 @@ package com.vntana.core.service.organization.test
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 
 /**
@@ -11,15 +12,21 @@ import org.junit.Test
  */
 class OrganizationFindByUuidServiceIntegrationTest : AbstractOrganizationServiceIntegrationTest() {
     @Test
-    fun `test findByUuid`() {
+    fun `test getByUuid`() {
         // given
         integrationTestHelper.persistOrganization().let { organization ->
             // when
             flushAndClear()
-            organizationService.findByUuid(organization.uuid).let {
+            organizationService.getByUuid(organization.uuid).let {
                 // then
-                assertThat(it).hasValue(organization)
+                assertThat(it).isEqualTo(organization)
             }
         }
+    }
+
+    @Test
+    fun `test getByUuid with invalid organization uuid`() {
+        assertThatThrownBy { organizationService.getByUuid(uuid()) }
+                .isExactlyInstanceOf(IllegalStateException::class.java)
     }
 }

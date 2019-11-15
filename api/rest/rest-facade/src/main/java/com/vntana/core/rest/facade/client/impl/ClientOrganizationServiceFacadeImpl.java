@@ -77,9 +77,6 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     @Override
     public CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request) {
         Assert.hasText(request.getOrganizationUuid(), "The organizationUuid uuid should not be null");
-        if (!organizationService.findByUuid(request.getOrganizationUuid()).isPresent()) {
-            return new CreateClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND));
-        }
         return clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
                 .map(clientOrganization -> {
                     LOGGER.debug("Client organization already exists for slug - {}", request.getSlug());
