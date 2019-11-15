@@ -39,9 +39,6 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
     @Override
     public List<ClientOrganizationErrorResponseModel> validate() {
         final List<ClientOrganizationErrorResponseModel> errors = initializeNew();
-        if (StringUtils.isBlank(organizationUuid)) {
-            errors.add(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
-        }
         if (StringUtils.isBlank(name)) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_NAME);
         }

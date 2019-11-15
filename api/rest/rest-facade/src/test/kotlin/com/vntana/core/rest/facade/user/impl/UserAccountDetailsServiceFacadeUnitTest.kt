@@ -54,7 +54,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
         assertThat(resultResponse.response().uuid).isEqualTo(user.uuid)
         assertThat(resultResponse.response().email).isEqualTo(user.email)
         assertThat(resultResponse.response().role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
-        assertThat(resultResponse.response().getfullName()).isEqualTo(user.fullName)
+        assertThat(resultResponse.response().fullName).isEqualTo(user.fullName)
         verifyAll()
     }
 
@@ -76,7 +76,8 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
         assertThat(resultResponse.response().uuid).isEqualTo(user.uuid)
         assertThat(resultResponse.response().email).isEqualTo(user.email)
         assertThat(resultResponse.response().role).isEqualTo(UserRoleModel.SUPER_ADMIN)
-        assertThat(resultResponse.response().getfullName()).isEqualTo(user.fullName)
+        assertThat(resultResponse.response().fullName).isEqualTo(user.fullName)
+        assertThat(resultResponse.response().verified).isEqualTo(user.verified)
         verifyAll()
     }
 

@@ -24,6 +24,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +63,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     @Override
     public CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableClientOrganizationSlugRequest request) {
+        Assert.hasText(request.getOrganizationUuid(), "The organizationUuid uuid should not be null");
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
         while (clientOrganizationService.findBySlugAndOrganization(mutableSlug.getValue(), request.getOrganizationUuid()).isPresent()) {
@@ -74,6 +76,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     @Override
     public CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request) {
+        Assert.hasText(request.getOrganizationUuid(), "The organizationUuid uuid should not be null");
         if (!organizationService.findByUuid(request.getOrganizationUuid()).isPresent()) {
             return new CreateClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND));
         }

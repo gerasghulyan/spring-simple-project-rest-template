@@ -26,14 +26,26 @@ public class AccountUserResponseModel implements ResponseModel {
     @JsonProperty("role")
     private UserRoleModel role;
 
+    @JsonProperty("isVerified")
+    private Boolean isVerified;
+
+    @JsonProperty("avatarUuid")
+    private String avatarUuid;
+
+    @JsonProperty("hasSubscription")
+    private Boolean hasSubscription;
+
     public AccountUserResponseModel() {
     }
 
-    public AccountUserResponseModel(final String uuid, final String fullName, final String email, final UserRoleModel role) {
+    public AccountUserResponseModel(final String uuid, final String fullName, final String email, final UserRoleModel role, final Boolean isVerified, final String avatarUuid, final Boolean hasSubscription) {
         this.uuid = uuid;
         this.fullName = fullName;
         this.email = email;
         this.role = role;
+        this.isVerified = isVerified;
+        this.avatarUuid = avatarUuid;
+        this.hasSubscription = hasSubscription;
     }
 
     @Override
@@ -50,6 +62,9 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(role, that.role)
+                .append(isVerified, that.isVerified)
+                .append(avatarUuid, that.avatarUuid)
+                .append(hasSubscription, that.hasSubscription)
                 .isEquals();
     }
 
@@ -60,6 +75,9 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append(fullName)
                 .append(email)
                 .append(role)
+                .append(isVerified)
+                .append(avatarUuid)
+                .append(hasSubscription)
                 .toHashCode();
     }
 
@@ -70,6 +88,9 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append("fullName", fullName)
                 .append("email", email)
                 .append("role", role)
+                .append("isVerified", isVerified)
+                .append("avatarUuid", avatarUuid)
+                .append("hasSubscription", hasSubscription)
                 .toString();
     }
 
@@ -81,11 +102,11 @@ public class AccountUserResponseModel implements ResponseModel {
         this.uuid = uuid;
     }
 
-    public String getfullName() {
+    public String getFullName() {
         return fullName;
     }
 
-    public void setfullName(final String fullName) {
+    public void setFullName(final String fullName) {
         this.fullName = fullName;
     }
 
@@ -103,5 +124,33 @@ public class AccountUserResponseModel implements ResponseModel {
 
     public void setRole(final UserRoleModel role) {
         this.role = role;
+    }
+
+    public Boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(final Boolean isVerified) {
+        this.isVerified = isVerified;
+    }
+
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public String getAvatarUuid() {
+        return avatarUuid;
+    }
+
+    public void setAvatarUuid(final String avatarUuid) {
+        this.avatarUuid = avatarUuid;
+    }
+
+    public Boolean getHasSubscription() {
+        return hasSubscription;
+    }
+
+    public void setHasSubscription(final Boolean hasSubscription) {
+        this.hasSubscription = hasSubscription;
     }
 }

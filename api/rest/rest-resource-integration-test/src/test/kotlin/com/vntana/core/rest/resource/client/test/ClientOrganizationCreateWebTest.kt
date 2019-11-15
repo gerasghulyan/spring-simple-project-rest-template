@@ -14,10 +14,6 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
 
     @Test
     fun `test create with invalid arguments`() {
-        val response0 = clientOrganizationResourceClient.create(
-                clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(organizationUuid = null)
-        )
-        assertBasicErrorResultResponse(response0, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
         val response1 = clientOrganizationResourceClient.create(
                 clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(slug = null)
         )

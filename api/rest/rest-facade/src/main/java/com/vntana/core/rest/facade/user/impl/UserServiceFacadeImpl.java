@@ -109,12 +109,16 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final Mutable<AccountUserResponse> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInPersistenceSession(() -> {
             final User user = userService.getByUuid(uuid);
+            //TODO avatarUUID and HasSubscription implementation later
             final AccountUserResponse response = user.roleOfSuperAdmin()
                     .map(userSuperAdminRole -> new AccountUserResponse(new AccountUserResponseModel(
                             user.getUuid(),
                             user.getFullName(),
                             user.getEmail(),
-                            UserRoleModel.SUPER_ADMIN
+                            UserRoleModel.SUPER_ADMIN,
+                            user.getVerified(),
+                            null,
+                            false
                     )))
                     .orElseGet(() -> {
                         final Organization organization = organizationService.getByUuid(organizationUuid);
@@ -124,7 +128,10 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                                         user.getUuid(),
                                         user.getFullName(),
                                         user.getEmail(),
-                                        userRoleModel
+                                        userRoleModel,
+                                        user.getVerified(),
+                                        null,
+                                        false
                                 )))
                                 .orElseGet(() -> new AccountUserResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)));
                     });

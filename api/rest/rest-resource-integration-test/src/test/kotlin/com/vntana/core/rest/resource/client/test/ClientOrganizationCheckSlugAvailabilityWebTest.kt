@@ -20,12 +20,6 @@ class ClientOrganizationCheckSlugAvailabilityWebTest : AbstractClientOrganizatio
         clientOrganizationResourceClient.checkSlugAvailability(clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = "")).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_SLUG)
         }
-        clientOrganizationResourceClient.checkSlugAvailability(clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(organizationUuid = null)).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
-        }
-        clientOrganizationResourceClient.checkSlugAvailability(clientOrganizationResourceTestHelper.buildCheckAvailableClientOrganizationSlugRequest(organizationUuid = "")).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID)
-        }
     }
 
     @Test
