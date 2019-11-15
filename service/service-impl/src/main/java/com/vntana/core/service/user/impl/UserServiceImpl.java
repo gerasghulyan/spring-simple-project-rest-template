@@ -17,8 +17,6 @@ import org.springframework.util.Assert;
 
 import java.util.Optional;
 
-import static java.lang.String.format;
-
 /**
  * Created by Arthur Asatryan.
  * Date: 10/3/19
@@ -50,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public User create(final CreateUserDto dto) {
         assertCreateDto(dto);
         LOGGER.debug("Creating user for dto - {}", dto);
-        final Organization organization = getOrganization(dto);
+        final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         final String password = passwordEncoder.encode(dto.getPassword());
         final User user = new User(dto.getFullName(), dto.getEmail(), password);
         final User savedUser = userRepository.save(user);
@@ -102,12 +100,5 @@ public class UserServiceImpl implements UserService {
         Assert.hasText(dto.getPassword(), "The user password should not be null or empty");
         Assert.hasText(dto.getOrganizationUuid(), "The organization uuid should not be null or empty");
         Assert.notNull(dto.getRole(), "The user role should not be null");
-    }
-
-    private Organization getOrganization(final CreateUserDto dto) {
-        return organizationService.findByUuid(dto.getOrganizationUuid()).orElseThrow(() -> {
-            LOGGER.error("Can not find organization for uuid - {}", dto.getOrganizationUuid());
-            return new IllegalStateException(format("Can not find organization for uuid - %s", dto.getOrganizationUuid()));
-        });
     }
 }

@@ -42,14 +42,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Organization> findByUuid(final String uuid) {
-        Assert.hasText(uuid, "The organization uuid should not be null");
-        LOGGER.debug("Trying to find organization with uuid - {}", uuid);
-        return organizationRepository.findByUuid(uuid);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public Optional<Organization> findBySlug(final String slug) {
         Assert.hasText(slug, "The organization slug should not be null");
         LOGGER.debug("Trying to find organization for slug - {}", slug);
@@ -62,12 +54,19 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Organization getByUuid(final String uuid) {
         return findByUuid(uuid).orElseThrow(() -> {
             LOGGER.error("Can not find organization for uuid - {}", uuid);
             return new IllegalStateException(format("Can not find organization for uuid - %s", uuid));
         });
+    }
+
+    private Optional<Organization> findByUuid(final String uuid) {
+        Assert.hasText(uuid, "The organization uuid should not be null");
+        LOGGER.debug("Trying to find organization with uuid - {}", uuid);
+        return organizationRepository.findByUuid(uuid);
     }
 
     private void assertCreateOrganizationDto(final CreateOrganizationDto dto) {

@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.*
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by Arthur Asatryan.
@@ -38,7 +37,7 @@ class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
     fun `test create when client organization not exists`() {
         val createDto = helper.buildUserCreateDto()
         resetAll()
-        expect(organizationService.findByUuid(createDto.organizationUuid)).andReturn(Optional.empty())
+        expect(organizationService.getByUuid(createDto.organizationUuid)).andThrow(IllegalStateException())
         replayAll()
         assertThatThrownBy { userService.create(createDto) }.isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
@@ -50,7 +49,7 @@ class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
         val organization = organizationHelper.buildOrganization()
         val encodedPassword = uuid()
         resetAll()
-        expect(organizationService.findByUuid(createDto.organizationUuid)).andReturn(Optional.of(organization))
+        expect(organizationService.getByUuid(createDto.organizationUuid)).andReturn(organization)
         expect(passwordEncoder.encode(createDto.password)).andReturn(encodedPassword)
         expect(userRepository.save(isA(User::class.java))).andAnswer { getCurrentArguments()[0] as User }
         replayAll()
