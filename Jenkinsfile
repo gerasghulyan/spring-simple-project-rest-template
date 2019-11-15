@@ -70,7 +70,7 @@ pipeline {
                         )
                     ]
                 ) {
-                    sh "./gradlew clean build -x test :api:rest:rest-model:upload :api:rest:rest-client:upload"
+                    sh "./gradlew :api:rest:rest-model:upload :api:rest:rest-client:upload"
                 }
             }
         }
@@ -97,7 +97,7 @@ pipeline {
                         )
                     ]
                 ) {
-                    sh "./gradlew clean build -x test pushDockerTags --project-prop dockerRegistry=$DOCKER_REGISTRY --project-prop removeImage"
+                    sh "./gradlew --exclude-task test pushDockerTags --project-prop dockerRegistry=$DOCKER_REGISTRY --project-prop removeImage"
                 }
             }
         }
