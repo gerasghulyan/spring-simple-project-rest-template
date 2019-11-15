@@ -14,12 +14,16 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
         maven {
             url 'https://nexus.vntana.com/repository/maven-public'
             credentials {
                 username System.env.SONATYPE_USERNAME
                 password System.env.SONATYPE_PASSWORD
             }
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
         }
     }
 
@@ -116,7 +120,6 @@ allprojects {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-//        mavenLocal()
     }
 
     dependencies {
