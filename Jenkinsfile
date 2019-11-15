@@ -82,6 +82,11 @@ pipeline {
                     branch 'develop'
                 }
             }
+            agent {
+                docker {
+                    image "openjdk:8"
+                }
+            }
             steps {
                 withCredentials(
                     [
