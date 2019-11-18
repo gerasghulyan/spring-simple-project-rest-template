@@ -18,8 +18,8 @@ class UserSendVerificationWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test with invalid request arguments`() {
-        userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest(uuid = null)).let {
-            assertBasicErrorResultResponse(it, UserErrorResponseModel.MISSING_UUID)
+        userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest(email = null)).let {
+            assertBasicErrorResultResponse(it, UserErrorResponseModel.MISSING_EMAIL)
         }
         userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest(token = null)).let {
             assertBasicErrorResultResponse(it, UserErrorResponseModel.MISSING_VERIFICATION_TOKEN)
@@ -35,18 +35,20 @@ class UserSendVerificationWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test when user already verified`() {
-        val userUuid = resourceHelper.persistVerifiedUser()
-        userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest(uuid = userUuid)).let {
+        val email = email()
+        resourceHelper.persistVerifiedUser(resourceHelper.buildCreateUserRequest(email = email))
+        userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest(email = email)).let {
             assertBasicErrorResultResponse(it, UserErrorResponseModel.USER_ALREADY_VERIFIED)
         }
     }
 
     @Test
-    fun `test`() {
+    fun `test sendVerification`() {
         Mockito.reset(emailNotificationResourceClient)
         Mockito.`when`(emailNotificationResourceClient.createEmailNotification(ArgumentMatchers.any())).thenReturn(ResultResponseModel<CreateEmailNotificationResponse>())
-        var userUuid = resourceHelper.persistUser().response().uuid
-        userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest(uuid = userUuid)).let {
+        val email = email()
+        val userUuid = resourceHelper.persistUser(resourceHelper.buildCreateUserRequest(email = email)).response().uuid
+        userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest(email = email)).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().uuid).isEqualTo(userUuid)
         }

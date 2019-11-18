@@ -41,7 +41,7 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
                 organization.uuid,
                 UserRole.ORGANIZATION_ADMIN
         ))).andReturn(user)
-        expect(userVerificationSenderComponent.sendVerificationEmail(SendUserVerificationRequest(user.uuid, request.token))).andReturn(SendUserVerificationResponse(user.uuid))
+        expect(userVerificationSenderComponent.sendVerificationEmail(SendUserVerificationRequest(request.email, request.token))).andReturn(SendUserVerificationResponse(user.uuid))
         replayAll()
         // test scenario
         val resultResponse = userServiceFacade.create(request)

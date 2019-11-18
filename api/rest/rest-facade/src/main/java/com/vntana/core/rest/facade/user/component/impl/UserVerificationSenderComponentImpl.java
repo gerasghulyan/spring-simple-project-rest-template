@@ -50,7 +50,7 @@ public class UserVerificationSenderComponentImpl implements UserVerificationSend
 
     @Override
     public SendUserVerificationResponse sendVerificationEmail(final SendUserVerificationRequest request) {
-        final Optional<User> userOptional = userService.findByUuid(request.getUuid());
+        final Optional<User> userOptional = userService.findByEmail(request.getEmail());
         if (!userOptional.isPresent()) {
             return new SendUserVerificationResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_UUID));
         }
@@ -67,6 +67,6 @@ public class UserVerificationSenderComponentImpl implements UserVerificationSend
                 String.format("%s/%s", verificationUrlPrefix, request.getToken())
         );
         emailSenderService.sendEmail(payload);
-        return new SendUserVerificationResponse(request.getUuid());
+        return new SendUserVerificationResponse(user.getUuid());
     }
 }

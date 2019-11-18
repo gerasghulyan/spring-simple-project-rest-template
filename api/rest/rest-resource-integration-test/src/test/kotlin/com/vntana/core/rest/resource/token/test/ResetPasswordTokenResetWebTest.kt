@@ -38,7 +38,7 @@ class ResetPasswordTokenResetWebTest : AbstractTokenWebTest() {
     fun `test reset`() {
         Mockito.reset(emailNotificationResourceClient)
         Mockito.`when`(emailNotificationResourceClient.createEmailNotification(ArgumentMatchers.any())).thenReturn(ResultResponseModel<CreateEmailNotificationResponse>())
-        val email = userRestTestHelper.buildUserValidEmail()
+        val email = userRestTestHelper.email()
         userResourceClient.createUser(userRestTestHelper.buildCreateUserRequest(email = email))
         val response = resetPasswordTokenResourceClient.reset(restTestHelper.buildResetPasswordRequest(email = email))
         Mockito.verify(emailNotificationResourceClient, times(2)).createEmailNotification(ArgumentMatchers.any())

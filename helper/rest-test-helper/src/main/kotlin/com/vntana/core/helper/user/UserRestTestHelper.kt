@@ -16,7 +16,7 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
             clientName: String? = uuid(),
             clientSlug: String? = uuid(),
             fullName: String? = uuid(),
-            email: String? = "${uuid()}@mail.com",
+            email: String? = email(),
             password: String? = uuid(),
             token: String? = uuid()
     ): CreateUserRequest = CreateUserRequest(clientName, clientSlug, fullName, email, password, token)
@@ -25,8 +25,8 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
 
     fun buildVerifyUserRequest(uuid: String? = uuid()): VerifyUserRequest = VerifyUserRequest(uuid)
 
-    fun buildSendUserVerificationRequest(uuid: String? = uuid(), token: String? = uuid()
-    ): SendUserVerificationRequest = SendUserVerificationRequest(uuid, token)
+    fun buildSendUserVerificationRequest(email: String? = uuid(), token: String? = uuid()
+    ): SendUserVerificationRequest = SendUserVerificationRequest(email, token)
 
-    fun buildUserValidEmail(): String = "${uuid()}@mail.com"
+    fun email(): String = uuid() + "@gmail.com"
 }

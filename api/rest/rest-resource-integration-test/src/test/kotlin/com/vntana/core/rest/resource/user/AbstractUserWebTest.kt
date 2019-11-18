@@ -20,4 +20,6 @@ abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var emailNotificationResourceClient: EmailNotificationResourceClient
+
+    fun email(): String = uuid() + "@gmail.com"
 }

@@ -2,7 +2,7 @@ package com.vntana.core.model.user.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
-import com.vntana.commons.api.model.request.impl.AbstractUuidAwareRequestModel;
+import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,7 +17,10 @@ import java.util.List;
  * Date: 11/12/19
  * Time: 1:29 PM
  */
-public class SendUserVerificationRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<UserErrorResponseModel> {
+public class SendUserVerificationRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
+
+    @JsonProperty("email")
+    private String email;
 
     @JsonProperty("token")
     private String token;
@@ -26,16 +29,16 @@ public class SendUserVerificationRequest extends AbstractUuidAwareRequestModel i
         super();
     }
 
-    public SendUserVerificationRequest(final String uuid, final String token) {
-        super(uuid);
+    public SendUserVerificationRequest(final String email, final String token) {
+        this.email = email;
         this.token = token;
     }
 
     @Override
     public List<UserErrorResponseModel> validate() {
         final List<UserErrorResponseModel> errors = new LinkedList<>();
-        if (StringUtils.isBlank(getUuid())) {
-            errors.add(UserErrorResponseModel.MISSING_UUID);
+        if (StringUtils.isBlank(getEmail())) {
+            errors.add(UserErrorResponseModel.MISSING_EMAIL);
         }
         if (StringUtils.isBlank(token)) {
             errors.add(UserErrorResponseModel.MISSING_VERIFICATION_TOKEN);
@@ -53,7 +56,7 @@ public class SendUserVerificationRequest extends AbstractUuidAwareRequestModel i
         }
         final SendUserVerificationRequest that = (SendUserVerificationRequest) o;
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
+                .append(email, that.email)
                 .append(token, that.token)
                 .isEquals();
     }
@@ -61,7 +64,7 @@ public class SendUserVerificationRequest extends AbstractUuidAwareRequestModel i
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
+                .append(email)
                 .append(token)
                 .toHashCode();
     }
@@ -69,8 +72,17 @@ public class SendUserVerificationRequest extends AbstractUuidAwareRequestModel i
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("email", email)
                 .append("token", token)
                 .toString();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
     public String getToken() {

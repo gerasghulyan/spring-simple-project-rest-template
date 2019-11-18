@@ -22,7 +22,7 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
     fun `test when user not found`() {
         val request = restHelper.buildSendUserVerificationRequest()
         resetAll()
-        expect(userService.findByUuid(request.uuid)).andReturn(Optional.empty())
+        expect(userService.findByEmail(request.email)).andReturn(Optional.empty())
         replayAll()
         assertBasicErrorResultResponse(userVerificationSenderComponent.sendVerificationEmail(request), UserErrorResponseModel.NOT_FOUND_FOR_UUID)
         verifyAll()
@@ -32,9 +32,9 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
     fun `test when user already verified`() {
         val user = userHelper.buildUser()
         user.verified = true
-        val request = restHelper.buildSendUserVerificationRequest(uuid = user.uuid)
+        val request = restHelper.buildSendUserVerificationRequest(email = user.email)
         resetAll()
-        expect(userService.findByUuid(request.uuid)).andReturn(Optional.of(user))
+        expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
         replayAll()
         userVerificationSenderComponent.sendVerificationEmail(request).let {
             assertBasicErrorResultResponse(it, UserErrorResponseModel.USER_ALREADY_VERIFIED)
@@ -43,13 +43,13 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
     }
 
     @Test
-    fun `test`() {
+    fun `test sendVerificationEmail`() {
         val user = userHelper.buildUser()
         val templateName = uuid()
         val templateEmail = TemplateEmail(TemplateEmailType.USER_VERIFICATION, templateName)
-        val request = restHelper.buildSendUserVerificationRequest(uuid = user.uuid)
+        val request = restHelper.buildSendUserVerificationRequest(email = user.email)
         resetAll()
-        expect(userService.findByUuid(request.uuid)).andReturn(Optional.of(user))
+        expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
         expect(templateEmailService.getByType(TemplateEmailType.USER_VERIFICATION)).andReturn(templateEmail)
         expect(emailSenderService.sendEmail(isA(VerificationEmailSendPayload::class.java))).andVoid()
         replayAll()
