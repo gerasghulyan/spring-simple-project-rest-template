@@ -427,7 +427,10 @@ project(":api:rest:rest-resource-executable") {
         implementation 'org.springframework.data:spring-data-jpa'
         implementation "io.springfox:springfox-swagger2"
         implementation "io.springfox:springfox-swagger-ui"
-        implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+        implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+        implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
         implementation "org.postgresql:postgresql"
         implementation "com.sflpro.notifier:api-client-library"
         implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -449,7 +452,10 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation 'org.springframework.data:spring-data-jpa'
         testImplementation "org.testcontainers:postgresql"
         testImplementation "org.postgresql:postgresql"
-        testImplementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+        testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+        testImplementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
+        testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+        testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     }
 }
 

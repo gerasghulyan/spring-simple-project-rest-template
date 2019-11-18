@@ -18,6 +18,7 @@ import javax.ws.rs.client.Client;
 public class JerseyRestClientConfig {
     @Bean
     public Client client(final ObjectMapper objectMapper) {
+        objectMapper.findAndRegisterModules();
         return JerseyClientBuilder.newClient().register(new JacksonJsonProvider(objectMapper)).property(CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE_CLIENT, true);
     }
 }
