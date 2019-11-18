@@ -55,7 +55,7 @@ public class UserVerificationSenderComponentImpl implements UserVerificationSend
             return new SendUserVerificationResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_UUID));
         }
         final User user = userOptional.get();
-        if (user.getVerified()) {
+        if (Boolean.TRUE.equals(user.getVerified())) {
             return new SendUserVerificationResponse(Collections.singletonList(UserErrorResponseModel.USER_ALREADY_VERIFIED));
         }
         final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_VERIFICATION);
