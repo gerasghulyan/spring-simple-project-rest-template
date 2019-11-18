@@ -6,7 +6,8 @@ import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.notification.payload.verification.VerificationEmailSendPayload
 import com.vntana.core.rest.facade.user.component.AbstractUserVerificationSenderComponentUnitTest
 import org.assertj.core.api.Assertions
-import org.easymock.EasyMock
+import org.easymock.EasyMock.expect
+import org.easymock.EasyMock.isA
 import org.junit.Test
 import java.util.*
 
@@ -21,11 +22,9 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
     fun `test when user not found`() {
         val request = restHelper.buildSendUserVerificationRequest()
         resetAll()
-        EasyMock.expect(userService.findByUuid(request.uuid)).andReturn(Optional.empty())
+        expect(userService.findByUuid(request.uuid)).andReturn(Optional.empty())
         replayAll()
-        userVerificationSenderComponent.sendVerificationEmail(request).let {
-            assertBasicErrorResultResponse(it, UserErrorResponseModel.NOT_FOUND_FOR_UUID)
-        }
+        assertBasicErrorResultResponse(userVerificationSenderComponent.sendVerificationEmail(request), UserErrorResponseModel.NOT_FOUND_FOR_UUID)
         verifyAll()
     }
 
@@ -35,7 +34,7 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
         user.verified = true
         val request = restHelper.buildSendUserVerificationRequest(uuid = user.uuid)
         resetAll()
-        EasyMock.expect(userService.findByUuid(request.uuid)).andReturn(Optional.of(user))
+        expect(userService.findByUuid(request.uuid)).andReturn(Optional.of(user))
         replayAll()
         userVerificationSenderComponent.sendVerificationEmail(request).let {
             assertBasicErrorResultResponse(it, UserErrorResponseModel.USER_ALREADY_VERIFIED)
@@ -50,9 +49,9 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
         val templateEmail = TemplateEmail(TemplateEmailType.USER_VERIFICATION, templateName)
         val request = restHelper.buildSendUserVerificationRequest(uuid = user.uuid)
         resetAll()
-        EasyMock.expect(userService.findByUuid(request.uuid)).andReturn(Optional.of(user))
-        EasyMock.expect(templateEmailService.getByType(TemplateEmailType.USER_VERIFICATION)).andReturn(templateEmail)
-        EasyMock.expect(emailSenderService.sendEmail(EasyMock.isA(VerificationEmailSendPayload::class.java))).andVoid()
+        expect(userService.findByUuid(request.uuid)).andReturn(Optional.of(user))
+        expect(templateEmailService.getByType(TemplateEmailType.USER_VERIFICATION)).andReturn(templateEmail)
+        expect(emailSenderService.sendEmail(isA(VerificationEmailSendPayload::class.java))).andVoid()
         replayAll()
         userVerificationSenderComponent.sendVerificationEmail(request).let {
             assertBasicSuccessResultResponse(it)

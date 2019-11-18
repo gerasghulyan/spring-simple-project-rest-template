@@ -61,8 +61,8 @@ public class UserVerificationSenderComponentImpl implements UserVerificationSend
         final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_VERIFICATION);
         final VerificationEmailSendPayload payload = new VerificationEmailSendPayload(
                 templateEmail.getTemplateName(),
-                senderEmail,
                 user.getEmail(),
+                senderEmail,
                 "Confirm your e-mail address",
                 String.format("%s/%s", verificationUrlPrefix, request.getToken())
         );
