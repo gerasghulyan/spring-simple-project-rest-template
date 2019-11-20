@@ -30,6 +30,6 @@ class UserServiceIntegrationTestHelper : UserCommonTestHelper() {
     fun persistVerifiedUser(organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
                             dto: CreateUserDto = buildUserCreateDto(organizationUuid = organizationUuid)): User {
         val user = persistUser(organizationUuid, dto)
-        return userService.makeVerified(user.uuid)
+        return userService.makeVerified(user.email)
     }
 }

@@ -141,14 +141,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     }
 
     @Override
-    public VerifyUserResponse verify(final String uuid) {
-        LOGGER.debug("Processing user facade verify method for uuid - {}", uuid);
-        final List<UserErrorResponseModel> errorsList = checkVerifyForPossibleErrors(uuid);
+    public VerifyUserResponse verify(final String email) {
+        LOGGER.debug("Processing user facade verify method for email - {}", email);
+        final List<UserErrorResponseModel> errorsList = checkVerifyForPossibleErrors(email);
         if (!errorsList.isEmpty()) {
             return new VerifyUserResponse(errorsList);
         }
-        final User user = userService.makeVerified(uuid);
-        LOGGER.debug("Successfully processed user facade verify method for uuid - {}", uuid);
+        final User user = userService.makeVerified(email);
+        LOGGER.debug("Successfully processed user facade verify method for email - {}", email);
         return new VerifyUserResponse(user.getUuid());
     }
 
@@ -160,13 +160,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return sendUserVerificationResponse;
     }
 
-    private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String uuid) {
-        if (StringUtils.isBlank(uuid)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_UUID);
+    private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String email) {
+        if (StringUtils.isBlank(email)) {
+            return Collections.singletonList(UserErrorResponseModel.MISSING_EMAIL);
         }
-        final Optional<User> user = userService.findByUuid(uuid);
+        final Optional<User> user = userService.findByEmail(email);
         if (!user.isPresent()) {
-            return Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_UUID);
+            return Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL);
         }
         if (Boolean.TRUE.equals(user.get().getVerified())) {
             return Collections.singletonList(UserErrorResponseModel.USER_ALREADY_VERIFIED);

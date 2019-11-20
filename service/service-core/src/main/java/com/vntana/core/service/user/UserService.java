@@ -19,5 +19,5 @@ public interface UserService {
 
     User getByUuid(final String uuid);
 
-    User makeVerified(final String uuid);
+    User makeVerified(final String email);
 }

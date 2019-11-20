@@ -17,6 +17,8 @@ import org.springframework.util.Assert;
 
 import java.util.Optional;
 
+import static java.lang.String.format;
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/3/19
@@ -80,16 +82,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User makeVerified(final String uuid) {
-        LOGGER.debug("Making user verified having uuid - {}", uuid);
-        Assert.hasText(uuid, "The user uuid should not be null or empty");
-        final User user = getByUuid(uuid);
-        if (user.getVerified()) {
-            throw new UserAlreadyVerifiedException(String.format("The user having %s uuid is already verified", uuid));
+    public User makeVerified(final String email) {
+        LOGGER.debug("Making user verified having uuid - {}", email);
+        Assert.hasText(email, "The user uuid should not be null or empty");
+        final User user = findByEmail(email).orElseThrow(() -> new IllegalStateException(format("Can not find user to verify with email - %s", email)));
+        if (Boolean.TRUE.equals(user.getVerified())) {
+            throw new UserAlreadyVerifiedException(format("The user having %s uuid is already verified", email));
         }
         user.setVerified(true);
         final User updatedUser = userRepository.save(user);
-        LOGGER.debug("Successfully made user verified having uuid - {}", uuid);
+        LOGGER.debug("Successfully made user verified having uuid - {}", email);
         return updatedUser;
     }
 

@@ -23,7 +23,7 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
 
     fun buildFindUserByEmailRequest(email: String? = "${uuid()}@mail.com"): FindUserByEmailRequest = FindUserByEmailRequest(email)
 
-    fun buildVerifyUserRequest(uuid: String? = uuid()): VerifyUserRequest = VerifyUserRequest(uuid)
+    fun buildVerifyUserRequest(email: String? = uuid()): VerifyUserRequest = VerifyUserRequest(email)
 
     fun buildSendUserVerificationRequest(email: String? = uuid(), token: String? = uuid()
     ): SendUserVerificationRequest = SendUserVerificationRequest(email, token)

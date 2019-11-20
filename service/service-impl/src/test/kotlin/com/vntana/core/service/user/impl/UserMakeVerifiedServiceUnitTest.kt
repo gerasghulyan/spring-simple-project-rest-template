@@ -3,7 +3,6 @@ package com.vntana.core.service.user.impl
 import com.vntana.core.domain.user.User
 import com.vntana.core.service.user.AbstractUserServiceUnitTest
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException
-import com.vntana.core.service.user.exception.UserNotFoundForUuidException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.*
@@ -30,12 +29,12 @@ class UserMakeVerifiedServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun `test when user does not exist`() {
-        val userUuid = uuid()
+        val email = uuid()
         resetAll()
-        expect(userRepository.findByUuid(userUuid)).andReturn(Optional.empty())
+        expect(userRepository.findByEmail(email)).andReturn(Optional.empty())
         replayAll()
-        assertThatThrownBy { userService.makeVerified(userUuid) }
-                .isExactlyInstanceOf(UserNotFoundForUuidException::class.java)
+        assertThatThrownBy { userService.makeVerified(email) }
+                .isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
     }
 
@@ -43,11 +42,11 @@ class UserMakeVerifiedServiceUnitTest : AbstractUserServiceUnitTest() {
     fun `test when user is already verified`() {
         val user = helper.buildUser()
         user.verified = true
-        val userUuid = user.uuid
+        val email = user.email
         resetAll()
-        expect(userRepository.findByUuid(userUuid)).andReturn(Optional.of(user))
+        expect(userRepository.findByEmail(email)).andReturn(Optional.of(user))
         replayAll()
-        assertThatThrownBy { userService.makeVerified(userUuid) }
+        assertThatThrownBy { userService.makeVerified(email) }
                 .isExactlyInstanceOf(UserAlreadyVerifiedException::class.java)
         verifyAll()
     }
@@ -55,13 +54,13 @@ class UserMakeVerifiedServiceUnitTest : AbstractUserServiceUnitTest() {
     @Test
     fun `test`() {
         val user = helper.buildUser()
-        val userUuid = user.uuid
+        val email = user.email
         resetAll()
-        expect(userRepository.findByUuid(userUuid)).andReturn(Optional.of(user))
+        expect(userRepository.findByEmail(email)).andReturn(Optional.of(user))
         expect(userRepository.save(isA(User::class.java))).andAnswer { getCurrentArguments()[0] as User }
         replayAll()
-        userService.makeVerified(userUuid).let {
-            assertThat(it.uuid).isEqualTo(userUuid)
+        userService.makeVerified(email).let {
+            assertThat(it.email).isEqualTo(email)
             assertThat(it.verified).isTrue()
         }
         verifyAll()

@@ -60,7 +60,7 @@ public class UserResource {
     @PutMapping(path = "/verify")
     public ResponseEntity<VerifyUserResponse> verify(@RequestBody final VerifyUserRequest request) {
         LOGGER.debug("Processing user resource verify method for request - {}", request);
-        final VerifyUserResponse resultResponse = userServiceFacade.verify(request.getUuid());
+        final VerifyUserResponse resultResponse = userServiceFacade.verify(request.getEmail());
         LOGGER.debug("Successfully processed user resource verify method for request - {}", request);
         return ResponseEntity.ok(resultResponse);
     }
