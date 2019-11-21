@@ -77,7 +77,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
         assertThat(resultResponse.response().email).isEqualTo(user.email)
         assertThat(resultResponse.response().role).isEqualTo(UserRoleModel.SUPER_ADMIN)
         assertThat(resultResponse.response().fullName).isEqualTo(user.fullName)
-        assertThat(resultResponse.response().verified).isEqualTo(user.verified)
+        assertThat(resultResponse.response().isEmailVerified).isEqualTo(user.verified)
         verifyAll()
     }
 
