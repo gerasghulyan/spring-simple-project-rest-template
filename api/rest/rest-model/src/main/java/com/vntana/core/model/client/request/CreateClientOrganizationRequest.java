@@ -27,13 +27,22 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
     @JsonProperty("slug")
     private String slug;
 
+    @JsonProperty("imageId")
+    private String imageId;
+
     public CreateClientOrganizationRequest() {
+        super();
     }
 
-    public CreateClientOrganizationRequest(final String organizationUuid, final String name, final String slug) {
+    public CreateClientOrganizationRequest(final String organizationUuid,
+                                           final String name,
+                                           final String slug,
+                                           final String imageId) {
+        super();
         this.organizationUuid = organizationUuid;
         this.name = name;
         this.slug = slug;
+        this.imageId = imageId;
     }
 
     @Override
@@ -44,6 +53,9 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
         }
         if (StringUtils.isBlank(slug)) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
+        }
+        if (StringUtils.isBlank(imageId)) {
+            errors.add(ClientOrganizationErrorResponseModel.MISSING_IMAGE_ID);
         }
         return errors;
     }
@@ -61,6 +73,7 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
                 .append(organizationUuid, that.organizationUuid)
                 .append(name, that.name)
                 .append(slug, that.slug)
+                .append(imageId, that.imageId)
                 .isEquals();
     }
 
@@ -70,6 +83,7 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
                 .append(organizationUuid)
                 .append(name)
                 .append(slug)
+                .append(imageId)
                 .toHashCode();
     }
 
@@ -79,6 +93,7 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
                 .append("organizationUuid", organizationUuid)
                 .append("name", name)
                 .append("slug", slug)
+                .append("imageId", imageId)
                 .toString();
     }
 
@@ -104,5 +119,13 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
 
     public void setSlug(final String slug) {
         this.slug = slug;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
     }
 }

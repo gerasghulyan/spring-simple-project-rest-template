@@ -104,6 +104,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                             .map(clientOrganization -> new GetUserClientOrganizationsResponseModel(
                                     clientOrganization.getUuid(),
                                     clientOrganization.getName(),
+                                    clientOrganization.getImageId(),
                                     UserRoleModel.valueOf(userOrganizationRole.getUserRole().name())
                             ))
                             .collect(Collectors.toList())

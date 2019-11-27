@@ -20,15 +20,23 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("imageId")
+    private String imageId;
+
     @JsonProperty("role")
     private UserRoleModel role;
 
     public GetUserClientOrganizationsResponseModel() {
+        super();
     }
 
-    public GetUserClientOrganizationsResponseModel(final String uuid, final String name, final UserRoleModel role) {
+    public GetUserClientOrganizationsResponseModel(final String uuid,
+                                                   final String name,
+                                                   final String imageId,
+                                                   final UserRoleModel role) {
         this.uuid = uuid;
         this.name = name;
+        this.imageId = imageId;
         this.role = role;
     }
 
@@ -44,6 +52,7 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
                 .append(name, that.name)
+                .append(imageId, that.imageId)
                 .append(role, that.role)
                 .isEquals();
     }
@@ -53,6 +62,7 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
         return new HashCodeBuilder()
                 .append(uuid)
                 .append(name)
+                .append(imageId)
                 .append(role)
                 .toHashCode();
     }
@@ -62,6 +72,7 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
         return new ToStringBuilder(this)
                 .append("uuid", uuid)
                 .append("name", name)
+                .append("imageId", imageId)
                 .append("role", role)
                 .toString();
     }
@@ -80,6 +91,14 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
     }
 
     public UserRoleModel getRole() {

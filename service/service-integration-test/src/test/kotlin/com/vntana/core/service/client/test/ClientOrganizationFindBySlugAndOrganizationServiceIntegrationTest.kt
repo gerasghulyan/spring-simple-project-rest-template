@@ -27,6 +27,10 @@ class ClientOrganizationFindBySlugAndOrganizationServiceIntegrationTest : Abstra
         clientOrganizationService.findBySlugAndOrganization(clientOrganization.slug, clientOrganization.organization.uuid).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.get()).isEqualTo(clientOrganization)
+            assertThat(it.get().name).isEqualTo(clientOrganization.name)
+            assertThat(it.get().slug).isEqualTo(clientOrganization.slug)
+            assertThat(it.get().imageId).isEqualTo(clientOrganization.imageId)
+            assertThat(it.get().organization).isEqualTo(clientOrganization.organization)
         }
     }
 }

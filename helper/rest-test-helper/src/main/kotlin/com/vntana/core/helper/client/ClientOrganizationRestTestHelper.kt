@@ -18,6 +18,7 @@ open class ClientOrganizationRestTestHelper : AbstractRestTestHelper() {
     fun buildCreateClientOrganizationRequest(
             organizationUuid: String? = uuid(),
             name: String? = uuid(),
-            slug: String? = uuid()
-    ): CreateClientOrganizationRequest = CreateClientOrganizationRequest(organizationUuid, name, slug)
+            slug: String? = uuid(),
+            imageId: String? = uuid()
+    ): CreateClientOrganizationRequest = CreateClientOrganizationRequest(organizationUuid, name, slug, imageId)
 }
