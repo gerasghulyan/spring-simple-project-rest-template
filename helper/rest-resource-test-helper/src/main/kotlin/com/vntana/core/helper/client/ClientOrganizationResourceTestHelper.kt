@@ -22,8 +22,12 @@ class ClientOrganizationResourceTestHelper : ClientOrganizationRestTestHelper() 
 
     fun persistClientOrganization(organizationUuid: String? = organizationResourceTestHelper.persistOrganization().response().uuid,
                                   name: String? = uuid(),
-                                  slug: String? = uuid()): CreateClientOrganizationResultResponse {
-        val request = buildCreateClientOrganizationRequest(organizationUuid = organizationUuid, name = name, slug = slug)
+                                  slug: String? = uuid(),
+                                  imageId: String? = uuid()): CreateClientOrganizationResultResponse {
+        val request = buildCreateClientOrganizationRequest(organizationUuid = organizationUuid,
+                name = name,
+                slug = slug,
+                imageId = imageId)
         return clientOrganizationResourceClient.create(request)
     }
 }

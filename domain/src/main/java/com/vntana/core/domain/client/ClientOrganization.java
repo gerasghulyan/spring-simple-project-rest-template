@@ -29,12 +29,21 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organization_id"), updatable = false)
     private Organization organization;
 
+    @Column(name = "image_id", nullable = false)
+    private String imageId;
+
     public ClientOrganization() {
+        super();
     }
 
-    public ClientOrganization(final String name, final String slug, final Organization organization) {
+    public ClientOrganization(final String name,
+                              final String slug,
+                              final String imageId,
+                              final Organization organization) {
+        super();
         this.name = name;
         this.slug = slug;
+        this.imageId = imageId;
         this.organization = organization;
     }
 
@@ -63,6 +72,7 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)
+                .append("imageId", imageId)
                 .append("slug", slug)
                 .toString();
     }
@@ -73,6 +83,10 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
 
     public String getSlug() {
         return slug;
+    }
+
+    public String getImageId() {
+        return imageId;
     }
 
     public Organization getOrganization() {

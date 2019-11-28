@@ -14,14 +14,26 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
 
     @Test
     fun `test create with invalid arguments`() {
-        val response1 = clientOrganizationResourceClient.create(
-                clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(slug = null)
-        )
-        assertBasicErrorResultResponse(response1, ClientOrganizationErrorResponseModel.MISSING_SLUG)
-        val response2 = clientOrganizationResourceClient.create(
-                clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(name = null)
-        )
-        assertBasicErrorResultResponse(response2, ClientOrganizationErrorResponseModel.MISSING_NAME)
+        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(slug = null)).let {
+            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_SLUG)
+
+        }
+        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(slug = "")).let {
+            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_SLUG)
+
+        }
+        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(name = null)).let {
+            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_NAME)
+        }
+        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(name = "")).let {
+            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_NAME)
+        }
+        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(imageId = null)).let {
+            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_IMAGE_ID)
+        }
+        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(imageId = "")).let {
+            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_IMAGE_ID)
+        }
     }
 
     @Test

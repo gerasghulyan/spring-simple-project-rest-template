@@ -13,6 +13,31 @@ import org.junit.Test
 class ClientOrganizationGetClientOrganizationWebTest : AbstractClientOrganizationWebTest() {
 
     @Test
+    fun `test` () {
+        val userResponseModel = userResourceTestHelper.persistUser().response()
+        val organizationUuid = userResponseModel.organizationUuid
+        val userUuid = userResponseModel.uuid
+        val clientName = uuid()
+        val clientSlug = uuid()
+        val imageId = uuid()
+        val clientOrganizationUuid = clientOrganizationResourceTestHelper.persistClientOrganization(
+                organizationUuid = organizationUuid,
+                name = clientName,
+                slug = clientSlug,
+                imageId = imageId
+        ).response().uuid
+        clientOrganizationResourceClient.getUserClientOrganizations(userUuid, organizationUuid).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().totalCount()).isEqualTo(1)
+            it.response().items()[0].run {
+                assertThat(this.uuid).isEqualTo(clientOrganizationUuid)
+                assertThat(this.name).isEqualTo(clientName)
+                assertThat(this.imageId).isEqualTo(imageId)
+            }
+        }
+    }
+
+    @Test
     fun `test get user client organizations when role is organization admin`() {
         val createUserResponseModel = userResourceTestHelper.persistUser().response()
         val organizationUuid = createUserResponseModel.organizationUuid

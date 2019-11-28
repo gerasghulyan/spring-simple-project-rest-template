@@ -31,6 +31,10 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(slug = " ")) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(imageId = null)) }
+                .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(imageId = " ")) }
+                .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -56,8 +60,9 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
         // test data
         resetAll()
         val slug = uuid()
+        val imageId = uuid()
         val organization = organizationTestHelper.buildOrganization()
-        val dto = helper.buildCreateClientOrganizationDto(slug = slug, organizationUuid = organization.uuid)
+        val dto = helper.buildCreateClientOrganizationDto(slug = slug, imageId = imageId, organizationUuid = organization.uuid)
         // expectations
         expect(clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organization.uuid)).andReturn(Optional.empty())
         expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
@@ -68,6 +73,7 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
         assertThat(clientOrganizationService.create(dto))
                 .hasFieldOrPropertyWithValue("name", dto.name)
                 .hasFieldOrPropertyWithValue("slug", dto.slug)
+                .hasFieldOrPropertyWithValue("imageId", dto.imageId)
                 .hasFieldOrPropertyWithValue("organization", organization)
         verifyAll()
     }

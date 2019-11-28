@@ -42,7 +42,8 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         assertCreateClientOrganizationDto(dto);
         assertNotExistsForSlugAndOrganization(dto.getSlug(), dto.getOrganizationUuid());
         final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
-        return clientOrganizationRepository.save(new ClientOrganization(dto.getName(), dto.getSlug(), organization));
+        final ClientOrganization clientOrganization = new ClientOrganization(dto.getName(), dto.getSlug(), dto.getImageId(), organization);
+        return clientOrganizationRepository.save(clientOrganization);
     }
 
     @Transactional(readOnly = true)
@@ -66,6 +67,7 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         Assert.notNull(dto, "The CreateClientOrganizationDto should not be null");
         Assert.hasText(dto.getName(), "The client name should contain text");
         Assert.hasText(dto.getSlug(), "The client slug should contain text");
+        Assert.hasText(dto.getImageId(), "The client imageId should contain text");
     }
 
     private void assertNotExistsForSlugAndOrganization(final String slug, final String organizationUuid) {

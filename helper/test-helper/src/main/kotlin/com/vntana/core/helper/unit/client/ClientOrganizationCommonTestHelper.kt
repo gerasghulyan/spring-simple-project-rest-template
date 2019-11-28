@@ -18,13 +18,15 @@ open class ClientOrganizationCommonTestHelper : AbstractCommonTestHelper() {
     fun buildCreateClientOrganizationDto(
             name: String? = uuid(),
             slug: String? = uuid(),
+            imageId: String? = uuid(),
             organizationUuid: String? = uuid()
-    ): CreateClientOrganizationDto = CreateClientOrganizationDto(name, slug, organizationUuid)
+    ): CreateClientOrganizationDto = CreateClientOrganizationDto(name, slug, imageId, organizationUuid)
 
     fun buildClientOrganization(
             name: String? = uuid(),
             slug: String? = uuid(),
+            imageId: String? = uuid(),
             organization: Organization? = organizationCommonTestHelper.buildOrganization()
-    ): ClientOrganization = ClientOrganization(name, slug, organization)
+    ): ClientOrganization = ClientOrganization(name, slug, imageId, organization)
 
 }
