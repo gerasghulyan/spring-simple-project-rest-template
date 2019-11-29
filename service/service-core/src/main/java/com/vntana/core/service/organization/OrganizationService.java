@@ -19,4 +19,6 @@ public interface OrganizationService {
     List<Organization> getAll();
 
     Organization getByUuid(final String uuid);
+
+    boolean existsByUuid(final String uuid);
 }

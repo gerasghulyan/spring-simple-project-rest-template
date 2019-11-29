@@ -16,10 +16,6 @@ public class UserOrganizationResponse extends AbstractResultResponseModel<GetUse
     public UserOrganizationResponse() {
     }
 
-    public UserOrganizationResponse(final boolean success, final List<OrganizationErrorResponseModel> errors, final GetUserOrganizationsGridResponseModel response) {
-        super(success, errors, response);
-    }
-
     public UserOrganizationResponse(final List<OrganizationErrorResponseModel> errors) {
         super(errors);
     }
