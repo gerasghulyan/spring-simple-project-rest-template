@@ -63,6 +63,14 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         return clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organizationUuid);
     }
 
+    @Override
+    public ClientOrganization getByUuid(final String uuid) {
+        return findByUuid(uuid).orElseThrow(() -> {
+            LOGGER.error("Can not find client for uuid - {}", uuid);
+            return new IllegalStateException(format("Can not find client for uuid - %s", uuid));
+        });
+    }
+
     private void assertCreateClientOrganizationDto(final CreateClientOrganizationDto dto) {
         Assert.notNull(dto, "The CreateClientOrganizationDto should not be null");
         Assert.hasText(dto.getName(), "The client name should contain text");

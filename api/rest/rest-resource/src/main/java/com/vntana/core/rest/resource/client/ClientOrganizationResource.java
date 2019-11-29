@@ -4,17 +4,13 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arthur Asatryan.
@@ -59,5 +55,13 @@ public class ClientOrganizationResource {
         final UserClientOrganizationResponse userClientOrganizationResponse = clientOrganizationServiceFacade.getUserClientOrganizations(userUuid, userOrganizationUuid);
         LOGGER.debug("Successfully proceeded find client organizations by user uuid and by organization uuid with response - {}", userClientOrganizationResponse);
         return ResponseEntity.ok(userClientOrganizationResponse);
+    }
+
+    @GetMapping(path = "/{uuid}")
+    public ResponseEntity<GetClientOrganizationResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Retrieving client organization by uuid - {}", uuid);
+        final GetClientOrganizationResultResponse response = clientOrganizationServiceFacade.getByUuid(uuid);
+        LOGGER.debug("Successfully retrieved client organization with response - {}", response);
+        return ResponseEntity.ok(response);
     }
 }

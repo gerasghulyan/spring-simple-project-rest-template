@@ -8,6 +8,8 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.get.GetClientOrganizationResponseModel;
+import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.model.user.response.model.GetUserClientOrganizationsGridResponseModel;
 import com.vntana.core.model.user.response.model.GetUserClientOrganizationsResponseModel;
@@ -112,5 +114,19 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         });
         final List<GetUserClientOrganizationsResponseModel> response = mutableResponse.getValue();
         return new UserClientOrganizationResponse(new GetUserClientOrganizationsGridResponseModel(response.size(), response));
+    }
+
+    @Override
+    public GetClientOrganizationResultResponse getByUuid(final String uuid) {
+        LOGGER.debug("Retrieving client organization by uuid - {}", uuid);
+        final ClientOrganization client = clientOrganizationService.getByUuid(uuid);
+        LOGGER.debug("Successfully retrieved client organization with result - {}", client);
+        final GetClientOrganizationResponseModel response = new GetClientOrganizationResponseModel(
+                client.getOrganization().getUuid(),
+                client.getOrganization().getSlug(),
+                client.getUuid(),
+                client.getSlug()
+        );
+        return new GetClientOrganizationResultResponse(response);
     }
 }
