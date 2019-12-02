@@ -79,7 +79,7 @@ class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
                         testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel()
                 )
         ))
-        val label = uuid()
+        val label = ""
         val ip = testHelper.validIp()
         val request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = organizationUuid1,
                 whitelistIps = listOf(

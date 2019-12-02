@@ -19,7 +19,6 @@ public class CreateWhitelistIpDto implements ServiceDto {
 
     public CreateWhitelistIpDto(final String label, final String ip, final String organizationUuid) {
         super();
-        Assert.hasText(label, "The whitelist ip label should not be null or empty");
         Assert.hasText(ip, "The whitelist ip ip should not be null or empty");
         Assert.hasText(organizationUuid, "The whitelist ip organizationUuid should not be null or empty");
         this.label = label;
