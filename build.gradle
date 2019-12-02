@@ -5,6 +5,7 @@ buildscript {
         kotlinVersion = '1.3.50'
         vavrVersion = '0.10.2'
         easymockVersion = '4.0.2'
+        apacheCommonsValidatorVersion = '1.4.1'
         testContainersVersion = '1.11.3'
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
@@ -108,6 +109,7 @@ allprojects {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter()
         maven {
@@ -139,7 +141,9 @@ allprojects {
         }
         dependencies {
             dependency("org.easymock:easymock:$easymockVersion")
+            dependency("org.easymock:easymock:$easymockVersion")
             dependency("io.vavr:vavr:$vavrVersion")
+            dependency("commons-validator:commons-validator:$apacheCommonsValidatorVersion")
             dependency("org.testcontainers:postgresql:$testContainersVersion")
             dependency("com.sflpro.notifier:api-client-library:$sflNotifierVersion")
             dependency("net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}")
@@ -340,6 +344,7 @@ project(":api:rest:rest-model") {
     dependencies {
         api "com.fasterxml.jackson.core:jackson-annotations"
         compile "com.vntana.commons:api-models"
+        implementation "commons-validator:commons-validator"
     }
 }
 

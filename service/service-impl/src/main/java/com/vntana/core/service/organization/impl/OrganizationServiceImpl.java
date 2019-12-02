@@ -63,6 +63,14 @@ public class OrganizationServiceImpl implements OrganizationService {
         });
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsByUuid(final String uuid) {
+        Assert.hasText(uuid, "The organization uuid should not be null or empty");
+        LOGGER.debug("Checking existence of organization having uuid - {}", uuid);
+        return organizationRepository.existsByUuid(uuid);
+    }
+
     private Optional<Organization> findByUuid(final String uuid) {
         Assert.hasText(uuid, "The organization uuid should not be null");
         LOGGER.debug("Trying to find organization with uuid - {}", uuid);

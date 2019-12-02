@@ -16,10 +16,6 @@ public class SignInResultResponse extends AbstractResultResponseModel<SignInResp
         super();
     }
 
-    public SignInResultResponse(final boolean success, final List<UserErrorResponseModel> errors, final SignInResponseModel response) {
-        super(success, errors, response);
-    }
-
     public SignInResultResponse(final List<UserErrorResponseModel> errors) {
         super(errors);
     }

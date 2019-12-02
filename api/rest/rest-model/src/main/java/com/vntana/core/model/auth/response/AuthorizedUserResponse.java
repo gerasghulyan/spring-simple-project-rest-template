@@ -16,10 +16,6 @@ public class AuthorizedUserResponse extends AbstractResultResponseModel<Authoriz
         super();
     }
 
-    public AuthorizedUserResponse(final boolean success, final List<UserErrorResponseModel> errors, final AuthorizedUserResponseModel response) {
-        super(success, errors, response);
-    }
-
     public AuthorizedUserResponse(final List<UserErrorResponseModel> errors) {
         super(errors);
     }
