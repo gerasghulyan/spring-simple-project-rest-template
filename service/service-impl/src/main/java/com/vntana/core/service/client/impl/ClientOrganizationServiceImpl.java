@@ -63,6 +63,7 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         return clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organizationUuid);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ClientOrganization getByUuid(final String uuid) {
         return findByUuid(uuid).orElseThrow(() -> {

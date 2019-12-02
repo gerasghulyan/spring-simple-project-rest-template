@@ -26,6 +26,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collections;
@@ -116,6 +117,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return new UserClientOrganizationResponse(new GetUserClientOrganizationsGridResponseModel(response.size(), response));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public GetClientOrganizationResultResponse getByUuid(final String uuid) {
         LOGGER.debug("Retrieving client organization by uuid - {}", uuid);
