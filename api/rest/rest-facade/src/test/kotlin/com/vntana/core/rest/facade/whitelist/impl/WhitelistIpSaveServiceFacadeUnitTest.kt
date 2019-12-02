@@ -10,7 +10,7 @@ import org.junit.Test
  * Date: 11/29/19
  * Time: 4:54 PM
  */
-class WhitelistIpCreateOrUpdateServiceFacadeUnitTest : AbstractWhitelistIpServiceFacadeUnitTest() {
+class WhitelistIpSaveServiceFacadeUnitTest : AbstractWhitelistIpServiceFacadeUnitTest() {
 
     @Test
     fun `test when organization not found`() {
@@ -19,7 +19,7 @@ class WhitelistIpCreateOrUpdateServiceFacadeUnitTest : AbstractWhitelistIpServic
         resetAll()
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(false)
         replayAll()
-        assertBasicErrorResultResponse(whitelistIpServiceFacade.createOrUpdate(request), WhitelistIpErrorResponseModel.ORGANIZATION_NOT_FOUND)
+        assertBasicErrorResultResponse(whitelistIpServiceFacade.save(request), WhitelistIpErrorResponseModel.ORGANIZATION_NOT_FOUND)
         verifyAll()
     }
 
@@ -37,7 +37,7 @@ class WhitelistIpCreateOrUpdateServiceFacadeUnitTest : AbstractWhitelistIpServic
         expect((whitelistIpService.getByOrganization(organizationUuid))).andReturn(listOf())
         expect(whitelistIpService.create(createDto)).andReturn(whitelistIp)
         replayAll()
-        assertBasicSuccessResultResponse(whitelistIpServiceFacade.createOrUpdate(request))
+        assertBasicSuccessResultResponse(whitelistIpServiceFacade.save(request))
         verifyAll()
     }
 
@@ -57,7 +57,7 @@ class WhitelistIpCreateOrUpdateServiceFacadeUnitTest : AbstractWhitelistIpServic
         expect((whitelistIpService.getByOrganization(organizationUuid))).andReturn(listOf())
         expect(whitelistIpService.create(createDto)).andReturn(whitelistIp)
         replayAll()
-        assertBasicSuccessResultResponse(whitelistIpServiceFacade.createOrUpdate(request))
+        assertBasicSuccessResultResponse(whitelistIpServiceFacade.save(request))
         verifyAll()
     }
 
@@ -78,7 +78,7 @@ class WhitelistIpCreateOrUpdateServiceFacadeUnitTest : AbstractWhitelistIpServic
         expect(whitelistIpService.delete(listOf(existingWhitelistIp1.uuid, existingWhitelistIp2.uuid))).andVoid()
         expect(whitelistIpService.create(createDto)).andReturn(whitelistIp)
         replayAll()
-        assertBasicSuccessResultResponse(whitelistIpServiceFacade.createOrUpdate(request))
+        assertBasicSuccessResultResponse(whitelistIpServiceFacade.save(request))
         verifyAll()
     }
 }

@@ -1,7 +1,7 @@
 package com.vntana.core.rest.resource.whitelist;
 
-import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpsRequest;
-import com.vntana.core.model.whitelist.response.CreateOrUpdateWhitelistIpResponse;
+import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest;
+import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
 import com.vntana.core.model.whitelist.response.GetWhitelistIpsByOrganizationResponse;
 import com.vntana.core.rest.facade.whitelist.WhitelistIpServiceFacade;
 import org.slf4j.Logger;
@@ -28,11 +28,11 @@ public class WhitelistIpResource {
         this.whitelistIpServiceFacade = whitelistIpServiceFacade;
     }
 
-    @PostMapping(path = "/create-or-update")
-    public CreateOrUpdateWhitelistIpResponse createOrUpdate(@RequestBody final CreateOrUpdateWhitelistIpsRequest request) {
-        LOGGER.debug("Processing whitelist ip resource createOrUpdate methods for request - {}", request);
-        final CreateOrUpdateWhitelistIpResponse response = whitelistIpServiceFacade.createOrUpdate(request);
-        LOGGER.debug("Successfully processed whitelist ip resource createOrUpdate methods for request - {}", request);
+    @PostMapping(path = "/save")
+    public SaveWhitelistIpResponse save(@RequestBody final SaveWhitelistIpsRequest request) {
+        LOGGER.debug("Processing whitelist ip resource save methods for request - {}", request);
+        final SaveWhitelistIpResponse response = whitelistIpServiceFacade.save(request);
+        LOGGER.debug("Successfully processed whitelist ip resource save methods for request - {}", request);
         return response;
     }
 

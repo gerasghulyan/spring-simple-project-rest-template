@@ -1,8 +1,8 @@
 package com.vntana.core.helper.whitelist
 
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
-import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpsRequest
-import com.vntana.core.model.whitelist.response.CreateOrUpdateWhitelistIpResponse
+import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest
+import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse
 import com.vntana.core.rest.client.whitelist.WhitelistIpResourceClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -22,8 +22,8 @@ class WhitelistIpResourceTestHelper : WhitelistIpRestTestHelper() {
     private lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
 
     fun persistWhitelistIps(organizationUuid: String = organizationResourceTestHelper.persistOrganization().response().uuid,
-                            request: CreateOrUpdateWhitelistIpsRequest = buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = organizationUuid)
-    ): CreateOrUpdateWhitelistIpResponse {
-        return whitelistIpResourceClient.createOrUpdate(request)
+                            request: SaveWhitelistIpsRequest = buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = organizationUuid)
+    ): SaveWhitelistIpResponse {
+        return whitelistIpResourceClient.save(request)
     }
 }

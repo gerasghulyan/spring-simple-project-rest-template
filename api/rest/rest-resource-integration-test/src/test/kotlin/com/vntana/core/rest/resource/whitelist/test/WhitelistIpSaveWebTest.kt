@@ -10,16 +10,16 @@ import org.junit.Test
  * Date: 11/29/19
  * Time: 12:38 PM
  */
-class WhitelistIpCreateOrUpdateWebTest : AbstractWhitelistIpWebTest() {
+class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
 
     @Test
     fun `test with invalid arguments`() {
         val request1 = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = null)
-        whitelistIpResourceClient.createOrUpdate(request1).let {
+        whitelistIpResourceClient.save(request1).let {
             assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.MISSING_ORGANIZATION_UUID)
         }
         val request2 = testHelper.buildCreateOrUpdateWhitelistIpsRequest(whitelistIps = null)
-        whitelistIpResourceClient.createOrUpdate(request2).let {
+        whitelistIpResourceClient.save(request2).let {
             assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.MISSING_WHITELIST_IPS)
         }
     }
@@ -30,7 +30,7 @@ class WhitelistIpCreateOrUpdateWebTest : AbstractWhitelistIpWebTest() {
                 testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = "256.200.0.0"),
                 testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel())
         )
-        whitelistIpResourceClient.createOrUpdate(request).let {
+        whitelistIpResourceClient.save(request).let {
             assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.INVALID_IP)
         }
     }
@@ -38,7 +38,7 @@ class WhitelistIpCreateOrUpdateWebTest : AbstractWhitelistIpWebTest() {
     @Test
     fun `test when organization not found`() {
         val request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = uuid())
-        whitelistIpResourceClient.createOrUpdate(request).let {
+        whitelistIpResourceClient.save(request).let {
             assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.ORGANIZATION_NOT_FOUND)
         }
     }
@@ -53,7 +53,7 @@ class WhitelistIpCreateOrUpdateWebTest : AbstractWhitelistIpWebTest() {
                         testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = validIp)
                 )
         )
-        whitelistIpResourceClient.createOrUpdate(request).let {
+        whitelistIpResourceClient.save(request).let {
             assertBasicSuccessResultResponse(it)
         }
         whitelistIpResourceClient.getByOrganization(organizationUuid1).let {
@@ -85,7 +85,7 @@ class WhitelistIpCreateOrUpdateWebTest : AbstractWhitelistIpWebTest() {
                 whitelistIps = listOf(
                         testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label = label, ip = ip)
                 ))
-        whitelistIpResourceClient.createOrUpdate(request).let {
+        whitelistIpResourceClient.save(request).let {
             assertBasicSuccessResultResponse(it)
         }
         whitelistIpResourceClient.getByOrganization(organizationUuid1).let {

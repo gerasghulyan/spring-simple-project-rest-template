@@ -1,7 +1,7 @@
 package com.vntana.core.rest.facade.whitelist;
 
-import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpsRequest;
-import com.vntana.core.model.whitelist.response.CreateOrUpdateWhitelistIpResponse;
+import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest;
+import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
 import com.vntana.core.model.whitelist.response.GetWhitelistIpsByOrganizationResponse;
 
 /**
@@ -11,7 +11,7 @@ import com.vntana.core.model.whitelist.response.GetWhitelistIpsByOrganizationRes
  */
 public interface WhitelistIpServiceFacade {
 
-    CreateOrUpdateWhitelistIpResponse createOrUpdate(final CreateOrUpdateWhitelistIpsRequest request);
+    SaveWhitelistIpResponse save(final SaveWhitelistIpsRequest request);
 
     GetWhitelistIpsByOrganizationResponse getByOrganization(final String organizationUuid);
 }

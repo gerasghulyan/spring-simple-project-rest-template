@@ -10,12 +10,12 @@ import java.util.List;
  * Date: 11/28/19
  * Time: 5:51 PM
  */
-public class CreateOrUpdateWhitelistIpResponse extends EmptyResultResponseModel<WhitelistIpErrorResponseModel> {
+public class SaveWhitelistIpResponse extends EmptyResultResponseModel<WhitelistIpErrorResponseModel> {
 
-    public CreateOrUpdateWhitelistIpResponse() {
+    public SaveWhitelistIpResponse() {
     }
 
-    public CreateOrUpdateWhitelistIpResponse(final List<WhitelistIpErrorResponseModel> errors) {
+    public SaveWhitelistIpResponse(final List<WhitelistIpErrorResponseModel> errors) {
         super(errors);
     }
 }

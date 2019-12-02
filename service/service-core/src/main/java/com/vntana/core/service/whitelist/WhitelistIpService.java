@@ -16,7 +16,7 @@ public interface WhitelistIpService {
 
     WhitelistIp create(final CreateWhitelistIpDto createDto);
 
-    Optional<WhitelistIp> getByUuid(final String uuid);
+    Optional<WhitelistIp> findByUuid(final String uuid);
 
     List<WhitelistIp> getByOrganization(final String organizationUuid);
 

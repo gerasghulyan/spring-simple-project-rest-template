@@ -2,7 +2,7 @@ package com.vntana.core.helper.whitelist
 
 import com.vntana.core.helper.AbstractRestTestHelper
 import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpItemRequestModel
-import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpsRequest
+import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest
 import com.vntana.core.model.whitelist.response.model.GetWhitelistIpResponseModel
 import kotlin.random.Random
 
@@ -15,7 +15,7 @@ open class WhitelistIpRestTestHelper : AbstractRestTestHelper() {
 
     fun buildCreateOrUpdateWhitelistIpsRequest(organizationUuid: String? = uuid(),
                                                whitelistIps: List<CreateOrUpdateWhitelistIpItemRequestModel>? = listOf(buildCreateOrUpdateWhitelistIpItemRequestModel())
-    ): CreateOrUpdateWhitelistIpsRequest = CreateOrUpdateWhitelistIpsRequest(organizationUuid, whitelistIps)
+    ): SaveWhitelistIpsRequest = SaveWhitelistIpsRequest(organizationUuid, whitelistIps)
 
     fun buildCreateOrUpdateWhitelistIpItemRequestModel(label: String? = uuid(), ip: String? = validIp()): CreateOrUpdateWhitelistIpItemRequestModel {
         return CreateOrUpdateWhitelistIpItemRequestModel(label, ip)

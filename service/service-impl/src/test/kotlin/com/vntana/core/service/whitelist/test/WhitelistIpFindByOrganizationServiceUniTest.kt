@@ -11,7 +11,7 @@ import org.junit.Test
  * Date: 11/28/19
  * Time: 3:48 PM
  */
-class WhitelistIpGetByOrganizationServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
+class WhitelistIpFindByOrganizationServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {

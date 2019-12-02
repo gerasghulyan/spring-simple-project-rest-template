@@ -14,7 +14,7 @@ import javax.persistence.*;
  * Time: 12:51 PM
  */
 @Entity
-@Table(name = "whitelist_ip")
+@Table(name = "settings_whitelist_ip")
 public class WhitelistIp extends AbstractUuidAwareDomainEntity {
 
     @Column(name = "label")
@@ -23,9 +23,9 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
     @Column(name = "ip")
     private String ip;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false, updatable = false,
-            foreignKey = @ForeignKey(name = "fk_whitelist_ip_organization_id")
+            foreignKey = @ForeignKey(name = "fk_settings_whitelist_ip_organization_id")
     )
     private Organization organization;
 
@@ -53,7 +53,7 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
                 .appendSuper(super.equals(o))
                 .append(label, that.label)
                 .append(ip, that.ip)
-                .append(organization, that.organization)
+                .append(getIdOrNull(organization), getIdOrNull(that.organization))
                 .isEquals();
     }
 
@@ -63,7 +63,7 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
                 .appendSuper(super.hashCode())
                 .append(label)
                 .append(ip)
-                .append(organization)
+                .append(getIdOrNull(organization))
                 .toHashCode();
     }
 
@@ -72,7 +72,7 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
         return new ToStringBuilder(this)
                 .append("label", label)
                 .append("ip", ip)
-                .append("organization", organization)
+                .append("organizationId", getIdOrNull(organization))
                 .toString();
     }
 

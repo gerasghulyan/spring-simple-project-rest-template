@@ -18,7 +18,7 @@ import java.util.List;
  * Date: 11/29/19
  * Time: 11:16 AM
  */
-public class CreateOrUpdateWhitelistIpsRequest extends AbstractRequestModel implements ValidatableRequest<WhitelistIpErrorResponseModel> {
+public class SaveWhitelistIpsRequest extends AbstractRequestModel implements ValidatableRequest<WhitelistIpErrorResponseModel> {
 
     @JsonProperty("organizationUuid")
     private String organizationUuid;
@@ -26,11 +26,11 @@ public class CreateOrUpdateWhitelistIpsRequest extends AbstractRequestModel impl
     @JsonProperty("whitelistIps")
     private List<CreateOrUpdateWhitelistIpItemRequestModel> whitelistIps;
 
-    private CreateOrUpdateWhitelistIpsRequest() {
+    private SaveWhitelistIpsRequest() {
         super();
     }
 
-    public CreateOrUpdateWhitelistIpsRequest(final String organizationUuid, final List<CreateOrUpdateWhitelistIpItemRequestModel> whitelistIps) {
+    public SaveWhitelistIpsRequest(final String organizationUuid, final List<CreateOrUpdateWhitelistIpItemRequestModel> whitelistIps) {
         super();
         this.organizationUuid = organizationUuid;
         this.whitelistIps = whitelistIps;
@@ -60,10 +60,10 @@ public class CreateOrUpdateWhitelistIpsRequest extends AbstractRequestModel impl
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CreateOrUpdateWhitelistIpsRequest)) {
+        if (!(o instanceof SaveWhitelistIpsRequest)) {
             return false;
         }
-        final CreateOrUpdateWhitelistIpsRequest that = (CreateOrUpdateWhitelistIpsRequest) o;
+        final SaveWhitelistIpsRequest that = (SaveWhitelistIpsRequest) o;
         return new EqualsBuilder()
                 .append(organizationUuid, that.organizationUuid)
                 .append(whitelistIps, that.whitelistIps)

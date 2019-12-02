@@ -3,8 +3,8 @@ package com.vntana.core.rest.facade.whitelist.impl;
 import com.vntana.core.domain.whitelist.WhitelistIp;
 import com.vntana.core.model.whitelist.error.WhitelistIpErrorResponseModel;
 import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpItemRequestModel;
-import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpsRequest;
-import com.vntana.core.model.whitelist.response.CreateOrUpdateWhitelistIpResponse;
+import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest;
+import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
 import com.vntana.core.model.whitelist.response.GetWhitelistIpsByOrganizationResponse;
 import com.vntana.core.model.whitelist.response.model.GetWhitelistIpGridResponseModel;
 import com.vntana.core.model.whitelist.response.model.GetWhitelistIpResponseModel;
@@ -47,11 +47,11 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
 
     @Transactional
     @Override
-    public CreateOrUpdateWhitelistIpResponse createOrUpdate(final CreateOrUpdateWhitelistIpsRequest request) {
-        LOGGER.debug("Processing WhitelistIp resource create method for request - {}", request);
+    public SaveWhitelistIpResponse save(final SaveWhitelistIpsRequest request) {
+        LOGGER.debug("Processing WhitelistIp resource save method for request - {}", request);
         final List<WhitelistIpErrorResponseModel> possibleErrors = checkCreateOrUpdateForErrors(request);
         if (!possibleErrors.isEmpty()) {
-            return new CreateOrUpdateWhitelistIpResponse(possibleErrors);
+            return new SaveWhitelistIpResponse(possibleErrors);
         }
         final List<String> uuids = whitelistIpService.getByOrganization(request.getOrganizationUuid()).stream()
                 .map(WhitelistIp::getUuid)
@@ -66,9 +66,10 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
                     whitelistIpService.create(createDto);
                 });
         LOGGER.debug("Successfully processed WhitelistIp resource create method for request - {}", request);
-        return new CreateOrUpdateWhitelistIpResponse();
+        return new SaveWhitelistIpResponse();
     }
 
+    @Transactional
     @Override
     public GetWhitelistIpsByOrganizationResponse getByOrganization(final String organizationUuid) {
         LOGGER.debug("Processing WhitelistIp resource getByOrganization method for organizationUuid - {}", organizationUuid);
@@ -78,10 +79,11 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
         return new GetWhitelistIpsByOrganizationResponse(new GetWhitelistIpGridResponseModel(responseModels.size(), responseModels));
     }
 
-    private List<WhitelistIpErrorResponseModel> checkCreateOrUpdateForErrors(final CreateOrUpdateWhitelistIpsRequest request) {
+    private List<WhitelistIpErrorResponseModel> checkCreateOrUpdateForErrors(final SaveWhitelistIpsRequest request) {
         final boolean anyOrganizationNotFound = organizationService.existsByUuid(request.getOrganizationUuid());
-        if (!anyOrganizationNotFound)
+        if (!anyOrganizationNotFound) {
             return Collections.singletonList(WhitelistIpErrorResponseModel.ORGANIZATION_NOT_FOUND);
+        }
         return Collections.emptyList();
     }
 }

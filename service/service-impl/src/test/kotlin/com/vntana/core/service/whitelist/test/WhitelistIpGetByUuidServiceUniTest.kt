@@ -18,9 +18,9 @@ class WhitelistIpGetByUuidServiceUniTest : AbstractWhitelistIpServiceUnitTest() 
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { whitelistIpService.getByUuid(null) }
+        assertThatThrownBy { whitelistIpService.findByUuid(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { whitelistIpService.getByUuid("") }
+        assertThatThrownBy { whitelistIpService.findByUuid("") }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -31,7 +31,7 @@ class WhitelistIpGetByUuidServiceUniTest : AbstractWhitelistIpServiceUnitTest() 
         resetAll()
         expect(whitelistIpRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
-        whitelistIpService.getByUuid(uuid).let {
+        whitelistIpService.findByUuid(uuid).let {
             assertThat(it).isEmpty
         }
         verifyAll()
@@ -44,7 +44,7 @@ class WhitelistIpGetByUuidServiceUniTest : AbstractWhitelistIpServiceUnitTest() 
         resetAll()
         expect(whitelistIpRepository.findByUuid(uuid)).andReturn(Optional.of(whitelistIp))
         replayAll()
-        whitelistIpService.getByUuid(uuid).let {
+        whitelistIpService.findByUuid(uuid).let {
             assertThat(it).isNotEmpty
             assertThat(it.get()).isEqualTo(whitelistIp)
         }

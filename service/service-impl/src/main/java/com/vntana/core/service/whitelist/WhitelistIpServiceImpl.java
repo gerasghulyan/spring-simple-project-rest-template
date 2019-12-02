@@ -48,7 +48,7 @@ public class WhitelistIpServiceImpl implements WhitelistIpService {
     }
 
     @Override
-    public Optional<WhitelistIp> getByUuid(final String uuid) {
+    public Optional<WhitelistIp> findByUuid(final String uuid) {
         Assert.hasText(uuid, "The whitelist ip should not be null or empty");
         LOGGER.debug("Retrieving WhitelistIp for uuid - {}", uuid);
         final Optional<WhitelistIp> whitelistIpOptional = whitelistIpRepository.findByUuid(uuid);
@@ -70,7 +70,7 @@ public class WhitelistIpServiceImpl implements WhitelistIpService {
     public WhitelistIp update(final UpdateWhitelistIpDto updateDto) {
         Assert.notNull(updateDto, "The UpdateWhitelistIpDto should not be null");
         LOGGER.debug("Updating WhitelistIp using update dto - {}", updateDto);
-        final WhitelistIp updatedWhitelistIp = getByUuid(updateDto.getUuid()).map(whitelistIp -> {
+        final WhitelistIp updatedWhitelistIp = findByUuid(updateDto.getUuid()).map(whitelistIp -> {
             whitelistIp.setLabel(updateDto.getLabel());
             whitelistIp.setIp(updateDto.getIp());
             return whitelistIpRepository.save(whitelistIp);

@@ -9,17 +9,17 @@ import org.junit.Test
  * Date: 11/28/19
  * Time: 1:55 PM
  */
-class WhitelistIpGetByUuidWhitelistIpServiceIntegrationTest : AbstractWhitelistIpServiceIntegrationTest() {
+class WhitelistIpFindByUuidWhitelistIpServiceIntegrationTest : AbstractWhitelistIpServiceIntegrationTest() {
 
     @Test
     fun `test when not found`() {
-        assertThat(whitelistIpService.getByUuid(uuid())).isEmpty
+        assertThat(whitelistIpService.findByUuid(uuid())).isEmpty
     }
 
     @Test
     fun `test`() {
         val whitelistIp = testHelper.persistWhitelistIp()
-        whitelistIpService.getByUuid(whitelistIp.uuid).let {
+        whitelistIpService.findByUuid(whitelistIp.uuid).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.get()).isEqualTo(whitelistIp)
         }
