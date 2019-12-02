@@ -18,9 +18,6 @@ class WhitelistIpCreateServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
     fun `test with invalid arguments`() {
         assertThatThrownBy { whitelistIpService.create(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { testHelper.buildCreateWhitelistIpDto(label = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { testHelper.buildCreateWhitelistIpDto(label = "") }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { testHelper.buildCreateWhitelistIpDto(ip = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
