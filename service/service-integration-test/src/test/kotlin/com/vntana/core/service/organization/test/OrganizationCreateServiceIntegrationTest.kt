@@ -1,6 +1,7 @@
 package com.vntana.core.service.organization.test
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceIntegrationTest
+import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -13,14 +14,14 @@ class OrganizationCreateServiceIntegrationTest : AbstractOrganizationServiceInte
     @Test
     fun `test create`() {
         // given
-        commonTestHelper.buildCreateOrganizationDto().let { dto ->
+        commonTestHelper.buildCreateOrganizationDto(name = " ${uuid()} ", slug = " ${uuid()} ").let { dto ->
             // when
             organizationService.create(dto).let { organization ->
                 // then
                 flushAndClear()
                 assertThat(organization)
-                        .hasFieldOrPropertyWithValue("name", dto.name)
-                        .hasFieldOrPropertyWithValue("slug", dto.slug)
+                        .hasFieldOrPropertyWithValue("name", StringUtils.trim(dto.name))
+                        .hasFieldOrPropertyWithValue("slug", StringUtils.trim(dto.slug))
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.vntana.core.service.organization.dto;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -55,10 +56,10 @@ public class CreateOrganizationDto {
     }
 
     public String getName() {
-        return name;
+        return StringUtils.trim(name);
     }
 
     public String getSlug() {
-        return slug;
+        return StringUtils.trim(slug);
     }
 }
