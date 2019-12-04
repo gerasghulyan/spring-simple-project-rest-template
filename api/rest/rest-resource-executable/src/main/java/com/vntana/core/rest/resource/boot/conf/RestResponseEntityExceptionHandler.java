@@ -27,7 +27,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handle(final RuntimeException e, final WebRequest request) {
         final String uuid = UUID.randomUUID().toString();
         final String responseBody = String.format("Error occurred having uuid - %s", uuid);
-        LOGGER.error("Exception caught having uuid - {} and stacktrace - {}", uuid, ExceptionUtils.getStackTrace(e));
+        LOGGER.error("{} Stacktrace {}", uuid, ExceptionUtils.getStackTrace(e));
         return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }
