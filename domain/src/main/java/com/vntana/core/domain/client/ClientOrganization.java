@@ -29,7 +29,7 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organization_id"), updatable = false)
     private Organization organization;
 
-    @Column(name = "image_id", nullable = false)
+    @Column(name = "image_id")
     private String imageId;
 
     public ClientOrganization() {
