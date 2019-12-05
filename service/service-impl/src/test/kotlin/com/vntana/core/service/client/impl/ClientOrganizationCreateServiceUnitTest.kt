@@ -31,10 +31,6 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(slug = " ")) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(imageId = null)) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(imageId = " ")) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 

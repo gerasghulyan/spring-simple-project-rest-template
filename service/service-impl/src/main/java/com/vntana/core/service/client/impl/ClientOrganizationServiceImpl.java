@@ -76,7 +76,6 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         Assert.notNull(dto, "The CreateClientOrganizationDto should not be null");
         Assert.hasText(dto.getName(), "The client name should contain text");
         Assert.hasText(dto.getSlug(), "The client slug should contain text");
-        Assert.hasText(dto.getImageId(), "The client imageId should contain text");
     }
 
     private void assertNotExistsForSlugAndOrganization(final String slug, final String organizationUuid) {

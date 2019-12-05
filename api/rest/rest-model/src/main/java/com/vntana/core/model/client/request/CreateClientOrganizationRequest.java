@@ -54,9 +54,6 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
         if (StringUtils.isBlank(slug)) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
         }
-        if (StringUtils.isBlank(imageId)) {
-            errors.add(ClientOrganizationErrorResponseModel.MISSING_IMAGE_ID);
-        }
         return errors;
     }
 

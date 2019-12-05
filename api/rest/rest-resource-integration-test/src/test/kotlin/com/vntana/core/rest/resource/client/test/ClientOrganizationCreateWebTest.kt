@@ -28,12 +28,6 @@ class ClientOrganizationCreateWebTest : AbstractClientOrganizationWebTest() {
         clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(name = "")).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_NAME)
         }
-        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(imageId = null)).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_IMAGE_ID)
-        }
-        clientOrganizationResourceClient.create(clientOrganizationResourceTestHelper.buildCreateClientOrganizationRequest(imageId = "")).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_IMAGE_ID)
-        }
     }
 
     @Test
