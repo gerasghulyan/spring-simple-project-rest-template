@@ -11,6 +11,7 @@ buildscript {
         springFoxSwaggerVersion = '2.9.2'
         sflNotifierVersion = '1.7.0'
         commonsApiModelsVersion = '0.1.2'
+        vntanaCacheVersion = '0.1.0'
     }
 
     repositories {
@@ -149,6 +150,8 @@ allprojects {
             dependency("io.springfox:springfox-swagger2:$springFoxSwaggerVersion")
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
             dependency("com.vntana.commons:api-models:$commonsApiModelsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:cache:$commonsApiModelsVersion${versionPostfix()}")
+            dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
         }
     }
 }
