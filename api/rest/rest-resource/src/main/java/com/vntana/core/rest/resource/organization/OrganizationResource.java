@@ -4,6 +4,7 @@ import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlug
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import org.slf4j.Logger;
@@ -53,5 +54,21 @@ public class OrganizationResource {
         final UserOrganizationResponse resultResponse = organizationServiceFacade.getUserOrganizations(uuid);
         LOGGER.debug("Successfully proceeded find organizations by user uuid with response - {}", resultResponse);
         return ResponseEntity.ok(resultResponse);
+    }
+
+    @GetMapping(path = "/slug/{slug}")
+    public ResponseEntity<GetOrganizationResultResponse> getBySlug(@PathVariable("slug") final String slug) {
+        LOGGER.debug("Retrieving organization by slug - {}", slug);
+        final GetOrganizationResultResponse response = organizationServiceFacade.getBySlug(slug);
+        LOGGER.debug("Successfully retrieved organization with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/{uuid}")
+    public ResponseEntity<GetOrganizationResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Retrieving organization by uuid - {}", uuid);
+        final GetOrganizationResultResponse response = organizationServiceFacade.getByUuid(uuid);
+        LOGGER.debug("Successfully retrieved organization with response - {}", response);
+        return ResponseEntity.ok(response);
     }
 }

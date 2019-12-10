@@ -10,5 +10,6 @@ import com.vntana.commons.api.model.response.ErrorResponseModel;
 public enum OrganizationErrorResponseModel implements ErrorResponseModel {
     MISSING_NAME,
     MISSING_SLUG,
-    SLUG_ALREADY_EXISTS
+    SLUG_ALREADY_EXISTS,
+    SLUG_NOT_FOUND
 }
