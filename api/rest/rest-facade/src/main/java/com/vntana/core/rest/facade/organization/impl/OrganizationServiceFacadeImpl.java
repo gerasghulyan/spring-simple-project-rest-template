@@ -27,7 +27,6 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collections;
@@ -105,7 +104,6 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         return new UserOrganizationResponse(new GetUserOrganizationsGridResponseModel(response.size(), response));
     }
 
-    @Transactional(readOnly = true)
     @Override
     public GetOrganizationResultResponse getBySlug(final String slug) {
         Assert.hasText(slug, "The organization slug should not be null");
@@ -115,6 +113,20 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             return new GetOrganizationResultResponse(Collections.singletonList(OrganizationErrorResponseModel.SLUG_NOT_FOUND));
         }
         final Organization organization = optionalOrganization.get();
+        LOGGER.debug("Successfully retrieved organization with result - {}", organization);
+        final GetOrganizationResponseModel response = new GetOrganizationResponseModel(
+                organization.getUuid(),
+                organization.getName(),
+                organization.getSlug()
+        );
+        return new GetOrganizationResultResponse(response);
+    }
+
+    @Override
+    public GetOrganizationResultResponse getByUuid(final String uuid) {
+        Assert.hasText(uuid, "The organization uuid should not be null");
+        LOGGER.debug("Retrieving organization by uuid - {}", uuid);
+        final Organization organization = organizationService.getByUuid(uuid);
         LOGGER.debug("Successfully retrieved organization with result - {}", organization);
         final GetOrganizationResponseModel response = new GetOrganizationResponseModel(
                 organization.getUuid(),

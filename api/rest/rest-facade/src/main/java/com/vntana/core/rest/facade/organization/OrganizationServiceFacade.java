@@ -20,4 +20,6 @@ public interface OrganizationServiceFacade {
     UserOrganizationResponse getUserOrganizations(final String userUuid);
 
     GetOrganizationResultResponse getBySlug(final String slug);
+
+    GetOrganizationResultResponse getByUuid(final String uuid);
 }

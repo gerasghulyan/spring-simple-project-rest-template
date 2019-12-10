@@ -56,10 +56,18 @@ public class OrganizationResource {
         return ResponseEntity.ok(resultResponse);
     }
 
-    @GetMapping(path = "/{slug}")
+    @GetMapping(path = "/slug/{slug}")
     public ResponseEntity<GetOrganizationResultResponse> getBySlug(@PathVariable("slug") final String slug) {
         LOGGER.debug("Retrieving organization by slug - {}", slug);
         final GetOrganizationResultResponse response = organizationServiceFacade.getBySlug(slug);
+        LOGGER.debug("Successfully retrieved organization with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/{uuid}")
+    public ResponseEntity<GetOrganizationResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Retrieving organization by uuid - {}", uuid);
+        final GetOrganizationResultResponse response = organizationServiceFacade.getByUuid(uuid);
         LOGGER.debug("Successfully retrieved organization with response - {}", response);
         return ResponseEntity.ok(response);
     }
