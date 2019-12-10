@@ -10,9 +10,11 @@ import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlug
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationResponseModel;
+import com.vntana.core.model.organization.response.get.GetOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.model.user.response.model.GetUserOrganizationsGridResponseModel;
 import com.vntana.core.model.user.response.model.GetUserOrganizationsResponseModel;
-import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import com.vntana.core.service.organization.OrganizationService;
@@ -25,9 +27,12 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -98,6 +103,25 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         });
         final List<GetUserOrganizationsResponseModel> response = mutableResponse.getValue();
         return new UserOrganizationResponse(new GetUserOrganizationsGridResponseModel(response.size(), response));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetOrganizationResultResponse getBySlug(final String slug) {
+        Assert.hasText(slug, "The organization slug should not be null");
+        LOGGER.debug("Retrieving organization by slug - {}", slug);
+        final Optional<Organization> optionalOrganization = organizationService.findBySlug(slug);
+        if (!optionalOrganization.isPresent()) {
+            return new GetOrganizationResultResponse(Collections.singletonList(OrganizationErrorResponseModel.SLUG_NOT_FOUND));
+        }
+        final Organization organization = optionalOrganization.get();
+        LOGGER.debug("Successfully retrieved organization with result - {}", organization);
+        final GetOrganizationResponseModel response = new GetOrganizationResponseModel(
+                organization.getUuid(),
+                organization.getName(),
+                organization.getSlug()
+        );
+        return new GetOrganizationResultResponse(response);
     }
 
     private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotAdmin(final User user) {

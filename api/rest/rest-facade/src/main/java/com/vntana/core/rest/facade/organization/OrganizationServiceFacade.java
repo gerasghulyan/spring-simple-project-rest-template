@@ -4,6 +4,7 @@ import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlug
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
 
 /**
@@ -17,4 +18,6 @@ public interface OrganizationServiceFacade {
     CreateOrganizationResultResponse create(final CreateOrganizationRequest request);
 
     UserOrganizationResponse getUserOrganizations(final String userUuid);
+
+    GetOrganizationResultResponse getBySlug(final String slug);
 }
