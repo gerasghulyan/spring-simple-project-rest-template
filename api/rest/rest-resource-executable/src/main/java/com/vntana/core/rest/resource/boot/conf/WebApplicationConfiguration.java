@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * Time: 5:23 PM
  */
 @Configuration
-@ComponentScan("com.vntana.core")
+@ComponentScan({"com.vntana.core", "com.vntana.cache"})
 @EnableJpaRepositories("com.vntana.core.persistence")
 @EntityScan("com.vntana.core.domain")
 @PropertySource("classpath:application.properties")

@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.organization
 
+import com.vntana.cache.service.organization.OrganizationCacheService
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationRestTestHelper
 import com.vntana.core.rest.client.organization.OrganizationResourceClient
@@ -19,4 +20,7 @@ abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
+
+    @Autowired
+    protected lateinit var organizationCacheService: OrganizationCacheService
 }
