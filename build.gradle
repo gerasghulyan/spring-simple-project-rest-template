@@ -15,6 +15,7 @@ buildscript {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter()
         maven {
@@ -110,6 +111,7 @@ allprojects {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter()
         maven {
