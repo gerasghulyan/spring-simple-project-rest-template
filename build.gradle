@@ -445,6 +445,7 @@ project(":api:rest:rest-resource-executable") {
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
         implementation "org.postgresql:postgresql"
         implementation "com.sflpro.notifier:api-client-library"
+        implementation "com.vntana.cache:vntana-cache"
         implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
     }
 }
@@ -456,10 +457,10 @@ project(":api:rest:rest-resource-integration-test") {
     dependencies {
         implementation project(":api:rest:rest-client")
         implementation "org.springframework.boot:spring-boot-starter"
-        compile "com.vntana.cache:vntana-cache"
         testImplementation project(":api:rest:rest-resource")
         testImplementation project(":migration:migration-library")
         testImplementation project(":helper:rest-resource-test-helper")
+        testImplementation "com.vntana.cache:vntana-cache"
         testImplementation "com.sflpro.notifier:api-client-library"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation 'org.springframework.data:spring-data-jpa'

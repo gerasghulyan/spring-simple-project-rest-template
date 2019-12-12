@@ -27,7 +27,6 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -58,7 +57,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             final MapperFacade mapperFacade,
             final OrganizationService organizationService,
             final UserService userService,
-            final @Qualifier("persistenceUtilityService") PersistenceUtilityService persistenceUtilityService,
+            final PersistenceUtilityService persistenceUtilityService,
             final OrganizationLifecycleMediator organizationLifecycleMediator) {
         this.userService = userService;
         this.mapperFacade = mapperFacade;

@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
  * Time: 11:46 AM
  */
 @EnableFeignClients("com.vntana.core")
-@ComponentScan("com.vntana.core", "com.vntana.cache")
+@ComponentScan("com.vntana.core")
 @EnableJpaRepositories("com.vntana.core")
 @EntityScan("com.vntana.core")
 @TestConfiguration
