@@ -130,6 +130,7 @@ allprojects {
         implementation 'org.apache.commons:commons-lang3'
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
         implementation "io.vavr:vavr"
+        testImplementation "org.easymock:easymock"
         testImplementation "junit:junit"
         testImplementation "org.assertj:assertj-core"
     }
@@ -295,6 +296,7 @@ project(":service:service-impl") {
         implementation project(":commons:persistence-utils")
         implementation project(":service:service-core")
         implementation "org.springframework.security:spring-security-crypto"
+        implementation project(":listener:listener-core")
         testImplementation project(":helper::test-helper")
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation "org.easymock:easymock"
@@ -413,6 +415,7 @@ project(":api:rest:rest-resource") {
         api "org.springframework.boot:spring-boot-starter-web"
         api "org.aspectj:aspectjrt"
         api "org.aspectj:aspectjweaver"
+        runtimeOnly project(":listener:listener-impl")
     }
 }
 
@@ -442,6 +445,7 @@ project(":api:rest:rest-resource-executable") {
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
         implementation "org.postgresql:postgresql"
         implementation "com.sflpro.notifier:api-client-library"
+        implementation "com.vntana.cache:vntana-cache"
         implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
     }
 }
@@ -456,6 +460,7 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation project(":api:rest:rest-resource")
         testImplementation project(":migration:migration-library")
         testImplementation project(":helper:rest-resource-test-helper")
+        testImplementation "com.vntana.cache:vntana-cache"
         testImplementation "com.sflpro.notifier:api-client-library"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation 'org.springframework.data:spring-data-jpa'
@@ -465,6 +470,22 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
         testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
         testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    }
+}
+
+project(":listener:listener-core") {
+
+    dependencies {
+        api project(":domain")
+    }
+}
+
+project(":listener:listener-impl") {
+
+    dependencies {
+        api project(":listener:listener-core")
+        api "com.vntana.cache:vntana-cache"
+        testImplementation project(":helper:test-helper")
     }
 }
 

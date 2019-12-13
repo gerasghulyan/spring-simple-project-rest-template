@@ -42,11 +42,12 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         expect(organizationService.findBySlug(slug)).andReturn(Optional.empty())
         expect(mapperFacade.map(request, CreateOrganizationDto::class.java)).andReturn(dto)
         expect(organizationService.create(dto)).andReturn(organization)
+        expect(organizationLifecycleMediator.onCreated(organization))
         replayAll()
         // test scenario
         val resultResponse = organizationServiceFacade.create(request)
         restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.response().getUuid()).isEqualTo(organization.uuid)
+        assertThat(resultResponse.response().uuid).isEqualTo(organization.uuid)
         verifyAll()
     }
 }

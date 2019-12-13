@@ -13,7 +13,7 @@ import org.junit.Test
 class UserSendVerificationEmailServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
 
     @Test
-    fun `test`() {
+    fun `test sendVerificationEmail`() {
         val request = restHelper.buildSendUserVerificationRequest()
         resetAll()
         expect(userVerificationSenderComponent.sendVerificationEmail(request)).andReturn(SendUserVerificationResponse(uuid()))

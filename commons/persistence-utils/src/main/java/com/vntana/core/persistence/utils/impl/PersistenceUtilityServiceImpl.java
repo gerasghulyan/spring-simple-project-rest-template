@@ -7,6 +7,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.EntityManagerHolder;
@@ -35,7 +36,9 @@ public class PersistenceUtilityServiceImpl implements PersistenceUtilityService 
 
     private final Executor executor;
 
-    PersistenceUtilityServiceImpl(final EntityManagerFactory entityManagerFactory, final Executor executor) {
+    PersistenceUtilityServiceImpl(
+            final EntityManagerFactory entityManagerFactory,
+            @Qualifier("persistenceExecutor") final Executor executor) {
         super();
         this.entityManagerFactory = entityManagerFactory;
         this.executor = executor;

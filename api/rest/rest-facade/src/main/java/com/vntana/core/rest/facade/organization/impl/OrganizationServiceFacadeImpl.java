@@ -19,6 +19,7 @@ import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.mutable.Mutable;
@@ -50,16 +51,19 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     private final OrganizationService organizationService;
     private final UserService userService;
     private final PersistenceUtilityService persistenceUtilityService;
+    private final OrganizationLifecycleMediator organizationLifecycleMediator;
 
     public OrganizationServiceFacadeImpl(
             final MapperFacade mapperFacade,
             final OrganizationService organizationService,
             final UserService userService,
-            final PersistenceUtilityService persistenceUtilityService) {
+            final PersistenceUtilityService persistenceUtilityService,
+            final OrganizationLifecycleMediator organizationLifecycleMediator) {
         this.userService = userService;
         this.mapperFacade = mapperFacade;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
+        this.organizationLifecycleMediator = organizationLifecycleMediator;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
@@ -85,6 +89,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                     LOGGER.debug("Creating organization for request - {}", request);
                     final CreateOrganizationDto dto = mapperFacade.map(request, CreateOrganizationDto.class);
                     final Organization organization = organizationService.create(dto);
+                    organizationLifecycleMediator.onCreated(organization);
                     return new CreateOrganizationResultResponse(organization.getUuid());
                 });
     }

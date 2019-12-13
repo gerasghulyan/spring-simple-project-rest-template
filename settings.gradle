@@ -18,4 +18,5 @@ include 'api:rest:rest-resource-executable'
 include 'api:rest:rest-resource-integration-test'
 include 'commons:persistence-utils'
 include 'notification'
-
+include 'listener:listener-core'
+include 'listener:listener-impl'
