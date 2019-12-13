@@ -1,8 +1,6 @@
 package com.vntana.core.rest.facade.user;
 
-import com.vntana.core.model.user.request.CreateUserRequest;
-import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.request.SendUserVerificationRequest;
+import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 
 /**
@@ -20,4 +18,8 @@ public interface UserServiceFacade {
     VerifyUserResponse verify(final String uuid);
 
     SendUserVerificationResponse sendVerificationEmail(final SendUserVerificationRequest request);
+
+    SendUserResetPasswordResponse sendResetPasswordEmail(final SendUserResetPasswordRequest request);
+
+    ResetUserPasswordResponse resetPassword(final ResetUserPasswordRequest request);
 }

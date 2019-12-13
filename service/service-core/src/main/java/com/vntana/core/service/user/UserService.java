@@ -20,4 +20,6 @@ public interface UserService {
     User getByUuid(final String uuid);
 
     User makeVerified(final String email);
+
+    User changePassword(final String uuid, final String password);
 }

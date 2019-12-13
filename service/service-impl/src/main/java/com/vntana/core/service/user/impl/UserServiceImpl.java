@@ -95,6 +95,18 @@ public class UserServiceImpl implements UserService {
         return updatedUser;
     }
 
+    @Override
+    public User changePassword(final String uuid, final String password) {
+        LOGGER.debug("Changing user password having uuid - {}", uuid);
+        Assert.hasText(uuid, "The user uuid should not be null or empty");
+        Assert.hasText(password, "The user password should not be null or empty");
+        final User user = getByUuid(uuid);
+        user.setPassword(passwordEncoder.encode(password));
+        final User updatedUser = userRepository.save(user);
+        LOGGER.debug("Successfully changed user password having uuid - {}", uuid);
+        return updatedUser;
+    }
+
     private void assertCreateDto(final CreateUserDto dto) {
         Assert.notNull(dto, "The user creation dto should not be null");
         Assert.hasText(dto.getFullName(), "The user full name should not be null or empty");

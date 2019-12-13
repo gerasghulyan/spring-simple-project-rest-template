@@ -1,10 +1,7 @@
 package com.vntana.core.helper.user
 
 import com.vntana.core.helper.AbstractRestTestHelper
-import com.vntana.core.model.user.request.CreateUserRequest
-import com.vntana.core.model.user.request.FindUserByEmailRequest
-import com.vntana.core.model.user.request.SendUserVerificationRequest
-import com.vntana.core.model.user.request.VerifyUserRequest
+import com.vntana.core.model.user.request.*
 
 /**
  * Created by Arthur Asatryan.
@@ -27,6 +24,12 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
 
     fun buildSendUserVerificationRequest(email: String? = uuid(), token: String? = uuid()
     ): SendUserVerificationRequest = SendUserVerificationRequest(email, token)
+
+    fun buildSendUserResetPasswordRequest(email: String? = uuid(), token: String? = uuid()
+    ): SendUserResetPasswordRequest = SendUserResetPasswordRequest(email, token)
+
+    fun buildResetUserPasswordRequest(email: String? = uuid(), password: String? = uuid()
+    ): ResetUserPasswordRequest = ResetUserPasswordRequest(email, password)
 
     fun email(): String = uuid() + "@gmail.com"
 }

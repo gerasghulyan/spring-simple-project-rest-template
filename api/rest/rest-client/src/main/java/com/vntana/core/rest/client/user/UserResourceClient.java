@@ -1,9 +1,6 @@
 package com.vntana.core.rest.client.user;
 
-import com.vntana.core.model.user.request.CreateUserRequest;
-import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.request.SendUserVerificationRequest;
-import com.vntana.core.model.user.request.VerifyUserRequest;
+import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -33,4 +30,9 @@ public interface UserResourceClient {
     @PostMapping(path = "/send-verification")
     SendUserVerificationResponse sendVerification(@RequestBody final SendUserVerificationRequest request);
 
+    @PostMapping(path = "/send-reset-password")
+    SendUserResetPasswordResponse sendResetPassword(@RequestBody final SendUserResetPasswordRequest request);
+
+    @PutMapping(path = "/reset-password")
+    ResetUserPasswordResponse resetPassword(@RequestBody final ResetUserPasswordRequest request);
 }
