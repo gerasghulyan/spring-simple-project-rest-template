@@ -5,15 +5,15 @@ import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
-import com.vntana.core.model.user.request.CreateUserRequest;
-import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.request.SendUserVerificationRequest;
+import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.model.AccountUserResponseModel;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
+import com.vntana.core.model.user.response.model.ResetUserPasswordResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
+import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent;
 import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent;
 import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
@@ -46,19 +46,22 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final EmailValidationComponent emailValidationComponent;
-    private final UserVerificationSenderComponent userVerificationSenderComponent;
+    private final UserVerificationSenderComponent verificationSenderComponent;
+    private final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent;
 
     public UserServiceFacadeImpl(final UserService userService,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService,
                                  final EmailValidationComponent emailValidationComponent,
-                                 final UserVerificationSenderComponent userVerificationSenderComponent) {
+                                 final UserVerificationSenderComponent verificationSenderComponent,
+                                 final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.emailValidationComponent = emailValidationComponent;
-        this.userVerificationSenderComponent = userVerificationSenderComponent;
+        this.verificationSenderComponent = verificationSenderComponent;
+        this.resetPasswordEmailSenderComponent = resetPasswordEmailSenderComponent;
     }
 
     @Override
@@ -87,7 +90,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             mutableResponse.setValue(new CreateUserResponseModel(user.getUuid(), organization.getUuid()));
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
-        userVerificationSenderComponent.sendVerificationEmail(new SendUserVerificationRequest(request.getEmail(), request.getToken()));
+        verificationSenderComponent.sendVerificationEmail(new SendUserVerificationRequest(request.getEmail(), request.getToken()));
         return new CreateUserResponse(mutableResponse.getValue());
     }
 
@@ -155,9 +158,32 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     @Override
     public SendUserVerificationResponse sendVerificationEmail(final SendUserVerificationRequest request) {
         LOGGER.debug("Processing facade sendVerificationEmail for request - {}", request);
-        final SendUserVerificationResponse sendUserVerificationResponse = userVerificationSenderComponent.sendVerificationEmail(request);
+        final SendUserVerificationResponse sendUserVerificationResponse = verificationSenderComponent.sendVerificationEmail(request);
         LOGGER.debug("Successfully processed facade sendVerificationEmail for request - {}", request);
         return sendUserVerificationResponse;
+    }
+
+    @Override
+    public SendUserResetPasswordResponse sendResetPasswordEmail(final SendUserResetPasswordRequest request) {
+        LOGGER.debug("Processing facade sendResetPasswordEmail for request - {}", request);
+        final Optional<User> userOptional = userService.findByEmail(request.getEmail());
+        if (!userOptional.isPresent()) {
+            return new SendUserResetPasswordResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL));
+        }
+        resetPasswordEmailSenderComponent.sendResetPasswordEmail(request.getEmail(), request.getToken());
+        LOGGER.debug("Successfully processed facade sendResetPasswordEmail for request - {}", request);
+        return new SendUserResetPasswordResponse();
+    }
+
+    @Override
+    public ResetUserPasswordResponse resetPassword(final ResetUserPasswordRequest request) {
+        LOGGER.debug("Processing facade resetPassword for email - {}", request.getEmail());
+        final ResetUserPasswordResponse response = userService.findByEmail(request.getEmail())
+                .map(user -> userService.changePassword(user.getUuid(), request.getPassword()).getEmail())
+                .map(email -> new ResetUserPasswordResponse(new ResetUserPasswordResponseModel(email)))
+                .orElse(new ResetUserPasswordResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
+        LOGGER.debug("Successfully processed facade resetPassword for email - {}", request.getEmail());
+        return response;
     }
 
     private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String email) {

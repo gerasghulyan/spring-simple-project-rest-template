@@ -1,9 +1,6 @@
 package com.vntana.core.rest.resource.user;
 
-import com.vntana.core.model.user.request.CreateUserRequest;
-import com.vntana.core.model.user.request.FindUserByEmailRequest;
-import com.vntana.core.model.user.request.SendUserVerificationRequest;
-import com.vntana.core.model.user.request.VerifyUserRequest;
+import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
@@ -70,6 +67,22 @@ public class UserResource {
         LOGGER.debug("Processing user resource send verification method for request - {}", request);
         final SendUserVerificationResponse resultResponse = userServiceFacade.sendVerificationEmail(request);
         LOGGER.debug("Successfully processed user resource send verification method for request - {}", request);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @PostMapping(path = "/send-reset-password")
+    public ResponseEntity<SendUserResetPasswordResponse> sendResetPasswordEmail(@RequestBody final SendUserResetPasswordRequest request) {
+        LOGGER.debug("Processing user resource sendResetPasswordEmail method for request - {}", request);
+        final SendUserResetPasswordResponse resultResponse = userServiceFacade.sendResetPasswordEmail(request);
+        LOGGER.debug("Successfully processed user resource sendResetPasswordEmail method for request - {}", request);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @PutMapping(path = "/reset-password")
+    public ResponseEntity<ResetUserPasswordResponse> resetPassword(@RequestBody final ResetUserPasswordRequest request) {
+        LOGGER.debug("Processing user resource resetPassword method for email - {}", request.getEmail());
+        final ResetUserPasswordResponse resultResponse = userServiceFacade.resetPassword(request);
+        LOGGER.debug("Successfully processed user resource resetPassword method for email - {}", request.getEmail());
         return ResponseEntity.ok(resultResponse);
     }
 }

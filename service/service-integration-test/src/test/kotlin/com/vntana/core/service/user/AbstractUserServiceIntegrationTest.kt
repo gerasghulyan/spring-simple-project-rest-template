@@ -4,6 +4,7 @@ import com.vntana.core.helper.integration.user.UserServiceIntegrationTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 /**
  * Created by Arthur Asatryan.
@@ -18,4 +19,7 @@ abstract class AbstractUserServiceIntegrationTest : AbstractServiceIntegrationTe
 
     @Autowired
     protected lateinit var userService: UserService
+
+    @Autowired
+    protected lateinit var passwordEncoder: BCryptPasswordEncoder
 }

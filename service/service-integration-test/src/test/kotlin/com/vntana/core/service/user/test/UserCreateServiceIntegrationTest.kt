@@ -5,7 +5,6 @@ import com.vntana.core.service.user.AbstractUserServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 /**
  * Created by Arthur Asatryan.
@@ -16,9 +15,6 @@ class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
 
     @Autowired
     private lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper
-
-    @Autowired
-    private lateinit var passwordEncoder: BCryptPasswordEncoder
 
     @Test
     fun `test create`() {

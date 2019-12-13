@@ -28,9 +28,7 @@ class UserSendVerificationWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test when user does not exist`() {
-        userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest()).let {
-            assertBasicErrorResultResponse(it, UserErrorResponseModel.NOT_FOUND_FOR_UUID)
-        }
+        assertBasicErrorResultResponse(userResourceClient.sendVerification(resourceHelper.buildSendUserVerificationRequest()), UserErrorResponseModel.NOT_FOUND_FOR_UUID)
     }
 
     @Test
