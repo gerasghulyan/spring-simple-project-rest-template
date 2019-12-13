@@ -484,7 +484,7 @@ project(":listener:listener-impl") {
 
     dependencies {
         api project(":listener:listener-core")
-        compile "com.vntana.cache:vntana-cache"
+        api "com.vntana.cache:vntana-cache"
         testImplementation project(":helper:test-helper")
     }
 }

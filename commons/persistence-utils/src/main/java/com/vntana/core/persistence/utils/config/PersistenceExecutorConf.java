@@ -13,18 +13,18 @@ import java.util.concurrent.Executor;
  * Time: 5:56 PM
  */
 @Configuration
-public class ApplicationThreadPoolTaskExecutorConf {
+public class PersistenceExecutorConf {
 
-    @Value("${executor.application.thread.core}")
+    @Value("${executor.persistence.thread.core}")
     private int corePoolSize;
 
-    @Value("${executor.application.thread.max}")
+    @Value("${executor.persistence.thread.max}")
     private int maxPoolSize;
 
-    @Value("${executor.application.thread.pool.size}")
+    @Value("${executor.persistence.thread.pool.size}")
     private int taskSchedulerThreadPoolSize;
 
-    @Bean(name = "applicationThreadPoolTaskExecutor")
+    @Bean(name = "persistenceExecutor")
     public Executor executor() {
         final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.setCorePoolSize(corePoolSize);

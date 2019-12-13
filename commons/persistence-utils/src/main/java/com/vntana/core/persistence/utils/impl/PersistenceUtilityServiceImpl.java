@@ -38,7 +38,7 @@ public class PersistenceUtilityServiceImpl implements PersistenceUtilityService 
 
     PersistenceUtilityServiceImpl(
             final EntityManagerFactory entityManagerFactory,
-            @Qualifier("applicationThreadPoolTaskExecutor") final Executor executor) {
+            @Qualifier("persistenceExecutor") final Executor executor) {
         super();
         this.entityManagerFactory = entityManagerFactory;
         this.executor = executor;

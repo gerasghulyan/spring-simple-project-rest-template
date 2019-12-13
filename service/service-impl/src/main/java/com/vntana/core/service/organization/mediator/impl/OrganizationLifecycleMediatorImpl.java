@@ -36,12 +36,12 @@ public class OrganizationLifecycleMediatorImpl implements OrganizationLifecycleM
 
     @Override
     public void onUpdated(final Organization organization) {
-        throw new IllegalStateException("Currently we are not supporting onUpdate case");
+        throw new UnsupportedOperationException("Currently we are not supporting onUpdate case");
     }
 
     @Override
     public void onDeleted(final Organization organization) {
-        throw new IllegalStateException("Currently we are not supporting onUpdate case");
+        throw new UnsupportedOperationException("Currently we are not supporting onUpdate case");
     }
 
     private void assertOrganization(final Organization organization) {
