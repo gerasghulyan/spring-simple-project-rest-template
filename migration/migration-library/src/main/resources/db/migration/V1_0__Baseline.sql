@@ -137,4 +137,4 @@ alter table user_role_super_admin
     add constraint FK3ittxgbixm7b3dm25v5dvw5av foreign key (id) references user_role;
 
 insert into template_email (id, created, removed, updated, uuid, template_name, type)
-VALUES (nextval('template_email_seq'), now(), null, now(), uuid_generate_v4(), 'template1', 'FORGOT_PASSWORD');
+VALUES (nextval('template_email_seq'), now(), null, now(), uuid_generate_v4(), 'template_user_reset_password', 'FORGOT_PASSWORD');
