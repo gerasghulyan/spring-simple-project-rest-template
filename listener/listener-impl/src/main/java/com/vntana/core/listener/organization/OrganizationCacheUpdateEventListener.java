@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
  * Time: 16:48
  */
 @Component
-@Lazy
+@Lazy(false)
 public class OrganizationCacheUpdateEventListener implements EntityLifecycleListener<Organization, OrganizationLifecyclePayload> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationCacheUpdateEventListener.class);
