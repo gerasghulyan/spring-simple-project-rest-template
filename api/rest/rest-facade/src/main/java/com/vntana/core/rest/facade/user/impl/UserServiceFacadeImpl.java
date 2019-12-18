@@ -101,7 +101,8 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                         new FindUserByEmailResponseModel(
                                 true,
                                 user.getEmail(),
-                                UserRoleModel.ASSET_MANAGER
+                                UserRoleModel.ASSET_MANAGER,
+                                user.getUuid()
                         )
                 ))
                 .orElseGet(() -> new FindUserByEmailResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));

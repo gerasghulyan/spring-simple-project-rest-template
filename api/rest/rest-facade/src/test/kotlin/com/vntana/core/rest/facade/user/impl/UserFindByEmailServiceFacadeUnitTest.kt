@@ -41,6 +41,7 @@ class UserFindByEmailServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest()
         val resultResponse = userServiceFacade.findByEmail(request)
         restHelper.assertBasicSuccessResultResponse(resultResponse)
         assertThat(resultResponse.response().isExists).isTrue()
+        assertThat(resultResponse.response().uuid).isEqualTo(user.uuid)
         verifyAll()
     }
 

@@ -23,13 +23,17 @@ public class FindUserByEmailResponseModel implements ResponseModel {
     @JsonProperty("userRole")
     private UserRoleModel userRole;
 
+    @JsonProperty("uuid")
+    private String uuid;
+
     public FindUserByEmailResponseModel() {
     }
 
-    public FindUserByEmailResponseModel(final boolean exists, final String username, final UserRoleModel userRole) {
+    public FindUserByEmailResponseModel(final boolean exists, final String username, final UserRoleModel userRole, final String uuid) {
         this.exists = exists;
         this.username = username;
         this.userRole = userRole;
+        this.uuid = uuid;
     }
 
     @Override
@@ -45,6 +49,7 @@ public class FindUserByEmailResponseModel implements ResponseModel {
                 .append(exists, that.exists)
                 .append(username, that.username)
                 .append(userRole, that.userRole)
+                .append(uuid, that.uuid)
                 .isEquals();
     }
 
@@ -54,6 +59,7 @@ public class FindUserByEmailResponseModel implements ResponseModel {
                 .append(exists)
                 .append(username)
                 .append(userRole)
+                .append(uuid)
                 .toHashCode();
     }
 
@@ -63,6 +69,7 @@ public class FindUserByEmailResponseModel implements ResponseModel {
                 .append("exists", exists)
                 .append("username", username)
                 .append("userRole", userRole)
+                .append("uuid", uuid)
                 .toString();
     }
 
@@ -88,5 +95,13 @@ public class FindUserByEmailResponseModel implements ResponseModel {
 
     public void setUserRole(final UserRoleModel userRole) {
         this.userRole = userRole;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(final String uuid) {
+        this.uuid = uuid;
     }
 }

@@ -21,10 +21,11 @@ class UserFindByEmailWebTest : AbstractUserWebTest() {
     @Test
     fun `test findByEmail`() {
         val createRequest = resourceHelper.buildCreateUserRequest()
-        userResourceClient.createUser(createRequest)
+        val userUuid = userResourceClient.createUser(createRequest).response().uuid
         val findUserByEmailRequest = resourceHelper.buildFindUserByEmailRequest(email = createRequest.email)
         val response = userResourceClient.findByEmail(findUserByEmailRequest)
         resourceHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().isExists).isTrue()
+        assertThat(response.response().uuid).isEqualTo(userUuid)
     }
 }
