@@ -1,9 +1,13 @@
 package com.vntana.core.rest.facade.organization.impl
 
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
+import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
+import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto
 import org.assertj.core.api.Assertions.assertThat
+import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*
@@ -41,7 +45,14 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         // expectations
         expect(organizationService.findBySlug(slug)).andReturn(Optional.empty())
         expect(mapperFacade.map(request, CreateOrganizationDto::class.java)).andReturn(dto)
+        expect(persistenceUtilityService.runInNewTransaction(EasyMock.isA(Executable::class.java)))
+                .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
         expect(organizationService.create(dto)).andReturn(organization)
+        expect(userService.grantOrganizationRole(UserGrantOrganizationRoleDto(
+                request.userUuid,
+                organization.uuid,
+                UserRole.ORGANIZATION_ADMIN)
+        ))
         expect(organizationLifecycleMediator.onCreated(organization))
         replayAll()
         // test scenario

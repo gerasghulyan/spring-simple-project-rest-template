@@ -4,6 +4,7 @@ import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserClientOrganizationRole;
 import com.vntana.core.domain.user.UserOrganizationRole;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
@@ -21,6 +22,7 @@ import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -88,9 +90,18 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .orElseGet(() -> {
                     LOGGER.debug("Creating organization for request - {}", request);
                     final CreateOrganizationDto dto = mapperFacade.map(request, CreateOrganizationDto.class);
-                    final Organization organization = organizationService.create(dto);
-                    organizationLifecycleMediator.onCreated(organization);
-                    return new CreateOrganizationResultResponse(organization.getUuid());
+                    final Mutable<String> mutableResponse = new MutableObject<>();
+                    persistenceUtilityService.runInNewTransaction(() -> {
+                        final Organization organization = organizationService.create(dto);
+                        userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
+                                request.getUserUuid(),
+                                organization.getUuid(),
+                                UserRole.ORGANIZATION_ADMIN)
+                        );
+                        organizationLifecycleMediator.onCreated(organization);
+                        mutableResponse.setValue(organization.getUuid());
+                    });
+                    return new CreateOrganizationResultResponse(mutableResponse.getValue());
                 });
     }
 

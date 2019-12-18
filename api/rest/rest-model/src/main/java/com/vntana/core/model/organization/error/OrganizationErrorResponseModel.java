@@ -11,5 +11,6 @@ public enum OrganizationErrorResponseModel implements ErrorResponseModel {
     MISSING_NAME,
     MISSING_SLUG,
     SLUG_ALREADY_EXISTS,
-    SLUG_NOT_FOUND
+    SLUG_NOT_FOUND,
+    MISSING_USER_UUID
 }

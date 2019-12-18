@@ -2,6 +2,7 @@ package com.vntana.core.service.user;
 
 import com.vntana.core.domain.user.User;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 
 import java.util.Optional;
 
@@ -22,4 +23,6 @@ public interface UserService {
     User makeVerified(final String email);
 
     User changePassword(final String uuid, final String password);
+
+    void grantOrganizationRole(final UserGrantOrganizationRoleDto dto);
 }
