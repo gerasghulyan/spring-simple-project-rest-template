@@ -1,6 +1,6 @@
 package com.vntana.core.service.whitelist.exception;
 
-import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
+import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.service.common.exception.EntityNotFoundForUuidException;
 
 /**

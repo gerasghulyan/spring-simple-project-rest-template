@@ -153,6 +153,7 @@ allprojects {
             dependency("io.springfox:springfox-swagger2:$springFoxSwaggerVersion")
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
             dependency("com.vntana.commons:api-models:$commonsApiModelsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:persistence-domain:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.commons:cache:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
         }
@@ -162,7 +163,7 @@ allprojects {
 project(":domain") {
 
     dependencies {
-        api 'org.springframework.boot:spring-boot-starter-data-jpa'
+        api 'com.vntana.commons:persistence-domain'
     }
 }
 

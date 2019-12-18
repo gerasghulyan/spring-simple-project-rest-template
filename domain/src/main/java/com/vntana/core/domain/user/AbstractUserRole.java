@@ -1,6 +1,6 @@
 package com.vntana.core.domain.user;
 
-import com.vntana.core.domain.commons.AbstractDomainEntity;
+import com.vntana.commons.persistence.domain.AbstractDomainEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;

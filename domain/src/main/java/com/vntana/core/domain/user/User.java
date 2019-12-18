@@ -1,7 +1,7 @@
 package com.vntana.core.domain.user;
 
+import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.client.ClientOrganization;
-import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

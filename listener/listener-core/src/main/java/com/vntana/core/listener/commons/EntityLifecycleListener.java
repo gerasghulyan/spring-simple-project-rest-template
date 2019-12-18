@@ -1,6 +1,6 @@
 package com.vntana.core.listener.commons;
 
-import com.vntana.core.domain.commons.AbstractDomainEntity;
+import com.vntana.commons.persistence.domain.AbstractDomainEntity;
 
 /**
  * Created by Geras Ghulyan.

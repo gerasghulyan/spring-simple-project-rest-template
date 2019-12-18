@@ -1,6 +1,6 @@
 package com.vntana.core.service.common.exception;
 
-import com.vntana.core.domain.commons.AbstractUuidAwareDomainEntity;
+import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
