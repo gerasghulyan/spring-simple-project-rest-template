@@ -6,6 +6,7 @@ import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
 import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
 import org.slf4j.Logger;
@@ -30,9 +31,7 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
-
     private final OrganizationService organizationService;
-
     private final BCryptPasswordEncoder passwordEncoder;
 
     public UserServiceImpl(
@@ -105,6 +104,16 @@ public class UserServiceImpl implements UserService {
         final User updatedUser = userRepository.save(user);
         LOGGER.debug("Successfully changed user password having uuid - {}", uuid);
         return updatedUser;
+    }
+
+    @Override
+    public void grantOrganizationRole(final UserGrantOrganizationRoleDto dto) {
+        LOGGER.debug("Setting user role for dto - {}", dto);
+        Assert.notNull(dto, "The UserGrantOrganizationRoleDto should not be null");
+        final User user = getByUuid(dto.getUuid());
+        final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
+        user.grantOrganizationRole(organization);
+        LOGGER.debug("Successfully created user role for dto - {}", dto);
     }
 
     private void assertCreateDto(final CreateUserDto dto) {

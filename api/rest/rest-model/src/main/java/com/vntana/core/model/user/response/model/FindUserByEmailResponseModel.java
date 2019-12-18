@@ -2,7 +2,6 @@ package com.vntana.core.model.user.response.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.ResponseModel;
-import com.vntana.core.model.auth.response.UserRoleModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,19 +19,15 @@ public class FindUserByEmailResponseModel implements ResponseModel {
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("userRole")
-    private UserRoleModel userRole;
-
     @JsonProperty("uuid")
     private String uuid;
 
     public FindUserByEmailResponseModel() {
     }
 
-    public FindUserByEmailResponseModel(final boolean exists, final String username, final UserRoleModel userRole, final String uuid) {
+    public FindUserByEmailResponseModel(final boolean exists, final String username, final String uuid) {
         this.exists = exists;
         this.username = username;
-        this.userRole = userRole;
         this.uuid = uuid;
     }
 
@@ -48,7 +43,6 @@ public class FindUserByEmailResponseModel implements ResponseModel {
         return new EqualsBuilder()
                 .append(exists, that.exists)
                 .append(username, that.username)
-                .append(userRole, that.userRole)
                 .append(uuid, that.uuid)
                 .isEquals();
     }
@@ -58,7 +52,6 @@ public class FindUserByEmailResponseModel implements ResponseModel {
         return new HashCodeBuilder()
                 .append(exists)
                 .append(username)
-                .append(userRole)
                 .append(uuid)
                 .toHashCode();
     }
@@ -68,7 +61,6 @@ public class FindUserByEmailResponseModel implements ResponseModel {
         return new ToStringBuilder(this)
                 .append("exists", exists)
                 .append("username", username)
-                .append("userRole", userRole)
                 .append("uuid", uuid)
                 .toString();
     }
@@ -87,14 +79,6 @@ public class FindUserByEmailResponseModel implements ResponseModel {
 
     public void setUsername(final String username) {
         this.username = username;
-    }
-
-    public UserRoleModel getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(final UserRoleModel userRole) {
-        this.userRole = userRole;
     }
 
     public String getUuid() {

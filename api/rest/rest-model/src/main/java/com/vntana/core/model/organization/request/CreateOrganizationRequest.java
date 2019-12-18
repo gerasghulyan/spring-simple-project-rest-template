@@ -24,12 +24,16 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
     @JsonProperty("slug")
     private String slug;
 
+    @JsonProperty("userUuid")
+    private String userUuid;
+
     public CreateOrganizationRequest() {
     }
 
-    public CreateOrganizationRequest(final String name, final String slug) {
+    public CreateOrganizationRequest(final String name, final String slug, final String userUuid) {
         this.name = name;
         this.slug = slug;
+        this.userUuid = userUuid;
     }
 
     @Override
@@ -40,6 +44,9 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
         }
         if (StringUtils.isBlank(slug)) {
             errors.add(OrganizationErrorResponseModel.MISSING_SLUG);
+        }
+        if (StringUtils.isBlank(userUuid)) {
+            errors.add(OrganizationErrorResponseModel.MISSING_USER_UUID);
         }
         return errors;
     }
@@ -56,6 +63,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
+                .append(userUuid, that.userUuid)
                 .isEquals();
     }
 
@@ -64,6 +72,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
+                .append(userUuid)
                 .toHashCode();
     }
 
@@ -72,6 +81,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
+                .append("userUuid", userUuid)
                 .toString();
     }
 
@@ -89,5 +99,13 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
 
     public void setSlug(final String slug) {
         this.slug = slug;
+    }
+
+    public String getUserUuid() {
+        return userUuid;
+    }
+
+    public void setUserUuid(final String userUuid) {
+        this.userUuid = userUuid;
     }
 }

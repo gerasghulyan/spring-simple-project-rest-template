@@ -26,7 +26,8 @@ class OrganizationCreateWebTest : AbstractOrganizationWebTest() {
 
     @Test
     fun `test create`() {
-        val request = restHelper.buildCreateOrganizationRequest()
+        val userUuid = userResourceTestHelper.persistUser().response().uuid
+        val request = restHelper.buildCreateOrganizationRequest(userUuid = userUuid)
         val response = organizationResourceClient.create(request)
         assertThat(response.success()).isTrue()
         assertThat(response.response().uuid).isNotBlank()
