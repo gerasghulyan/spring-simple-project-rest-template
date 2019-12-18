@@ -18,6 +18,9 @@ public interface UserResourceClient {
     @PostMapping(path = "/by-email")
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
+    @GetMapping(path = "/{uuid}")
+    FindUserByUuidResponse findByUuid(@PathVariable("uuid") final String uuid);
+
     @GetMapping(path = "/{uuid}/account-details/organizations/{organizationUuid}")
     AccountUserResponse accountDetails(
             @PathVariable("uuid") final String uuid,

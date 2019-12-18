@@ -13,6 +13,8 @@ public interface UserServiceFacade {
 
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
+    FindUserByUuidResponse findByUuid(final String uuid);
+
     AccountUserResponse accountDetails(final String uuid, final String organizationUuid);
 
     VerifyUserResponse verify(final String uuid);

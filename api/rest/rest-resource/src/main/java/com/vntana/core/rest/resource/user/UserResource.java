@@ -44,6 +44,14 @@ public class UserResource {
         return ResponseEntity.ok(resultResponse);
     }
 
+    @GetMapping(path = "/{uuid}")
+    public ResponseEntity<FindUserByUuidResponse> findByUuid(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Processing find user by uuid resource method for uuid- {}", uuid);
+        final FindUserByUuidResponse resultResponse = userServiceFacade.findByUuid(uuid);
+        LOGGER.debug("Successfully processed find user by uuid resource method for uuid- {}", uuid);
+        return ResponseEntity.ok(resultResponse);
+    }
+
     @GetMapping(path = "/{uuid}/account-details/organizations/{organizationUuid}")
     public ResponseEntity<AccountUserResponse> accountDetails(
             @PathVariable("uuid") final String uuid,

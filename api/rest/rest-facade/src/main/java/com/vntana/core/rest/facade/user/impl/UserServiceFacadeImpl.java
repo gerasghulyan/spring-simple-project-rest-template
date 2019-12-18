@@ -7,10 +7,7 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
-import com.vntana.core.model.user.response.model.AccountUserResponseModel;
-import com.vntana.core.model.user.response.model.CreateUserResponseModel;
-import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
-import com.vntana.core.model.user.response.model.ResetUserPasswordResponseModel;
+import com.vntana.core.model.user.response.model.*;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent;
@@ -106,6 +103,22 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                         )
                 ))
                 .orElseGet(() -> new FindUserByEmailResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
+    }
+
+    @Override
+    public FindUserByUuidResponse findByUuid(final String uuid) {
+        LOGGER.debug("Processing facade findByUuid method for uuid - {}", uuid);
+        if (StringUtils.isEmpty(uuid)) {
+            return new FindUserByUuidResponse(UserErrorResponseModel.MISSING_UUID);
+        }
+        final FindUserByUuidResponse response = userService.findByUuid(uuid)
+                .map(user -> new FindUserByUuidResponse(new FindUserByUuidResponseModel(
+                        user.getUuid(),
+                        user.getEmail()
+                )))
+                .orElseGet(() -> new FindUserByUuidResponse(UserErrorResponseModel.NOT_FOUND_FOR_UUID));
+        LOGGER.debug("Successfully processed facade findByUuid method for uuid - {}", uuid);
+        return response;
     }
 
     @Override
