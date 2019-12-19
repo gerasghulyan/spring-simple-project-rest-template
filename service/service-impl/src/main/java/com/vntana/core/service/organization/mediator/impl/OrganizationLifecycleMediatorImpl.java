@@ -31,7 +31,7 @@ public class OrganizationLifecycleMediatorImpl implements OrganizationLifecycleM
         assertOrganization(organization);
         LOGGER.debug("Publishing organization creation event for uuid - {}", organization.getUuid());
         applicationEventPublisher.publishEvent(new OrganizationLifecyclePayload(organization, EntityLifecycle.CREATED));
-        LOGGER.debug("Successfully published organization creation event for uuid - {}", organization);
+        LOGGER.debug("Successfully published organization creation event for uuid - {}", organization.getUuid());
     }
 
     @Override

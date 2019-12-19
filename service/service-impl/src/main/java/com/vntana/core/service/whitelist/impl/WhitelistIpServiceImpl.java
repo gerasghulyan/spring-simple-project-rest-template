@@ -1,9 +1,10 @@
-package com.vntana.core.service.whitelist;
+package com.vntana.core.service.whitelist.impl;
 
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.whitelist.WhitelistIp;
 import com.vntana.core.persistence.whitelist.WhitelistIpRepository;
 import com.vntana.core.service.organization.OrganizationService;
+import com.vntana.core.service.whitelist.WhitelistIpService;
 import com.vntana.core.service.whitelist.dto.CreateWhitelistIpDto;
 import com.vntana.core.service.whitelist.dto.UpdateWhitelistIpDto;
 import com.vntana.core.service.whitelist.exception.WhitelistIpNotFoundException;

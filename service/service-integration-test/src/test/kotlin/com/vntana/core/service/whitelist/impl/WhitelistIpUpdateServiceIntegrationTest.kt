@@ -1,4 +1,4 @@
-package com.vntana.core.service.whitelist.test
+package com.vntana.core.service.whitelist.impl
 
 import com.vntana.core.service.whitelist.AbstractWhitelistIpServiceIntegrationTest
 import com.vntana.core.service.whitelist.exception.WhitelistIpNotFoundException
