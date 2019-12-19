@@ -1,17 +1,20 @@
 package com.vntana.core.rest.facade.whitelist.impl;
 
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.whitelist.WhitelistIp;
 import com.vntana.core.model.whitelist.error.WhitelistIpErrorResponseModel;
 import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpItemRequestModel;
 import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest;
-import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
 import com.vntana.core.model.whitelist.response.GetWhitelistIpsByOrganizationResponse;
+import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
 import com.vntana.core.model.whitelist.response.model.GetWhitelistIpGridResponseModel;
 import com.vntana.core.model.whitelist.response.model.GetWhitelistIpResponseModel;
 import com.vntana.core.rest.facade.whitelist.WhitelistIpServiceFacade;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.whitelist.WhitelistIpService;
 import com.vntana.core.service.whitelist.dto.CreateWhitelistIpDto;
+import com.vntana.core.service.whitelist.mediator.WhitelistIpLifecycleMediator;
+import com.vntana.core.service.whitelist.mediator.dto.SaveWhitelistIpLifecycleDto;
 import io.vavr.collection.Stream;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
@@ -37,9 +40,15 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
     private final MapperFacade mapperFacade;
     private final OrganizationService organizationService;
     private final WhitelistIpService whitelistIpService;
+    private final WhitelistIpLifecycleMediator whitelistIpLifecycleMediator;
 
-    public WhitelistIpServiceFacadeImpl(final MapperFacade mapperFacade, final OrganizationService organizationService, final WhitelistIpService whitelistIpService) {
+    public WhitelistIpServiceFacadeImpl(
+            final MapperFacade mapperFacade,
+            final OrganizationService organizationService,
+            final WhitelistIpService whitelistIpService,
+            final WhitelistIpLifecycleMediator whitelistIpLifecycleMediator) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+        this.whitelistIpLifecycleMediator = whitelistIpLifecycleMediator;
         this.mapperFacade = mapperFacade;
         this.organizationService = organizationService;
         this.whitelistIpService = whitelistIpService;
@@ -65,6 +74,7 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
                     final CreateWhitelistIpDto createDto = new CreateWhitelistIpDto(model.getLabel(), model.getIp(), request.getOrganizationUuid());
                     whitelistIpService.create(createDto);
                 });
+        whitelistIpLifecycleMediator.onSaved(buildSaveWhitelistIpLifecycleDto(request));
         LOGGER.debug("Successfully processed WhitelistIp resource create method for request - {}", request);
         return new SaveWhitelistIpResponse();
     }
@@ -85,5 +95,17 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
             return Collections.singletonList(WhitelistIpErrorResponseModel.ORGANIZATION_NOT_FOUND);
         }
         return Collections.emptyList();
+    }
+
+    private SaveWhitelistIpLifecycleDto buildSaveWhitelistIpLifecycleDto(final SaveWhitelistIpsRequest request) {
+        final Organization organization = organizationService.getByUuid(request.getOrganizationUuid());
+        final List<String> ips = request.getWhitelistIps().stream()
+                .map(CreateOrUpdateWhitelistIpItemRequestModel::getIp)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+        return new SaveWhitelistIpLifecycleDto(
+                organization.getUuid(),
+                organization.getSlug(),
+                ips
+        );
     }
 }

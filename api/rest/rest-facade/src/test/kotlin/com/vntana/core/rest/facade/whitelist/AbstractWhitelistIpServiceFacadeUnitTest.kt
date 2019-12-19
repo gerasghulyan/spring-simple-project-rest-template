@@ -7,6 +7,7 @@ import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.rest.facade.whitelist.impl.WhitelistIpServiceFacadeImpl
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.whitelist.WhitelistIpService
+import com.vntana.core.service.whitelist.mediator.WhitelistIpLifecycleMediator
 import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
 import org.junit.Before
@@ -27,6 +28,9 @@ abstract class AbstractWhitelistIpServiceFacadeUnitTest : AbstractServiceFacadeU
     @Mock
     protected lateinit var whitelistIpService: WhitelistIpService
 
+    @Mock
+    protected lateinit var whitelistIpLifecycleMediator: WhitelistIpLifecycleMediator
+
     protected lateinit var whitelistIpServiceFacade: WhitelistIpServiceFacade
 
     protected val testHelper: WhitelistIpRestTestHelper = WhitelistIpRestTestHelper()
@@ -39,7 +43,8 @@ abstract class AbstractWhitelistIpServiceFacadeUnitTest : AbstractServiceFacadeU
     fun prepare() {
         whitelistIpServiceFacade = WhitelistIpServiceFacadeImpl(mapperFacade,
                 organizationService,
-                whitelistIpService
+                whitelistIpService,
+                whitelistIpLifecycleMediator
         )
     }
 }

@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.whitelist.WhitelistIpCommonTestHelper
 import com.vntana.core.persistence.whitelist.WhitelistIpRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.organization.OrganizationService
+import com.vntana.core.service.whitelist.impl.WhitelistIpServiceImpl
 import org.easymock.Mock
 import org.junit.Before
 

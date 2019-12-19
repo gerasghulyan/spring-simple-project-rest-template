@@ -1,4 +1,4 @@
-package com.vntana.core.service.whitelist.test
+package com.vntana.core.service.whitelist.impl
 
 import com.vntana.core.domain.whitelist.WhitelistIp
 import com.vntana.core.service.whitelist.AbstractWhitelistIpServiceUnitTest

@@ -11,7 +11,7 @@ import com.vntana.core.listener.commons.EntityLifecycle;
  */
 public class OrganizationLifecyclePayload extends AbstractEntityLifecyclePayload<Organization> {
 
-    public OrganizationLifecyclePayload(final Organization entity, final EntityLifecycle entityLifecycle) {
-        super(entity, entityLifecycle);
+    public OrganizationLifecyclePayload(final Organization organization, final EntityLifecycle entityLifecycle) {
+        super(organization, entityLifecycle);
     }
 }
