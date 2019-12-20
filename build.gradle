@@ -428,6 +428,7 @@ project(":api:rest:rest-resource-executable") {
 
     bootJar {
         mainClassName = "${platformGroup}.rest.resource.boot.VntanaSpringBootWebApplication"
+        implementation project(":migration:migration-library")
         manifest {
             attributes(
                     "Implementation-Version": environmentPlatformVersion()
