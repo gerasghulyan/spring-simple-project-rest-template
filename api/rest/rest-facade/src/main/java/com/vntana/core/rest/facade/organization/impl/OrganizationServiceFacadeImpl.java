@@ -18,6 +18,7 @@ import com.vntana.core.model.user.response.model.GetUserOrganizationsGridRespons
 import com.vntana.core.model.user.response.model.GetUserOrganizationsResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
+import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
@@ -54,23 +55,31 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     private final UserService userService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
+    private final SlugValidationComponent slugValidationComponent;
 
     public OrganizationServiceFacadeImpl(
             final MapperFacade mapperFacade,
             final OrganizationService organizationService,
             final UserService userService,
             final PersistenceUtilityService persistenceUtilityService,
-            final OrganizationLifecycleMediator organizationLifecycleMediator) {
+            final OrganizationLifecycleMediator organizationLifecycleMediator,
+            final SlugValidationComponent slugValidationComponent) {
         this.userService = userService;
         this.mapperFacade = mapperFacade;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.organizationLifecycleMediator = organizationLifecycleMediator;
+        this.slugValidationComponent = slugValidationComponent;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
     @Override
-    public CheckAvailableOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableOrganizationSlugRequest request) {
+    public CheckAvailableOrganizationSlugResultResponse checkSlugAvailability(
+            final CheckAvailableOrganizationSlugRequest request) {
+        final List<OrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
+        if (!possibleErrors.isEmpty()) {
+            return new CheckAvailableOrganizationSlugResultResponse(possibleErrors);
+        }
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
         while (organizationService.findBySlug(mutableSlug.getValue()).isPresent()) {
@@ -82,6 +91,10 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
 
     @Override
     public CreateOrganizationResultResponse create(final CreateOrganizationRequest request) {
+        final List<OrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
+        if (!possibleErrors.isEmpty()) {
+            return new CreateOrganizationResultResponse(possibleErrors);
+        }
         return organizationService.findBySlug(request.getSlug())
                 .map(organization -> {
                     LOGGER.debug("Organization already exists for slug - {}", request.getSlug());
@@ -189,5 +202,12 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                         UserRoleModel.SUPER_ADMIN
                 ))
                 .collect(Collectors.toList());
+    }
+
+    private List<OrganizationErrorResponseModel> validateSlugErrors(final String slug) {
+        if (!slugValidationComponent.validate(slug)) {
+            return Collections.singletonList(OrganizationErrorResponseModel.SLUG_NOT_VALID);
+        }
+        return Collections.emptyList();
     }
 }

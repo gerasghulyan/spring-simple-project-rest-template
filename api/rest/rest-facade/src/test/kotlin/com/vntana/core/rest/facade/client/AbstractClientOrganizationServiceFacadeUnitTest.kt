@@ -8,6 +8,7 @@ import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.client.impl.ClientOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.client.ClientOrganizationService
+import com.vntana.core.service.common.component.SlugValidationComponent
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import ma.glasnost.orika.MapperFacade
@@ -45,6 +46,9 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractService
 
     protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
+    @Mock
+    protected lateinit var slugValidationComponent: SlugValidationComponent
+
     @Before
     fun before() {
         clientOrganizationServiceFacade = ClientOrganizationServiceFacadeImpl(
@@ -52,6 +56,8 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractService
                 persistenceUtilityService,
                 clientOrganizationService,
                 organizationService,
-                userService)
+                userService,
+                slugValidationComponent
+        )
     }
 }

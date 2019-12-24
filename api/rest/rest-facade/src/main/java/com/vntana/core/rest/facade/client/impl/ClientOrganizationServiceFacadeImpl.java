@@ -17,6 +17,7 @@ import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
+import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import ma.glasnost.orika.MapperFacade;
@@ -50,23 +51,30 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private final ClientOrganizationService clientOrganizationService;
     private final OrganizationService organizationService;
     private final UserService userService;
+    private final SlugValidationComponent slugValidationComponent;
 
     public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade,
                                                final PersistenceUtilityService persistenceUtilityService,
                                                final ClientOrganizationService clientOrganizationService,
                                                final OrganizationService organizationService,
-                                               final UserService userService) {
+                                               final UserService userService,
+                                               final SlugValidationComponent slugValidationComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.mapperFacade = mapperFacade;
         this.persistenceUtilityService = persistenceUtilityService;
         this.clientOrganizationService = clientOrganizationService;
         this.organizationService = organizationService;
         this.userService = userService;
+        this.slugValidationComponent = slugValidationComponent;
     }
 
     @Override
     public CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableClientOrganizationSlugRequest request) {
         Assert.hasText(request.getOrganizationUuid(), "The organizationUuid uuid should not be null");
+        final List<ClientOrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
+        if (!possibleErrors.isEmpty()) {
+            return new CheckAvailableClientOrganizationSlugResultResponse(possibleErrors);
+        }
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
         while (clientOrganizationService.findBySlugAndOrganization(mutableSlug.getValue(), request.getOrganizationUuid()).isPresent()) {
@@ -80,6 +88,10 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     @Override
     public CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request) {
         Assert.hasText(request.getOrganizationUuid(), "The organizationUuid uuid should not be null");
+        final List<ClientOrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
+        if (!possibleErrors.isEmpty()) {
+            return new CreateClientOrganizationResultResponse(possibleErrors);
+        }
         return clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
                 .map(clientOrganization -> {
                     LOGGER.debug("Client organization already exists for slug - {}", request.getSlug());
@@ -130,5 +142,12 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 client.getSlug()
         );
         return new GetClientOrganizationResultResponse(response);
+    }
+
+    private List<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
+        if (!slugValidationComponent.validate(slug)) {
+            return Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_NOT_VALID);
+        }
+        return Collections.emptyList();
     }
 }

@@ -5,6 +5,8 @@ import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.persistence.client.ClientOrganizationRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.client.impl.ClientOrganizationServiceImpl
+import com.vntana.core.service.common.component.SlugValidationComponent
+import com.vntana.core.service.common.component.impl.SlugValidationComponentImpl
 import com.vntana.core.service.organization.OrganizationService
 import org.easymock.Mock
 import org.junit.Before
@@ -24,12 +26,18 @@ abstract class AbstractClientOrganizationServiceUnitTest : AbstractServiceUnitTe
 
     protected lateinit var clientOrganizationService: ClientOrganizationService
 
+    protected val slugValidationComponent: SlugValidationComponent = SlugValidationComponentImpl()
+
     protected val helper: ClientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
     protected val organizationTestHelper = OrganizationCommonTestHelper()
 
     @Before
     fun before() {
-        clientOrganizationService = ClientOrganizationServiceImpl(organizationService, clientOrganizationRepository)
+        clientOrganizationService = ClientOrganizationServiceImpl(
+                organizationService,
+                clientOrganizationRepository,
+                slugValidationComponent
+        )
     }
 }

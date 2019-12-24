@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.organization.impl
 
+import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
@@ -12,12 +13,27 @@ import java.util.*
  * Time: 3:54 PM
  */
 class OrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractOrganizationServiceFacadeUnitTest() {
+
+    @Test
+    fun `test checkSlugAvailability when not valid`() {
+        // test data
+        resetAll()
+        val request = restHelper.buildCheckAvailableOrganizationSlugRequest()
+        // expectations
+        expect(slugValidationComponent.validate(request.slug)).andReturn(false)
+        replayAll()
+        // test scenario
+        assertBasicErrorResultResponse(organizationServiceFacade.checkSlugAvailability(request), OrganizationErrorResponseModel.SLUG_NOT_VALID)
+        verifyAll()
+    }
+
     @Test
     fun `test checkSlugAvailability when is available at first iteration`() {
         // test data
         resetAll()
         val request = restHelper.buildCheckAvailableOrganizationSlugRequest()
         // expectations
+        expect(slugValidationComponent.validate(request.slug)).andReturn(true)
         expect(organizationService.findBySlug(request.slug)).andReturn(Optional.empty())
         replayAll()
         // test scenario
@@ -36,6 +52,7 @@ class OrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractOrganizat
         val organization = commonTestHelper.buildOrganization()
         val request = restHelper.buildCheckAvailableOrganizationSlugRequest(slug = slug)
         // expectations
+        expect(slugValidationComponent.validate(slug)).andReturn(true)
         expect(organizationService.findBySlug(slug)).andReturn(Optional.of(organization))
         expect(organizationService.findBySlug("${slug}1")).andReturn(Optional.of(organization))
         expect(organizationService.findBySlug("${slug}2")).andReturn(Optional.of(organization))
