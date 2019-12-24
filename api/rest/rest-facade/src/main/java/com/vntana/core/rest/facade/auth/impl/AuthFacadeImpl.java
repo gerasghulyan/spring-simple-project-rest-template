@@ -72,18 +72,30 @@ public class AuthFacadeImpl implements AuthFacade {
         persistenceUtilityService.runInPersistenceSession(() -> {
             final User user = userService.getByUuid(request.getUuid());
             final Organization organization = organizationService.getByUuid(request.getOrganizationUuid());
-            final SecureFindUserByUuidAndOrganizationResponse response = user.roleOfOrganization(organization)
-                    .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
-                    .map(userRoleModel -> new SecureFindUserByUuidAndOrganizationResponse(
-                                    new SecureUserOrganizationResponseModel(
-                                            user.getUuid(),
-                                            user.getEmail(),
-                                            userRoleModel,
-                                            organization.getUuid()
-                                    )
-                            )
-                    ).orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_ROLE));
-            mutableResponse.setValue(response);
+            if (user.roleOfSuperAdmin().isPresent()) {
+                final SecureFindUserByUuidAndOrganizationResponse response = new SecureFindUserByUuidAndOrganizationResponse(
+                        new SecureUserOrganizationResponseModel(
+                                user.getUuid(),
+                                user.getEmail(),
+                                UserRoleModel.SUPER_ADMIN,
+                                organization.getUuid()
+                        )
+                );
+                mutableResponse.setValue(response);
+            } else {
+                final SecureFindUserByUuidAndOrganizationResponse response = user.roleOfOrganization(organization)
+                        .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
+                        .map(userRoleModel -> new SecureFindUserByUuidAndOrganizationResponse(
+                                        new SecureUserOrganizationResponseModel(
+                                                user.getUuid(),
+                                                user.getEmail(),
+                                                userRoleModel,
+                                                organization.getUuid()
+                                        )
+                                )
+                        ).orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_ROLE));
+                mutableResponse.setValue(response);
+            }
         });
         return mutableResponse.getValue();
     }
