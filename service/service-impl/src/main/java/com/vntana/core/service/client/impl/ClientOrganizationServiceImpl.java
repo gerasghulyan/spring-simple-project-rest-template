@@ -5,6 +5,7 @@ import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.persistence.client.ClientOrganizationRepository;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
+import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,20 +28,24 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOrganizationServiceImpl.class);
 
     private final OrganizationService organizationService;
-
     private final ClientOrganizationRepository clientOrganizationRepository;
+    private final SlugValidationComponent slugValidationComponent;
 
-    public ClientOrganizationServiceImpl(final OrganizationService organizationService, final ClientOrganizationRepository clientOrganizationRepository) {
+    public ClientOrganizationServiceImpl(
+            final OrganizationService organizationService,
+            final ClientOrganizationRepository clientOrganizationRepository,
+            final SlugValidationComponent slugValidationComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.organizationService = organizationService;
         this.clientOrganizationRepository = clientOrganizationRepository;
+        this.slugValidationComponent = slugValidationComponent;
     }
 
     @Transactional
     @Override
     public ClientOrganization create(final CreateClientOrganizationDto dto) {
         assertCreateClientOrganizationDto(dto);
-        assertNotExistsForSlugAndOrganization(dto.getSlug(), dto.getOrganizationUuid());
+        assertSlugAndOrganization(dto.getSlug(), dto.getOrganizationUuid());
         final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         final ClientOrganization clientOrganization = new ClientOrganization(dto.getName(), dto.getSlug(), dto.getImageId(), organization);
         return clientOrganizationRepository.save(clientOrganization);
@@ -78,7 +83,8 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         Assert.hasText(dto.getSlug(), "The client slug should contain text");
     }
 
-    private void assertNotExistsForSlugAndOrganization(final String slug, final String organizationUuid) {
+    private void assertSlugAndOrganization(final String slug, final String organizationUuid) {
+        Assert.isTrue(slugValidationComponent.validate(slug), "The slug must be valid");
         findBySlugAndOrganization(slug, organizationUuid).ifPresent(it -> {
             LOGGER.error("Client with slug - {} already exists", slug);
             throw new IllegalStateException(format("Client with slug - %s already exists", slug));

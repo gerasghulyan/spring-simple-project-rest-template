@@ -2,6 +2,7 @@ package com.vntana.core.service.organization.impl;
 
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.persistence.organization.OrganizationRepository;
+import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import org.slf4j.Logger;
@@ -26,9 +27,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
     private final OrganizationRepository organizationRepository;
+    private final SlugValidationComponent slugValidationComponent;
 
-    public OrganizationServiceImpl(final OrganizationRepository organizationRepository) {
+    public OrganizationServiceImpl(
+            final OrganizationRepository organizationRepository,
+            final SlugValidationComponent slugValidationComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+        this.slugValidationComponent = slugValidationComponent;
         this.organizationRepository = organizationRepository;
     }
 
@@ -36,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Organization create(final CreateOrganizationDto dto) {
         assertCreateOrganizationDto(dto);
-        assertNotExistsForSlug(dto.getSlug());
+        assertSlug(dto.getSlug());
         return organizationRepository.save(new Organization(dto.getName(), dto.getSlug()));
     }
 
@@ -83,7 +88,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         Assert.hasText(dto.getSlug(), "The slug should contain text");
     }
 
-    private void assertNotExistsForSlug(final String slug) {
+    private void assertSlug(final String slug) {
+        Assert.isTrue(slugValidationComponent.validate(slug), "The slug must be valid");
         findBySlug(slug).ifPresent(it -> {
             LOGGER.error("Organization with slug - {} already exists", slug);
             throw new IllegalStateException(format("Organization with slug - %s already exists", slug));

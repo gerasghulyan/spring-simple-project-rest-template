@@ -13,12 +13,28 @@ import java.util.*
  * Time: 3:54 PM
  */
 class ClientOrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
-        @Test
+
+    @Test
+    fun `test checkSlugAvailability when slug not valid`() {
+        // test data
+        resetAll()
+        val request = restHelper.buildCheckAvailableClientOrganizationSlugRequest()
+        // expectations
+        expect(slugValidationComponent.validate(request.slug)).andReturn(false)
+        replayAll()
+        // test scenario
+        val resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request)
+        restHelper.assertBasicErrorResultResponse(resultResponse, ClientOrganizationErrorResponseModel.SLUG_NOT_VALID)
+        verifyAll()
+    }
+
+    @Test
     fun `test checkSlugAvailability when is available at first iteration`() {
         // test data
         resetAll()
         val request = restHelper.buildCheckAvailableClientOrganizationSlugRequest()
         // expectations
+        expect(slugValidationComponent.validate(request.slug)).andReturn(true)
         expect(clientOrganizationService.findBySlugAndOrganization(request.slug, request.organizationUuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
@@ -37,6 +53,7 @@ class ClientOrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractCli
         val clientOrganization = commonTestHelper.buildClientOrganization()
         val request = restHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = slug)
         // expectations
+        expect(slugValidationComponent.validate(slug)).andReturn(true)
         expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
         expect(clientOrganizationService.findBySlugAndOrganization("${slug}1", request.organizationUuid)).andReturn(Optional.of(clientOrganization))
         expect(clientOrganizationService.findBySlugAndOrganization("${slug}2", request.organizationUuid)).andReturn(Optional.of(clientOrganization))

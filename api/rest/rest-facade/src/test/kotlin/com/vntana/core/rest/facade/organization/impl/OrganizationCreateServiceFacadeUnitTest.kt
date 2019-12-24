@@ -18,6 +18,23 @@ import java.util.*
  * Time: 11:35 AM
  */
 class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacadeUnitTest() {
+
+    @Test
+    fun `test create when slug not valid`() {
+        // test data
+        resetAll()
+        val slug = uuid()
+        val request = restHelper.buildCreateOrganizationRequest(slug = slug)
+        val organization = commonTestHelper.buildOrganization()
+        // expectations
+        expect(slugValidationComponent.validate(slug)).andReturn(false)
+        replayAll()
+        // test scenario
+        val resultResponse = organizationServiceFacade.create(request)
+        restHelper.assertBasicErrorResultResponse(resultResponse, OrganizationErrorResponseModel.SLUG_NOT_VALID)
+        verifyAll()
+    }
+
     @Test
     fun `test create when organization already exists for slug`() {
         // test data
@@ -26,6 +43,7 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         val request = restHelper.buildCreateOrganizationRequest(slug = slug)
         val organization = commonTestHelper.buildOrganization()
         // expectations
+        expect(slugValidationComponent.validate(slug)).andReturn(true)
         expect(organizationService.findBySlug(slug)).andReturn(Optional.of(organization))
         replayAll()
         // test scenario
@@ -43,6 +61,7 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         val dto = commonTestHelper.buildCreateOrganizationDto()
         val organization = commonTestHelper.buildOrganization()
         // expectations
+        expect(slugValidationComponent.validate(slug)).andReturn(true)
         expect(organizationService.findBySlug(slug)).andReturn(Optional.empty())
         expect(mapperFacade.map(request, CreateOrganizationDto::class.java)).andReturn(dto)
         expect(persistenceUtilityService.runInNewTransaction(EasyMock.isA(Executable::class.java)))
