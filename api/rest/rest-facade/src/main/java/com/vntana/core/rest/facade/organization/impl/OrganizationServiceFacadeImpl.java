@@ -10,9 +10,13 @@ import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
-import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
-import com.vntana.core.model.organization.response.get.GetOrganizationResponseModel;
-import com.vntana.core.model.organization.response.get.GetOrganizationResultResponse;
+import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResponseModel;
+import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResponseModel;
+import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
+import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.model.user.response.model.GetUserOrganizationsGridResponseModel;
 import com.vntana.core.model.user.response.model.GetUserOrganizationsResponseModel;
@@ -21,6 +25,7 @@ import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
@@ -134,35 +139,54 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     }
 
     @Override
-    public GetOrganizationResultResponse getBySlug(final String slug) {
+    public GetOrganizationBySlugResultResponse getBySlug(final String slug) {
         Assert.hasText(slug, "The organization slug should not be null");
         LOGGER.debug("Retrieving organization by slug - {}", slug);
         final Optional<Organization> optionalOrganization = organizationService.findBySlug(slug);
         if (!optionalOrganization.isPresent()) {
-            return new GetOrganizationResultResponse(Collections.singletonList(OrganizationErrorResponseModel.SLUG_NOT_FOUND));
+            return new GetOrganizationBySlugResultResponse(Collections.singletonList(OrganizationErrorResponseModel.SLUG_NOT_FOUND));
         }
         final Organization organization = optionalOrganization.get();
         LOGGER.debug("Successfully retrieved organization with result - {}", organization);
-        final GetOrganizationResponseModel response = new GetOrganizationResponseModel(
+        final GetOrganizationBySlugResponseModel response = new GetOrganizationBySlugResponseModel(
                 organization.getUuid(),
                 organization.getName(),
-                organization.getSlug()
+                organization.getSlug(),
+                organization.getImageId()
         );
-        return new GetOrganizationResultResponse(response);
+        return new GetOrganizationBySlugResultResponse(response);
     }
 
     @Override
-    public GetOrganizationResultResponse getByUuid(final String uuid) {
+    public GetOrganizationByUuidResultResponse getByUuid(final String uuid) {
         Assert.hasText(uuid, "The organization uuid should not be null");
         LOGGER.debug("Retrieving organization by uuid - {}", uuid);
         final Organization organization = organizationService.getByUuid(uuid);
         LOGGER.debug("Successfully retrieved organization with result - {}", organization);
-        final GetOrganizationResponseModel response = new GetOrganizationResponseModel(
+        final GetOrganizationByUuidResponseModel response = new GetOrganizationByUuidResponseModel(
                 organization.getUuid(),
                 organization.getName(),
-                organization.getSlug()
+                organization.getSlug(),
+                organization.getImageId(),
+                organization.getCreated()
         );
-        return new GetOrganizationResultResponse(response);
+        return new GetOrganizationByUuidResultResponse(response);
+    }
+
+    @Override
+    public UpdateOrganizationResultResponse update(final UpdateOrganizationRequest request) {
+        LOGGER.debug("Processing organization facade update method for request - {}", request);
+        if (!organizationService.existsByUuid(request.getUuid())) {
+            return new UpdateOrganizationResultResponse(OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
+        }
+        final UpdateOrganizationDto dto = new UpdateOrganizationDto(
+                request.getUuid(),
+                request.getImageId(),
+                request.getName()
+        );
+        final Organization organization = organizationService.update(dto);
+        LOGGER.debug("Successfully processed organization facade update method for request - {}", request);
+        return new UpdateOrganizationResultResponse(organization.getUuid());
     }
 
     private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotAdmin(final User user) {

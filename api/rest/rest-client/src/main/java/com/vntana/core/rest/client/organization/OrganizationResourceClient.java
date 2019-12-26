@@ -3,14 +3,14 @@ package com.vntana.core.rest.client.organization;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
-import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
-import com.vntana.core.model.organization.response.get.GetOrganizationResultResponse;
+import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
+import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arthur Asatryan.
@@ -29,8 +29,11 @@ public interface OrganizationResourceClient {
     UserOrganizationResponse getUserOrganizations(@PathVariable("uuid") final String uuid);
 
     @GetMapping(path = "/slug/{slug}")
-    GetOrganizationResultResponse getBySlug(@PathVariable("slug") final String slug);
+    GetOrganizationBySlugResultResponse getBySlug(@PathVariable("slug") final String slug);
 
     @GetMapping(path = "/{uuid}")
-    GetOrganizationResultResponse getByUuid(@PathVariable("uuid") final String uuid);
+    GetOrganizationByUuidResultResponse getByUuid(@PathVariable("uuid") final String uuid);
+
+    @PutMapping
+    UpdateOrganizationResultResponse update(@RequestBody final UpdateOrganizationRequest request);
 }

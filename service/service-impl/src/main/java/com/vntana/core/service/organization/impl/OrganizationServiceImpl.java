@@ -5,6 +5,7 @@ import com.vntana.core.persistence.organization.OrganizationRepository;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization create(final CreateOrganizationDto dto) {
         assertCreateOrganizationDto(dto);
         assertSlug(dto.getSlug());
-        return organizationRepository.save(new Organization(dto.getName(), dto.getSlug()));
+        return organizationRepository.save(new Organization(dto.getName(), dto.getSlug(), dto.getImageId()));
     }
 
     @Transactional(readOnly = true)
@@ -74,6 +75,18 @@ public class OrganizationServiceImpl implements OrganizationService {
         Assert.hasText(uuid, "The organization uuid should not be null or empty");
         LOGGER.debug("Checking existence of organization having uuid - {}", uuid);
         return organizationRepository.existsByUuid(uuid);
+    }
+
+    @Override
+    public Organization update(final UpdateOrganizationDto dto) {
+        Assert.notNull(dto, "The UpdateOrganizationDto should not be null");
+        LOGGER.debug("Updating organization for dto - {}", dto);
+        final Organization organization = getByUuid(dto.getUuid());
+        organization.setImageId(dto.getImageId());
+        organization.setName(dto.getName());
+        organizationRepository.save(organization);
+        LOGGER.debug("Successfully updating organization for dto - {}", dto);
+        return organization;
     }
 
     private Optional<Organization> findByUuid(final String uuid) {

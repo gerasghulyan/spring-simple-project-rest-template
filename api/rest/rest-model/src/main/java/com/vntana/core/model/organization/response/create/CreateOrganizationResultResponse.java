@@ -1,4 +1,4 @@
-package com.vntana.core.model.organization.response;
+package com.vntana.core.model.organization.response.create;
 
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;

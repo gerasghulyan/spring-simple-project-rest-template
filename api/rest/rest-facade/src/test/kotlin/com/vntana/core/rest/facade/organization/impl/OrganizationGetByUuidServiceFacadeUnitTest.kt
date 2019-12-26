@@ -1,8 +1,8 @@
 package com.vntana.core.rest.facade.organization.impl
 
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.junit.Test
 
@@ -20,7 +20,7 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
         // expectations
         replayAll()
         // test scenario
-        Assertions.assertThatThrownBy { organizationServiceFacade.getByUuid(null) }
+        assertThatThrownBy { organizationServiceFacade.getByUuid(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -39,6 +39,8 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
         assertThat(resultResponse.response().uuid).isEqualTo(organization.uuid)
         assertThat(resultResponse.response().name).isEqualTo(organization.name)
         assertThat(resultResponse.response().slug).isEqualTo(organization.slug)
+        assertThat(resultResponse.response().imageId).isEqualTo(organization.imageId)
+        assertThat(resultResponse.response().created).isEqualTo(organization.created)
         verifyAll()
     }
 }

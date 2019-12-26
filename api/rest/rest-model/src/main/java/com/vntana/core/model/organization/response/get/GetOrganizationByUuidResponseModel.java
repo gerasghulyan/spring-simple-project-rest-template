@@ -6,12 +6,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
+
 /**
- * Created by Geras Ghulyan
- * Date: 10/9/19
- * Time: 2:55 PM
+ * Created by Arman Gevorgyan.
+ * Date: 12/26/19
+ * Time: 3:14 PM
  */
-public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel {
+public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareResponseModel {
 
     @JsonProperty("name")
     private String name;
@@ -19,13 +21,25 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
     @JsonProperty("slug")
     private String slug;
 
-    public GetOrganizationResponseModel() {
+    @JsonProperty("imageId")
+    private String imageId;
+
+    private LocalDateTime created;
+
+    public GetOrganizationByUuidResponseModel() {
+        super();
     }
 
-    public GetOrganizationResponseModel(final String uuid, final String name, final String slug) {
+    public GetOrganizationByUuidResponseModel(final String uuid,
+                                              final String name,
+                                              final String slug,
+                                              final String imageId,
+                                              final LocalDateTime created) {
         super(uuid);
         this.name = name;
         this.slug = slug;
+        this.imageId = imageId;
+        this.created = created;
     }
 
     @Override
@@ -33,13 +47,15 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
         if (this == o) {
             return true;
         }
-        if (!(o instanceof GetOrganizationResponseModel)) {
+        if (!(o instanceof GetOrganizationByUuidResponseModel)) {
             return false;
         }
-        final GetOrganizationResponseModel that = (GetOrganizationResponseModel) o;
+        final GetOrganizationByUuidResponseModel that = (GetOrganizationByUuidResponseModel) o;
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
+                .append(imageId, that.imageId)
+                .append(created, that.created)
                 .isEquals();
     }
 
@@ -48,6 +64,8 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
+                .append(imageId)
+                .append(created)
                 .toHashCode();
     }
 
@@ -56,6 +74,8 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
+                .append("imageId", imageId)
+                .append("created", created)
                 .toString();
     }
 
@@ -73,5 +93,21 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
 
     public void setSlug(final String slug) {
         this.slug = slug;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(final LocalDateTime created) {
+        this.created = created;
     }
 }

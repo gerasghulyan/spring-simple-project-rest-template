@@ -13,16 +13,16 @@ import org.junit.Test
 class OrganizationCheckSlugAvailabilityWebTest : AbstractOrganizationWebTest() {
     @Test
     fun `test checkSlugAvailability with invalid arguments`() {
-        val request = restHelper.buildCheckAvailableOrganizationSlugRequest(slug = null)
+        val request = resourceTestHelper.buildCheckAvailableOrganizationSlugRequest(slug = null)
         val response = organizationResourceClient.checkSlugAvailability(request)
-        restHelper.assertBasicErrorResultResponse(response, OrganizationErrorResponseModel.MISSING_SLUG)
+        assertBasicErrorResultResponse(response, OrganizationErrorResponseModel.MISSING_SLUG)
     }
 
     @Test
     fun `test checkSlugAvailability`() {
-        val request = restHelper.buildCheckAvailableOrganizationSlugRequest()
+        val request = resourceTestHelper.buildCheckAvailableOrganizationSlugRequest()
         val response = organizationResourceClient.checkSlugAvailability(request)
-        restHelper.assertBasicSuccessResultResponse(response)
+        assertBasicSuccessResultResponse(response)
         assertThat(response.response().isAvailable).isTrue()
         assertThat(response.response().suggested).isEqualTo(request.slug)
     }

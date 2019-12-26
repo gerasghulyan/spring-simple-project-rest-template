@@ -1,30 +1,33 @@
-package com.vntana.core.service.organization.dto;
+package com.vntana.core.model.organization.response.get;
 
-import com.vntana.core.service.common.dto.ServiceDto;
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.util.Assert;
 
 /**
- * Created by Arthur Asatryan.
- * Date: 10/8/19
- * Time: 5:18 PM
+ * Created by Geras Ghulyan
+ * Date: 10/9/19
+ * Time: 2:55 PM
  */
-public class CreateOrganizationDto implements ServiceDto {
+public class GetOrganizationBySlugResponseModel extends AbstractUuidAwareResponseModel {
 
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("slug")
     private String slug;
+
+    @JsonProperty("imageId")
     private String imageId;
 
-    public CreateOrganizationDto() {
+    public GetOrganizationBySlugResponseModel() {
         super();
     }
 
-    public CreateOrganizationDto(final String name, final String slug, final String imageId) {
-        Assert.hasText(name, "The name should not be null or empty");
-        Assert.hasText(slug, "The slug should not be null or empty");
+    public GetOrganizationBySlugResponseModel(final String uuid, final String name, final String slug, final String imageId) {
+        super(uuid);
         this.name = name;
         this.slug = slug;
         this.imageId = imageId;
@@ -35,10 +38,10 @@ public class CreateOrganizationDto implements ServiceDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CreateOrganizationDto)) {
+        if (!(o instanceof GetOrganizationBySlugResponseModel)) {
             return false;
         }
-        final CreateOrganizationDto that = (CreateOrganizationDto) o;
+        final GetOrganizationBySlugResponseModel that = (GetOrganizationBySlugResponseModel) o;
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
@@ -65,14 +68,26 @@ public class CreateOrganizationDto implements ServiceDto {
     }
 
     public String getName() {
-        return StringUtils.trim(name);
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
     public String getSlug() {
-        return StringUtils.trim(slug);
+        return slug;
+    }
+
+    public void setSlug(final String slug) {
+        this.slug = slug;
     }
 
     public String getImageId() {
         return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
     }
 }

@@ -3,8 +3,11 @@ package com.vntana.core.rest.resource.organization;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
-import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
-import com.vntana.core.model.organization.response.get.GetOrganizationResultResponse;
+import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
+import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import org.slf4j.Logger;
@@ -57,18 +60,26 @@ public class OrganizationResource {
     }
 
     @GetMapping(path = "/slug/{slug}")
-    public ResponseEntity<GetOrganizationResultResponse> getBySlug(@PathVariable("slug") final String slug) {
+    public ResponseEntity<GetOrganizationBySlugResultResponse> getBySlug(@PathVariable("slug") final String slug) {
         LOGGER.debug("Retrieving organization by slug - {}", slug);
-        final GetOrganizationResultResponse response = organizationServiceFacade.getBySlug(slug);
+        final GetOrganizationBySlugResultResponse response = organizationServiceFacade.getBySlug(slug);
         LOGGER.debug("Successfully retrieved organization with response - {}", response);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping(path = "/{uuid}")
-    public ResponseEntity<GetOrganizationResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
+    public ResponseEntity<GetOrganizationByUuidResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
         LOGGER.debug("Retrieving organization by uuid - {}", uuid);
-        final GetOrganizationResultResponse response = organizationServiceFacade.getByUuid(uuid);
+        final GetOrganizationByUuidResultResponse response = organizationServiceFacade.getByUuid(uuid);
         LOGGER.debug("Successfully retrieved organization with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<UpdateOrganizationResultResponse> update(@RequestBody final UpdateOrganizationRequest request) {
+        LOGGER.debug("Processing organization resource update method for request - {}", request);
+        final UpdateOrganizationResultResponse response = organizationServiceFacade.update(request);
+        LOGGER.debug("Successfully processed organization resource update method for request - {}", request);
         return ResponseEntity.ok(response);
     }
 }

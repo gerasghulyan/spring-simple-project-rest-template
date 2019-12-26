@@ -2,6 +2,7 @@ package com.vntana.core.service.organization;
 
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +22,6 @@ public interface OrganizationService {
     Organization getByUuid(final String uuid);
 
     boolean existsByUuid(final String uuid);
+
+    Organization update(final UpdateOrganizationDto dto);
 }

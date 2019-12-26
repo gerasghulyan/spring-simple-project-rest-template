@@ -15,19 +15,19 @@ class OrganizationCreateWebTest : AbstractOrganizationWebTest() {
     @Test
     fun `test create with invalid arguments`() {
         val response1 = organizationResourceClient.create(
-                restHelper.buildCreateOrganizationRequest(slug = null)
+                resourceTestHelper.buildCreateOrganizationRequest(slug = null)
         )
-        restHelper.assertBasicErrorResultResponse(response1, OrganizationErrorResponseModel.MISSING_SLUG)
+        assertBasicErrorResultResponse(response1, OrganizationErrorResponseModel.MISSING_SLUG)
         val response2 = organizationResourceClient.create(
-                restHelper.buildCreateOrganizationRequest(name = null)
+                resourceTestHelper.buildCreateOrganizationRequest(name = null)
         )
-        restHelper.assertBasicErrorResultResponse(response2, OrganizationErrorResponseModel.MISSING_NAME)
+        assertBasicErrorResultResponse(response2, OrganizationErrorResponseModel.MISSING_NAME)
     }
 
     @Test
     fun `test create`() {
         val userUuid = userResourceTestHelper.persistUser().response().uuid
-        val request = restHelper.buildCreateOrganizationRequest(userUuid = userUuid)
+        val request = resourceTestHelper.buildCreateOrganizationRequest(userUuid = userUuid)
         val response = organizationResourceClient.create(request)
         assertThat(response.success()).isTrue()
         assertThat(response.response().uuid).isNotBlank()
