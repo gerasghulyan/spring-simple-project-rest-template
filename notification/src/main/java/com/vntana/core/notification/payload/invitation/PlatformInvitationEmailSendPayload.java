@@ -1,4 +1,4 @@
-package com.vntana.core.notification.payload.reset.password;
+package com.vntana.core.notification.payload.invitation;
 
 import com.vntana.core.notification.payload.AbstractTemplateEmailSendPayload;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,18 +10,18 @@ import java.util.Map;
 
 /**
  * Created by Arman Gevorgyan.
- * Date: 12/12/19
- * Time: 2:18 PM
+ * Date: 12/25/19
+ * Time: 5:58 PM
  */
-public class ResetPasswordEmailSendPayload extends AbstractTemplateEmailSendPayload {
+public class PlatformInvitationEmailSendPayload extends AbstractTemplateEmailSendPayload {
 
     private final String verificationLinkAddress;
 
-    public ResetPasswordEmailSendPayload(final String templateName,
-                                         final String recipientEmail,
-                                         final String senderEmail,
-                                         final String subject,
-                                         final String verificationLinkAddress) {
+    public PlatformInvitationEmailSendPayload(final String templateName,
+                                              final String recipientEmail,
+                                              final String senderEmail,
+                                              final String subject,
+                                              final String verificationLinkAddress) {
         super(templateName, recipientEmail, senderEmail, subject);
         this.verificationLinkAddress = verificationLinkAddress;
     }
@@ -31,10 +31,10 @@ public class ResetPasswordEmailSendPayload extends AbstractTemplateEmailSendPayl
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ResetPasswordEmailSendPayload)) {
+        if (!(o instanceof PlatformInvitationEmailSendPayload)) {
             return false;
         }
-        final ResetPasswordEmailSendPayload that = (ResetPasswordEmailSendPayload) o;
+        final PlatformInvitationEmailSendPayload that = (PlatformInvitationEmailSendPayload) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(verificationLinkAddress, that.verificationLinkAddress)
