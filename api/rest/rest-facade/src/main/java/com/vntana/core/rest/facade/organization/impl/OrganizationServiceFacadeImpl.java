@@ -64,13 +64,13 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             final PersistenceUtilityService persistenceUtilityService,
             final OrganizationLifecycleMediator organizationLifecycleMediator,
             final SlugValidationComponent slugValidationComponent) {
+        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.mapperFacade = mapperFacade;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.organizationLifecycleMediator = organizationLifecycleMediator;
         this.slugValidationComponent = slugValidationComponent;
-        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
     @Override

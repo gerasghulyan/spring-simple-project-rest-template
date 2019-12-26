@@ -1,12 +1,11 @@
 package com.vntana.core.notification.payload.verification;
 
-import com.vntana.core.notification.payload.TemplateEmailSendPayload;
+import com.vntana.core.notification.payload.AbstractTemplateEmailSendPayload;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,23 +13,17 @@ import java.util.Map;
  * Date: 11/12/19
  * Time: 12:26 PM
  */
-public class VerificationEmailSendPayload implements TemplateEmailSendPayload {
+public class VerificationEmailSendPayload extends AbstractTemplateEmailSendPayload {
 
-    private final String templateName;
-    private final String recipientsEmail;
-    private final String senderEmail;
-    private final String subject;
     private final String verificationLinkAddress;
 
     public VerificationEmailSendPayload(final String templateName,
-                                        final String recipientsEmail,
+                                        final String recipientEmail,
                                         final String senderEmail,
                                         final String subject,
                                         final String verificationLinkAddress) {
-        this.templateName = templateName;
-        this.recipientsEmail = recipientsEmail;
-        this.senderEmail = senderEmail;
-        this.subject = subject;
+
+        super(templateName, recipientEmail, senderEmail, subject);
         this.verificationLinkAddress = verificationLinkAddress;
     }
 
@@ -44,10 +37,7 @@ public class VerificationEmailSendPayload implements TemplateEmailSendPayload {
         }
         final VerificationEmailSendPayload that = (VerificationEmailSendPayload) o;
         return new EqualsBuilder()
-                .append(templateName, that.templateName)
-                .append(recipientsEmail, that.recipientsEmail)
-                .append(senderEmail, that.senderEmail)
-                .append(subject, that.subject)
+                .appendSuper(super.equals(o))
                 .append(verificationLinkAddress, that.verificationLinkAddress)
                 .isEquals();
     }
@@ -55,10 +45,7 @@ public class VerificationEmailSendPayload implements TemplateEmailSendPayload {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(templateName)
-                .append(recipientsEmail)
-                .append(senderEmail)
-                .append(subject)
+                .appendSuper(super.hashCode())
                 .append(verificationLinkAddress)
                 .toHashCode();
     }
@@ -66,32 +53,8 @@ public class VerificationEmailSendPayload implements TemplateEmailSendPayload {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("templateName", templateName)
-                .append("recipientsEmail", recipientsEmail)
-                .append("senderEmail", senderEmail)
-                .append("subject", subject)
                 .append("verificationLinkAddress", verificationLinkAddress)
                 .toString();
-    }
-
-    @Override
-    public String templateName() {
-        return templateName;
-    }
-
-    @Override
-    public List<String> recipientsEmails() {
-        return Collections.singletonList(recipientsEmail);
-    }
-
-    @Override
-    public String senderEmail() {
-        return senderEmail;
-    }
-
-    @Override
-    public String subject() {
-        return subject;
     }
 
     @Override
