@@ -27,13 +27,17 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
     @JsonProperty("userUuid")
     private String userUuid;
 
+    @JsonProperty("imageId")
+    private String imageId;
+
     public CreateOrganizationRequest() {
     }
 
-    public CreateOrganizationRequest(final String name, final String slug, final String userUuid) {
+    public CreateOrganizationRequest(final String name, final String slug, final String userUuid, final String imageId) {
         this.name = name;
         this.slug = slug;
         this.userUuid = userUuid;
+        this.imageId = imageId;
     }
 
     @Override
@@ -64,6 +68,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
                 .append(name, that.name)
                 .append(slug, that.slug)
                 .append(userUuid, that.userUuid)
+                .append(imageId, that.imageId)
                 .isEquals();
     }
 
@@ -73,6 +78,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
                 .append(name)
                 .append(slug)
                 .append(userUuid)
+                .append(imageId)
                 .toHashCode();
     }
 
@@ -82,6 +88,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
                 .append("name", name)
                 .append("slug", slug)
                 .append("userUuid", userUuid)
+                .append("imageId", imageId)
                 .toString();
     }
 
@@ -107,5 +114,13 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
 
     public void setUserUuid(final String userUuid) {
         this.userUuid = userUuid;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
     }
 }

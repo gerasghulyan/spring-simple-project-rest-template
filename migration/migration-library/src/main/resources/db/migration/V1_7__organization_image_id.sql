@@ -1,0 +1,1 @@
+alter table organization add column image_id varchar(255);

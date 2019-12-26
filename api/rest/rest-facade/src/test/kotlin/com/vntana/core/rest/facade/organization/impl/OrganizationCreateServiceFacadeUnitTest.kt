@@ -25,7 +25,6 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         resetAll()
         val slug = uuid()
         val request = restHelper.buildCreateOrganizationRequest(slug = slug)
-        val organization = commonTestHelper.buildOrganization()
         // expectations
         expect(slugValidationComponent.validate(slug)).andReturn(false)
         replayAll()
