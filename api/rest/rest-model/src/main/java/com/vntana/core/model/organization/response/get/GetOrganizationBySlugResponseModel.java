@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 10/9/19
  * Time: 2:55 PM
  */
-public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel {
+public class GetOrganizationBySlugResponseModel extends AbstractUuidAwareResponseModel {
 
     @JsonProperty("name")
     private String name;
@@ -19,13 +19,18 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
     @JsonProperty("slug")
     private String slug;
 
-    public GetOrganizationResponseModel() {
+    @JsonProperty("imageId")
+    private String imageId;
+
+    public GetOrganizationBySlugResponseModel() {
+        super();
     }
 
-    public GetOrganizationResponseModel(final String uuid, final String name, final String slug) {
+    public GetOrganizationBySlugResponseModel(final String uuid, final String name, final String slug, final String imageId) {
         super(uuid);
         this.name = name;
         this.slug = slug;
+        this.imageId = imageId;
     }
 
     @Override
@@ -33,13 +38,14 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
         if (this == o) {
             return true;
         }
-        if (!(o instanceof GetOrganizationResponseModel)) {
+        if (!(o instanceof GetOrganizationBySlugResponseModel)) {
             return false;
         }
-        final GetOrganizationResponseModel that = (GetOrganizationResponseModel) o;
+        final GetOrganizationBySlugResponseModel that = (GetOrganizationBySlugResponseModel) o;
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
+                .append(imageId, that.imageId)
                 .isEquals();
     }
 
@@ -48,6 +54,7 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
+                .append(imageId)
                 .toHashCode();
     }
 
@@ -56,6 +63,7 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
+                .append("imageId", imageId)
                 .toString();
     }
 
@@ -73,5 +81,13 @@ public class GetOrganizationResponseModel extends AbstractUuidAwareResponseModel
 
     public void setSlug(final String slug) {
         this.slug = slug;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
     }
 }

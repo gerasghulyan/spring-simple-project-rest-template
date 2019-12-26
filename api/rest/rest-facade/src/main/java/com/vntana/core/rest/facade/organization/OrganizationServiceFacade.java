@@ -3,8 +3,11 @@ package com.vntana.core.rest.facade.organization;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
-import com.vntana.core.model.organization.response.CreateOrganizationResultResponse;
-import com.vntana.core.model.organization.response.get.GetOrganizationResultResponse;
+import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
+import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
+import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
 
 /**
@@ -19,7 +22,9 @@ public interface OrganizationServiceFacade {
 
     UserOrganizationResponse getUserOrganizations(final String userUuid);
 
-    GetOrganizationResultResponse getBySlug(final String slug);
+    GetOrganizationBySlugResultResponse getBySlug(final String slug);
 
-    GetOrganizationResultResponse getByUuid(final String uuid);
+    GetOrganizationByUuidResultResponse getByUuid(final String uuid);
+
+    UpdateOrganizationResultResponse update(final UpdateOrganizationRequest request);
 }

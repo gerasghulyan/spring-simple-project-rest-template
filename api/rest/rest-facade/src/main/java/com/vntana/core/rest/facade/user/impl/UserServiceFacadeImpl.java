@@ -75,7 +75,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         persistenceUtilityService.runInNewTransaction(() -> {
             LOGGER.debug("Creating a organization for request - {}", request);
             final Organization organization = organizationService.create(
-                    new CreateOrganizationDto(request.getOrganizationName(), request.getOrganizationSlug())
+                    new CreateOrganizationDto(request.getOrganizationName(), request.getOrganizationSlug(), null)
             );
             final User user = userService.create(new CreateUserDto(
                     request.getFullName(),

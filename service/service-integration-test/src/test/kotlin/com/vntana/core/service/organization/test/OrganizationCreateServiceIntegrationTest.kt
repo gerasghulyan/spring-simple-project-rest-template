@@ -14,7 +14,7 @@ class OrganizationCreateServiceIntegrationTest : AbstractOrganizationServiceInte
     @Test
     fun `test create`() {
         // given
-        commonTestHelper.buildCreateOrganizationDto(name = " ${uuid()} ", slug = " ${uuid()} ").let { dto ->
+        commonTestHelper.buildCreateOrganizationDto().let { dto ->
             // when
             organizationService.create(dto).let { organization ->
                 // then
@@ -22,6 +22,7 @@ class OrganizationCreateServiceIntegrationTest : AbstractOrganizationServiceInte
                 assertThat(organization)
                         .hasFieldOrPropertyWithValue("name", StringUtils.trim(dto.name))
                         .hasFieldOrPropertyWithValue("slug", StringUtils.trim(dto.slug))
+                        .hasFieldOrPropertyWithValue("imageId", StringUtils.trim(dto.imageId))
             }
         }
     }

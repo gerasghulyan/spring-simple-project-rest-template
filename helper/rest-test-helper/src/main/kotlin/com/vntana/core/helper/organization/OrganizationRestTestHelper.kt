@@ -3,6 +3,7 @@ package com.vntana.core.helper.organization
 import com.vntana.core.helper.AbstractRestTestHelper
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest
 import com.vntana.core.model.organization.request.CreateOrganizationRequest
+import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest
 
 /**
  * Created by Arthur Asatryan.
@@ -17,6 +18,13 @@ open class OrganizationRestTestHelper : AbstractRestTestHelper() {
     fun buildCreateOrganizationRequest(
             name: String? = uuid(),
             slug: String? = uuid(),
-            userUuid: String? = uuid()
-    ): CreateOrganizationRequest = CreateOrganizationRequest(name, slug, userUuid)
+            userUuid: String? = uuid(),
+            imageId: String? = uuid()
+    ): CreateOrganizationRequest = CreateOrganizationRequest(name, slug, userUuid, imageId)
+
+    fun buildUpdateOrganizationRequest(
+            uuid: String? = uuid(),
+            name: String? = uuid(),
+            imageId: String? = uuid()
+    ): UpdateOrganizationRequest = UpdateOrganizationRequest(uuid, name, imageId)
 }

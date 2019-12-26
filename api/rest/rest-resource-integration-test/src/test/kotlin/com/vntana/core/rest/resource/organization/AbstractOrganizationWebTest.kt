@@ -1,7 +1,6 @@
 package com.vntana.core.rest.resource.organization
 
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
-import com.vntana.core.helper.organization.OrganizationRestTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.rest.client.organization.OrganizationResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
@@ -13,13 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired
  * Time: 5:51 PM
  */
 abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
-    protected val restHelper = OrganizationRestTestHelper()
 
     @Autowired
     protected lateinit var organizationResourceClient: OrganizationResourceClient
 
     @Autowired
-    protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
+    protected lateinit var resourceTestHelper: OrganizationResourceTestHelper
 
     @Autowired
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
