@@ -24,6 +24,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
     @JsonProperty("imageId")
     private String imageId;
 
+    @JsonProperty("created")
     private LocalDateTime created;
 
     public GetOrganizationByUuidResponseModel() {
