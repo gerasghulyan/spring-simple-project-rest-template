@@ -47,7 +47,7 @@ public class PlatformInvitationSenderComponentImpl implements PlatformInvitation
                 templateEmail.getTemplateName(),
                 email,
                 senderEmail,
-                "Reset your password address",
+                "Platform invitation",
                 String.format("%s/%s", platformInvitationUrlPrefix, token)
         );
         emailSenderService.sendEmail(payload);
