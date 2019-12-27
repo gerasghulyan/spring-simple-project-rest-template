@@ -201,14 +201,16 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                             return new GetUserOrganizationsResponseModel(
                                     userOrganizationRole.getOrganization().getUuid(),
                                     userOrganizationRole.getOrganization().getName(),
-                                    UserRoleModel.valueOf(userOrganizationRole.getUserRole().name())
+                                    UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()),
+                                    userOrganizationRole.getOrganization().getImageId()
                             );
                         case CLIENT_ROLE:
                             final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
                             return new GetUserOrganizationsResponseModel(
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getName(),
-                                    UserRoleModel.valueOf(userClientOrganizationRole.getUserRole().name())
+                                    UserRoleModel.valueOf(userClientOrganizationRole.getUserRole().name()),
+                                    userClientOrganizationRole.getClientOrganization().getOrganization().getImageId()
                             );
                         default:
                             throw new IllegalStateException(format("Unknown user role %s", userRole.toString()));
@@ -223,7 +225,8 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .map(organization -> new GetUserOrganizationsResponseModel(
                         organization.getUuid(),
                         organization.getName(),
-                        UserRoleModel.SUPER_ADMIN
+                        UserRoleModel.SUPER_ADMIN,
+                        organization.getImageId()
                 ))
                 .collect(Collectors.toList());
     }

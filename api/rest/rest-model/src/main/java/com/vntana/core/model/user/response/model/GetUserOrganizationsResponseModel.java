@@ -23,13 +23,17 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
     @JsonProperty("role")
     private UserRoleModel role;
 
+    @JsonProperty("imageId")
+    private String imageId;
+
     public GetUserOrganizationsResponseModel() {
     }
 
-    public GetUserOrganizationsResponseModel(final String uuid, final String name, final UserRoleModel role) {
+    public GetUserOrganizationsResponseModel(final String uuid, final String name, final UserRoleModel role, final String imageId) {
         this.uuid = uuid;
         this.name = name;
         this.role = role;
+        this.imageId = imageId;
     }
 
     @Override
@@ -45,6 +49,7 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
                 .append(uuid, that.uuid)
                 .append(name, that.name)
                 .append(role, that.role)
+                .append(imageId, that.imageId)
                 .isEquals();
     }
 
@@ -54,6 +59,7 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
                 .append(uuid)
                 .append(name)
                 .append(role)
+                .append(imageId)
                 .toHashCode();
     }
 
@@ -63,6 +69,7 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
                 .append("uuid", uuid)
                 .append("name", name)
                 .append("role", role)
+                .append("imageId", imageId)
                 .toString();
     }
 
@@ -88,5 +95,13 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
 
     public void setRole(final UserRoleModel role) {
         this.role = role;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
     }
 }
