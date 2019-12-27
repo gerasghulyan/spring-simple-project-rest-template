@@ -52,7 +52,7 @@ public class PlatformInvitationEmailSendPayload extends AbstractTemplateEmailSen
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("verificationLinkAddress", verificationLinkAddress)
+                .append("platformInvitationLinkAddress", verificationLinkAddress)
                 .toString();
     }
 
