@@ -428,7 +428,6 @@ project(":api:rest:rest-resource-executable") {
 
     bootJar {
         mainClassName = "${platformGroup}.rest.resource.boot.VntanaSpringBootWebApplication"
-        project(":migration:migration-library")
         manifest {
             attributes(
                     "Implementation-Version": environmentPlatformVersion()
@@ -438,6 +437,7 @@ project(":api:rest:rest-resource-executable") {
 
     dependencies {
         implementation project(":api:rest:rest-resource")
+        implementation project(":migration:migration-library")
         implementation 'org.springframework.data:spring-data-jpa'
         implementation "io.springfox:springfox-swagger2"
         implementation "io.springfox:springfox-swagger-ui"
