@@ -15,7 +15,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "client_organization", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_client_organization_slug_organization_id", columnNames = {"client_organization_slug", "organization_id"})
+        @UniqueConstraint(name = "uk_client_organization_slug_organization_id", columnNames = {"client_organization_slug", "organization_id"}),
+        @UniqueConstraint(name = "uk_client_organization_uuid", columnNames = {"uuid"})
 })
 public class ClientOrganization extends AbstractUuidAwareDomainEntity {
 

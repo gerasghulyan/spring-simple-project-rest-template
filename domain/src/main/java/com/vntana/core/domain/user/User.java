@@ -22,7 +22,10 @@ import static java.lang.String.format;
  * Time: 5:37 PM
  */
 @Entity
-@Table(name = "user_")
+@Table(name = "user_", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_user_uuid", columnNames = {"uuid"}),
+        @UniqueConstraint(name = "uk_user_email", columnNames = {"email"})
+})
 public class User extends AbstractUuidAwareDomainEntity {
 
     @Column(name = "full_name", nullable = false)

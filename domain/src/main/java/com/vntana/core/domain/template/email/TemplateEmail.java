@@ -14,7 +14,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "template_email", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"type", "template_name"}, name = "UK_template_email_type_template_name")
+        @UniqueConstraint(columnNames = {"type", "template_name"}, name = "UK_template_email_type_template_name"),
+        @UniqueConstraint(name = "uk_template_email_uuid", columnNames = {"uuid"})
 })
 public class TemplateEmail extends AbstractUuidAwareDomainEntity {
 
