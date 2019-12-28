@@ -89,6 +89,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organization;
     }
 
+    @Override
+    public String getOrganizationOwnerEmail(final String organizationUuid) {
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        LOGGER.debug("Retrieving organization owner email having uuid - {}", organizationUuid);
+        final Optional<String> emailOptional = organizationRepository.findOrganizationOwnerEmail(organizationUuid);
+        LOGGER.debug("Successfully processed organization owner email retrieval having uuid - {}", organizationUuid);
+        return emailOptional.orElse("");
+    }
+
     private Optional<Organization> findByUuid(final String uuid) {
         Assert.hasText(uuid, "The organization uuid should not be null");
         LOGGER.debug("Trying to find organization with uuid - {}", uuid);

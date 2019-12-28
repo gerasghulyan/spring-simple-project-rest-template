@@ -24,4 +24,6 @@ public interface OrganizationService {
     boolean existsByUuid(final String uuid);
 
     Organization update(final UpdateOrganizationDto dto);
+
+    String getOrganizationOwnerEmail(final String organizationUuid);
 }

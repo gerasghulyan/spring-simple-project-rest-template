@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Import(VntanaCacheConf.class)
 @Configuration
-@EnableFeignClients("com.vntana.core.rest.client")
+@EnableFeignClients({"com.vntana.core.rest.client", "com.vntana.payment.client"})
 @ComponentScan({"com.vntana.core"})
 @EnableJpaRepositories("com.vntana.core.persistence")
 @EntityScan("com.vntana.core.domain")

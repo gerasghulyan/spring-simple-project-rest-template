@@ -10,6 +10,7 @@ import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponen
 import com.vntana.core.rest.facade.user.impl.UserServiceFacadeImpl
 import com.vntana.core.service.email.EmailValidationComponent
 import com.vntana.core.service.organization.OrganizationService
+import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before
@@ -47,6 +48,9 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
     @Mock
     protected lateinit var resetPasswordEmailSenderComponent: UserResetPasswordEmailSenderComponent
 
+    @Mock
+    protected lateinit var organizationLifecycleMediator: OrganizationLifecycleMediator
+
     @Before
     fun before() {
         userServiceFacade = UserServiceFacadeImpl(userService,
@@ -54,7 +58,8 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
                 persistenceUtilityService,
                 emailValidationComponent,
                 userVerificationSenderComponent,
-                resetPasswordEmailSenderComponent
+                resetPasswordEmailSenderComponent,
+                organizationLifecycleMediator
         )
     }
 }

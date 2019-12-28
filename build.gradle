@@ -12,6 +12,7 @@ buildscript {
         sflNotifierVersion = '1.7.0'
         commonsApiModelsVersion = '0.1.2'
         vntanaCacheVersion = '0.1.0'
+        vntanaPaymentVersion = '0.1.0'
     }
 
     repositories {
@@ -156,6 +157,7 @@ allprojects {
             dependency("com.vntana.commons:persistence-domain:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.commons:cache:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
+            dependency("com.vntana.payment:rest-client-payment:$vntanaPaymentVersion${versionPostfix()}")
         }
     }
 }
@@ -437,6 +439,7 @@ project(":api:rest:rest-resource-executable") {
 
     dependencies {
         implementation project(":api:rest:rest-resource")
+        runtimeOnly project(":listener:listener-impl")
         implementation 'org.springframework.data:spring-data-jpa'
         implementation "io.springfox:springfox-swagger2"
         implementation "io.springfox:springfox-swagger-ui"
@@ -461,6 +464,7 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation project(":api:rest:rest-resource")
         testImplementation project(":migration:migration-library")
         testImplementation project(":helper:rest-resource-test-helper")
+        testImplementation 'com.vntana.payment:rest-client-payment'
         testImplementation "com.vntana.cache:vntana-cache"
         testImplementation "com.sflpro.notifier:api-client-library"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
@@ -487,6 +491,7 @@ project(":listener:listener-impl") {
     dependencies {
         api project(":listener:listener-core")
         api "com.vntana.cache:vntana-cache"
+        api 'com.vntana.payment:rest-client-payment'
         testImplementation project(":helper:test-helper")
     }
 }

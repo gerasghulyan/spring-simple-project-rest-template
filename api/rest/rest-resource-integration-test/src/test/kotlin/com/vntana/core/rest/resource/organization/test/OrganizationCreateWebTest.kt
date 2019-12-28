@@ -4,6 +4,9 @@ import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.ArgumentMatchers.argThat
+import org.mockito.Mockito
+import org.mockito.Mockito.times
 
 /**
  * Created by Arthur Asatryan.
@@ -26,10 +29,12 @@ class OrganizationCreateWebTest : AbstractOrganizationWebTest() {
 
     @Test
     fun `test create`() {
-        val userUuid = userResourceTestHelper.persistUser().response().uuid
+        val email = userResourceTestHelper.email()
+        val userUuid = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = email)).response().uuid
         val request = resourceTestHelper.buildCreateOrganizationRequest(userUuid = userUuid)
         val response = organizationResourceClient.create(request)
         assertThat(response.success()).isTrue()
         assertThat(response.response().uuid).isNotBlank()
+        Mockito.verify(customerResourceClient, times(2)).create(argThat { request -> request.email == email })
     }
 }
