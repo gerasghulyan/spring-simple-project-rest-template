@@ -1,0 +1,2 @@
+insert into template_email (id, created, removed, updated, uuid, template_name, type)
+VALUES (nextval('template_email_seq'), now(), null, now(), 'fd754dc6-2968-11ea-978f-2e728ce88125a', 'template_platform_invitation', 'PLATFORM_INVITATION');
