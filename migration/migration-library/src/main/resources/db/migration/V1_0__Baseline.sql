@@ -97,7 +97,7 @@ create table if not exists user_role
         constraint fk_user_id
             references user_
 );
-create sequence user_role_seq start 1 increment 1;
+create sequence abstract_user_role_seq start 1 increment 1;
 
 create table if not exists user_role_client_organization
 (
@@ -152,11 +152,11 @@ create table if not exists settings_whitelist_ip
         constraint fk_settings_whitelist_ip_organization_id
             references organization
 );
-create sequence settings_whitelist_ip_seq start 1 increment 1;
+create sequence whitelist_ip_seq start 1 increment 1;
 -- end user
 
 insert into template_email (id, created, removed, updated, uuid, template_name, type)
-VALUES (nextval('template_email_seq'), now(), null, now(), uuid_generate_v4(), 'template_user_reset_password', 'FORGOT_PASSWORD');
+VALUES (nextval('template_email_seq'), now(), null, now(), 'fd75503c-2968-11ea-978f-2e728ce88125a', 'template_user_reset_password', 'FORGOT_PASSWORD');
 
 insert into template_email (id, created, removed, updated, uuid, template_name, type)
-VALUES (nextval('template_email_seq'), now(), null, now(), uuid_generate_v4(), 'template_user_verification', 'USER_VERIFICATION');
+VALUES (nextval('template_email_seq'), now(), null, now(), 'fd755190-2968-11ea-978f-2e728ce88125a', 'template_user_verification', 'USER_VERIFICATION');
