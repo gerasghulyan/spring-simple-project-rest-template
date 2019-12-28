@@ -6,6 +6,7 @@ import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
+import com.vntana.core.service.organization.exception.OrganizationOwnerNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -95,7 +96,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         LOGGER.debug("Retrieving organization owner email having uuid - {}", organizationUuid);
         final Optional<String> emailOptional = organizationRepository.findOrganizationOwnerEmail(organizationUuid);
         LOGGER.debug("Successfully processed organization owner email retrieval having uuid - {}", organizationUuid);
-        return emailOptional.orElse("");
+        return emailOptional.orElseThrow(() -> new OrganizationOwnerNotFoundException(organizationUuid));
     }
 
     private Optional<Organization> findByUuid(final String uuid) {

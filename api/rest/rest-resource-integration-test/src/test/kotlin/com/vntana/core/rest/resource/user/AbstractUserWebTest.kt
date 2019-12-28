@@ -6,7 +6,7 @@ import com.sflpro.notifier.api.model.email.response.CreateEmailNotificationRespo
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
-import com.vntana.payment.client.customer.CustomerResourceClient
+import com.vntana.payment.client.customer.PaymentCustomerResourceClient
 import com.vntana.payment.reset.model.customer.create.response.CustomerCreateResultResponse
 import com.vntana.payment.reset.model.customer.create.response.model.CustomerCreateResponseModel
 import org.junit.Before
@@ -31,7 +31,7 @@ abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
     protected lateinit var emailNotificationResourceClient: EmailNotificationResourceClient
 
     @Autowired
-    protected lateinit var customerResourceClient: CustomerResourceClient
+    protected lateinit var customerResourceClient: PaymentCustomerResourceClient
 
     fun email(): String = uuid() + "@gmail.com"
 

@@ -5,7 +5,7 @@ import com.vntana.core.listener.AbstractListenerUnitTest
 import com.vntana.core.listener.commons.EntityLifecycle
 import com.vntana.core.listener.organization.OrganizationLifecyclePayload
 import com.vntana.core.service.organization.OrganizationService
-import com.vntana.payment.client.customer.CustomerResourceClient
+import com.vntana.payment.client.customer.PaymentCustomerResourceClient
 import com.vntana.payment.reset.model.customer.create.request.CustomerCreateRequest
 import com.vntana.payment.reset.model.customer.create.response.CustomerCreateResultResponse
 import org.assertj.core.api.Assertions
@@ -29,7 +29,7 @@ class CustomerCreationEventListenerUnitTest : AbstractListenerUnitTest() {
     private lateinit var organizationService: OrganizationService
 
     @Mock
-    private lateinit var customerResourceClient: CustomerResourceClient
+    private lateinit var customerResourceClient: PaymentCustomerResourceClient
 
     @Before
     fun prepare() {
@@ -44,6 +44,27 @@ class CustomerCreationEventListenerUnitTest : AbstractListenerUnitTest() {
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
+
+    @Test
+    fun `test when updated`() {
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val payload = OrganizationLifecyclePayload(organization, EntityLifecycle.UPDATED)
+        resetAll()
+        replayAll()
+        customerCreationEventListener.handleEvent(payload)
+        verifyAll()
+    }
+
+    @Test
+    fun `test when deleted`() {
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val payload = OrganizationLifecyclePayload(organization, EntityLifecycle.DELETED)
+        resetAll()
+        replayAll()
+        customerCreationEventListener.handleEvent(payload)
+        verifyAll()
+    }
+
 
     @Test
     fun `test handleEvent`() {

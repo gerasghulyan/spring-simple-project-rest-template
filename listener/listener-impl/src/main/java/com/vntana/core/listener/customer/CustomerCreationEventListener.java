@@ -5,7 +5,7 @@ import com.vntana.core.listener.commons.EntityLifecycle;
 import com.vntana.core.listener.commons.EntityLifecycleListener;
 import com.vntana.core.listener.organization.OrganizationLifecyclePayload;
 import com.vntana.core.service.organization.OrganizationService;
-import com.vntana.payment.client.customer.CustomerResourceClient;
+import com.vntana.payment.client.customer.PaymentCustomerResourceClient;
 import com.vntana.payment.reset.model.customer.create.request.CustomerCreateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ public class CustomerCreationEventListener implements EntityLifecycleListener<Or
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerCreationEventListener.class);
 
     private final OrganizationService organizationService;
-    private final CustomerResourceClient customerResourceClient;
+    private final PaymentCustomerResourceClient customerResourceClient;
 
-    public CustomerCreationEventListener(final OrganizationService organizationService, final CustomerResourceClient customerResourceClient) {
+    public CustomerCreationEventListener(final OrganizationService organizationService, final PaymentCustomerResourceClient customerResourceClient) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.organizationService = organizationService;
         this.customerResourceClient = customerResourceClient;

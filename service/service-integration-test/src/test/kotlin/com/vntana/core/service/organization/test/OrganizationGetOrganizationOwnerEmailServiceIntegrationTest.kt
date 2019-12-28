@@ -12,11 +12,6 @@ import org.junit.Test
 class OrganizationGetOrganizationOwnerEmailServiceIntegrationTest : AbstractOrganizationServiceIntegrationTest() {
 
     @Test
-    fun `test when not found`() {
-        assertThat(organizationService.getOrganizationOwnerEmail(uuid())).isEqualTo("")
-    }
-
-    @Test
     fun `test when found`() {
         val userEmail = uuid()
         val organization = integrationTestHelper.persistOrganization()

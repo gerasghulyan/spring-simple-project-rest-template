@@ -4,7 +4,7 @@ import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.rest.client.organization.OrganizationResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
-import com.vntana.payment.client.customer.CustomerResourceClient
+import com.vntana.payment.client.customer.PaymentCustomerResourceClient
 import com.vntana.payment.reset.model.customer.create.response.CustomerCreateResultResponse
 import org.junit.Before
 import org.mockito.ArgumentMatchers
@@ -28,7 +28,7 @@ abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 
     @Autowired
-    protected lateinit var customerResourceClient: CustomerResourceClient
+    protected lateinit var customerResourceClient: PaymentCustomerResourceClient
 
     @Before
     fun prepare() {

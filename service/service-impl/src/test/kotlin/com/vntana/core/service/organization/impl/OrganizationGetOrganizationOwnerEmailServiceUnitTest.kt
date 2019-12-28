@@ -1,6 +1,7 @@
 package com.vntana.core.service.organization.impl
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceUnitTest
+import com.vntana.core.service.organization.exception.OrganizationOwnerNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
@@ -31,7 +32,8 @@ class OrganizationGetOrganizationOwnerEmailServiceUnitTest : AbstractOrganizatio
         resetAll()
         expect(organizationRepository.findOrganizationOwnerEmail(organizationUuid)).andReturn(Optional.empty())
         replayAll()
-        assertThat(organizationService.getOrganizationOwnerEmail(organizationUuid)).isEqualTo("")
+        assertThatThrownBy { organizationService.getOrganizationOwnerEmail(organizationUuid) }
+                .isExactlyInstanceOf(OrganizationOwnerNotFoundException::class.java)
         verifyAll()
     }
 
