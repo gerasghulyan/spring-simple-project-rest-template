@@ -1,7 +1,9 @@
 package com.vntana.core.rest.facade.client.impl;
 
 import com.vntana.core.domain.client.ClientOrganization;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
@@ -110,20 +112,15 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         LOGGER.debug("Retrieving user organization's client organizations by user uuid - {} and by user organization uuid - {}", userUuid, userOrganizationUuid);
         final Mutable<List<GetUserClientOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInPersistenceSession(() -> {
+            final Organization organization = organizationService.getByUuid(userOrganizationUuid);
             final User user = userService.getByUuid(userUuid);
-            mutableResponse.setValue(user.roleOfOrganization(organizationService.getByUuid(userOrganizationUuid))
-                    .map(userOrganizationRole -> userOrganizationRole
-                            .getOrganization()
-                            .getClientOrganizations()
-                            .stream()
-                            .map(clientOrganization -> new GetUserClientOrganizationsResponseModel(
-                                    clientOrganization.getUuid(),
-                                    clientOrganization.getName(),
-                                    clientOrganization.getImageId(),
-                                    UserRoleModel.valueOf(userOrganizationRole.getUserRole().name())
-                            ))
-                            .collect(Collectors.toList())
-                    ).orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints")));
+            final List<GetUserClientOrganizationsResponseModel> response;
+            if (user.roleOfSuperAdmin().isPresent()) {
+                response = getClientsForSuperAdmin(user, organization);
+            } else {
+                response = getClientsForOrganizationAdmin(user, organization);
+            }
+            mutableResponse.setValue(response);
         });
         final List<GetUserClientOrganizationsResponseModel> response = mutableResponse.getValue();
         return new UserClientOrganizationResponse(new GetUserClientOrganizationsGridResponseModel(response.size(), response));
@@ -149,5 +146,33 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
             return Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_NOT_VALID);
         }
         return Collections.emptyList();
+    }
+
+    private List<GetUserClientOrganizationsResponseModel> getClientsForSuperAdmin(
+            final User user,
+            final Organization organization) {
+        return user.roleOfSuperAdmin()
+                .map(role -> buildClients(organization, role.getUserRole()))
+                .orElseThrow(() -> new IllegalStateException(format("Super Admin can't find the clients for organization - %s", organization.getUuid())));
+    }
+
+    private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationAdmin(
+            final User user,
+            final Organization organization) {
+        return user.roleOfOrganization(organization)
+                .map(role -> buildClients(organization, role.getUserRole()))
+                .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"));
+    }
+
+    private List<GetUserClientOrganizationsResponseModel> buildClients(final Organization organization, final UserRole role) {
+        return organization.getClientOrganizations()
+                .stream()
+                .map(clientOrganization -> new GetUserClientOrganizationsResponseModel(
+                        clientOrganization.getUuid(),
+                        clientOrganization.getName(),
+                        clientOrganization.getImageId(),
+                        UserRoleModel.valueOf(role.name())
+                ))
+                .collect(Collectors.toList());
     }
 }
