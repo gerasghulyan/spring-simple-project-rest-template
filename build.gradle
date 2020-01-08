@@ -440,6 +440,7 @@ project(":api:rest:rest-resource-executable") {
     dependencies {
         implementation project(":api:rest:rest-resource")
         runtimeOnly project(":listener:listener-impl")
+        implementation project(":migration:migration-library")
         implementation 'org.springframework.data:spring-data-jpa'
         implementation "io.springfox:springfox-swagger2"
         implementation "io.springfox:springfox-swagger-ui"

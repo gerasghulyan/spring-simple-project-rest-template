@@ -18,7 +18,10 @@ import java.util.Optional;
  * Time: 3:40 PM
  */
 @Entity
-@Table(name = "organization")
+@Table(name = "organization", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_organization_id_slug", columnNames = {"organization_slug"}),
+        @UniqueConstraint(name = "uk_organization_uuid", columnNames = {"uuid"})
+})
 public class Organization extends AbstractUuidAwareDomainEntity {
 
     @Column(name = "organization_name", nullable = false)
