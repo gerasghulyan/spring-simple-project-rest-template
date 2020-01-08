@@ -41,6 +41,7 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
                 organization.uuid,
                 UserRole.ORGANIZATION_ADMIN
         ))).andReturn(user)
+        expect(organizationLifecycleMediator.onCreated(organization))
         expect(userVerificationSenderComponent.sendVerificationEmail(SendUserVerificationRequest(request.email, request.token))).andReturn(SendUserVerificationResponse(user.uuid))
         replayAll()
         // test scenario

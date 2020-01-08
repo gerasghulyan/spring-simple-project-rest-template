@@ -3,6 +3,7 @@ package com.vntana.core.rest.resource.conf
 import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient
 import com.vntana.cache.service.organization.OrganizationCacheService
 import com.vntana.cache.service.whitelist.WhitelistIpCacheService
+import com.vntana.payment.client.customer.PaymentCustomerResourceClient
 import org.mockito.Mockito.mock
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,4 +27,8 @@ class MockingConf {
     @Bean
     @Primary
     fun whitelistIpCacheService(): WhitelistIpCacheService = mock(WhitelistIpCacheService::class.java)
+
+    @Bean
+    @Primary
+    fun customerResourceClient(): PaymentCustomerResourceClient = mock(PaymentCustomerResourceClient::class.java)
 }

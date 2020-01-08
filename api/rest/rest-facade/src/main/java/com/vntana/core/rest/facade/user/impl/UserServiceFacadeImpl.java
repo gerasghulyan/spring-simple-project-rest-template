@@ -15,6 +15,7 @@ import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponen
 import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import org.apache.commons.lang3.StringUtils;
@@ -45,13 +46,15 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final EmailValidationComponent emailValidationComponent;
     private final UserVerificationSenderComponent verificationSenderComponent;
     private final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent;
+    private final OrganizationLifecycleMediator organizationLifecycleMediator;
 
     public UserServiceFacadeImpl(final UserService userService,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService,
                                  final EmailValidationComponent emailValidationComponent,
                                  final UserVerificationSenderComponent verificationSenderComponent,
-                                 final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent) {
+                                 final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent,
+                                 final OrganizationLifecycleMediator organizationLifecycleMediator) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.organizationService = organizationService;
@@ -59,6 +62,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         this.emailValidationComponent = emailValidationComponent;
         this.verificationSenderComponent = verificationSenderComponent;
         this.resetPasswordEmailSenderComponent = resetPasswordEmailSenderComponent;
+        this.organizationLifecycleMediator = organizationLifecycleMediator;
     }
 
     @Override
@@ -84,6 +88,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN
             ));
+            organizationLifecycleMediator.onCreated(organization);
             mutableResponse.setValue(new CreateUserResponseModel(user.getUuid(), organization.getUuid()));
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });

@@ -4,6 +4,9 @@ import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.rest.resource.user.AbstractUserWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 
 /**
  * Created by Arthur Asatryan.
@@ -30,11 +33,13 @@ class UserCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test create`() {
-        val createRequest = resourceHelper.buildCreateUserRequest()
-        val response = userResourceClient.createUser(createRequest)
+        val email = resourceHelper.email()
+        val response = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(email = email))
         resourceHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isNotEmpty()
         assertThat(response.response().organizationUuid).isNotEmpty()
+        verify(customerResourceClient, times(1))
+                .create(ArgumentMatchers.argThat { request -> request.email == email })
     }
 
     @Test

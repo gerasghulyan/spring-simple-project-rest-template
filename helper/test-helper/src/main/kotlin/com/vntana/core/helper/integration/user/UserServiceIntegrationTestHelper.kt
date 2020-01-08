@@ -22,14 +22,17 @@ class UserServiceIntegrationTestHelper : UserCommonTestHelper() {
     @Autowired
     private lateinit var userService: UserService
 
-    fun persistUser(
-            organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
-            dto: CreateUserDto = buildUserCreateDto(organizationUuid = organizationUuid)
-    ): User = userService.create(dto)
+    fun persistUser(organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
+                    fullName: String? = uuid(),
+                    email: String? = uuid()): User {
+        val dto: CreateUserDto = buildUserCreateDto(organizationUuid = organizationUuid, fullName = fullName, email = email)
+        return userService.create(dto)
+    }
 
     fun persistVerifiedUser(organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
-                            dto: CreateUserDto = buildUserCreateDto(organizationUuid = organizationUuid)): User {
-        val user = persistUser(organizationUuid, dto)
+                            fullName: String? = uuid(),
+                            email: String? = uuid()): User {
+        val user = persistUser(organizationUuid, fullName, email)
         return userService.makeVerified(user.email)
     }
 }

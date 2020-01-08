@@ -1,10 +1,8 @@
 package com.vntana.core.helper.integration.organization
 
-import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.service.organization.OrganizationService
-import com.vntana.core.service.organization.dto.CreateOrganizationDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -18,5 +16,14 @@ class OrganizationIntegrationTestHelper : OrganizationCommonTestHelper() {
     @Autowired
     private lateinit var organizationService: OrganizationService
 
-    fun persistOrganization(dto: CreateOrganizationDto = buildCreateOrganizationDto()): Organization = organizationService.create(dto)
+    fun persistOrganization(name: String? = uuid(),
+                            slug: String? = uuid(),
+                            imageId: String? = uuid()): Organization {
+        val dto = buildCreateOrganizationDto(
+                name = name,
+                slug = slug,
+                imageId = imageId
+        )
+        return organizationService.create(dto)
+    }
 }
