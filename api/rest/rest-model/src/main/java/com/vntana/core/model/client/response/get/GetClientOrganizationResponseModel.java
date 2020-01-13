@@ -25,14 +25,27 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
     @JsonProperty("clientSlug")
     private String clientSlug;
 
+    @JsonProperty("clientName")
+    private String clientName;
+
+    @JsonProperty("imageId")
+    private String imageId;
+
     public GetClientOrganizationResponseModel() {
     }
 
-    public GetClientOrganizationResponseModel(final String organizationUuid, final String organizationSlug, final String clientUuid, final String clientSlug) {
+    public GetClientOrganizationResponseModel(final String organizationUuid,
+                                              final String organizationSlug,
+                                              final String clientUuid,
+                                              final String clientSlug,
+                                              final String clientName,
+                                              final String imageId) {
         this.organizationUuid = organizationUuid;
         this.organizationSlug = organizationSlug;
         this.clientUuid = clientUuid;
         this.clientSlug = clientSlug;
+        this.clientName = clientName;
+        this.imageId = imageId;
     }
 
     @Override
@@ -102,5 +115,21 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
 
     public void setClientSlug(final String clientSlug) {
         this.clientSlug = clientSlug;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(final String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
     }
 }

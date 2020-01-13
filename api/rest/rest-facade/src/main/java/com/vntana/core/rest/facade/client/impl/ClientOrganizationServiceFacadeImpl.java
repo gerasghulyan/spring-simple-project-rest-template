@@ -136,7 +136,9 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 client.getOrganization().getUuid(),
                 client.getOrganization().getSlug(),
                 client.getUuid(),
-                client.getSlug()
+                client.getSlug(),
+                client.getName(),
+                client.getImageId()
         );
         return new GetClientOrganizationResultResponse(response);
     }
