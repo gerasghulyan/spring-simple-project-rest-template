@@ -4,6 +4,7 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -31,4 +32,7 @@ public interface ClientOrganizationResourceClient {
 
     @GetMapping(path = "/{uuid}")
     GetClientOrganizationResultResponse getByUuid(@PathVariable("uuid") final String uuid);
+
+    @GetMapping(path = "/organizations/{organizationUuid}/clients/{slug}")
+    GetClientOrganizationBySlugResultResponse getBySlug(@PathVariable("organizationUuid") final String organizationUuid, @PathVariable("slug") final String slug);
 }

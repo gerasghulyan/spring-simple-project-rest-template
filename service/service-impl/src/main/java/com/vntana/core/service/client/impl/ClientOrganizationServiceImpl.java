@@ -64,7 +64,7 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
     public Optional<ClientOrganization> findBySlugAndOrganization(final String slug, final String organizationUuid) {
         Assert.hasText(slug, "The client organization slug should not be null");
         Assert.hasText(organizationUuid, "The client organization uuid should not be null");
-        LOGGER.debug("Trying to find client organization for slug - {}", slug);
+        LOGGER.debug("Trying to find client organization for a slug - {}", slug);
         return clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organizationUuid);
     }
 
@@ -72,8 +72,8 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
     @Override
     public ClientOrganization getByUuid(final String uuid) {
         return findByUuid(uuid).orElseThrow(() -> {
-            LOGGER.error("Can not find client for uuid - {}", uuid);
-            return new IllegalStateException(format("Can not find client for uuid - %s", uuid));
+            LOGGER.error("Cannot find client for uuid - {}", uuid);
+            return new IllegalStateException(format("Cannot find client for uuid - %s", uuid));
         });
     }
 

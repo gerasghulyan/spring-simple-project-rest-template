@@ -35,6 +35,6 @@ class OrganizationCreateWebTest : AbstractOrganizationWebTest() {
         val response = organizationResourceClient.create(request)
         assertThat(response.success()).isTrue()
         assertThat(response.response().uuid).isNotBlank()
-        Mockito.verify(customerResourceClient, times(2)).create(argThat { request -> request.email == email })
+        Mockito.verify(customerResourceClient, times(2)).create(argThat { inRequest -> inRequest.email == email })
     }
 }

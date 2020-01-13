@@ -10,6 +10,7 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResponseModel;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
@@ -23,6 +24,7 @@ import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import ma.glasnost.orika.MapperFacade;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -80,7 +82,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
         while (clientOrganizationService.findBySlugAndOrganization(mutableSlug.getValue(), request.getOrganizationUuid()).isPresent()) {
-            LOGGER.debug("Client organization with slug - {} and organization - {} already exists, trying to generate suggested one",
+            LOGGER.debug("Client organization with a slug - {} and organization - {} already exists, trying to generate suggested one",
                     mutableSlug.getValue(), request.getOrganizationUuid());
             mutableSlug.setValue(format("%s%d", request.getSlug(), mutableInt.getAndIncrement()));
         }
@@ -96,7 +98,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         }
         return clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
                 .map(clientOrganization -> {
-                    LOGGER.debug("Client organization already exists for slug - {}", request.getSlug());
+                    LOGGER.debug("Client organization already exists for a slug - {}", request.getSlug());
                     return new CreateClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS));
                 })
                 .orElseGet(() -> {
@@ -129,6 +131,9 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     @Transactional(readOnly = true)
     @Override
     public GetClientOrganizationResultResponse getByUuid(final String uuid) {
+        if (StringUtils.isBlank(uuid)) {
+            return new GetClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.MISSING_UUID));
+        }
         LOGGER.debug("Retrieving client organization by uuid - {}", uuid);
         final ClientOrganization client = clientOrganizationService.getByUuid(uuid);
         LOGGER.debug("Successfully retrieved client organization with result - {}", client);
@@ -141,6 +146,32 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 client.getImageId()
         );
         return new GetClientOrganizationResultResponse(response);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetClientOrganizationBySlugResultResponse getBySlug(final String organizationUuid, final String slug) {
+        if (StringUtils.isBlank(organizationUuid)) {
+            return new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID));
+        }
+        if (StringUtils.isBlank(slug)) {
+            return new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.MISSING_SLUG));
+        }
+        LOGGER.debug("Retrieving client organization by organizationUuid - {} and slug - {}", organizationUuid, slug);
+        return clientOrganizationService.findBySlugAndOrganization(slug, organizationUuid)
+                .map(client -> {
+                    LOGGER.debug("Successfully retrieved client organization with result - {}", client);
+                    return new GetClientOrganizationBySlugResultResponse(
+                            new GetClientOrganizationResponseModel(
+                                    client.getOrganization().getUuid(),
+                                    client.getOrganization().getSlug(),
+                                    client.getUuid(),
+                                    client.getSlug(),
+                                    client.getName(),
+                                    client.getImageId()
+                            ));
+                })
+                .orElseGet(() -> new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND)));
     }
 
     private List<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {

@@ -4,6 +4,7 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
@@ -61,6 +62,16 @@ public class ClientOrganizationResource {
     public ResponseEntity<GetClientOrganizationResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
         LOGGER.debug("Retrieving client organization by uuid - {}", uuid);
         final GetClientOrganizationResultResponse response = clientOrganizationServiceFacade.getByUuid(uuid);
+        LOGGER.debug("Successfully retrieved client organization with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/organizations/{organizationUuid}/clients/{slug}")
+    public ResponseEntity<GetClientOrganizationBySlugResultResponse> getBySlug(
+            @PathVariable("organizationUuid") final String organizationUuid,
+            @PathVariable("slug") final String slug) {
+        LOGGER.debug("Retrieving client organizationUuid - {} and client slug - {}", organizationUuid, slug);
+        final GetClientOrganizationBySlugResultResponse response = clientOrganizationServiceFacade.getBySlug(organizationUuid, slug);
         LOGGER.debug("Successfully retrieved client organization with response - {}", response);
         return ResponseEntity.ok(response);
     }

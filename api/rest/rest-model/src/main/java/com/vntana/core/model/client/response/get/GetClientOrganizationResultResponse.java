@@ -21,5 +21,4 @@ public class GetClientOrganizationResultResponse extends AbstractResultResponseM
     public GetClientOrganizationResultResponse(final GetClientOrganizationResponseModel response) {
         super(response);
     }
-
 }
