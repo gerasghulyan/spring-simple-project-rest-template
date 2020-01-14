@@ -4,6 +4,7 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.get.GetAllOrganizationsResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
@@ -73,6 +74,13 @@ public class ClientOrganizationResource {
         LOGGER.debug("Retrieving client organizationUuid - {} and client slug - {}", organizationUuid, slug);
         final GetClientOrganizationBySlugResultResponse response = clientOrganizationServiceFacade.getBySlug(organizationUuid, slug);
         LOGGER.debug("Successfully retrieved client organization with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/")
+    public ResponseEntity<GetAllOrganizationsResultResponse> getAll() {
+        final GetAllOrganizationsResultResponse response = clientOrganizationServiceFacade.getAll();
+        LOGGER.debug("Successfully retrieved all client organizations with response - {}", response);
         return ResponseEntity.ok(response);
     }
 }

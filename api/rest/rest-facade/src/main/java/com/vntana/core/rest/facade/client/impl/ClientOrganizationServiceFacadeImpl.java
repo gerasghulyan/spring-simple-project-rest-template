@@ -10,9 +10,7 @@ import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlug
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
-import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
-import com.vntana.core.model.client.response.get.GetClientOrganizationResponseModel;
-import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.get.*;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.model.user.response.model.GetUserClientOrganizationsGridResponseModel;
 import com.vntana.core.model.user.response.model.GetUserClientOrganizationsResponseModel;
@@ -172,6 +170,21 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                             ));
                 })
                 .orElseGet(() -> new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND)));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetAllOrganizationsResultResponse getAll() {
+        final List<GetAllOrganizationsResponseModel> responseModels = organizationService.getAll().stream()
+                .flatMap(organization -> organization.getClientOrganizations().stream())
+                .map(clientOrganization -> new GetAllOrganizationsResponseModel(
+                        clientOrganization.getOrganization().getUuid(),
+                        clientOrganization.getOrganization().getName(),
+                        clientOrganization.getUuid(),
+                        clientOrganization.getName()
+                ))
+                .collect(Collectors.toList());
+        return new GetAllOrganizationsResultResponse(responseModels.size(), responseModels);
     }
 
     private List<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
