@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by Geras Ghulyan
  * Date: 10/9/19
@@ -31,21 +33,27 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
     @JsonProperty("imageId")
     private String imageId;
 
+    @JsonProperty("created")
+    private LocalDateTime created;
+
     public GetClientOrganizationResponseModel() {
     }
 
-    public GetClientOrganizationResponseModel(final String organizationUuid,
-                                              final String organizationSlug,
-                                              final String clientUuid,
-                                              final String clientSlug,
-                                              final String clientName,
-                                              final String imageId) {
+    public GetClientOrganizationResponseModel(
+            final String organizationUuid,
+            final String organizationSlug,
+            final String clientUuid,
+            final String clientSlug,
+            final String clientName,
+            final String imageId,
+            final LocalDateTime created) {
         this.organizationUuid = organizationUuid;
         this.organizationSlug = organizationSlug;
         this.clientUuid = clientUuid;
         this.clientSlug = clientSlug;
         this.clientName = clientName;
         this.imageId = imageId;
+        this.created = created;
     }
 
     @Override
@@ -62,6 +70,7 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append(organizationSlug, that.organizationSlug)
                 .append(clientUuid, that.clientUuid)
                 .append(clientSlug, that.clientSlug)
+                .append(created, that.created)
                 .isEquals();
     }
 
@@ -72,6 +81,7 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append(organizationSlug)
                 .append(clientUuid)
                 .append(clientSlug)
+                .append(created)
                 .toHashCode();
     }
 
@@ -82,6 +92,7 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append("organizationSlug", organizationSlug)
                 .append("clientUuid", clientUuid)
                 .append("clientSlug", clientSlug)
+                .append("created", created)
                 .toString();
     }
 
@@ -131,5 +142,13 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
 
     public void setImageId(final String imageId) {
         this.imageId = imageId;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(final LocalDateTime created) {
+        this.created = created;
     }
 }

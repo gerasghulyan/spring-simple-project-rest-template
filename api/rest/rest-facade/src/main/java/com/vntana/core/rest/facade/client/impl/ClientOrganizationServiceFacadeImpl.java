@@ -141,7 +141,8 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 client.getUuid(),
                 client.getSlug(),
                 client.getName(),
-                client.getImageId()
+                client.getImageId(),
+                client.getCreated()
         );
         return new GetClientOrganizationResultResponse(response);
     }
@@ -166,7 +167,8 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                                     client.getUuid(),
                                     client.getSlug(),
                                     client.getName(),
-                                    client.getImageId()
+                                    client.getImageId(),
+                                    client.getCreated()
                             ));
                 })
                 .orElseGet(() -> new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND)));
