@@ -36,9 +36,11 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
             assertThat(it.response().totalCount()).isEqualTo(1)
             val organizationClientOrganization = it.response().items()[0]
             assertThat(organizationClientOrganization.name).isEqualTo(clientOrganization.name)
+            assertThat(organizationClientOrganization.slug).isEqualTo(clientOrganization.slug)
             assertThat(organizationClientOrganization.uuid).isEqualTo(clientOrganization.uuid)
             assertThat(organizationClientOrganization.imageId).isEqualTo(clientOrganization.imageId)
             assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(organizationClientOrganization.created).isEqualTo(clientOrganization.created)
         }
         verifyAll()
     }

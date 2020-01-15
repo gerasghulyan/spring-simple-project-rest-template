@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by Manuk Gharslyan.
  * Date: 11/11/2019
@@ -17,6 +19,9 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
     @JsonProperty("uuid")
     private String uuid;
 
+    @JsonProperty("slug")
+    private String slug;
+
     @JsonProperty("name")
     private String name;
 
@@ -26,18 +31,20 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
     @JsonProperty("role")
     private UserRoleModel role;
 
+    @JsonProperty("created")
+    private LocalDateTime created;
+
     public GetUserClientOrganizationsResponseModel() {
         super();
     }
 
-    public GetUserClientOrganizationsResponseModel(final String uuid,
-                                                   final String name,
-                                                   final String imageId,
-                                                   final UserRoleModel role) {
+    public GetUserClientOrganizationsResponseModel(final String uuid, final String slug, final String name, final String imageId, final UserRoleModel role, final LocalDateTime created) {
         this.uuid = uuid;
+        this.slug = slug;
         this.name = name;
         this.imageId = imageId;
         this.role = role;
+        this.created = created;
     }
 
     @Override
@@ -51,9 +58,11 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
         final GetUserClientOrganizationsResponseModel that = (GetUserClientOrganizationsResponseModel) o;
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
+                .append(slug, that.slug)
                 .append(name, that.name)
                 .append(imageId, that.imageId)
                 .append(role, that.role)
+                .append(created, that.created)
                 .isEquals();
     }
 
@@ -61,9 +70,11 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(uuid)
+                .append(slug)
                 .append(name)
                 .append(imageId)
                 .append(role)
+                .append(created)
                 .toHashCode();
     }
 
@@ -71,9 +82,11 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("uuid", uuid)
+                .append("slug", slug)
                 .append("name", name)
                 .append("imageId", imageId)
                 .append("role", role)
+                .append("created", created)
                 .toString();
     }
 
@@ -83,6 +96,14 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
 
     public void setUuid(final String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(final String slug) {
+        this.slug = slug;
     }
 
     public String getName() {
@@ -107,5 +128,13 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
 
     public void setRole(final UserRoleModel role) {
         this.role = role;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(final LocalDateTime created) {
+        this.created = created;
     }
 }

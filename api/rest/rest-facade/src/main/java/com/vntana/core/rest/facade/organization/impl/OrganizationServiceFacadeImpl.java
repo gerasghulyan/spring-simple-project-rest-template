@@ -200,17 +200,21 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                             final UserOrganizationRole userOrganizationRole = (UserOrganizationRole) userRole;
                             return new GetUserOrganizationsResponseModel(
                                     userOrganizationRole.getOrganization().getUuid(),
+                                    userOrganizationRole.getOrganization().getSlug(),
                                     userOrganizationRole.getOrganization().getName(),
                                     UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()),
-                                    userOrganizationRole.getOrganization().getImageId()
+                                    userOrganizationRole.getOrganization().getImageId(),
+                                    userOrganizationRole.getOrganization().getCreated()
                             );
                         case CLIENT_ROLE:
                             final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
                             return new GetUserOrganizationsResponseModel(
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),
+                                    userClientOrganizationRole.getClientOrganization().getOrganization().getSlug(),
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getName(),
                                     UserRoleModel.valueOf(userClientOrganizationRole.getUserRole().name()),
-                                    userClientOrganizationRole.getClientOrganization().getOrganization().getImageId()
+                                    userClientOrganizationRole.getClientOrganization().getOrganization().getImageId(),
+                                    userClientOrganizationRole.getClientOrganization().getOrganization().getCreated()
                             );
                         default:
                             throw new IllegalStateException(format("Unknown user role %s", userRole.toString()));
@@ -224,9 +228,11 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         return organizationService.getAll().stream()
                 .map(organization -> new GetUserOrganizationsResponseModel(
                         organization.getUuid(),
+                        organization.getSlug(),
                         organization.getName(),
                         UserRoleModel.SUPER_ADMIN,
-                        organization.getImageId()
+                        organization.getImageId(),
+                        organization.getCreated()
                 ))
                 .collect(Collectors.toList());
     }

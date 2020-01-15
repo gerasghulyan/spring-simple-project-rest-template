@@ -27,17 +27,19 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         expect(persistenceUtilityService.runInNewTransaction(EasyMock.isA(Executable::class.java)))
                 .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
         expect(userService.getByUuid(user.uuid)).andReturn(user)
-        expect(organizationService.getAll()).andReturn(listOf(organization, organization2))
+        expect(organizationService.all).andReturn(listOf(organization, organization2))
         replayAll()
         // test scenario
         organizationServiceFacade.getUserOrganizations(user.uuid).let {
             assertThat(it.response().totalCount()).isEqualTo(2)
             assertThat(it.response().items()[0].uuid).isEqualTo(organization.uuid)
+            assertThat(it.response().items()[0].slug).isEqualTo(organization.slug)
             assertThat(it.response().items()[0].name).isEqualTo(organization.name)
             assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.SUPER_ADMIN)
             assertThat(it.response().items()[1].uuid).isEqualTo(organization2.uuid)
             assertThat(it.response().items()[1].name).isEqualTo(organization2.name)
             assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.SUPER_ADMIN)
+            assertThat(it.response().items()[0].created).isEqualTo(organization.created)
         }
         verifyAll()
     }

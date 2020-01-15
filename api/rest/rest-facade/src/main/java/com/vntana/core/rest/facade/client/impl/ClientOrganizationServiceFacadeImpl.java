@@ -215,9 +215,11 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 .stream()
                 .map(clientOrganization -> new GetUserClientOrganizationsResponseModel(
                         clientOrganization.getUuid(),
+                        clientOrganization.getSlug(),
                         clientOrganization.getName(),
                         clientOrganization.getImageId(),
-                        UserRoleModel.valueOf(role.name())
+                        UserRoleModel.valueOf(role.name()),
+                        clientOrganization.getCreated()
                 ))
                 .collect(Collectors.toList());
     }
