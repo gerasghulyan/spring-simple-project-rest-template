@@ -2,8 +2,10 @@ package com.vntana.core.rest.resource.client;
 
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
+import com.vntana.core.model.client.request.UpdateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.UpdateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.get.GetAllOrganizationsResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
@@ -42,7 +44,7 @@ public class ClientOrganizationResource {
         return ResponseEntity.ok(resultResponse);
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping
     public ResponseEntity<CreateClientOrganizationResultResponse> create(@RequestBody final CreateClientOrganizationRequest request) {
         LOGGER.debug("Creating client organization for request - {}", request);
         final CreateClientOrganizationResultResponse resultResponse = clientOrganizationServiceFacade.create(request);
@@ -82,5 +84,13 @@ public class ClientOrganizationResource {
         final GetAllOrganizationsResultResponse response = clientOrganizationServiceFacade.getAll();
         LOGGER.debug("Successfully retrieved all client organizations with response - {}", response);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<UpdateClientOrganizationResultResponse> update(@RequestBody final UpdateClientOrganizationRequest request) {
+        LOGGER.debug("Updating client organization for request - {}", request);
+        final UpdateClientOrganizationResultResponse resultResponse = clientOrganizationServiceFacade.update(request);
+        LOGGER.debug("Successfully updated client organization with response - {}", resultResponse);
+        return ResponseEntity.ok(resultResponse);
     }
 }

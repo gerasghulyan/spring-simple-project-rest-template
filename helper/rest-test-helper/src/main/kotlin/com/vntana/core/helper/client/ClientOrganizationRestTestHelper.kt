@@ -3,6 +3,7 @@ package com.vntana.core.helper.client
 import com.vntana.core.helper.AbstractRestTestHelper
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest
+import com.vntana.core.model.client.request.UpdateClientOrganizationRequest
 
 /**
  * Created by Arthur Asatryan.
@@ -21,4 +22,11 @@ open class ClientOrganizationRestTestHelper : AbstractRestTestHelper() {
             slug: String? = uuid(),
             imageId: String? = uuid()
     ): CreateClientOrganizationRequest = CreateClientOrganizationRequest(organizationUuid, name, slug, imageId)
+
+    fun buildUpdateClientOrganizationRequest(
+            uuid: String? = uuid(),
+            name: String? = uuid(),
+            slug: String? = uuid(),
+            imageId: String? = uuid()
+    ): UpdateClientOrganizationRequest = UpdateClientOrganizationRequest(uuid, name, slug, imageId)
 }

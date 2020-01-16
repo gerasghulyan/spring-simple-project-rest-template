@@ -93,4 +93,20 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     public Organization getOrganization() {
         return organization;
     }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public void setSlug(final String slug) {
+        this.slug = slug;
+    }
+
+    public void setOrganization(final Organization organization) {
+        this.organization = organization;
+    }
+
+    public void setImageId(final String imageId) {
+        this.imageId = imageId;
+    }
 }
