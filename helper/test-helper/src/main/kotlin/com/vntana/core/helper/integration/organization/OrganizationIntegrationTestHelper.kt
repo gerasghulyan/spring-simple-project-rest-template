@@ -13,12 +13,14 @@ import org.springframework.stereotype.Component
  */
 @Component
 class OrganizationIntegrationTestHelper : OrganizationCommonTestHelper() {
+
     @Autowired
     private lateinit var organizationService: OrganizationService
 
-    fun persistOrganization(name: String? = uuid(),
-                            slug: String? = uuid(),
-                            imageId: String? = uuid()): Organization {
+    fun persistOrganization(
+            name: String? = uuid(),
+            slug: String? = uuid(),
+            imageId: String? = uuid()): Organization {
         val dto = buildCreateOrganizationDto(
                 name = name,
                 slug = slug,

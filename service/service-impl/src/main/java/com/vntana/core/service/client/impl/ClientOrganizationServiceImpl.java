@@ -5,6 +5,7 @@ import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.persistence.client.ClientOrganizationRepository;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
+import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import org.slf4j.Logger;
@@ -77,6 +78,17 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         });
     }
 
+    @Override
+    public ClientOrganization update(final UpdateClientOrganizationDto dto) {
+        assertUpdateClientOrganizationDto(dto);
+        final ClientOrganization clientOrganization = getByUuid(dto.getUuid());
+        updateAssertSlugAndOrganization(clientOrganization, dto.getSlug());
+        clientOrganization.setName(dto.getName());
+        clientOrganization.setSlug(dto.getSlug());
+        clientOrganization.setImageId(dto.getImageId());
+        return clientOrganizationRepository.save(clientOrganization);
+    }
+
     private void assertCreateClientOrganizationDto(final CreateClientOrganizationDto dto) {
         Assert.notNull(dto, "The CreateClientOrganizationDto should not be null");
         Assert.hasText(dto.getName(), "The client name should contain text");
@@ -89,5 +101,22 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
             LOGGER.error("Client with slug - {} already exists", slug);
             throw new IllegalStateException(format("Client with slug - %s already exists", slug));
         });
+    }
+
+    private void assertUpdateClientOrganizationDto(final UpdateClientOrganizationDto dto) {
+        Assert.notNull(dto, "The UpdateClientOrganizationDto should not be null");
+        Assert.hasText(dto.getUuid(), "The client uuid should contain text");
+        Assert.hasText(dto.getName(), "The client name should contain text");
+        Assert.hasText(dto.getSlug(), "The client slug should contain text");
+    }
+
+    private void updateAssertSlugAndOrganization(final ClientOrganization clientOrganization, final String slug) {
+        Assert.isTrue(slugValidationComponent.validate(slug), "The slug must be valid");
+        findBySlugAndOrganization(slug, clientOrganization.getOrganization().getUuid())
+                .filter(it -> !it.getUuid().equals(clientOrganization.getUuid()))
+                .ifPresent(it -> {
+                    LOGGER.error("Client with slug - {} already exists", slug);
+                    throw new IllegalStateException(format("Client with slug - %s already exists", slug));
+                });
     }
 }

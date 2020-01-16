@@ -2,6 +2,7 @@ package com.vntana.core.service.client;
 
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
+import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 
 import java.util.Optional;
 
@@ -18,4 +19,6 @@ public interface ClientOrganizationService {
     Optional<ClientOrganization> findBySlugAndOrganization(final String slug, final String organizationUuid);
 
     ClientOrganization getByUuid(final String uuid);
+
+    ClientOrganization update(final UpdateClientOrganizationDto dto);
 }

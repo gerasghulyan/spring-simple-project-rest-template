@@ -8,8 +8,10 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
+import com.vntana.core.model.client.request.UpdateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.UpdateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.get.*;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.model.user.response.model.GetUserClientOrganizationsGridResponseModel;
@@ -18,6 +20,7 @@ import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
+import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -34,6 +37,7 @@ import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -189,7 +193,40 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return new GetAllOrganizationsResultResponse(responseModels.size(), responseModels);
     }
 
+    @Transactional
+    @Override
+    public UpdateClientOrganizationResultResponse update(final UpdateClientOrganizationRequest request) {
+        final List<ClientOrganizationErrorResponseModel> possibleSlugErrors = validateSlugErrors(request.getSlug());
+        if (!possibleSlugErrors.isEmpty()) {
+            return new UpdateClientOrganizationResultResponse(possibleSlugErrors);
+        }
+        final ClientOrganization clientOrganization = clientOrganizationService.getByUuid(request.getUuid());
+        final Optional<ClientOrganization> clientOrganizationOptional = clientOrganizationService.findBySlugAndOrganization(
+                request.getSlug(),
+                clientOrganization.getOrganization().getUuid()
+        );
+        if (!clientOrganizationOptional.isPresent()) {
+            return doUpdateRequest(request, clientOrganization);
+        } else {
+            return clientOrganizationOptional
+                    .filter(it -> it.getUuid().equals(clientOrganization.getUuid()))
+                    .map(it -> doUpdateRequest(request, clientOrganization))
+                    .orElseGet(() -> {
+                        LOGGER.debug("Client organization already exists for a slug - {}", request.getSlug());
+                        return new UpdateClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS));
+                    });
+        }
+    }
+
+    private UpdateClientOrganizationResultResponse doUpdateRequest(final UpdateClientOrganizationRequest request, final ClientOrganization clientOrganization) {
+        LOGGER.debug("Updating client organization for request - {}", request);
+        final UpdateClientOrganizationDto dto = mapperFacade.map(request, UpdateClientOrganizationDto.class);
+        clientOrganizationService.update(dto);
+        return new UpdateClientOrganizationResultResponse(clientOrganization.getUuid());
+    }
+
     private List<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
+        LOGGER.debug("Validating client slug for slug - {}", slug);
         if (!slugValidationComponent.validate(slug)) {
             return Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_NOT_VALID);
         }

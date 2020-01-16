@@ -2,8 +2,10 @@ package com.vntana.core.rest.facade.client;
 
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
+import com.vntana.core.model.client.request.UpdateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
+import com.vntana.core.model.client.response.UpdateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.get.GetAllOrganizationsResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
@@ -26,4 +28,6 @@ public interface ClientOrganizationServiceFacade {
     GetClientOrganizationBySlugResultResponse getBySlug(final String organizationUuid, final String slug);
 
     GetAllOrganizationsResultResponse getAll();
+
+    UpdateClientOrganizationResultResponse update(final UpdateClientOrganizationRequest request);
 }
