@@ -123,5 +123,22 @@ pipeline {
                 )
             }
         }
+        stage("DeployACC") {
+            when {
+                 expression {
+                    return env.BRANCH_NAME == 'release'
+                }
+            }
+            steps {
+                build(
+                    job: 'DeployACC/master',
+                    parameters: [
+                        booleanParam(name: "core", value: true)
+                    ],
+                    propagate: 'true',
+                    wait: 'false'
+                )
+            }
+        }
     }
 }
