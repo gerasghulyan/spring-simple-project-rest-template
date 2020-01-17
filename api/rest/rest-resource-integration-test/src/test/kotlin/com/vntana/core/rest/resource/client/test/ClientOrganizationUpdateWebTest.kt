@@ -22,14 +22,6 @@ class ClientOrganizationUpdateWebTest : AbstractClientOrganizationWebTest() {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_UUID)
 
         }
-        clientOrganizationResourceClient.update(clientOrganizationResourceTestHelper.buildUpdateClientOrganizationRequest(slug = null)).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_SLUG)
-
-        }
-        clientOrganizationResourceClient.update(clientOrganizationResourceTestHelper.buildUpdateClientOrganizationRequest(slug = "")).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_SLUG)
-
-        }
         clientOrganizationResourceClient.update(clientOrganizationResourceTestHelper.buildUpdateClientOrganizationRequest(name = null)).let {
             assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.MISSING_NAME)
         }
@@ -39,24 +31,11 @@ class ClientOrganizationUpdateWebTest : AbstractClientOrganizationWebTest() {
     }
 
     @Test
-    fun `test when slug name already exists for same organization`() {
-        val slugName = uuid()
-        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val clientOrganization1Uuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid).response().uuid
-        clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid, slug = slugName).response().uuid
-        val request = clientOrganizationResourceTestHelper.buildUpdateClientOrganizationRequest(uuid = clientOrganization1Uuid, slug = slugName)
-        clientOrganizationResourceClient.update(request).let {
-            assertBasicErrorResultResponse(it, ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS)
-        }
-    }
-
-    @Test
     fun test() {
-        val slugName = uuid()
-        clientOrganizationResourceTestHelper.persistClientOrganization(slug = slugName)
+        clientOrganizationResourceTestHelper.persistClientOrganization()
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val clientOrganizationUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid).response().uuid
-        val request = clientOrganizationResourceTestHelper.buildUpdateClientOrganizationRequest(uuid = clientOrganizationUuid, slug = slugName)
+        val request = clientOrganizationResourceTestHelper.buildUpdateClientOrganizationRequest(uuid = clientOrganizationUuid)
         val response = clientOrganizationResourceClient.update(request)
         clientOrganizationResourceTestHelper.assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isNotBlank()

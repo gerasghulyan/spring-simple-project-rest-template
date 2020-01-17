@@ -26,7 +26,6 @@ open class ClientOrganizationRestTestHelper : AbstractRestTestHelper() {
     fun buildUpdateClientOrganizationRequest(
             uuid: String? = uuid(),
             name: String? = uuid(),
-            slug: String? = uuid(),
             imageId: String? = uuid()
-    ): UpdateClientOrganizationRequest = UpdateClientOrganizationRequest(uuid, name, slug, imageId)
+    ): UpdateClientOrganizationRequest = UpdateClientOrganizationRequest(uuid, name, imageId)
 }

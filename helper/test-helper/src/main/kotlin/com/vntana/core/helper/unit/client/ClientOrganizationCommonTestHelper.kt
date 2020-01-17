@@ -35,8 +35,7 @@ open class ClientOrganizationCommonTestHelper : AbstractCommonTestHelper() {
     fun buildUpdateClientOrganizationDto(
             uuid: String? = uuid(),
             name: String? = uuid(),
-            slug: String? = uuid(),
             imageId: String? = uuid()
-    ): UpdateClientOrganizationDto = UpdateClientOrganizationDto(uuid, name, slug, imageId)
+    ): UpdateClientOrganizationDto = UpdateClientOrganizationDto(uuid, name, imageId)
 
 }

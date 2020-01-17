@@ -37,7 +37,6 @@ import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -196,32 +195,10 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     @Transactional
     @Override
     public UpdateClientOrganizationResultResponse update(final UpdateClientOrganizationRequest request) {
-        final List<ClientOrganizationErrorResponseModel> possibleSlugErrors = validateSlugErrors(request.getSlug());
-        if (!possibleSlugErrors.isEmpty()) {
-            return new UpdateClientOrganizationResultResponse(possibleSlugErrors);
-        }
-        final ClientOrganization clientOrganization = clientOrganizationService.getByUuid(request.getUuid());
-        final Optional<ClientOrganization> clientOrganizationOptional = clientOrganizationService.findBySlugAndOrganization(
-                request.getSlug(),
-                clientOrganization.getOrganization().getUuid()
-        );
-        if (!clientOrganizationOptional.isPresent()) {
-            return doUpdateRequest(request, clientOrganization);
-        } else {
-            return clientOrganizationOptional
-                    .filter(it -> it.getUuid().equals(clientOrganization.getUuid()))
-                    .map(it -> doUpdateRequest(request, clientOrganization))
-                    .orElseGet(() -> {
-                        LOGGER.debug("Client organization already exists for a slug - {}", request.getSlug());
-                        return new UpdateClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS));
-                    });
-        }
-    }
-
-    private UpdateClientOrganizationResultResponse doUpdateRequest(final UpdateClientOrganizationRequest request, final ClientOrganization clientOrganization) {
         LOGGER.debug("Updating client organization for request - {}", request);
         final UpdateClientOrganizationDto dto = mapperFacade.map(request, UpdateClientOrganizationDto.class);
-        clientOrganizationService.update(dto);
+        final ClientOrganization clientOrganization = clientOrganizationService.update(dto);
+        LOGGER.debug("Successfully updated client organization for request - {}", request);
         return new UpdateClientOrganizationResultResponse(clientOrganization.getUuid());
     }
 

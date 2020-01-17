@@ -78,13 +78,12 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         });
     }
 
+    @Transactional
     @Override
     public ClientOrganization update(final UpdateClientOrganizationDto dto) {
         assertUpdateClientOrganizationDto(dto);
         final ClientOrganization clientOrganization = getByUuid(dto.getUuid());
-        updateAssertSlugAndOrganization(clientOrganization, dto.getSlug());
         clientOrganization.setName(dto.getName());
-        clientOrganization.setSlug(dto.getSlug());
         clientOrganization.setImageId(dto.getImageId());
         return clientOrganizationRepository.save(clientOrganization);
     }
@@ -107,16 +106,5 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         Assert.notNull(dto, "The UpdateClientOrganizationDto should not be null");
         Assert.hasText(dto.getUuid(), "The client uuid should contain text");
         Assert.hasText(dto.getName(), "The client name should contain text");
-        Assert.hasText(dto.getSlug(), "The client slug should contain text");
-    }
-
-    private void updateAssertSlugAndOrganization(final ClientOrganization clientOrganization, final String slug) {
-        Assert.isTrue(slugValidationComponent.validate(slug), "The slug must be valid");
-        findBySlugAndOrganization(slug, clientOrganization.getOrganization().getUuid())
-                .filter(it -> !it.getUuid().equals(clientOrganization.getUuid()))
-                .ifPresent(it -> {
-                    LOGGER.error("Client with slug - {} already exists", slug);
-                    throw new IllegalStateException(format("Client with slug - %s already exists", slug));
-                });
     }
 }

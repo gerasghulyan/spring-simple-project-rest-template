@@ -21,7 +21,6 @@ class ClientOrganizationUpdateServiceIntegrationTest : AbstractClientOrganizatio
             assertThat(it.name).isEqualTo(dto.name)
             assertThat(it.imageId).isEqualTo(dto.imageId)
             assertThat(it.organization).isEqualTo(client.organization)
-            assertThat(it.slug).isEqualTo(dto.slug)
         }
     }
 }
