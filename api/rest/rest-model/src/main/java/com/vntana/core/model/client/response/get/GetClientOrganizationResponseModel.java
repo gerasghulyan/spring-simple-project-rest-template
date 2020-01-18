@@ -36,6 +36,15 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
     @JsonProperty("created")
     private LocalDateTime created;
 
+    @JsonProperty("productsCount")
+    private Integer productsCount;
+
+    @JsonProperty("locationsCount")
+    private Integer locationsCount;
+
+    @JsonProperty("tagsCount")
+    private Integer tagsCount;
+
     public GetClientOrganizationResponseModel() {
     }
 
@@ -70,7 +79,12 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append(organizationSlug, that.organizationSlug)
                 .append(clientUuid, that.clientUuid)
                 .append(clientSlug, that.clientSlug)
+                .append(clientName, that.clientName)
+                .append(imageId, that.imageId)
                 .append(created, that.created)
+                .append(productsCount, that.productsCount)
+                .append(locationsCount, that.locationsCount)
+                .append(tagsCount, that.tagsCount)
                 .isEquals();
     }
 
@@ -81,7 +95,12 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append(organizationSlug)
                 .append(clientUuid)
                 .append(clientSlug)
+                .append(clientName)
+                .append(imageId)
                 .append(created)
+                .append(productsCount)
+                .append(locationsCount)
+                .append(tagsCount)
                 .toHashCode();
     }
 
@@ -92,7 +111,12 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append("organizationSlug", organizationSlug)
                 .append("clientUuid", clientUuid)
                 .append("clientSlug", clientSlug)
+                .append("clientName", clientName)
+                .append("imageId", imageId)
                 .append("created", created)
+                .append("productsCount", productsCount)
+                .append("locationsCount", locationsCount)
+                .append("tagsCount", tagsCount)
                 .toString();
     }
 
@@ -150,5 +174,29 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
 
     public void setCreated(final LocalDateTime created) {
         this.created = created;
+    }
+
+    public Integer getProductsCount() {
+        return productsCount;
+    }
+
+    public void setProductsCount(final Integer productsCount) {
+        this.productsCount = productsCount;
+    }
+
+    public Integer getLocationsCount() {
+        return locationsCount;
+    }
+
+    public void setLocationsCount(final Integer locationsCount) {
+        this.locationsCount = locationsCount;
+    }
+
+    public Integer getTagsCount() {
+        return tagsCount;
+    }
+
+    public void setTagsCount(final Integer tagsCount) {
+        this.tagsCount = tagsCount;
     }
 }
