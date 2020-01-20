@@ -44,7 +44,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization create(final CreateOrganizationDto dto) {
         assertCreateOrganizationDto(dto);
         assertSlug(dto.getSlug());
-        return organizationRepository.save(new Organization(dto.getName(), dto.getSlug(), dto.getImageId()));
+        return organizationRepository.save(new Organization(dto.getName(), dto.getSlug(), dto.getImageBlobId()));
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Assert.notNull(dto, "The UpdateOrganizationDto should not be null");
         LOGGER.debug("Updating organization for dto - {}", dto);
         final Organization organization = getByUuid(dto.getUuid());
-        organization.setImageId(dto.getImageId());
+        organization.setImageBlobId(dto.getImageBlobId());
         organization.setName(dto.getName());
         organizationRepository.save(organization);
         LOGGER.debug("Successfully updating organization for dto - {}", dto);

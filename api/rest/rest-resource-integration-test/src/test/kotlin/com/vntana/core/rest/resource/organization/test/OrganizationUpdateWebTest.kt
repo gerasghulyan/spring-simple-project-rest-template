@@ -38,21 +38,21 @@ class OrganizationUpdateWebTest : AbstractOrganizationWebTest() {
     @Test
     fun test() {
         val newName = uuid()
-        val newImageId = uuid()
+        val newImageBlobId = uuid()
         val slugName = uuid()
         val organizationUuid = resourceTestHelper.persistOrganization(
                 slug = slugName,
-                imageId = null
+                imageBlobId = null
         ).response().uuid
 
         organizationResourceClient.update(
-                resourceTestHelper.buildUpdateOrganizationRequest(uuid = organizationUuid, name = newName, imageId = newImageId)
+                resourceTestHelper.buildUpdateOrganizationRequest(uuid = organizationUuid, name = newName, imageBlobId = newImageBlobId)
         ).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().uuid).isEqualTo(organizationUuid)
             organizationResourceClient.getByUuid(organizationUuid).let {
                 assertThat(it.response().name).isEqualTo(newName)
-                assertThat(it.response().imageId).isEqualTo(newImageId)
+                assertThat(it.response().imageBlobId).isEqualTo(newImageBlobId)
                 assertThat(it.response().slug).isEqualTo(slugName)
             }
         }

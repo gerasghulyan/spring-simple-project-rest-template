@@ -15,28 +15,28 @@ class OrganizationGetBySlugWebTest : AbstractOrganizationWebTest() {
     fun `test getBySlug`() {
         val slug = uuid()
         val name = uuid()
-        val imageId = uuid()
+        val imageBlobId = uuid()
         val uuid = resourceTestHelper
-                .persistOrganization(slug = slug, name = name, imageId = imageId).response().uuid
+                .persistOrganization(slug = slug, name = name, imageBlobId = imageBlobId).response().uuid
         val response = organizationResourceClient.getBySlug(slug)
         assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isEqualTo(uuid)
         assertThat(response.response().name).isEqualTo(name)
         assertThat(response.response().slug).isEqualTo(slug)
-        assertThat(response.response().imageId).isEqualTo(imageId)
+        assertThat(response.response().imageBlobId).isEqualTo(imageBlobId)
     }
 
     @Test
-    fun `test getBySlug null imageId`() {
+    fun `test getBySlug null imageBlobId`() {
         val slug = uuid()
         val name = uuid()
         val uuid = resourceTestHelper
-                .persistOrganization(slug = slug, name = name, imageId = null).response().uuid
+                .persistOrganization(slug = slug, name = name, imageBlobId = null).response().uuid
         val response = organizationResourceClient.getBySlug(slug)
         assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isEqualTo(uuid)
         assertThat(response.response().name).isEqualTo(name)
         assertThat(response.response().slug).isEqualTo(slug)
-        assertThat(response.response().imageId).isEqualTo(null)
+        assertThat(response.response().imageBlobId).isEqualTo(null)
     }
 }

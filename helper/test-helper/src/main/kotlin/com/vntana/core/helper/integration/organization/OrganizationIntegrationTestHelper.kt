@@ -20,11 +20,11 @@ class OrganizationIntegrationTestHelper : OrganizationCommonTestHelper() {
     fun persistOrganization(
             name: String? = uuid(),
             slug: String? = uuid(),
-            imageId: String? = uuid()): Organization {
+            imageBlobId: String? = uuid()): Organization {
         val dto = buildCreateOrganizationDto(
                 name = name,
                 slug = slug,
-                imageId = imageId
+                imageBlobId = imageBlobId
         )
         return organizationService.create(dto)
     }

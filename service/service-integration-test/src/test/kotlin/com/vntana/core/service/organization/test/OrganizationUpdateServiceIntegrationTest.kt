@@ -20,7 +20,7 @@ class OrganizationUpdateServiceIntegrationTest : AbstractOrganizationServiceInte
             flushAndClear()
             assertThat(it.uuid).isEqualTo(organization.uuid)
             assertThat(it.slug).isEqualTo(organization.slug)
-            assertThat(it.imageId).isEqualTo(updateDto.imageId)
+            assertThat(it.imageBlobId).isEqualTo(updateDto.imageBlobId)
             assertThat(it.name).isEqualTo(updateDto.name)
         }
     }

@@ -14,14 +14,14 @@ import org.springframework.util.Assert;
 public class UpdateOrganizationDto implements ServiceDto {
 
     private final String uuid;
-    private final String imageId;
+    private final String imageBlobId;
     private final String name;
 
-    public UpdateOrganizationDto(final String uuid, final String imageId, final String name) {
+    public UpdateOrganizationDto(final String uuid, final String imageBlobId, final String name) {
         Assert.hasText(uuid, "The uuid should not be null or empty");
         Assert.hasText(name, "The name should not be null or empty");
         this.uuid = uuid;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
         this.name = name;
     }
 
@@ -36,7 +36,7 @@ public class UpdateOrganizationDto implements ServiceDto {
         final UpdateOrganizationDto that = (UpdateOrganizationDto) o;
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .append(name, that.name)
                 .isEquals();
     }
@@ -45,7 +45,7 @@ public class UpdateOrganizationDto implements ServiceDto {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(uuid)
-                .append(imageId)
+                .append(imageBlobId)
                 .append(name)
                 .toHashCode();
     }
@@ -54,7 +54,7 @@ public class UpdateOrganizationDto implements ServiceDto {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("uuid", uuid)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .append("name", name)
                 .toString();
     }
@@ -63,8 +63,8 @@ public class UpdateOrganizationDto implements ServiceDto {
         return uuid;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
     public String getName() {

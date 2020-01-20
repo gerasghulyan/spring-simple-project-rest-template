@@ -152,7 +152,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 organization.getUuid(),
                 organization.getName(),
                 organization.getSlug(),
-                organization.getImageId()
+                organization.getImageBlobId()
         );
         return new GetOrganizationBySlugResultResponse(response);
     }
@@ -167,7 +167,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 organization.getUuid(),
                 organization.getName(),
                 organization.getSlug(),
-                organization.getImageId(),
+                organization.getImageBlobId(),
                 organization.getCreated()
         );
         return new GetOrganizationByUuidResultResponse(response);
@@ -181,7 +181,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         }
         final UpdateOrganizationDto dto = new UpdateOrganizationDto(
                 request.getUuid(),
-                request.getImageId(),
+                request.getImageBlobId(),
                 request.getName()
         );
         final Organization organization = organizationService.update(dto);
@@ -203,7 +203,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                                     userOrganizationRole.getOrganization().getSlug(),
                                     userOrganizationRole.getOrganization().getName(),
                                     UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()),
-                                    userOrganizationRole.getOrganization().getImageId(),
+                                    userOrganizationRole.getOrganization().getImageBlobId(),
                                     userOrganizationRole.getOrganization().getCreated()
                             );
                         case CLIENT_ROLE:
@@ -213,7 +213,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getSlug(),
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getName(),
                                     UserRoleModel.valueOf(userClientOrganizationRole.getUserRole().name()),
-                                    userClientOrganizationRole.getClientOrganization().getOrganization().getImageId(),
+                                    userClientOrganizationRole.getClientOrganization().getOrganization().getImageBlobId(),
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getCreated()
                             );
                         default:
@@ -231,7 +231,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                         organization.getSlug(),
                         organization.getName(),
                         UserRoleModel.SUPER_ADMIN,
-                        organization.getImageId(),
+                        organization.getImageBlobId(),
                         organization.getCreated()
                 ))
                 .collect(Collectors.toList());

@@ -15,20 +15,20 @@ open class OrganizationCommonTestHelper : AbstractCommonTestHelper() {
     fun buildCreateOrganizationDto(
             name: String? = uuid(),
             slug: String? = uuid(),
-            imageId: String? = uuid()
-    ): CreateOrganizationDto = CreateOrganizationDto(name, slug, imageId)
+            imageBlobId: String? = uuid()
+    ): CreateOrganizationDto = CreateOrganizationDto(name, slug, imageBlobId)
 
     fun buildUpdateOrganizationDto(
             uuid: String? = uuid(),
-            imageId: String? = uuid(),
+            imageBlobId: String? = uuid(),
             name: String? = uuid()
-    ): UpdateOrganizationDto = UpdateOrganizationDto(uuid, imageId, name)
+    ): UpdateOrganizationDto = UpdateOrganizationDto(uuid, imageBlobId, name)
 
 
     fun buildOrganization(
             name: String? = uuid(),
             slug: String? = uuid(),
-            imageId: String? = uuid()
-    ): Organization = Organization(name, slug, imageId)
+            imageBlobId: String? = uuid()
+    ): Organization = Organization(name, slug, imageBlobId)
 
 }

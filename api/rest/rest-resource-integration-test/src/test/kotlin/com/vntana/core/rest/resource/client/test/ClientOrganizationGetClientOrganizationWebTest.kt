@@ -19,12 +19,12 @@ class ClientOrganizationGetClientOrganizationWebTest : AbstractClientOrganizatio
         val userUuid = userResponseModel.uuid
         val clientName = uuid()
         val clientSlug = uuid()
-        val imageId = uuid()
+        val imageBlobId = uuid()
         val clientOrganizationUuid = clientOrganizationResourceTestHelper.persistClientOrganization(
                 organizationUuid = organizationUuid,
                 name = clientName,
                 slug = clientSlug,
-                imageId = imageId
+                imageBlobId = imageBlobId
         ).response().uuid
         clientOrganizationResourceClient.getUserClientOrganizations(userUuid, organizationUuid).let {
             assertBasicSuccessResultResponse(it)
@@ -32,7 +32,7 @@ class ClientOrganizationGetClientOrganizationWebTest : AbstractClientOrganizatio
             it.response().items()[0].run {
                 assertThat(this.uuid).isEqualTo(clientOrganizationUuid)
                 assertThat(this.name).isEqualTo(clientName)
-                assertThat(this.imageId).isEqualTo(imageId)
+                assertThat(this.imageBlobId).isEqualTo(imageBlobId)
             }
         }
     }

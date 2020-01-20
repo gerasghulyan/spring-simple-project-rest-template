@@ -55,7 +55,7 @@ class OrganizationGetBySlugServiceFacadeUnitTest : AbstractOrganizationServiceFa
         assertThat(resultResponse.response().uuid).isEqualTo(organization.uuid)
         assertThat(resultResponse.response().name).isEqualTo(organization.name)
         assertThat(resultResponse.response().slug).isEqualTo(organization.slug)
-        assertThat(resultResponse.response().imageId).isEqualTo(organization.imageId)
+        assertThat(resultResponse.response().imageBlobId).isEqualTo(organization.imageBlobId)
         verifyAll()
     }
 }

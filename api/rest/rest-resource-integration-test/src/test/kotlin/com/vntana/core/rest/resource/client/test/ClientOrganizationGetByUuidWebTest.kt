@@ -22,13 +22,13 @@ class ClientOrganizationGetByUuidWebTest : AbstractClientOrganizationWebTest() {
         val slugName = uuid()
         val clientName = uuid()
         val organizationSlug = uuid()
-        val imageId = uuid()
+        val imageBlobId = uuid()
         val organizationUuid = organizationResourceTestHelper.persistOrganization(slug = organizationSlug).response().uuid
         val client = clientOrganizationResourceTestHelper.persistClientOrganization(
                 organizationUuid = organizationUuid,
                 name = clientName,
                 slug = slugName,
-                imageId = imageId
+                imageBlobId = imageBlobId
         )
         // when
         val response = clientOrganizationResourceClient.getByUuid(client.response().uuid)
@@ -39,6 +39,6 @@ class ClientOrganizationGetByUuidWebTest : AbstractClientOrganizationWebTest() {
         Assertions.assertThat(response.response().clientSlug).isEqualTo(slugName)
         Assertions.assertThat(response.response().organizationUuid).isEqualTo(organizationUuid)
         Assertions.assertThat(response.response().organizationSlug).isEqualTo(organizationSlug)
-        Assertions.assertThat(response.response().imageId).isEqualTo(imageId)
+        Assertions.assertThat(response.response().imageBlobId).isEqualTo(imageBlobId)
     }
 }

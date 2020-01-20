@@ -29,7 +29,7 @@ class ClientOrganizationFindBySlugAndOrganizationServiceIntegrationTest : Abstra
             assertThat(it.get()).isEqualTo(clientOrganization)
             assertThat(it.get().name).isEqualTo(clientOrganization.name)
             assertThat(it.get().slug).isEqualTo(clientOrganization.slug)
-            assertThat(it.get().imageId).isEqualTo(clientOrganization.imageId)
+            assertThat(it.get().imageBlobId).isEqualTo(clientOrganization.imageBlobId)
             assertThat(it.get().organization).isEqualTo(clientOrganization.organization)
         }
     }

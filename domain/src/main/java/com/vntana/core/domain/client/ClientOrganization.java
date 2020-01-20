@@ -30,8 +30,8 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organization_id"), updatable = false)
     private Organization organization;
 
-    @Column(name = "image_id")
-    private String imageId;
+    @Column(name = "image_blob_id")
+    private String imageBlobId;
 
     public ClientOrganization() {
         super();
@@ -39,12 +39,12 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
 
     public ClientOrganization(final String name,
                               final String slug,
-                              final String imageId,
+                              final String imageBlobId,
                               final Organization organization) {
         super();
         this.name = name;
         this.slug = slug;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
         this.organization = organization;
     }
 
@@ -73,7 +73,7 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .append("slug", slug)
                 .toString();
     }
@@ -86,8 +86,8 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
         return slug;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
     public Organization getOrganization() {
@@ -106,7 +106,7 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
         this.organization = organization;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 }

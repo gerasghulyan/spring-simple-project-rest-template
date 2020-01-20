@@ -56,9 +56,9 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
         // test data
         resetAll()
         val slug = uuid()
-        val imageId = uuid()
+        val imageBlobId = uuid()
         val organization = organizationTestHelper.buildOrganization()
-        val dto = helper.buildCreateClientOrganizationDto(slug = slug, imageId = imageId, organizationUuid = organization.uuid)
+        val dto = helper.buildCreateClientOrganizationDto(slug = slug, imageBlobId = imageBlobId, organizationUuid = organization.uuid)
         // expectations
         expect(clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organization.uuid)).andReturn(Optional.empty())
         expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
@@ -69,7 +69,7 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
         assertThat(clientOrganizationService.create(dto))
                 .hasFieldOrPropertyWithValue("name", dto.name)
                 .hasFieldOrPropertyWithValue("slug", dto.slug)
-                .hasFieldOrPropertyWithValue("imageId", dto.imageId)
+                .hasFieldOrPropertyWithValue("imageBlobId", dto.imageBlobId)
                 .hasFieldOrPropertyWithValue("organization", organization)
         verifyAll()
     }

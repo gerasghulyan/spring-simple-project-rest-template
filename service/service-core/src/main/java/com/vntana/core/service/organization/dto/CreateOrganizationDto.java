@@ -16,18 +16,18 @@ public class CreateOrganizationDto implements ServiceDto {
 
     private String name;
     private String slug;
-    private String imageId;
+    private String imageBlobId;
 
     public CreateOrganizationDto() {
         super();
     }
 
-    public CreateOrganizationDto(final String name, final String slug, final String imageId) {
+    public CreateOrganizationDto(final String name, final String slug, final String imageBlobId) {
         Assert.hasText(name, "The name should not be null or empty");
         Assert.hasText(slug, "The slug should not be null or empty");
         this.name = name;
         this.slug = slug;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class CreateOrganizationDto implements ServiceDto {
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .isEquals();
     }
 
@@ -51,7 +51,7 @@ public class CreateOrganizationDto implements ServiceDto {
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
-                .append(imageId)
+                .append(imageBlobId)
                 .toHashCode();
     }
 
@@ -60,7 +60,7 @@ public class CreateOrganizationDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .toString();
     }
 
@@ -72,7 +72,7 @@ public class CreateOrganizationDto implements ServiceDto {
         return StringUtils.trim(slug);
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 }

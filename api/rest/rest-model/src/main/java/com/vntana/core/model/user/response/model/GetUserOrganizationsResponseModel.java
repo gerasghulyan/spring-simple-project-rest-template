@@ -28,8 +28,8 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
     @JsonProperty("role")
     private UserRoleModel role;
 
-    @JsonProperty("imageId")
-    private String imageId;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     @JsonProperty("created")
     private LocalDateTime created;
@@ -37,12 +37,12 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
     public GetUserOrganizationsResponseModel() {
     }
 
-    public GetUserOrganizationsResponseModel(final String uuid, final String slug, final String name, final UserRoleModel role, final String imageId, final LocalDateTime created) {
+    public GetUserOrganizationsResponseModel(final String uuid, final String slug, final String name, final UserRoleModel role, final String imageBlobId, final LocalDateTime created) {
         this.uuid = uuid;
         this.slug = slug;
         this.name = name;
         this.role = role;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
         this.created = created;
     }
 
@@ -60,7 +60,7 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
                 .append(slug, that.slug)
                 .append(name, that.name)
                 .append(role, that.role)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .append(created, that.created)
                 .isEquals();
     }
@@ -72,7 +72,7 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
                 .append(slug)
                 .append(name)
                 .append(role)
-                .append(imageId)
+                .append(imageBlobId)
                 .append(created)
                 .toHashCode();
     }
@@ -84,7 +84,7 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
                 .append("slug", slug)
                 .append("name", name)
                 .append("role", role)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .append("created", created)
                 .toString();
     }
@@ -121,12 +121,12 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
         this.role = role;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 
     public LocalDateTime getCreated() {

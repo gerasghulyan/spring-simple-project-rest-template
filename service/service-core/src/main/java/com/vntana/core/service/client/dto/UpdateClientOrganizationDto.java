@@ -15,7 +15,7 @@ public class UpdateClientOrganizationDto implements ServiceDto {
 
     private String uuid;
     private String name;
-    private String imageId;
+    private String imageBlobId;
 
     public UpdateClientOrganizationDto() {
         super();
@@ -24,11 +24,11 @@ public class UpdateClientOrganizationDto implements ServiceDto {
     public UpdateClientOrganizationDto(
             final String uuid,
             final String name,
-            final String imageId) {
+            final String imageBlobId) {
         super();
         this.uuid = uuid;
         this.name = name;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UpdateClientOrganizationDto implements ServiceDto {
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
                 .append(name, that.name)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .isEquals();
     }
 
@@ -52,7 +52,7 @@ public class UpdateClientOrganizationDto implements ServiceDto {
         return new HashCodeBuilder()
                 .append(uuid)
                 .append(name)
-                .append(imageId)
+                .append(imageBlobId)
                 .toHashCode();
     }
 
@@ -61,7 +61,7 @@ public class UpdateClientOrganizationDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .append("uuid", uuid)
                 .append("name", name)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .toString();
     }
 
@@ -73,8 +73,8 @@ public class UpdateClientOrganizationDto implements ServiceDto {
         return StringUtils.trim(name);
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
 }

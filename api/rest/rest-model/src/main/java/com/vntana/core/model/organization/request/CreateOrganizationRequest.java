@@ -27,17 +27,17 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
     @JsonProperty("userUuid")
     private String userUuid;
 
-    @JsonProperty("imageId")
-    private String imageId;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     public CreateOrganizationRequest() {
     }
 
-    public CreateOrganizationRequest(final String name, final String slug, final String userUuid, final String imageId) {
+    public CreateOrganizationRequest(final String name, final String slug, final String userUuid, final String imageBlobId) {
         this.name = name;
         this.slug = slug;
         this.userUuid = userUuid;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
                 .append(name, that.name)
                 .append(slug, that.slug)
                 .append(userUuid, that.userUuid)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .isEquals();
     }
 
@@ -78,7 +78,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
                 .append(name)
                 .append(slug)
                 .append(userUuid)
-                .append(imageId)
+                .append(imageBlobId)
                 .toHashCode();
     }
 
@@ -88,7 +88,7 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
                 .append("name", name)
                 .append("slug", slug)
                 .append("userUuid", userUuid)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .toString();
     }
 
@@ -116,11 +116,11 @@ public class CreateOrganizationRequest extends AbstractRequestModel implements V
         this.userUuid = userUuid;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 }

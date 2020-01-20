@@ -20,12 +20,12 @@ open class ClientOrganizationRestTestHelper : AbstractRestTestHelper() {
             organizationUuid: String? = uuid(),
             name: String? = uuid(),
             slug: String? = uuid(),
-            imageId: String? = uuid()
-    ): CreateClientOrganizationRequest = CreateClientOrganizationRequest(organizationUuid, name, slug, imageId)
+            imageBlobId: String? = uuid()
+    ): CreateClientOrganizationRequest = CreateClientOrganizationRequest(organizationUuid, name, slug, imageBlobId)
 
     fun buildUpdateClientOrganizationRequest(
             uuid: String? = uuid(),
             name: String? = uuid(),
-            imageId: String? = uuid()
-    ): UpdateClientOrganizationRequest = UpdateClientOrganizationRequest(uuid, name, imageId)
+            imageBlobId: String? = uuid()
+    ): UpdateClientOrganizationRequest = UpdateClientOrganizationRequest(uuid, name, imageBlobId)
 }

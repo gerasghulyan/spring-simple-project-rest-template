@@ -24,8 +24,8 @@ public class UpdateClientOrganizationRequest extends AbstractRequestModel implem
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("imageId")
-    private String imageId;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     public UpdateClientOrganizationRequest() {
         super();
@@ -34,11 +34,11 @@ public class UpdateClientOrganizationRequest extends AbstractRequestModel implem
     public UpdateClientOrganizationRequest(
             final String uuid,
             final String name,
-            final String imageId) {
+            final String imageBlobId) {
         super();
         this.uuid = uuid;
         this.name = name;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UpdateClientOrganizationRequest extends AbstractRequestModel implem
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
                 .append(name, that.name)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .isEquals();
     }
 
@@ -74,7 +74,7 @@ public class UpdateClientOrganizationRequest extends AbstractRequestModel implem
         return new HashCodeBuilder()
                 .append(uuid)
                 .append(name)
-                .append(imageId)
+                .append(imageBlobId)
                 .toHashCode();
     }
 
@@ -83,7 +83,7 @@ public class UpdateClientOrganizationRequest extends AbstractRequestModel implem
         return new ToStringBuilder(this)
                 .append("organizationUuid", uuid)
                 .append("name", name)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .toString();
     }
 
@@ -103,11 +103,11 @@ public class UpdateClientOrganizationRequest extends AbstractRequestModel implem
         this.name = name;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 }

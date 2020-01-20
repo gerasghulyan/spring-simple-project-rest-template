@@ -19,7 +19,7 @@ class ClientOrganizationUpdateServiceIntegrationTest : AbstractClientOrganizatio
         clientOrganizationService.update(dto).let {
             assertThat(it.uuid).isEqualTo(client.uuid)
             assertThat(it.name).isEqualTo(dto.name)
-            assertThat(it.imageId).isEqualTo(dto.imageId)
+            assertThat(it.imageBlobId).isEqualTo(dto.imageBlobId)
             assertThat(it.organization).isEqualTo(client.organization)
         }
     }

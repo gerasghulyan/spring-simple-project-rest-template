@@ -25,8 +25,8 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("imageId")
-    private String imageId;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     @JsonProperty("role")
     private UserRoleModel role;
@@ -38,11 +38,11 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
         super();
     }
 
-    public GetUserClientOrganizationsResponseModel(final String uuid, final String slug, final String name, final String imageId, final UserRoleModel role, final LocalDateTime created) {
+    public GetUserClientOrganizationsResponseModel(final String uuid, final String slug, final String name, final String imageBlobId, final UserRoleModel role, final LocalDateTime created) {
         this.uuid = uuid;
         this.slug = slug;
         this.name = name;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
         this.role = role;
         this.created = created;
     }
@@ -60,7 +60,7 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
                 .append(uuid, that.uuid)
                 .append(slug, that.slug)
                 .append(name, that.name)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .append(role, that.role)
                 .append(created, that.created)
                 .isEquals();
@@ -72,7 +72,7 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
                 .append(uuid)
                 .append(slug)
                 .append(name)
-                .append(imageId)
+                .append(imageBlobId)
                 .append(role)
                 .append(created)
                 .toHashCode();
@@ -84,7 +84,7 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
                 .append("uuid", uuid)
                 .append("slug", slug)
                 .append("name", name)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .append("role", role)
                 .append("created", created)
                 .toString();
@@ -114,12 +114,12 @@ public class GetUserClientOrganizationsResponseModel implements ResponseModel {
         this.name = name;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 
     public UserRoleModel getRole() {

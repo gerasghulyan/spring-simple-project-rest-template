@@ -26,7 +26,7 @@ class OrganizationUpdateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
     @Test
     fun test() {
         val request = restHelper.buildUpdateOrganizationRequest()
-        val dto = commonTestHelper.buildUpdateOrganizationDto(uuid = request.uuid, imageId = request.imageId, name = request.name)
+        val dto = commonTestHelper.buildUpdateOrganizationDto(uuid = request.uuid, imageBlobId = request.imageBlobId, name = request.name)
         val updatedOrganization = commonTestHelper.buildOrganization()
         resetAll()
         expect(organizationService.existsByUuid(request.uuid)).andReturn(true)

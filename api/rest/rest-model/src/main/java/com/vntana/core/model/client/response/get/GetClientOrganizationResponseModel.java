@@ -30,8 +30,8 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
     @JsonProperty("clientName")
     private String clientName;
 
-    @JsonProperty("imageId")
-    private String imageId;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     @JsonProperty("created")
     private LocalDateTime created;
@@ -54,14 +54,14 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
             final String clientUuid,
             final String clientSlug,
             final String clientName,
-            final String imageId,
+            final String imageBlobId,
             final LocalDateTime created) {
         this.organizationUuid = organizationUuid;
         this.organizationSlug = organizationSlug;
         this.clientUuid = clientUuid;
         this.clientSlug = clientSlug;
         this.clientName = clientName;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
         this.created = created;
     }
 
@@ -80,7 +80,7 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append(clientUuid, that.clientUuid)
                 .append(clientSlug, that.clientSlug)
                 .append(clientName, that.clientName)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .append(created, that.created)
                 .append(productsCount, that.productsCount)
                 .append(locationsCount, that.locationsCount)
@@ -96,7 +96,7 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append(clientUuid)
                 .append(clientSlug)
                 .append(clientName)
-                .append(imageId)
+                .append(imageBlobId)
                 .append(created)
                 .append(productsCount)
                 .append(locationsCount)
@@ -112,7 +112,7 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append("clientUuid", clientUuid)
                 .append("clientSlug", clientSlug)
                 .append("clientName", clientName)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .append("created", created)
                 .append("productsCount", productsCount)
                 .append("locationsCount", locationsCount)
@@ -160,12 +160,12 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
         this.clientName = clientName;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 
     public LocalDateTime getCreated() {

@@ -15,18 +15,18 @@ class OrganizationGetByUuidWebTest : AbstractOrganizationWebTest() {
     fun `test getByUuid`() {
         val slug = uuid()
         val name = uuid()
-        val imageId = uuid()
+        val imageBlobId = uuid()
         val uuid = resourceTestHelper.persistOrganization(
                 slug = slug,
                 name = name,
-                imageId = imageId
+                imageBlobId = imageBlobId
         ).response().uuid
         val response = organizationResourceClient.getByUuid(uuid)
         assertBasicSuccessResultResponse(response)
         assertThat(response.response().uuid).isEqualTo(uuid)
         assertThat(response.response().name).isEqualTo(name)
         assertThat(response.response().slug).isEqualTo(slug)
-        assertThat(response.response().imageId).isEqualTo(imageId)
+        assertThat(response.response().imageBlobId).isEqualTo(imageBlobId)
         assertThat(response.response().created).isNotNull()
     }
 }

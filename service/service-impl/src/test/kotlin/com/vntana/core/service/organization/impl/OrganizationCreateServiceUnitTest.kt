@@ -64,7 +64,7 @@ class OrganizationCreateServiceUnitTest : AbstractOrganizationServiceUnitTest() 
         assertThat(organizationService.create(dto))
                 .hasFieldOrPropertyWithValue("name", dto.name)
                 .hasFieldOrPropertyWithValue("slug", dto.slug)
-                .hasFieldOrPropertyWithValue("imageId", dto.imageId)
+                .hasFieldOrPropertyWithValue("imageBlobId", dto.imageBlobId)
         verifyAll()
     }
 }

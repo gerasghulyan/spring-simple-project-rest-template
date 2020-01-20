@@ -21,21 +21,21 @@ open class ClientOrganizationCommonTestHelper : AbstractCommonTestHelper() {
     fun buildCreateClientOrganizationDto(
             name: String? = uuid(),
             slug: String? = uuid(),
-            imageId: String? = uuid(),
+            imageBlobId: String? = uuid(),
             organizationUuid: String? = uuid()
-    ): CreateClientOrganizationDto = CreateClientOrganizationDto(name, slug, imageId, organizationUuid)
+    ): CreateClientOrganizationDto = CreateClientOrganizationDto(name, slug, imageBlobId, organizationUuid)
 
     fun buildClientOrganization(
             name: String? = uuid(),
             slug: String? = uuid(),
-            imageId: String? = uuid(),
+            imageBlobId: String? = uuid(),
             organization: Organization? = organizationCommonTestHelper.buildOrganization()
-    ): ClientOrganization = ClientOrganization(name, slug, imageId, organization)
+    ): ClientOrganization = ClientOrganization(name, slug, imageBlobId, organization)
 
     fun buildUpdateClientOrganizationDto(
             uuid: String? = uuid(),
             name: String? = uuid(),
-            imageId: String? = uuid()
-    ): UpdateClientOrganizationDto = UpdateClientOrganizationDto(uuid, name, imageId)
+            imageBlobId: String? = uuid()
+    ): UpdateClientOrganizationDto = UpdateClientOrganizationDto(uuid, name, imageBlobId)
 
 }

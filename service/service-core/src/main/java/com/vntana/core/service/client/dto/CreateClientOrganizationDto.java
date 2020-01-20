@@ -19,7 +19,7 @@ public class CreateClientOrganizationDto implements ServiceDto {
 
     private String organizationUuid;
 
-    private String imageId;
+    private String imageBlobId;
 
     public CreateClientOrganizationDto() {
         super();
@@ -27,12 +27,12 @@ public class CreateClientOrganizationDto implements ServiceDto {
 
     public CreateClientOrganizationDto(final String name,
                                        final String slug,
-                                       final String imageId,
+                                       final String imageBlobId,
                                        final String organizationUuid) {
         super();
         this.name = name;
         this.slug = slug;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
         this.organizationUuid = organizationUuid;
     }
 
@@ -48,7 +48,7 @@ public class CreateClientOrganizationDto implements ServiceDto {
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
@@ -58,7 +58,7 @@ public class CreateClientOrganizationDto implements ServiceDto {
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
-                .append(imageId)
+                .append(imageBlobId)
                 .append(organizationUuid)
                 .toHashCode();
     }
@@ -68,7 +68,7 @@ public class CreateClientOrganizationDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .append("organizationUuid", organizationUuid)
                 .toString();
     }
@@ -81,8 +81,8 @@ public class CreateClientOrganizationDto implements ServiceDto {
         return StringUtils.trim(slug);
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
     public String getOrganizationUuid() {

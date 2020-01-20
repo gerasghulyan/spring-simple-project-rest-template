@@ -144,7 +144,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 client.getUuid(),
                 client.getSlug(),
                 client.getName(),
-                client.getImageId(),
+                client.getImageBlobId(),
                 client.getCreated()
         );
         return new GetClientOrganizationResultResponse(response);
@@ -170,7 +170,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                                     client.getUuid(),
                                     client.getSlug(),
                                     client.getName(),
-                                    client.getImageId(),
+                                    client.getImageBlobId(),
                                     client.getCreated()
                             ));
                 })
@@ -233,7 +233,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                         clientOrganization.getUuid(),
                         clientOrganization.getSlug(),
                         clientOrganization.getName(),
-                        clientOrganization.getImageId(),
+                        clientOrganization.getImageBlobId(),
                         UserRoleModel.valueOf(role.name()),
                         clientOrganization.getCreated()
                 ))

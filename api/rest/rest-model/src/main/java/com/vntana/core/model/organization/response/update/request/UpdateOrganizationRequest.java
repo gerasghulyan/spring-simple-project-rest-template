@@ -22,17 +22,17 @@ public class UpdateOrganizationRequest extends AbstractUuidAwareRequestModel imp
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("imageId")
-    private String imageId;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     public UpdateOrganizationRequest() {
         super();
     }
 
-    public UpdateOrganizationRequest(final String uuid, final String name, final String imageId) {
+    public UpdateOrganizationRequest(final String uuid, final String name, final String imageBlobId) {
         super(uuid);
         this.name = name;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UpdateOrganizationRequest extends AbstractUuidAwareRequestModel imp
         final UpdateOrganizationRequest that = (UpdateOrganizationRequest) o;
         return new EqualsBuilder()
                 .append(name, that.name)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .isEquals();
     }
 
@@ -65,7 +65,7 @@ public class UpdateOrganizationRequest extends AbstractUuidAwareRequestModel imp
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(name)
-                .append(imageId)
+                .append(imageBlobId)
                 .toHashCode();
     }
 
@@ -73,7 +73,7 @@ public class UpdateOrganizationRequest extends AbstractUuidAwareRequestModel imp
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .toString();
     }
 
@@ -81,7 +81,7 @@ public class UpdateOrganizationRequest extends AbstractUuidAwareRequestModel imp
         return name;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 }

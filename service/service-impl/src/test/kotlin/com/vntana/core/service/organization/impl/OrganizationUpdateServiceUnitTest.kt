@@ -54,7 +54,7 @@ class OrganizationUpdateServiceUnitTest : AbstractOrganizationServiceUnitTest() 
                 .andAnswer { getCurrentArguments()[0] as Organization }
         replayAll()
         organizationService.update(dto).let {
-            assertThat(it.imageId).isEqualTo(dto.imageId)
+            assertThat(it.imageBlobId).isEqualTo(dto.imageBlobId)
             assertThat(it.name).isEqualTo(dto.name)
             assertThat(it.slug).isEqualTo(organizationSlug)
         }

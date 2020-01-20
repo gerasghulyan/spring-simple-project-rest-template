@@ -38,9 +38,9 @@ class ClientOrganizationUpdateServiceUnitTest : AbstractClientOrganizationServic
     fun test() {
         // test data
         resetAll()
-        val imageId = uuid()
+        val imageBlobId = uuid()
         val clientOrganization = helper.buildClientOrganization()
-        val dto = helper.buildUpdateClientOrganizationDto(imageId = imageId, uuid = clientOrganization.uuid)
+        val dto = helper.buildUpdateClientOrganizationDto(imageBlobId = imageBlobId, uuid = clientOrganization.uuid)
         // expectations
         expect(clientOrganizationRepository.findByUuid(clientOrganization.uuid)).andReturn(Optional.of(clientOrganization))
         expect(clientOrganizationRepository.save(isA(ClientOrganization::class.java)))
@@ -49,7 +49,7 @@ class ClientOrganizationUpdateServiceUnitTest : AbstractClientOrganizationServic
         // test scenario
         assertThat(clientOrganizationService.update(dto))
                 .hasFieldOrPropertyWithValue("name", dto.name)
-                .hasFieldOrPropertyWithValue("imageId", dto.imageId)
+                .hasFieldOrPropertyWithValue("imageBlobId", dto.imageBlobId)
                 .hasFieldOrPropertyWithValue("organization", clientOrganization.organization)
                 .hasFieldOrPropertyWithValue("uuid", dto.uuid)
         verifyAll()

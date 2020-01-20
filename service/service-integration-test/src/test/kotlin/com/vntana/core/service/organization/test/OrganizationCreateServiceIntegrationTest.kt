@@ -22,7 +22,7 @@ class OrganizationCreateServiceIntegrationTest : AbstractOrganizationServiceInte
                 assertThat(organization)
                         .hasFieldOrPropertyWithValue("name", StringUtils.trim(dto.name))
                         .hasFieldOrPropertyWithValue("slug", StringUtils.trim(dto.slug))
-                        .hasFieldOrPropertyWithValue("imageId", StringUtils.trim(dto.imageId))
+                        .hasFieldOrPropertyWithValue("imageBlobId", StringUtils.trim(dto.imageBlobId))
             }
         }
     }

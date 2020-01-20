@@ -38,7 +38,7 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
             assertThat(organizationClientOrganization.name).isEqualTo(clientOrganization.name)
             assertThat(organizationClientOrganization.slug).isEqualTo(clientOrganization.slug)
             assertThat(organizationClientOrganization.uuid).isEqualTo(clientOrganization.uuid)
-            assertThat(organizationClientOrganization.imageId).isEqualTo(clientOrganization.imageId)
+            assertThat(organizationClientOrganization.imageBlobId).isEqualTo(clientOrganization.imageBlobId)
             assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
             assertThat(organizationClientOrganization.created).isEqualTo(clientOrganization.created)
         }

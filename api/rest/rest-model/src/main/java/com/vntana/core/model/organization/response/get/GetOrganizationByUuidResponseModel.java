@@ -21,8 +21,8 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
     @JsonProperty("slug")
     private String slug;
 
-    @JsonProperty("imageId")
-    private String imageId;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     @JsonProperty("created")
     private LocalDateTime created;
@@ -34,12 +34,12 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
     public GetOrganizationByUuidResponseModel(final String uuid,
                                               final String name,
                                               final String slug,
-                                              final String imageId,
+                                              final String imageBlobId,
                                               final LocalDateTime created) {
         super(uuid);
         this.name = name;
         this.slug = slug;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
         this.created = created;
     }
 
@@ -55,7 +55,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
-                .append(imageId, that.imageId)
+                .append(imageBlobId, that.imageBlobId)
                 .append(created, that.created)
                 .isEquals();
     }
@@ -65,7 +65,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
-                .append(imageId)
+                .append(imageBlobId)
                 .append(created)
                 .toHashCode();
     }
@@ -75,7 +75,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .append("created", created)
                 .toString();
     }
@@ -96,12 +96,12 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         this.slug = slug;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 
     public LocalDateTime getCreated() {

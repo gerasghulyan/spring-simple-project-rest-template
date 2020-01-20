@@ -12,9 +12,7 @@ public enum ClientOrganizationErrorResponseModel implements ErrorResponseModel {
     MISSING_ORGANIZATION_UUID,
     MISSING_NAME,
     MISSING_SLUG,
-    MISSING_IMAGE_ID,
     SLUG_ALREADY_EXISTS,
     SLUG_NOT_VALID,
-    ORGANIZATION_NOT_FOUND,
     CLIENT_NOT_FOUND
 }

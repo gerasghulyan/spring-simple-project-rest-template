@@ -30,8 +30,8 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     @Column(name = "organization_slug", nullable = false, updatable = false, unique = true)
     private String slug;
 
-    @Column(name = "image_id")
-    private String imageId;
+    @Column(name = "image_blob_id")
+    private String imageBlobId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
     private List<ClientOrganization> clientOrganizations;
@@ -39,10 +39,10 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     public Organization() {
     }
 
-    public Organization(final String name, final String slug, final String imageId) {
+    public Organization(final String name, final String slug, final String imageBlobId) {
         this.name = name;
         this.slug = slug;
-        this.imageId = imageId;
+        this.imageBlobId = imageBlobId;
     }
 
     //region Public methods
@@ -107,7 +107,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageId", imageId)
+                .append("imageBlobId", imageBlobId)
                 .toString();
     }
 
@@ -123,11 +123,11 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         return slug;
     }
 
-    public String getImageId() {
-        return imageId;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setImageId(final String imageId) {
-        this.imageId = imageId;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 }

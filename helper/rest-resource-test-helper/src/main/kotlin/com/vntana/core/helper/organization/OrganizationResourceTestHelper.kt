@@ -22,12 +22,12 @@ class OrganizationResourceTestHelper : OrganizationRestTestHelper() {
 
     fun persistOrganization(name: String? = uuid(),
                             slug: String? = uuid(),
-                            imageId: String? = uuid()
+                            imageBlobId: String? = uuid()
     ): CreateOrganizationResultResponse {
         val request = buildCreateOrganizationRequest(
                 name = name,
                 slug = slug,
-                imageId = imageId
+                imageBlobId = imageBlobId
         )
         val userResponse = userResourceTestHelper.persistUser()
         request.userUuid = userResponse.response().uuid

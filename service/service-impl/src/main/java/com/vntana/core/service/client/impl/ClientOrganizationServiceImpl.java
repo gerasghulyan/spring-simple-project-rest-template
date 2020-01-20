@@ -48,7 +48,7 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         assertCreateClientOrganizationDto(dto);
         assertSlugAndOrganization(dto.getSlug(), dto.getOrganizationUuid());
         final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
-        final ClientOrganization clientOrganization = new ClientOrganization(dto.getName(), dto.getSlug(), dto.getImageId(), organization);
+        final ClientOrganization clientOrganization = new ClientOrganization(dto.getName(), dto.getSlug(), dto.getImageBlobId(), organization);
         return clientOrganizationRepository.save(clientOrganization);
     }
 
@@ -84,7 +84,7 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
         assertUpdateClientOrganizationDto(dto);
         final ClientOrganization clientOrganization = getByUuid(dto.getUuid());
         clientOrganization.setName(dto.getName());
-        clientOrganization.setImageId(dto.getImageId());
+        clientOrganization.setImageBlobId(dto.getImageBlobId());
         return clientOrganizationRepository.save(clientOrganization);
     }
 
