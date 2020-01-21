@@ -25,6 +25,11 @@ pipeline {
             }
         }
         stage("Quality Analysis") {
+            when {
+                 expression {
+                    return env.BRANCH_NAME != 'develop' && env.BRANCH_NAME != 'release' && env.BRANCH_NAME != 'master'
+                }
+            }
             agent {
                 docker {
                     image "openjdk:8"
