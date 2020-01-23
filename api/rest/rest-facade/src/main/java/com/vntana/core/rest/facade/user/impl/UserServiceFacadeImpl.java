@@ -18,6 +18,7 @@ import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.UpdateUserDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -68,7 +69,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     @Override
     public CreateUserResponse create(final CreateUserRequest request) {
         LOGGER.debug("Processing Facade createUser method for request - {}", request);
-        Assert.notNull(request, "The USerCreateRequest should not be null");
+        Assert.notNull(request, "The UserCreateRequest should not be null");
         if (!emailValidationComponent.isValid(request.getEmail())) {
             return new CreateUserResponse(Collections.singletonList(UserErrorResponseModel.INVALID_EMAIL_FORMAT));
         }
@@ -130,7 +131,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final Mutable<AccountUserResponse> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInPersistenceSession(() -> {
             final User user = userService.getByUuid(uuid);
-            //TODO avatarUUID and HasSubscription implementation later
+            //TODO HasSubscription implementation later
             final AccountUserResponse response = user.roleOfSuperAdmin()
                     .map(userSuperAdminRole -> new AccountUserResponse(new AccountUserResponseModel(
                             user.getUuid(),
@@ -138,7 +139,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                             user.getEmail(),
                             UserRoleModel.SUPER_ADMIN,
                             user.getVerified(),
-                            null,
+                            user.getImageBlobId(),
                             false
                     )))
                     .orElseGet(() -> {
@@ -151,7 +152,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                                         user.getEmail(),
                                         userRoleModel,
                                         user.getVerified(),
-                                        null,
+                                        user.getImageBlobId(),
                                         false
                                 )))
                                 .orElseGet(() -> new AccountUserResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)));
@@ -202,6 +203,22 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 .orElse(new ResetUserPasswordResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
         LOGGER.debug("Successfully processed facade resetPassword for email - {}", request.getEmail());
         return response;
+    }
+
+    @Override
+    public UpdateUserResponse update(final UpdateUserRequest request) {
+        Assert.notNull(request, "The UpdateUserRequest should not be null");
+        LOGGER.debug("Processing facade update method for request - {}", request);
+        if (!userService.existsByUuid(request.getUuid())) {
+            return new UpdateUserResponse(UserErrorResponseModel.USER_NOT_FOUND);
+        }
+        final User updatedUser = userService.update(new UpdateUserDto(
+                request.getUuid(),
+                request.getImageBlobId(),
+                request.getFullName()
+        ));
+        LOGGER.debug("Successfully processed facade update method for request - {}", request);
+        return new UpdateUserResponse(updatedUser.getUuid());
     }
 
     private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String email) {

@@ -93,4 +93,12 @@ public class UserResource {
         LOGGER.debug("Successfully processed user resource resetPassword method for email - {}", request.getEmail());
         return ResponseEntity.ok(resultResponse);
     }
+
+    @PutMapping
+    public ResponseEntity<UpdateUserResponse> update(@RequestBody final UpdateUserRequest request) {
+        LOGGER.debug("Processing user resource update method for request - {}", request);
+        final UpdateUserResponse response = userServiceFacade.update(request);
+        LOGGER.debug("Successfully processed user resource update method for request - {}", request);
+        return ResponseEntity.ok(response);
+    }
 }

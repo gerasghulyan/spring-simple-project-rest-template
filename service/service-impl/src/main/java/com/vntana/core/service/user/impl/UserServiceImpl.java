@@ -6,6 +6,7 @@ import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.UpdateUserDto;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
 import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
@@ -59,6 +60,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User update(final UpdateUserDto dto) {
+        Assert.notNull(dto, "The 'CreateUserDto' dto should not be null");
+        LOGGER.debug("Update user for dto - {}", dto);
+        final User updatedUser = updateUser(getByUuid(dto.getUuid()), dto);
+        userRepository.save(updatedUser);
+        LOGGER.debug("Successfully updated user for dto - {}", dto);
+        return updatedUser;
+    }
+
+    @Override
     public Optional<User> findByEmail(final String email) {
         Assert.notNull(email, "The user email should not be null");
         LOGGER.debug("Getting user for email - {}", email);
@@ -106,6 +117,14 @@ public class UserServiceImpl implements UserService {
         return updatedUser;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsByUuid(final String uuid) {
+        Assert.hasText(uuid, "The user uuid should not be null or empty");
+        LOGGER.debug("Checking existence of user having uuid - {}", uuid);
+        return userRepository.existsByUuid(uuid);
+    }
+
     @Override
     public void grantOrganizationRole(final UserGrantOrganizationRoleDto dto) {
         LOGGER.debug("Setting user role for dto - {}", dto);
@@ -114,6 +133,12 @@ public class UserServiceImpl implements UserService {
         final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         user.grantOrganizationRole(organization);
         LOGGER.debug("Successfully created user role for dto - {}", dto);
+    }
+
+    private User updateUser(final User user, final UpdateUserDto dto) {
+        user.setFullName(dto.getFullName());
+        user.setImageBlobId(dto.getImageBlobId());
+        return user;
     }
 
     private void assertCreateDto(final CreateUserDto dto) {

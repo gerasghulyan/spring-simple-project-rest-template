@@ -38,4 +38,7 @@ public interface UserResourceClient {
 
     @PutMapping(path = "/reset-password")
     ResetUserPasswordResponse resetPassword(@RequestBody final ResetUserPasswordRequest request);
+
+    @PutMapping
+    UpdateUserResponse update(@RequestBody final UpdateUserRequest request);
 }
