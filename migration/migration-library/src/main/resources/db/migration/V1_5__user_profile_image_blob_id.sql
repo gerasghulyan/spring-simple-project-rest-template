@@ -1,0 +1,1 @@
+alter table user_ add column image_blob_id varchar(255);
