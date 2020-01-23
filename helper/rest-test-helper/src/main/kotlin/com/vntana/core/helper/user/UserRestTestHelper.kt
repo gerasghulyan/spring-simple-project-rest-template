@@ -32,4 +32,12 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
     ): ResetUserPasswordRequest = ResetUserPasswordRequest(email, password)
 
     fun email(): String = uuid() + "@gmail.com"
+
+    fun buildUpdateUserRequest(
+            uuid: String? = uuid(),
+            imageBlobId: String? = uuid(),
+            fullName: String? = uuid()
+    ): UpdateUserRequest {
+        return UpdateUserRequest(uuid, imageBlobId, fullName)
+    }
 }

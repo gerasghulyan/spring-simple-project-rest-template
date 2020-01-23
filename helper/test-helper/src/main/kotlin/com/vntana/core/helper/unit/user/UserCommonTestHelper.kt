@@ -6,6 +6,7 @@ import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.service.user.dto.CreateUserDto
+import com.vntana.core.service.user.dto.UpdateUserDto
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto
 
 /**
@@ -43,4 +44,12 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
             organizationUuid: String? = uuid(),
             role: UserRole? = UserRole.CLIENT_ADMIN
     ): UserGrantOrganizationRoleDto = UserGrantOrganizationRoleDto(uuid, organizationUuid, role)
+
+    fun buildUpdateUserDto(
+            uuid: String? = uuid(),
+            imageBlobId: String? = uuid(),
+            fullName: String? = uuid()
+    ): UpdateUserDto {
+        return UpdateUserDto(uuid, imageBlobId, fullName)
+    }
 }
