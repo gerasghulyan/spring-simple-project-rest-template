@@ -25,5 +25,6 @@ public enum UserErrorResponseModel implements ErrorResponseModel {
     MISSING_VERIFICATION_TOKEN,
     MISSING_RESET_PASSWORD_TOKEN,
     INVALID_RESET_PASSWORD_TOKEN,
-    USER_NOT_FOUND
+    USER_NOT_FOUND,
+    PASSWORD_MISMATCH
 }

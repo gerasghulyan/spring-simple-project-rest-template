@@ -30,4 +30,6 @@ public interface UserService {
     void grantOrganizationRole(final UserGrantOrganizationRoleDto dto);
 
     boolean existsByUuid(final String uuid);
+
+    boolean checkPassword(final String uuid, final String rawPassword);
 }

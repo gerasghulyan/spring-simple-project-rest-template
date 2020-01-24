@@ -135,6 +135,15 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("Successfully created user role for dto - {}", dto);
     }
 
+    @Override
+    public boolean checkPassword(final String uuid, final String rawPassword) {
+        Assert.hasText(uuid, "The uuid should not be null or empty");
+        Assert.hasText(rawPassword, "The password should not be null or empty");
+        LOGGER.debug("Checking user password for user having uuid - {}", uuid);
+        final User user = getByUuid(uuid);
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
     private User updateUser(final User user, final UpdateUserDto dto) {
         user.setFullName(dto.getFullName());
         user.setImageBlobId(dto.getImageBlobId());

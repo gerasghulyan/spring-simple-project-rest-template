@@ -221,6 +221,21 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return new UpdateUserResponse(updatedUser.getUuid());
     }
 
+    @Override
+    public ChangeUserPasswordResponse changePassword(final ChangeUserPasswordRequest request) {
+        Assert.notNull(request, "The ChangeUserPasswordRequest should not be null");
+        LOGGER.debug("Processing facade changePassword method for user having uuid - {}", request.getUuid());
+        if (!userService.existsByUuid(request.getUuid())) {
+            return new ChangeUserPasswordResponse(UserErrorResponseModel.USER_NOT_FOUND);
+        }
+        if (!userService.checkPassword(request.getUuid(), request.getOldPassword())) {
+            return new ChangeUserPasswordResponse(UserErrorResponseModel.PASSWORD_MISMATCH);
+        }
+        final User user = userService.changePassword(request.getUuid(), request.getNewPassword());
+        LOGGER.debug("Successfully processed facade changePassword method for user having uuid - {}", request.getUuid());
+        return new ChangeUserPasswordResponse(user.getUuid());
+    }
+
     private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String email) {
         if (StringUtils.isBlank(email)) {
             return Collections.singletonList(UserErrorResponseModel.MISSING_EMAIL);

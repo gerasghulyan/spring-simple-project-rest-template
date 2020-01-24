@@ -26,4 +26,6 @@ public interface UserServiceFacade {
     ResetUserPasswordResponse resetPassword(final ResetUserPasswordRequest request);
 
     UpdateUserResponse update(final UpdateUserRequest request);
+
+    ChangeUserPasswordResponse changePassword(final ChangeUserPasswordRequest request);
 }
