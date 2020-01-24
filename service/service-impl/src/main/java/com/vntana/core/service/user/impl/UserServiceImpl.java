@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService {
         return savedUser;
     }
 
+    @Transactional
     @Override
     public User update(final UpdateUserDto dto) {
         Assert.notNull(dto, "The 'CreateUserDto' dto should not be null");
