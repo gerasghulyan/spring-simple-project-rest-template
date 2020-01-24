@@ -24,8 +24,9 @@ class UserServiceIntegrationTestHelper : UserCommonTestHelper() {
 
     fun persistUser(organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
                     fullName: String? = uuid(),
-                    email: String? = uuid()): User {
-        val dto: CreateUserDto = buildUserCreateDto(organizationUuid = organizationUuid, fullName = fullName, email = email)
+                    email: String? = uuid(),
+                    password: String? = uuid()): User {
+        val dto: CreateUserDto = buildUserCreateDto(organizationUuid = organizationUuid, fullName = fullName, email = email, password = password)
         return userService.create(dto)
     }
 

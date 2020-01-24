@@ -40,4 +40,12 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
     ): UpdateUserRequest {
         return UpdateUserRequest(uuid, imageBlobId, fullName)
     }
+
+    fun buildChangeUserPasswordRequest(
+            uuid: String? = uuid(),
+            oldPassword: String? = uuid(),
+            newPassword: String? = uuid()
+    ): ChangeUserPasswordRequest {
+        return ChangeUserPasswordRequest(uuid, oldPassword, newPassword)
+    }
 }
