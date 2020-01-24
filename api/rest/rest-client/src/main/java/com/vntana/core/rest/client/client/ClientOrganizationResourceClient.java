@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * Date: 10/18/19
  * Time: 2:49 PM
  */
-@FeignClient(name = "coreClients", path = "clients", url = "${ms.core.url}")
+@FeignClient(name = "coreClients", path = "clients", url = "${ms.core.url}", primary = false)
 public interface ClientOrganizationResourceClient {
     @PostMapping(path = "/slug-availability")
     CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(@RequestBody final CheckAvailableClientOrganizationSlugRequest request);
