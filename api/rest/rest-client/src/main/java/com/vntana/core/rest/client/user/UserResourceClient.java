@@ -38,4 +38,10 @@ public interface UserResourceClient {
 
     @PutMapping(path = "/reset-password")
     ResetUserPasswordResponse resetPassword(@RequestBody final ResetUserPasswordRequest request);
+
+    @PutMapping(path = "/change-password")
+    ChangeUserPasswordResponse changePassword(@RequestBody final ChangeUserPasswordRequest request);
+
+    @PutMapping
+    UpdateUserResponse update(@RequestBody final UpdateUserRequest request);
 }

@@ -2,6 +2,7 @@ package com.vntana.core.service.user;
 
 import com.vntana.core.domain.user.User;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.UpdateUserDto;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 
 import java.util.Optional;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public interface UserService {
     User create(final CreateUserDto dto);
 
+    User update(final UpdateUserDto dto);
+
     Optional<User> findByEmail(final String email);
 
     Optional<User> findByUuid(final String uuid);
@@ -25,4 +28,8 @@ public interface UserService {
     User changePassword(final String uuid, final String password);
 
     void grantOrganizationRole(final UserGrantOrganizationRoleDto dto);
+
+    boolean existsByUuid(final String uuid);
+
+    boolean checkPassword(final String uuid, final String rawPassword);
 }

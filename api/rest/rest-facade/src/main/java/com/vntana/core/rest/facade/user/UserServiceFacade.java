@@ -24,4 +24,8 @@ public interface UserServiceFacade {
     SendUserResetPasswordResponse sendResetPasswordEmail(final SendUserResetPasswordRequest request);
 
     ResetUserPasswordResponse resetPassword(final ResetUserPasswordRequest request);
+
+    UpdateUserResponse update(final UpdateUserRequest request);
+
+    ChangeUserPasswordResponse changePassword(final ChangeUserPasswordRequest request);
 }

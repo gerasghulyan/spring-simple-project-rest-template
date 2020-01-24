@@ -40,6 +40,9 @@ public class User extends AbstractUuidAwareDomainEntity {
     @Column(name = "verified", nullable = false)
     private Boolean verified;
 
+    @Column(name = "image_blob_id")
+    private String imageBlobId;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AbstractUserRole> roles;
 
@@ -127,6 +130,18 @@ public class User extends AbstractUuidAwareDomainEntity {
         this.verified = verified;
     }
 
+    public void setFullName(final String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getImageBlobId() {
+        return imageBlobId;
+    }
+
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
+    }
+
     public List<AbstractUserRole> roles() {
         return immutableRoles();
     }
@@ -173,22 +188,26 @@ public class User extends AbstractUuidAwareDomainEntity {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof User)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
         final User user = (User) o;
         return new EqualsBuilder()
-                .append(getUuid(), user.getUuid())
+                .appendSuper(super.equals(o))
+                .append(this.fullName, user.fullName)
+                .append(this.email, user.email)
+                .append(this.verified, user.verified)
+                .append(this.imageBlobId, user.imageBlobId)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(getUuid())
+                .appendSuper(super.hashCode())
+                .append(this.fullName)
+                .append(this.email)
+                .append(this.verified)
+                .append(this.imageBlobId)
                 .toHashCode();
     }
 
@@ -197,6 +216,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         return new ToStringBuilder(this)
                 .append("fullName", fullName)
                 .append("email", email)
+                .append("imageBlobId", imageBlobId)
                 .append("verified", verified)
                 .toString();
     }

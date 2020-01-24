@@ -29,8 +29,8 @@ public class AccountUserResponseModel implements ResponseModel {
     @JsonProperty("isEmailVerified")
     private boolean emailVerified;
 
-    @JsonProperty("avatarUuid")
-    private String avatarUuid;
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
 
     @JsonProperty("hasSubscription")
     private Boolean hasSubscription;
@@ -38,13 +38,13 @@ public class AccountUserResponseModel implements ResponseModel {
     public AccountUserResponseModel() {
     }
 
-    public AccountUserResponseModel(final String uuid, final String fullName, final String email, final UserRoleModel role, final boolean emailVerified, final String avatarUuid, final Boolean hasSubscription) {
+    public AccountUserResponseModel(final String uuid, final String fullName, final String email, final UserRoleModel role, final boolean emailVerified, final String imageBlobId, final Boolean hasSubscription) {
         this.uuid = uuid;
         this.fullName = fullName;
         this.email = email;
         this.role = role;
         this.emailVerified = emailVerified;
-        this.avatarUuid = avatarUuid;
+        this.imageBlobId = imageBlobId;
         this.hasSubscription = hasSubscription;
     }
 
@@ -63,7 +63,7 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append(email, that.email)
                 .append(role, that.role)
                 .append(emailVerified, that.emailVerified)
-                .append(avatarUuid, that.avatarUuid)
+                .append(imageBlobId, that.imageBlobId)
                 .append(hasSubscription, that.hasSubscription)
                 .isEquals();
     }
@@ -76,7 +76,7 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append(email)
                 .append(role)
                 .append(emailVerified)
-                .append(avatarUuid)
+                .append(imageBlobId)
                 .append(hasSubscription)
                 .toHashCode();
     }
@@ -89,7 +89,7 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append("email", email)
                 .append("role", role)
                 .append("emailVerified", emailVerified)
-                .append("avatarUuid", avatarUuid)
+                .append("imageBlobId", imageBlobId)
                 .append("hasSubscription", hasSubscription)
                 .toString();
     }
@@ -134,12 +134,12 @@ public class AccountUserResponseModel implements ResponseModel {
         this.emailVerified = emailVerified;
     }
 
-    public String getAvatarUuid() {
-        return avatarUuid;
+    public String getImageBlobId() {
+        return imageBlobId;
     }
 
-    public void setAvatarUuid(final String avatarUuid) {
-        this.avatarUuid = avatarUuid;
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 
     public Boolean getHasSubscription() {
