@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.boot.conf;
 
+import com.vntana.commons.api.model.constants.Headers;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -28,6 +30,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         final String uuid = UUID.randomUUID().toString();
         final String responseBody = String.format("Error occurred having uuid - %s", uuid);
         LOGGER.error("{} Stacktrace {}", uuid, ExceptionUtils.getStackTrace(e));
-        return handleExceptionInternal(e, responseBody, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.put(Headers.MS_ERRORS, Collections.singletonList(responseBody));
+        return handleExceptionInternal(e, responseBody, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }
