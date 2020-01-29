@@ -25,7 +25,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 
-    @ExceptionHandler(value = RuntimeException.class)
+    @ExceptionHandler(value = Exception.class)
     protected ResponseEntity<Object> handle(final RuntimeException e, final WebRequest request) {
         final String uuid = UUID.randomUUID().toString();
         final String responseBody = String.format("Error occurred having uuid - %s", uuid);
