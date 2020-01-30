@@ -47,7 +47,7 @@ public class UserResetPasswordEmailSenderComponentImpl implements UserResetPassw
                 templateEmail.getTemplateName(),
                 email,
                 senderEmail,
-                "Reset your password address",
+                "Reset your password",
                 String.format("%s/%s", resetPasswordUrlPrefix, token)
         );
         emailSenderService.sendEmail(payload);
