@@ -10,7 +10,7 @@ buildscript {
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
         sflNotifierVersion = '1.9.0-SNAPSHOT'
-        commonsApiModelsVersion = '0.1.2'
+        commonsApiModelsVersion = '0.1.0'
         vntanaCacheVersion = '0.1.0'
         vntanaPaymentVersion = '0.1.0'
     }
