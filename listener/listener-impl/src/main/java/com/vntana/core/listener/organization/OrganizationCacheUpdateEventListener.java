@@ -32,7 +32,7 @@ public class OrganizationCacheUpdateEventListener implements EntityLifecycleList
     @EventListener
     @Override
     public void handleEvent(final OrganizationLifecyclePayload payload) {
-        Assert.notNull(payload, "The ProductLifecyclePayload should not be null");
+        Assert.notNull(payload, "The OrganizationLifecyclePayload should not be null");
         final Organization organization = payload.entity();
         final CacheOrganizationCreateDto dto = new CacheOrganizationCreateDto(
                 organization.getUuid(),

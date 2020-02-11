@@ -21,6 +21,7 @@ import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
 import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
+import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -57,13 +58,15 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private final OrganizationService organizationService;
     private final UserService userService;
     private final SlugValidationComponent slugValidationComponent;
+    private final ClientOrganizationLifecycleMediator clientOrganizationLifecycleMediator;
 
     public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade,
                                                final PersistenceUtilityService persistenceUtilityService,
                                                final ClientOrganizationService clientOrganizationService,
                                                final OrganizationService organizationService,
                                                final UserService userService,
-                                               final SlugValidationComponent slugValidationComponent) {
+                                               final SlugValidationComponent slugValidationComponent,
+                                               final ClientOrganizationLifecycleMediator clientOrganizationLifecycleMediator) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.mapperFacade = mapperFacade;
         this.persistenceUtilityService = persistenceUtilityService;
@@ -71,6 +74,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         this.organizationService = organizationService;
         this.userService = userService;
         this.slugValidationComponent = slugValidationComponent;
+        this.clientOrganizationLifecycleMediator = clientOrganizationLifecycleMediator;
     }
 
     @Override
@@ -106,6 +110,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                     LOGGER.debug("Creating client organization for request - {}", request);
                     final CreateClientOrganizationDto dto = mapperFacade.map(request, CreateClientOrganizationDto.class);
                     final ClientOrganization clientOrganization = clientOrganizationService.create(dto);
+                    clientOrganizationLifecycleMediator.onCreated(clientOrganization);
                     return new CreateClientOrganizationResultResponse(clientOrganization.getUuid());
                 });
     }

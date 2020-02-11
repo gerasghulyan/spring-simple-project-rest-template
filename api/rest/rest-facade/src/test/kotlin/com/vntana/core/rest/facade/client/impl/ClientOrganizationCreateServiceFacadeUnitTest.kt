@@ -61,6 +61,7 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.empty())
         expect(mapperFacade.map(request, CreateClientOrganizationDto::class.java)).andReturn(dto)
         expect(clientOrganizationService.create(dto)).andReturn(clientOrganization)
+        expect(clientOrganizationLifecycleMediator.onCreated(clientOrganization))
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.create(request)
