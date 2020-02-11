@@ -40,6 +40,7 @@ buildscript {
 
 plugins {
     id 'org.springframework.boot' version '2.1.8.RELEASE' apply false
+    id "jacoco"
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id "org.jetbrains.kotlin.plugin.spring" version "1.3.50"
     id "org.ajoberstar.grgit" version "3.0.0"
@@ -164,6 +165,12 @@ allprojects {
             dependency("com.vntana.payment:rest-client-payment:$vntanaPaymentVersion${versionPostfix()}")
         }
     }
+
+
+    jacoco {
+        toolVersion = '0.8.5'
+    }
+
 }
 
 project(":domain") {
@@ -293,6 +300,7 @@ project(":service:service-core") {
 project(":service:service-impl") {
 
     apply plugin: "kotlin-spring"
+    apply plugin: "jacoco"
 
     group = "${platformGroup}.service"
 
@@ -394,6 +402,7 @@ project(":api:rest:rest-client") {
 
 project(":api:rest:rest-facade") {
 
+    apply plugin: "jacoco"
     group = "${platformGroup}.rest.facade"
 
     dependencies {
@@ -493,12 +502,68 @@ project(":listener:listener-core") {
 
 project(":listener:listener-impl") {
 
+    apply plugin: "jacoco"
+
     dependencies {
         api project(":listener:listener-core")
         api "com.vntana.cache:vntana-cache"
         api 'com.vntana.payment:rest-client-payment'
         testImplementation project(":helper:test-helper")
     }
+}
+
+configure(subprojects.findAll {
+    it.name == "service-impl" || it.name == "rest-facade" || it.name == "listener-impl"
+}) {
+    jacocoTestReport {
+        reports {
+            csv.enabled = false
+            xml.enabled = false
+            html.enabled = true
+            html.destination file("${buildDir}/reports/coverage")
+            println("jacoco coverage report: ${project.name}")
+            println("file://${html.destination}/index.html")
+        }
+        afterEvaluate {
+            classDirectories.from = files(classDirectories.files.collect {
+                fileTree(
+                        dir: it,
+                        includes: [
+                                'com/vntana/core/service/**',
+                                'com/vntana/core/rest/facade/**',
+                                'com/vntana/core/listener/**'
+                        ],
+                        exclude: [
+                                'com/vntana/core/service/conf/**',
+                                'com/vntana/core/rest/facade/conf/**'
+                        ])
+            })
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'CLASS'
+                includes = ['com.vntana.core.service.*.impl.*',
+                            'com.vntana.core.rest.facade.*.impl.*',
+                            'com.vntana.core.listener.*.*'
+                ]
+                excludes = [
+                        '*Exception',
+                ]
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.2
+                }
+                failOnViolation true
+            }
+        }
+    }
+
+    build.dependsOn jacocoTestReport
+    check.dependsOn jacocoTestCoverageVerification
 }
 
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
