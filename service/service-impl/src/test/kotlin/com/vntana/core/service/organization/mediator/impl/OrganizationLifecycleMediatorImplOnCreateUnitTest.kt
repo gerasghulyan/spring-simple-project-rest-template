@@ -25,7 +25,7 @@ class OrganizationLifecycleMediatorImplOnCreateUnitTest: AbstractOrganizationLif
 
     @Test
     fun `test when absent in locations and products`() {
-        val organization = organizationCommonTestHelper.buildOrganization()
+        val organization = helper.buildOrganization()
         resetAll()
         expect(applicationEventPublisher.publishEvent(OrganizationLifecyclePayload(organization, EntityLifecycle.CREATED))).andVoid()
         replayAll()

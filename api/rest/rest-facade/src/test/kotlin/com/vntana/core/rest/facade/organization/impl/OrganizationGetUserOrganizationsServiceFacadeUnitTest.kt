@@ -15,6 +15,7 @@ import org.junit.Test
  * Time: 11:35 AM
  */
 class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizationServiceFacadeUnitTest() {
+
     @Test
     fun `test getUserOrganizations when super admin`() {
         // test data
