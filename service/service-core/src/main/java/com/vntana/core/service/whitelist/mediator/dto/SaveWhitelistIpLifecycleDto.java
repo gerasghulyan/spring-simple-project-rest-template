@@ -1,8 +1,10 @@
 package com.vntana.core.service.whitelist.mediator.dto;
 
+import com.vntana.core.service.common.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -11,13 +13,15 @@ import java.util.List;
  * Date: 18.12.19
  * Time: 16:06
  */
-public class SaveWhitelistIpLifecycleDto {
+public class SaveWhitelistIpLifecycleDto implements ServiceDto {
 
-    final String organizationUuid;
-    final String organizationSlug;
-    final List<String> ips;
+    private final String organizationUuid;
+    private final String organizationSlug;
+    private final List<String> ips;
 
     public SaveWhitelistIpLifecycleDto(final String organizationUuid, final String organizationSlug, final List<String> ips) {
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        Assert.hasText(organizationSlug, "The organizationSlug should not be null or empty");
         this.organizationUuid = organizationUuid;
         this.organizationSlug = organizationSlug;
         this.ips = ips;

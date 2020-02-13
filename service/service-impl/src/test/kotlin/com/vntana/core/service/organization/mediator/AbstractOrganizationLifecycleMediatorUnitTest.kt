@@ -16,7 +16,7 @@ abstract class AbstractOrganizationLifecycleMediatorUnitTest : AbstractServiceUn
 
     protected lateinit var organizationLifecycleMediator: OrganizationLifecycleMediator
 
-    protected val organizationCommonTestHelper: OrganizationCommonTestHelper = OrganizationCommonTestHelper()
+    protected val helper: OrganizationCommonTestHelper = OrganizationCommonTestHelper()
 
     @Mock
     protected lateinit var applicationEventPublisher: ApplicationEventPublisher

@@ -5,6 +5,7 @@ import com.vntana.core.domain.whitelist.WhitelistIp
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.whitelist.dto.CreateWhitelistIpDto
 import com.vntana.core.service.whitelist.dto.UpdateWhitelistIpDto
+import com.vntana.core.service.whitelist.mediator.dto.SaveWhitelistIpLifecycleDto
 
 /**
  * Created by Arman Gevorgyan.
@@ -21,4 +22,10 @@ open class WhitelistIpCommonTestHelper : AbstractCommonTestHelper() {
 
     fun buildUpdateWhitelistIpDto(uuid: String? = uuid(), label: String? = uuid(), ip: String? = uuid()
     ): UpdateWhitelistIpDto = UpdateWhitelistIpDto(uuid, label, ip)
+
+    fun buildSaveWhitelistIpLifecycleDto(
+            organizationUuid: String? = uuid(),
+            organizationSlug: String? = uuid(),
+            ips: List<String>? = listOf(uuid(), uuid())
+    ): SaveWhitelistIpLifecycleDto = SaveWhitelistIpLifecycleDto(organizationUuid, organizationSlug, ips)
 }
