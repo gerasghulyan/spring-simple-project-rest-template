@@ -175,12 +175,16 @@ allprojects {
 
 project(":domain") {
 
+    sonarqube.skipProject = true
+
     dependencies {
         api 'com.vntana.commons:persistence-domain'
     }
 }
 
 project(":persistence:persistence-core") {
+
+    sonarqube.skipProject = true
 
     dependencies {
         implementation project(":domain")
@@ -189,6 +193,8 @@ project(":persistence:persistence-core") {
 
 project(":persistence:persistence-impl") {
 
+    sonarqube.skipProject = true
+
     dependencies {
         implementation project(":domain")
         implementation project(":persistence:persistence-core")
@@ -196,6 +202,8 @@ project(":persistence:persistence-impl") {
 }
 
 project(":commons:persistence-utils") {
+
+    sonarqube.skipProject = true
 
     group = "${platformGroup}.persistence"
 
@@ -207,6 +215,8 @@ project(":commons:persistence-utils") {
 
 project(":migration:migration-library") {
 
+    sonarqube.skipProject = true
+
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.flywaydb:flyway-core'
@@ -216,6 +226,8 @@ project(":migration:migration-library") {
 }
 
 project(":migration:migration-executable") {
+
+    sonarqube.skipProject = true
 
     group = "${platformGroup}.migration"
 
@@ -237,6 +249,8 @@ project(":migration:migration-executable") {
 
 project(":notification") {
 
+    sonarqube.skipProject = true
+
     dependencies {
         implementation "com.sflpro.notifier:api-client-library"
         implementation 'org.springframework:spring-context'
@@ -248,6 +262,8 @@ project(":notification") {
 
 project(":helper:test-helper") {
 
+    sonarqube.skipProject = true
+
     dependencies {
         implementation project(":domain")
         implementation project(":service:service-core")
@@ -258,6 +274,8 @@ project(":helper:test-helper") {
 }
 
 project(":helper:rest-test-helper") {
+
+    sonarqube.skipProject = true
 
     group = "${platformGroup}.helper"
     apply plugin: "kotlin-spring"
@@ -275,6 +293,8 @@ project(":helper:rest-test-helper") {
 
 project(":helper:rest-resource-test-helper") {
 
+    sonarqube.skipProject = true
+
     group = "${platformGroup}.helper"
     apply plugin: "kotlin-spring"
 
@@ -289,6 +309,8 @@ project(":helper:rest-resource-test-helper") {
 }
 
 project(":service:service-core") {
+
+    sonarqube.skipProject = true
 
     group = "${platformGroup}.service"
 
@@ -321,8 +343,9 @@ project(":service:service-impl") {
 project(":service:service-integration-test") {
 
     group = "${platformGroup}.service"
-
+    apply plugin: "jacoco"
     apply plugin: "kotlin-spring"
+    sonarqube.skipProject = true
 
     dependencies {
         testImplementation project(":helper:test-helper")
@@ -340,6 +363,7 @@ project(":service:service-integration-test") {
 project(":api:rest:rest-model") {
 
     apply plugin: 'maven'
+    sonarqube.skipProject = true
 
     archivesBaseName = 'rest-model-core'
 
@@ -372,6 +396,7 @@ project(":api:rest:rest-model") {
 project(":api:rest:rest-client") {
 
     apply plugin: 'maven'
+    sonarqube.skipProject = true
 
     archivesBaseName = 'rest-client-core'
 
@@ -424,6 +449,7 @@ project(":api:rest:rest-facade") {
 project(":api:rest:rest-resource") {
 
     group = "${platformGroup}.rest.resource"
+    sonarqube.skipProject = true
 
     dependencies {
         api project(":api:rest:rest-facade")
@@ -439,6 +465,7 @@ project(":api:rest:rest-resource-executable") {
 
     group = "${platformGroup}.rest.resource"
 
+    sonarqube.skipProject = true
     apply plugin: "org.springframework.boot"
 
     bootJar {
@@ -471,6 +498,8 @@ project(":api:rest:rest-resource-executable") {
 project(":api:rest:rest-resource-integration-test") {
 
     apply plugin: "kotlin-spring"
+    sonarqube.skipProject = true
+    apply plugin: "jacoco"
 
     dependencies {
         implementation project(":api:rest:rest-client")
@@ -494,6 +523,8 @@ project(":api:rest:rest-resource-integration-test") {
 
 project(":listener:listener-core") {
 
+    sonarqube.skipProject = true
+
     dependencies {
         api project(":domain")
         api project(":service:service-core")
@@ -512,13 +543,14 @@ project(":listener:listener-impl") {
     }
 }
 
+//region Jacoco unit tests
 configure(subprojects.findAll {
     it.name == "service-impl" || it.name == "rest-facade" || it.name == "listener-impl"
 }) {
     jacocoTestReport {
         reports {
             csv.enabled = false
-            xml.enabled = false
+            xml.enabled = true
             html.enabled = true
             html.destination file("${buildDir}/reports/coverage")
             println("jacoco coverage report: ${project.name}")
@@ -564,6 +596,99 @@ configure(subprojects.findAll {
 
     build.dependsOn jacocoTestReport
     check.dependsOn jacocoTestCoverageVerification
+}
+//endregion
+
+//region Jacoco integration tests
+configure(subprojects.findAll {
+    it.name == "service-integration-test" || it.name == "rest-resource-integration-test"}) {
+    jacocoTestReport {
+
+        reports {
+            csv.enabled = false
+            xml.enabled = true
+            html.enabled = true
+            html.destination file("${buildDir}/reports/coverage")
+            println("jacoco coverage report: ${project.name}")
+            println("file://${html.destination}/index.html")
+        }
+        afterEvaluate {
+            if (project.name == "service-integration-test") {
+                classDirectories.from = files(files(rootProject.project(":service:service-impl").buildDir).collect().collect {
+                    fileTree(
+                            dir: it,
+                            includes: [
+                                    'classes/java/main/com/vntana/core/service/**'
+                            ],
+                            exclude: [
+                            ])
+                })
+                additionalSourceDirs.from("${rootProject.project(":service:service-impl").projectDir}/src/main/java")
+            } else if (project.name == "rest-resource-integration-test") {
+                List allFiles = files(rootProject.project(":api:rest:rest-facade").buildDir).collect()
+                allFiles.addAll(files(rootProject.project(":service:service-impl").buildDir).collect())
+                classDirectories.from = files(allFiles.collect {
+                    fileTree(
+                            dir: it,
+                            includes: [
+                                    'classes/java/main/com/vntana/core/rest/facade/**',
+                                    'classes/java/main/com/vntana/core/service/**'
+                            ],
+                            exclude: [
+                            ])
+                })
+                additionalSourceDirs.from("${rootProject.project(":service:service-impl").projectDir}/src/main/java",
+                        "${rootProject.project(":api:rest:rest-facade").projectDir}/src/main/java")
+            }
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                List allFiles = files(rootProject.project(":api:rest:rest-facade").buildDir).collect()
+                allFiles.addAll(files(rootProject.project(":service:service-impl").buildDir).collect())
+                classDirectories.from = files(allFiles.collect {
+                    fileTree(
+                            dir: it,
+                            includes: [
+                                    'classes/java/main/com/vntana/core/rest/facade/**',
+                                    'classes/java/main/com/vntana/core/service/**'
+                            ],
+                            exclude: [
+                            ])
+                })
+                element = 'CLASS'
+                includes = ['com.vntana.core.service.*.impl.*',
+                            'com.vntana.core.rest.facade.*.impl.*',
+                            'com.vntana.core.listener.*.*'
+                ]
+                excludes = [
+                        '*Exception'
+                ]
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.2
+                }
+                failOnViolation false
+            }
+        }
+    }
+
+    build.dependsOn jacocoTestReport
+    check.dependsOn jacocoTestCoverageVerification
+}
+//endregion
+
+sonarqube {
+
+    properties {
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.projectKey", "vntanaplatform2_vntana-core"
+        property "sonar.organization", "vntanaplatform2"
+        //property "sonar.login", "5a036bca40998e0bd8f7b145b23f9c872d949f6c"
+    }
 }
 
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage

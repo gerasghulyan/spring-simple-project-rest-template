@@ -44,11 +44,7 @@ pipeline {
                         )
                     ]
                 ) {
-                sh './gradlew sonarqube \
-                      -Dsonar.projectKey=vntanaplatform2_vntana-core \
-                      -Dsonar.organization=vntanaplatform2 \
-                      -Dsonar.host.url=https://sonarcloud.io \
-                      -Dsonar.login=$SONAR_TOKEN'
+                sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
                }
             }
         }
