@@ -1,6 +1,6 @@
 package com.vntana.core.helper.client
 
-import com.vntana.core.helper.AbstractRestTestHelper
+import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest
 import com.vntana.core.model.client.request.UpdateClientOrganizationRequest

@@ -1,6 +1,6 @@
 package com.vntana.core.helper.user
 
-import com.vntana.core.helper.AbstractRestTestHelper
+import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.user.request.*
 
 /**

@@ -1,6 +1,6 @@
 package com.vntana.core.helper.invitation
 
-import com.vntana.core.helper.AbstractRestTestHelper
+import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.invitation.request.InvitationToPlatformRequest
 
 /**

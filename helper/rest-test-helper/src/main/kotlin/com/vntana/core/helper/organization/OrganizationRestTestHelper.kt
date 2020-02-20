@@ -1,6 +1,6 @@
 package com.vntana.core.helper.organization
 
-import com.vntana.core.helper.AbstractRestTestHelper
+import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest
 import com.vntana.core.model.organization.request.CreateOrganizationRequest
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest
