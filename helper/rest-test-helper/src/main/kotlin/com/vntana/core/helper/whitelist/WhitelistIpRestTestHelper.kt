@@ -1,6 +1,6 @@
 package com.vntana.core.helper.whitelist
 
-import com.vntana.core.helper.AbstractRestTestHelper
+import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpItemRequestModel
 import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest
 import com.vntana.core.model.whitelist.response.model.GetWhitelistIpResponseModel
