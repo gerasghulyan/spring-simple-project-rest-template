@@ -275,14 +275,33 @@ project(":helper:test-helper") {
 
 project(":helper:rest-test-helper") {
 
+    apply plugin: 'maven'
+    apply plugin: "kotlin-spring"
+    
     sonarqube.skipProject = true
 
-    group = "${platformGroup}.helper"
-    apply plugin: "kotlin-spring"
+    archivesBaseName = 'rest-test-helper'
 
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+
+                repository(url: "https://nexus.vntana.com/repository/maven-releases/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                snapshotRepository(url: "https://nexus.vntana.com/repository/maven-snapshots/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                pom.version = environmentPlatformVersion()
+                pom.artifactId = "rest-test-helper"
+                pom.groupId = platformGroup
+            }
+        }
+    }
+    
     dependencies {
-        implementation project(":domain")
-        api project(":helper:test-helper")
         implementation project(":api:rest:rest-model")
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework:spring-context'

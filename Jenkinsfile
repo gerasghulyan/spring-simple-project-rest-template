@@ -66,7 +66,7 @@ pipeline {
                         )
                     ]
                 ) {
-                    sh "./gradlew :api:rest:rest-model:upload :api:rest:rest-client:upload --refresh-dependencies"
+                    sh "./gradlew :api:rest:rest-model:upload :api:rest:rest-client:upload :helper:rest-test-helper:upload --refresh-dependencies"
                 }
             }
         }
