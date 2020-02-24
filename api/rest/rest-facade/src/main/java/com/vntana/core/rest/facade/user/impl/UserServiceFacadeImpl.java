@@ -93,7 +93,6 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             mutableResponse.setValue(new CreateUserResponseModel(user.getUuid(), organization.getUuid()));
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
-        verificationSenderComponent.sendVerificationEmail(new SendUserVerificationRequest(request.getEmail(), request.getToken()));
         return new CreateUserResponse(mutableResponse.getValue());
     }
 
