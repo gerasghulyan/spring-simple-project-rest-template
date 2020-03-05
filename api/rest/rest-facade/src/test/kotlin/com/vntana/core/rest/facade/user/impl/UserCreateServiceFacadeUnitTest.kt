@@ -2,8 +2,6 @@ package com.vntana.core.rest.facade.user.impl
 
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.user.error.UserErrorResponseModel
-import com.vntana.core.model.user.request.SendUserVerificationRequest
-import com.vntana.core.model.user.response.SendUserVerificationResponse
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
@@ -42,7 +40,6 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
                 UserRole.ORGANIZATION_ADMIN
         ))).andReturn(user)
         expect(organizationLifecycleMediator.onCreated(organization))
-        expect(userVerificationSenderComponent.sendVerificationEmail(SendUserVerificationRequest(request.email, request.token))).andReturn(SendUserVerificationResponse(user.uuid))
         replayAll()
         // test scenario
         val resultResponse = userServiceFacade.create(request)

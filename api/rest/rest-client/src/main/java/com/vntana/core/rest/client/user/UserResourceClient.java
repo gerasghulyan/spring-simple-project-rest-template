@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
  * Date: 10/18/19
  * Time: 3:46 PM
  */
-@FeignClient(name = "coreUsers", path = "users", url = "${ms.core.url}")
+@FeignClient(name = "coreUsers", path = "users", url = "${ms.core.url}", primary = false)
 public interface UserResourceClient {
     @PostMapping(path = "/create")
     CreateUserResponse createUser(@RequestBody final CreateUserRequest request);

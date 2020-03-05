@@ -1,7 +1,7 @@
 buildscript {
     ext {
         platformGroup = 'com.vntana.core'
-        platformVersion = '0.2.0'
+        platformVersion = '0.3.0'
         kotlinVersion = '1.3.61'
         vavrVersion = '0.10.2'
         easymockVersion = '4.0.2'
@@ -10,9 +10,9 @@ buildscript {
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
         sflNotifierVersion = '1.9.0-SNAPSHOT'
-        commonsApiModelsVersion = '0.2.0'
-        vntanaCacheVersion = '0.2.0'
-        vntanaPaymentVersion = '0.2.0'
+        commonsApiModelsVersion = '0.3.0'
+        vntanaCacheVersion = '0.3.0'
+        vntanaPaymentVersion = '0.3.0'
     }
 
     repositories {
@@ -161,6 +161,7 @@ allprojects {
             dependency("com.vntana.commons:api-models:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.commons:persistence-domain:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.commons:cache:$commonsApiModelsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:rest-test-helper:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
             dependency("com.vntana.payment:rest-client-payment:$vntanaPaymentVersion${versionPostfix()}")
         }
@@ -275,14 +276,34 @@ project(":helper:test-helper") {
 
 project(":helper:rest-test-helper") {
 
+    apply plugin: 'maven'
+    apply plugin: "kotlin-spring"
+    
     sonarqube.skipProject = true
 
-    group = "${platformGroup}.helper"
-    apply plugin: "kotlin-spring"
+    archivesBaseName = 'rest-test-helper'
 
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+
+                repository(url: "https://nexus.vntana.com/repository/maven-releases/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                snapshotRepository(url: "https://nexus.vntana.com/repository/maven-snapshots/") {
+                    authentication(userName: System.env.SONATYPE_USERNAME, password: System.env.SONATYPE_PASSWORD)
+                }
+
+                pom.version = environmentPlatformVersion()
+                pom.artifactId = "rest-test-helper"
+                pom.groupId = platformGroup
+            }
+        }
+    }
+    
     dependencies {
-        implementation project(":domain")
-        api project(":helper:test-helper")
+        compile "com.vntana.commons:rest-test-helper"
         implementation project(":api:rest:rest-model")
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework:spring-context'

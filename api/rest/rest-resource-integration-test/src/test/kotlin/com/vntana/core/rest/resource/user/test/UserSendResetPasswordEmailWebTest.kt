@@ -3,9 +3,6 @@ package com.vntana.core.rest.resource.user.test
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.rest.resource.user.AbstractUserWebTest
 import org.junit.Test
-import org.mockito.ArgumentMatchers.argThat
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 
 /**
  * Created by Arman Gevorgyan.
@@ -30,7 +27,6 @@ class UserSendResetPasswordEmailWebTest : AbstractUserWebTest() {
         userResourceClient.sendResetPassword(request).let {
             assertBasicSuccessResultResponse(it)
         }
-        verify(emailNotificationResourceClient, times(2)).createEmailNotification(argThat { argument -> argument.recipientEmail == email })
     }
 
 }
