@@ -737,7 +737,7 @@ configure(subprojects.findAll {
 
     task createDockerfile(type: Dockerfile) {
         destFile = project.layout.buildDirectory.file('docker/Dockerfile')
-        from 'openjdk:8-jre-alpine'
+        from 'openjdk:8-jre'
         label(
                 [
                         'maintainer': 'vntana@sfl.am',
