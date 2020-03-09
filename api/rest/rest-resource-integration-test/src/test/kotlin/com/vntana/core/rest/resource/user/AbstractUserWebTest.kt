@@ -9,6 +9,7 @@ import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import com.vntana.payment.client.customer.PaymentCustomerResourceClient
 import com.vntana.payment.reset.model.customer.create.response.CustomerCreateResultResponse
 import com.vntana.payment.reset.model.customer.create.response.model.CustomerCreateResponseModel
+import com.vntana.payment.reset.model.customer.update.response.CustomerUpdateResultResponse
 import org.junit.Before
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
@@ -42,5 +43,7 @@ abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
         `when`(emailNotificationResourceClient.createEmailNotification(ArgumentMatchers.any())).thenReturn(ResultResponseModel<CreateEmailNotificationResponse>())
         `when`(customerResourceClient.create(ArgumentMatchers.any()))
                 .thenReturn(CustomerCreateResultResponse(CustomerCreateResponseModel(uuid())))
+        `when`(customerResourceClient.update(ArgumentMatchers.any()))
+                .thenReturn(CustomerUpdateResultResponse())
     }
 }
