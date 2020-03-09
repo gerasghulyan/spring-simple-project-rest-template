@@ -2,6 +2,7 @@ package com.vntana.core.service.organization;
 
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface OrganizationService {
     Organization update(final UpdateOrganizationDto dto);
 
     String getOrganizationOwnerEmail(final String organizationUuid);
+
+    List<Organization> getUserOrganizationsByUserUuidAndRole(final GetUserOrganizationsByUserUuidAndRoleDto dto);
 }

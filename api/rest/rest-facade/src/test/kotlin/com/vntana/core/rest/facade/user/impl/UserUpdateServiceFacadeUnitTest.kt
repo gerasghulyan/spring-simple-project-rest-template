@@ -42,7 +42,8 @@ class UserUpdateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
     @Test
     fun `test update`() {
         // test data
-        val user = userHelper.buildUser()
+        val organization = organizationHelper.buildOrganization()
+        val user = userHelper.buildUser(clientOrganization = organization)
         val request = restHelper.buildUpdateUserRequest(uuid = user.uuid)
         val dto = userHelper.buildUpdateUserDto(
                 request.uuid,
@@ -53,6 +54,10 @@ class UserUpdateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
         // expectations
         expect(userService.existsByUuid(request.uuid)).andReturn(true)
         expect(userService.update(dto)).andReturn(user)
+        expect(organizationService.getUserOrganizationsByUserUuidAndRole(organizationHelper.buildGetUserOrganizationsByUserUuidAndRoleDto(
+                userUuid = user.uuid
+        ))).andReturn(listOf(organization))
+        expect(organizationLifecycleMediator.onUpdated(organization)).andVoid()
         replayAll()
         // test scenario
         val result = userServiceFacade.update(request)

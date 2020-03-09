@@ -4,6 +4,8 @@ import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.verify
 
 /**
  * Created by Arman Gevorgyan.
@@ -44,7 +46,6 @@ class OrganizationUpdateWebTest : AbstractOrganizationWebTest() {
                 slug = slugName,
                 imageBlobId = null
         ).response().uuid
-
         organizationResourceClient.update(
                 resourceTestHelper.buildUpdateOrganizationRequest(uuid = organizationUuid, name = newName, imageBlobId = newImageBlobId)
         ).let {
@@ -56,5 +57,7 @@ class OrganizationUpdateWebTest : AbstractOrganizationWebTest() {
                 assertThat(it.response().slug).isEqualTo(slugName)
             }
         }
+        verify(customerResourceClient).update(ArgumentMatchers.argThat { inRequest -> inRequest.organizationName == newName &&
+                inRequest.organizationUuid == organizationUuid})
     }
 }
