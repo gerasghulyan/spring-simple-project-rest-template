@@ -4,7 +4,6 @@ import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.listener.commons.EntityLifecycle;
 import com.vntana.core.listener.commons.EntityLifecycleListener;
-import com.vntana.core.listener.customer.create.CustomerCreationEventListener;
 import com.vntana.core.listener.organization.OrganizationLifecyclePayload;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -28,7 +27,7 @@ import static java.lang.String.format;
 @Lazy(false)
 public class CustomerUpdateEventListener implements EntityLifecycleListener<Organization, OrganizationLifecyclePayload> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerCreationEventListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerUpdateEventListener.class);
 
     private final OrganizationService organizationService;
     private final UserService userService;
