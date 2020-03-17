@@ -31,6 +31,7 @@ class OrganizationUpdateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         resetAll()
         expect(organizationService.existsByUuid(request.uuid)).andReturn(true)
         expect(organizationService.update(dto)).andReturn(updatedOrganization)
+        expect(organizationLifecycleMediator.onUpdated(updatedOrganization)).andVoid()
         replayAll()
         organizationServiceFacade.update(request).let {
             assertBasicSuccessResultResponse(it)

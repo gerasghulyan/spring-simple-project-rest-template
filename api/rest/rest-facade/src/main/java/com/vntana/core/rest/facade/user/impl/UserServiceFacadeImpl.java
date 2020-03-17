@@ -15,6 +15,7 @@ import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponen
 import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
@@ -25,6 +26,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collections;
@@ -204,6 +206,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return response;
     }
 
+    @Transactional
     @Override
     public UpdateUserResponse update(final UpdateUserRequest request) {
         Assert.notNull(request, "The UpdateUserRequest should not be null");
@@ -216,6 +219,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 request.getImageBlobId(),
                 request.getFullName()
         ));
+        fireUserOwnedOrganizationsOnUpdateEvent(updatedUser.getUuid());
         LOGGER.debug("Successfully processed facade update method for request - {}", request);
         return new UpdateUserResponse(updatedUser.getUuid());
     }
@@ -247,5 +251,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return Collections.singletonList(UserErrorResponseModel.USER_ALREADY_VERIFIED);
         }
         return Collections.emptyList();
+    }
+
+    private void fireUserOwnedOrganizationsOnUpdateEvent(final String userUuid) {
+        organizationService.getUserOrganizationsByUserUuidAndRole(new GetUserOrganizationsByUserUuidAndRoleDto(
+                        userUuid,
+                        UserRole.ORGANIZATION_ADMIN
+                )
+        ).forEach(organizationLifecycleMediator::onUpdated);
     }
 }

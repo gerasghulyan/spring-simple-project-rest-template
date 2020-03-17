@@ -5,6 +5,7 @@ import com.vntana.core.persistence.organization.OrganizationRepository;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.exception.OrganizationOwnerNotFoundException;
 import org.slf4j.Logger;
@@ -97,6 +98,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         final Optional<String> emailOptional = organizationRepository.findOrganizationOwnerEmail(organizationUuid);
         LOGGER.debug("Successfully processed organization owner email retrieval having uuid - {}", organizationUuid);
         return emailOptional.orElseThrow(() -> new OrganizationOwnerNotFoundException(organizationUuid));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Organization> getUserOrganizationsByUserUuidAndRole(final GetUserOrganizationsByUserUuidAndRoleDto dto) {
+        Assert.notNull(dto, "The 'GetUserOrganizationsByUserUuidAndRoleDto' should not be null");LOGGER.debug("Retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
+        final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole().name());
+        LOGGER.debug("Successfully processed retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
+        return organizations;
     }
 
     private Optional<Organization> findByUuid(final String uuid) {
