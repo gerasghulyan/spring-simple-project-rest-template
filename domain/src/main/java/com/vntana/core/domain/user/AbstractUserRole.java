@@ -34,8 +34,6 @@ public abstract class AbstractUserRole extends AbstractDomainEntity {
         this.userRole = userRole;
     }
 
-    public abstract UserRoleType getType();
-
     public User getUser() {
         return user;
     }

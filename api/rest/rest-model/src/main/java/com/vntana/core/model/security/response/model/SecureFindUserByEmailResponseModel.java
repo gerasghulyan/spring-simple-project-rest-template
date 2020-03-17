@@ -2,9 +2,12 @@ package com.vntana.core.model.security.response.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.ResponseModel;
+import com.vntana.core.model.auth.response.UserRoleModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.List;
 
 /**
  * Created by Arthur Asatryan.
@@ -22,16 +25,21 @@ public class SecureFindUserByEmailResponseModel implements ResponseModel {
 
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("roles")
+    private List<UserRoleModel> roles;
     //endregion
 
     //region Constructors
     public SecureFindUserByEmailResponseModel() {
+        super();
     }
 
-    public SecureFindUserByEmailResponseModel(final String uuid, final String username, final String password) {
+    public SecureFindUserByEmailResponseModel(final String uuid, final String username, final String password, final List<UserRoleModel> roles) {
         this.uuid = uuid;
         this.username = username;
         this.password = password;
+        this.roles = roles;
     }
     //endregion
 
@@ -67,6 +75,7 @@ public class SecureFindUserByEmailResponseModel implements ResponseModel {
                 .append("uuid", uuid)
                 .append("username", username)
                 .append("password", password)
+                .append("roles", roles)
                 .toString();
     }
     //endregion
@@ -94,6 +103,14 @@ public class SecureFindUserByEmailResponseModel implements ResponseModel {
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public List<UserRoleModel> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(final List<UserRoleModel> roles) {
+        this.roles = roles;
     }
     //endregion
 

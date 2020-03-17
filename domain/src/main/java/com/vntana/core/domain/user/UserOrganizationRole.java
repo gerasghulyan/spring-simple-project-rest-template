@@ -30,11 +30,6 @@ public class UserOrganizationRole extends AbstractUserRole {
     }
 
     @Override
-    public UserRoleType getType() {
-        return UserRoleType.ORGANIZATION_ROLE;
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;

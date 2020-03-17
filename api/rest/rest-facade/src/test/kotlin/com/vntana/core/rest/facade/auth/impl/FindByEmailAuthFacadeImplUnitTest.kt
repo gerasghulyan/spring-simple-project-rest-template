@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.auth.impl
 
+import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.security.response.model.SecureFindUserByEmailResponseModel
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.model.user.request.FindUserByEmailRequest
@@ -38,7 +39,7 @@ class FindByEmailAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTest() {
     fun `test findByEmail`() {
         // test data
         val user = userHelper.buildUser()
-        val secureUser = SecureFindUserByEmailResponseModel(user.uuid, user.email, user.password)
+        val secureUser = SecureFindUserByEmailResponseModel(user.uuid, user.email, user.password, listOf(UserRoleModel.ORGANIZATION_ADMIN))
         resetAll()
         // expectations
         expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
@@ -46,11 +47,10 @@ class FindByEmailAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTest() {
         expect(userService.findByEmail(user.email)).andReturn(Optional.of(user))
         replayAll()
         // test scenario
-        val resultResponse = authFacade.findByEmail(FindUserByEmailRequest(user.email))
-        restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.success()).isTrue()
-        assertThat(resultResponse.errors()).isEmpty()
-        assertThat(resultResponse.response()).isEqualTo(secureUser)
+        authFacade.findByEmail(FindUserByEmailRequest(user.email)).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response()).isEqualTo(secureUser)
+        }
         verifyAll()
     }
 }
