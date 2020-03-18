@@ -20,9 +20,4 @@ public class UserSuperAdminRole extends AbstractUserRole {
     public UserSuperAdminRole(final User user) {
         super(user, UserRole.SUPER_ADMIN);
     }
-
-    @Override
-    public UserRoleType getType() {
-        return UserRoleType.SUPER_ADMIN_ROLE;
-    }
 }

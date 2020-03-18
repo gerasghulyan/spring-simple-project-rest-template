@@ -197,9 +197,9 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         return user.roles()
                 .stream()
                 .map(userRole -> {
-                    LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {} and role - {}", user.getUuid(), userRole.getType().name());
-                    switch (userRole.getType()) {
-                        case ORGANIZATION_ROLE:
+                    LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
+                    switch (userRole.getUserRole()) {
+                        case ORGANIZATION_ADMIN:
                             final UserOrganizationRole userOrganizationRole = (UserOrganizationRole) userRole;
                             return new GetUserOrganizationsResponseModel(
                                     userOrganizationRole.getOrganization().getUuid(),
@@ -209,7 +209,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                                     userOrganizationRole.getOrganization().getImageBlobId(),
                                     userOrganizationRole.getOrganization().getCreated()
                             );
-                        case CLIENT_ROLE:
+                        case CLIENT_ADMIN:
                             final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
                             return new GetUserOrganizationsResponseModel(
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),

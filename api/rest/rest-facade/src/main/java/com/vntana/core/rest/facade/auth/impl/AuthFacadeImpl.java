@@ -1,13 +1,14 @@
 package com.vntana.core.rest.facade.auth.impl;
 
 import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest;
-import com.vntana.core.model.security.response.SecureFindUserByUuidAndOrganizationResponse;
 import com.vntana.core.model.security.response.SecureFindUserByEmailResponse;
-import com.vntana.core.model.security.response.model.SecureUserOrganizationResponseModel;
+import com.vntana.core.model.security.response.SecureFindUserByUuidAndOrganizationResponse;
 import com.vntana.core.model.security.response.model.SecureFindUserByEmailResponseModel;
+import com.vntana.core.model.security.response.model.SecureUserOrganizationResponseModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * Created by Geras Ghulyan.
@@ -57,7 +59,12 @@ public class AuthFacadeImpl implements AuthFacade {
                             new SecureFindUserByEmailResponseModel(
                                     user.getUuid(),
                                     user.getEmail(),
-                                    user.getPassword()
+                                    user.getPassword(),
+                                    user.roles().stream()
+                                            .map(AbstractUserRole::getUserRole)
+                                            .map(Enum::name)
+                                            .map(UserRoleModel::valueOf)
+                                            .collect(Collectors.toList())
                             )
                     ))
                     .orElseGet(() -> new SecureFindUserByEmailResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
