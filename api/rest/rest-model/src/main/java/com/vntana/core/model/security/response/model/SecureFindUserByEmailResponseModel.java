@@ -74,7 +74,6 @@ public class SecureFindUserByEmailResponseModel implements ResponseModel {
         return new ToStringBuilder(this)
                 .append("uuid", uuid)
                 .append("username", username)
-                .append("password", password)
                 .append("roles", roles)
                 .toString();
     }
