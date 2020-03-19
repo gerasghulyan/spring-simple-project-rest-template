@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.whitelist.test
 
 import com.vntana.core.model.whitelist.error.WhitelistIpErrorResponseModel
 import com.vntana.core.rest.resource.whitelist.AbstractWhitelistIpWebTest
+import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -14,14 +15,18 @@ class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
 
     @Test
     fun `test with invalid arguments`() {
-        val request1 = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = null)
-        whitelistIpResourceClient.save(request1).let {
-            assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.MISSING_ORGANIZATION_UUID)
-        }
-        val request2 = testHelper.buildCreateOrUpdateWhitelistIpsRequest(whitelistIps = null)
-        whitelistIpResourceClient.save(request2).let {
-            assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.MISSING_WHITELIST_IPS)
-        }
+        val request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(
+               whitelistIps = listOf(testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = null))
+        )
+        assertBasicErrorResultResponse(whitelistIpResourceClient.save(request), WhitelistIpErrorResponseModel.MISSING_IP)
+        val request1 = testHelper.buildCreateOrUpdateWhitelistIpsRequest(
+                whitelistIps = listOf(testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = StringUtils.EMPTY))
+        )
+        assertBasicErrorResultResponse(whitelistIpResourceClient.save(request1), WhitelistIpErrorResponseModel.MISSING_IP)
+        val request2 = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = null)
+        assertBasicErrorResultResponse(whitelistIpResourceClient.save(request2), WhitelistIpErrorResponseModel.MISSING_ORGANIZATION_UUID)
+        val request3 = testHelper.buildCreateOrUpdateWhitelistIpsRequest(whitelistIps = null)
+        assertBasicErrorResultResponse(whitelistIpResourceClient.save(request3), WhitelistIpErrorResponseModel.MISSING_WHITELIST_IPS)
     }
 
     @Test
@@ -30,17 +35,13 @@ class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
                 testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = "256.200.0.0"),
                 testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel())
         )
-        whitelistIpResourceClient.save(request).let {
-            assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.INVALID_IP)
-        }
+        assertBasicErrorResultResponse(whitelistIpResourceClient.save(request), WhitelistIpErrorResponseModel.INVALID_IP)
     }
 
     @Test
     fun `test when organization not found`() {
         val request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = uuid())
-        whitelistIpResourceClient.save(request).let {
-            assertBasicErrorResultResponse(it, WhitelistIpErrorResponseModel.ORGANIZATION_NOT_FOUND)
-        }
+        assertBasicErrorResultResponse(whitelistIpResourceClient.save(request), WhitelistIpErrorResponseModel.ORGANIZATION_NOT_FOUND)
     }
 
     @Test
@@ -53,9 +54,7 @@ class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
                         testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = validIp)
                 )
         )
-        whitelistIpResourceClient.save(request).let {
-            assertBasicSuccessResultResponse(it)
-        }
+        assertBasicSuccessResultResponse(whitelistIpResourceClient.save(request))
         whitelistIpResourceClient.getByOrganization(organizationUuid1).let {
             assertThat(it.response().totalCount()).isEqualTo(1)
             assertThat(it.response().items()[0].organizationUuid).isEqualTo(organizationUuid1)
@@ -79,15 +78,13 @@ class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
                         testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel()
                 )
         ))
-        val label = ""
+        val label = StringUtils.EMPTY
         val ip = testHelper.validIp()
         val request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid = organizationUuid1,
                 whitelistIps = listOf(
                         testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label = label, ip = ip)
                 ))
-        whitelistIpResourceClient.save(request).let {
-            assertBasicSuccessResultResponse(it)
-        }
+        assertBasicSuccessResultResponse(whitelistIpResourceClient.save(request))
         whitelistIpResourceClient.getByOrganization(organizationUuid1).let {
             assertThat(it.response().totalCount()).isEqualTo(1)
             assertThat(it.response().items()[0].organizationUuid).isEqualTo(organizationUuid1)

@@ -1,17 +1,24 @@
 package com.vntana.core.model.whitelist.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
+import com.vntana.core.model.whitelist.error.WhitelistIpErrorResponseModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.validator.routines.InetAddressValidator;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Arman Gevorgyan.
  * Date: 11/28/19
  * Time: 5:44 PM
  */
-public class CreateOrUpdateWhitelistIpItemRequestModel extends AbstractRequestModel {
+public class CreateOrUpdateWhitelistIpItemRequestModel extends AbstractRequestModel implements ValidatableRequest<WhitelistIpErrorResponseModel> {
 
     @JsonProperty("label")
     private String label;
@@ -26,6 +33,19 @@ public class CreateOrUpdateWhitelistIpItemRequestModel extends AbstractRequestMo
     public CreateOrUpdateWhitelistIpItemRequestModel(final String label, final String ip) {
         this.label = label;
         this.ip = ip;
+    }
+
+    @Override
+    public List<WhitelistIpErrorResponseModel> validate() {
+        if (StringUtils.isBlank(ip)) {
+            return Collections.singletonList(WhitelistIpErrorResponseModel.MISSING_IP);
+        }
+        final boolean validInet4Address = InetAddressValidator.getInstance().isValidInet4Address(ip);
+        final boolean validInet6Address = InetAddressValidator.getInstance().isValidInet6Address(ip);
+        if (!(validInet4Address || validInet6Address)) {
+            return Collections.singletonList(WhitelistIpErrorResponseModel.INVALID_IP);
+        }
+        return Collections.emptyList();
     }
 
     @Override

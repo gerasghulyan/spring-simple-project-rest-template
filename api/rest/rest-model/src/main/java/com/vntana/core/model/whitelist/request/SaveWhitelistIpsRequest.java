@@ -8,10 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Arman Gevorgyan.
@@ -44,15 +44,10 @@ public class SaveWhitelistIpsRequest extends AbstractRequestModel implements Val
         if (whitelistIps == null) {
             return Collections.singletonList(WhitelistIpErrorResponseModel.MISSING_WHITELIST_IPS);
         }
-        final boolean containsWrongIp = whitelistIps.stream().map(CreateOrUpdateWhitelistIpItemRequestModel::getIp).anyMatch(ip -> {
-            final boolean validInet4Address = InetAddressValidator.getInstance().isValidInet4Address(ip);
-            final boolean validInet6Address = InetAddressValidator.getInstance().isValidInet6Address(ip);
-            return !(validInet4Address || validInet6Address);
-        });
-        if (containsWrongIp) {
-            return Collections.singletonList(WhitelistIpErrorResponseModel.INVALID_IP);
-        }
-        return Collections.emptyList();
+        return whitelistIps.parallelStream()
+                .flatMap(ip -> ip.validate().stream())
+                .distinct()
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
     @Override
