@@ -36,7 +36,10 @@ public class OrganizationLifecycleMediatorImpl implements OrganizationLifecycleM
 
     @Override
     public void onUpdated(final Organization organization) {
-        throw new UnsupportedOperationException("Currently we are not supporting onUpdate case");
+        assertOrganization(organization);
+        LOGGER.debug("Publishing organization update event for uuid - {}", organization.getUuid());
+        applicationEventPublisher.publishEvent(new OrganizationLifecyclePayload(organization, EntityLifecycle.UPDATED));
+        LOGGER.debug("Successfully published organization update event for uuid - {}", organization.getUuid());
     }
 
     @Override

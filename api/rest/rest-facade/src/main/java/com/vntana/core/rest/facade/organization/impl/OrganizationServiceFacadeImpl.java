@@ -36,6 +36,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collections;
@@ -173,6 +174,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         return new GetOrganizationByUuidResultResponse(response);
     }
 
+    @Transactional
     @Override
     public UpdateOrganizationResultResponse update(final UpdateOrganizationRequest request) {
         LOGGER.debug("Processing organization facade update method for request - {}", request);
@@ -185,6 +187,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 request.getName()
         );
         final Organization organization = organizationService.update(dto);
+        organizationLifecycleMediator.onUpdated(organization);
         LOGGER.debug("Successfully processed organization facade update method for request - {}", request);
         return new UpdateOrganizationResultResponse(organization.getUuid());
     }
