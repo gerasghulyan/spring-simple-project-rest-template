@@ -3,6 +3,7 @@ package com.vntana.core.service.token.impl;
 import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.persistence.token.TokenRepository;
 import com.vntana.core.service.token.TokenService;
+import com.vntana.core.service.token.exception.TokenNotFoundForUuidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,26 @@ public class TokenServiceImpl implements TokenService {
     public Optional<AbstractToken> findByUuid(final String uuid) {
         Assert.notNull(uuid, "The uuid should not be null");
         return tokenRepository.findByUuid(uuid);
+    }
+
+    @Transactional
+    @Override
+    public AbstractToken getByUuid(final String uuid) {
+        Assert.hasText(uuid, "The AbstractToken uuid should not be null or empty");
+        LOGGER.debug("Retrieving abstract token having uuid - {}", uuid);
+        final AbstractToken token = findByUuid(uuid).orElseThrow(() -> new TokenNotFoundForUuidException(uuid, AbstractToken.class));
+        LOGGER.debug("Successfully retrieved abstract token having uuid - {}", uuid);
+        return token;
+    }
+
+    @Transactional
+    @Override
+    public AbstractToken expire(final String tokenUuid) {
+        Assert.hasText(tokenUuid, "The token uuid should not be null or empty");
+        LOGGER.debug("Expiring token having uuid - {}", tokenUuid);
+        final AbstractToken token = getByUuid(tokenUuid);
+        token.expire();
+        LOGGER.debug("Expiring token having uuid - {}", tokenUuid);
+        return token;
     }
 }

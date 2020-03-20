@@ -1,7 +1,7 @@
 package com.vntana.core.helper.integration.token
 
 import com.vntana.core.domain.token.ResetPasswordToken
-import com.vntana.core.helper.integration.user.UserServiceIntegrationTestHelper
+import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.token.ResetPasswordTokenService
@@ -21,7 +21,7 @@ class TokenIntegrationTestHelper : TokenCommonTestHelper() {
     private val userCommonTestHelper = UserCommonTestHelper()
 
     @Autowired
-    private lateinit var userIntegrationTestHelper: UserServiceIntegrationTestHelper
+    private lateinit var userIntegrationTestHelper: UserIntegrationTestHelper
 
     @Autowired
     private lateinit var tokenService: TokenService

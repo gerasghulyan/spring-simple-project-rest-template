@@ -24,7 +24,6 @@ create table token (
     primary key (id)
 );
 
-alter table auth_token add constraint uk_auth_token_user_id unique (user_id);
 alter table auth_token add constraint uk_auth_token_uuid unique (uuid);
 alter table auth_token add constraint uk_auth_token_token unique (token);
 

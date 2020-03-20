@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "auth_token",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_auth_token_token", columnNames = {"token"}),
-                @UniqueConstraint(name = "uk_auth_token_user_id", columnNames = {"user_id"}),
+                @UniqueConstraint(name = "uk_auth_token_token", columnNames = {"token"})
         }
 )
 public class AuthToken extends AbstractUuidAwareDomainEntity {
@@ -32,6 +31,10 @@ public class AuthToken extends AbstractUuidAwareDomainEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_auth_token_user_id"))
     private User user;
+
+    AuthToken() {
+        super();
+    }
 
     public AuthToken(final String token, final User user) {
         super();
