@@ -13,4 +13,9 @@ public interface TokenService {
     Optional<AbstractToken> findByToken(final String token);
 
     Optional<AbstractToken> findByUuid(final String uuid);
+
+    AbstractToken getByUuid(final String uuid);
+
+    AbstractToken expire(final String tokenUuid);
+
 }
