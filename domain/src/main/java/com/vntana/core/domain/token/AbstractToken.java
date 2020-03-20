@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Created by Arthur Asatryan.
@@ -13,15 +14,22 @@ import javax.persistence.*;
  * Time: 12:15 PM
  */
 @Entity
-@Table(name = "token")
+@Table(name = "token",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_token_token", columnNames = "token")
+        }
+)
 @Inheritance(
         strategy = InheritanceType.JOINED
 )
 @DiscriminatorColumn(name = "type")
 public abstract class AbstractToken extends AbstractUuidAwareDomainEntity {
 
-    @Column(name = "token", nullable = false, updatable = false, unique = true)
+    @Column(name = "token", nullable = false, updatable = false)
     private String token;
+
+    @Column(name = "expiration")
+    private LocalDateTime expiration;
 
     AbstractToken() {
     }
@@ -34,6 +42,10 @@ public abstract class AbstractToken extends AbstractUuidAwareDomainEntity {
 
     public String getToken() {
         return token;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
     }
 
     @Override
@@ -62,5 +74,13 @@ public abstract class AbstractToken extends AbstractUuidAwareDomainEntity {
         return new ToStringBuilder(this)
                 .append("token", token)
                 .toString();
+    }
+
+    public void expire() {
+        this.expiration = LocalDateTime.now();
+    }
+
+    public boolean isExpired() {
+        return expiration != null;
     }
 }
