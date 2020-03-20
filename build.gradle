@@ -13,6 +13,7 @@ buildscript {
         commonsApiModelsVersion = '0.4.0'
         vntanaCacheVersion = '0.4.0'
         vntanaPaymentVersion = '0.4.0'
+        vntanaCommonsVersion = '0.4.0'
     }
 
     repositories {
@@ -162,6 +163,7 @@ allprojects {
             dependency("com.vntana.commons:persistence-domain:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.commons:cache:$commonsApiModelsVersion${versionPostfix()}")
             dependency("com.vntana.commons:rest-test-helper:$commonsApiModelsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:web-utils:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
             dependency("com.vntana.payment:rest-client-payment:$vntanaPaymentVersion${versionPostfix()}")
         }
@@ -473,6 +475,7 @@ project(":api:rest:rest-resource") {
     sonarqube.skipProject = true
 
     dependencies {
+        implementation "com.vntana.commons:web-utils"
         api project(":api:rest:rest-facade")
         api project(":api:rest:rest-model")
         api "org.springframework.boot:spring-boot-starter-web"
