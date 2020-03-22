@@ -30,17 +30,18 @@ import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediat
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,9 +83,10 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     @Override
     public CheckAvailableOrganizationSlugResultResponse checkSlugAvailability(
             final CheckAvailableOrganizationSlugRequest request) {
-        final List<OrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
-        if (!possibleErrors.isEmpty()) {
-            return new CheckAvailableOrganizationSlugResultResponse(possibleErrors);
+        final Optional<CheckAvailableOrganizationSlugResultResponse> error = validateSlugErrors(request.getSlug())
+                .map(it -> new CheckAvailableOrganizationSlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
+        if (error.isPresent()) {
+            return error.get();
         }
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
@@ -97,14 +99,12 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
 
     @Override
     public CreateOrganizationResultResponse create(final CreateOrganizationRequest request) {
-        final List<OrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
-        if (!possibleErrors.isEmpty()) {
-            return new CreateOrganizationResultResponse(possibleErrors);
-        }
-        return organizationService.findBySlug(request.getSlug())
+        final Optional<CreateOrganizationResultResponse> error = validateSlugErrors(request.getSlug())
+                .map(it -> new CreateOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
+        return error.orElseGet(() -> organizationService.findBySlug(request.getSlug())
                 .map(organization -> {
                     LOGGER.debug("Organization already exists for slug - {}", request.getSlug());
-                    return new CreateOrganizationResultResponse(Collections.singletonList(OrganizationErrorResponseModel.SLUG_ALREADY_EXISTS));
+                    return new CreateOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.SLUG_ALREADY_EXISTS);
                 })
                 .orElseGet(() -> {
                     LOGGER.debug("Creating organization for request - {}", request);
@@ -121,31 +121,45 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                         mutableResponse.setValue(organization.getUuid());
                     });
                     return new CreateOrganizationResultResponse(mutableResponse.getValue());
-                });
+                }));
     }
 
     @Override
     public UserOrganizationResponse getUserOrganizations(final String userUuid) {
+        if (StringUtils.isBlank(userUuid)) {
+            return new UserOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.MISSING_USER_UUID);
+        }
         LOGGER.debug("Retrieving user organizations by user uuid - {}", userUuid);
         final Mutable<List<GetUserOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
+        final Mutable<OrganizationErrorResponseModel> mutableErrorResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
-            final User user = userService.getByUuid(userUuid);
+            final Optional<User> userOptional = userService.findByUuid(userUuid);
+            if (!userOptional.isPresent()) {
+                mutableErrorResponse.setValue(OrganizationErrorResponseModel.USER_NOT_FOUND);
+                return;
+            }
+            final User user = userOptional.get();
             final List<GetUserOrganizationsResponseModel> response = user.roleOfSuperAdmin()
                     .map(userSuperAdminRole -> getOrganizationsWhenAdmin(userUuid))
                     .orElseGet(() -> getOrganizationsWhenNotAdmin(user));
             mutableResponse.setValue(response);
         });
+        if (Objects.nonNull(mutableErrorResponse.getValue())) {
+            return new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, mutableErrorResponse.getValue());
+        }
         final List<GetUserOrganizationsResponseModel> response = mutableResponse.getValue();
         return new UserOrganizationResponse(new GetUserOrganizationsGridResponseModel(response.size(), response));
     }
 
     @Override
     public GetOrganizationBySlugResultResponse getBySlug(final String slug) {
-        Assert.hasText(slug, "The organization slug should not be null");
+        if (StringUtils.isBlank(slug)) {
+            return new GetOrganizationBySlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.MISSING_SLUG);
+        }
         LOGGER.debug("Retrieving organization by slug - {}", slug);
         final Optional<Organization> optionalOrganization = organizationService.findBySlug(slug);
         if (!optionalOrganization.isPresent()) {
-            return new GetOrganizationBySlugResultResponse(Collections.singletonList(OrganizationErrorResponseModel.SLUG_NOT_FOUND));
+            return new GetOrganizationBySlugResultResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.SLUG_NOT_FOUND);
         }
         final Organization organization = optionalOrganization.get();
         LOGGER.debug("Successfully retrieved organization with result - {}", organization);
@@ -160,8 +174,13 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
 
     @Override
     public GetOrganizationByUuidResultResponse getByUuid(final String uuid) {
-        Assert.hasText(uuid, "The organization uuid should not be null");
+        if (StringUtils.isBlank(uuid)) {
+            return new GetOrganizationByUuidResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.MISSING_UUID);
+        }
         LOGGER.debug("Retrieving organization by uuid - {}", uuid);
+        if (!organizationService.existsByUuid(uuid)) {
+            return new GetOrganizationByUuidResultResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
+        }
         final Organization organization = organizationService.getByUuid(uuid);
         LOGGER.debug("Successfully retrieved organization with result - {}", organization);
         final GetOrganizationByUuidResponseModel response = new GetOrganizationByUuidResponseModel(
@@ -179,7 +198,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     public UpdateOrganizationResultResponse update(final UpdateOrganizationRequest request) {
         LOGGER.debug("Processing organization facade update method for request - {}", request);
         if (!organizationService.existsByUuid(request.getUuid())) {
-            return new UpdateOrganizationResultResponse(OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
+            return new UpdateOrganizationResultResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
         }
         final UpdateOrganizationDto dto = new UpdateOrganizationDto(
                 request.getUuid(),
@@ -240,10 +259,10 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .collect(Collectors.toList());
     }
 
-    private List<OrganizationErrorResponseModel> validateSlugErrors(final String slug) {
+    private Optional<OrganizationErrorResponseModel> validateSlugErrors(final String slug) {
         if (!slugValidationComponent.validate(slug)) {
-            return Collections.singletonList(OrganizationErrorResponseModel.SLUG_NOT_VALID);
+            return Optional.of(OrganizationErrorResponseModel.SLUG_NOT_VALID);
         }
-        return Collections.emptyList();
+        return Optional.empty();
     }
 }

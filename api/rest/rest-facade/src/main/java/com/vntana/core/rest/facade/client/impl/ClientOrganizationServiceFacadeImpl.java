@@ -9,6 +9,7 @@ import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
 import com.vntana.core.model.client.request.UpdateClientOrganizationRequest;
+import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResponseModel;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.UpdateClientOrganizationResultResponse;
@@ -30,14 +31,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -79,10 +81,10 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     @Override
     public CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableClientOrganizationSlugRequest request) {
-        Assert.hasText(request.getOrganizationUuid(), "The organizationUuid uuid should not be null");
-        final List<ClientOrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
-        if (!possibleErrors.isEmpty()) {
-            return new CheckAvailableClientOrganizationSlugResultResponse(possibleErrors);
+        final Optional<CheckAvailableClientOrganizationSlugResultResponse> error = validateSlugErrors(request.getSlug())
+                .map(it -> new CheckAvailableClientOrganizationSlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
+        if (error.isPresent()) {
+            return error.get();
         }
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
@@ -91,20 +93,21 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                     mutableSlug.getValue(), request.getOrganizationUuid());
             mutableSlug.setValue(format("%s%d", request.getSlug(), mutableInt.getAndIncrement()));
         }
-        return new CheckAvailableClientOrganizationSlugResultResponse(mutableSlug.getValue().equals(request.getSlug()), mutableSlug.getValue());
+        return new CheckAvailableClientOrganizationSlugResultResponse(
+                new CheckAvailableClientOrganizationSlugResponseModel(
+                        mutableSlug.getValue().equals(request.getSlug()), mutableSlug.getValue()
+                )
+        );
     }
 
     @Override
     public CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request) {
-        Assert.hasText(request.getOrganizationUuid(), "The organizationUuid uuid should not be null");
-        final List<ClientOrganizationErrorResponseModel> possibleErrors = validateSlugErrors(request.getSlug());
-        if (!possibleErrors.isEmpty()) {
-            return new CreateClientOrganizationResultResponse(possibleErrors);
-        }
-        return clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
+        final Optional<CreateClientOrganizationResultResponse> error = validateSlugErrors(request.getSlug())
+                .map(it -> new CreateClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
+        return error.orElseGet(() -> clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
                 .map(clientOrganization -> {
                     LOGGER.debug("Client organization already exists for a slug - {}", request.getSlug());
-                    return new CreateClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS));
+                    return new CreateClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS);
                 })
                 .orElseGet(() -> {
                     LOGGER.debug("Creating client organization for request - {}", request);
@@ -112,25 +115,44 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                     final ClientOrganization clientOrganization = clientOrganizationService.create(dto);
                     clientOrganizationLifecycleMediator.onCreated(clientOrganization);
                     return new CreateClientOrganizationResultResponse(clientOrganization.getUuid());
-                });
+                }));
     }
 
     @Override
     public UserClientOrganizationResponse getUserClientOrganizations(final String userUuid, final String userOrganizationUuid) {
+        if (StringUtils.isBlank(userUuid)) {
+            return new UserClientOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_USER_UUID);
+        }
+        if (StringUtils.isBlank(userOrganizationUuid)) {
+            return new UserClientOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
         LOGGER.debug("Retrieving user organization's client organizations by user uuid - {} and by user organization uuid - {}", userUuid, userOrganizationUuid);
-        final Mutable<List<GetUserClientOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
+        final Mutable<List<GetUserClientOrganizationsResponseModel>> mutableResponseModel = new MutableObject<>();
+        final Mutable<ClientOrganizationErrorResponseModel> mutableErrorResponse = new MutableObject<>();
         persistenceUtilityService.runInPersistenceSession(() -> {
+            if (!organizationService.existsByUuid(userOrganizationUuid)) {
+                mutableErrorResponse.setValue(ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
+                return;
+            }
             final Organization organization = organizationService.getByUuid(userOrganizationUuid);
-            final User user = userService.getByUuid(userUuid);
+            final Optional<User> userOptional = userService.findByUuid(userUuid);
+            if (!userOptional.isPresent()) {
+                mutableErrorResponse.setValue(ClientOrganizationErrorResponseModel.USER_NOT_FOUND);
+                return;
+            }
+            final User user = userOptional.get();
             final List<GetUserClientOrganizationsResponseModel> response;
             if (user.roleOfSuperAdmin().isPresent()) {
                 response = getClientsForSuperAdmin(user, organization);
             } else {
                 response = getClientsForOrganizationAdmin(user, organization);
             }
-            mutableResponse.setValue(response);
+            mutableResponseModel.setValue(response);
         });
-        final List<GetUserClientOrganizationsResponseModel> response = mutableResponse.getValue();
+        if (Objects.nonNull(mutableErrorResponse.getValue())) {
+            return new UserClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, mutableErrorResponse.getValue());
+        }
+        final List<GetUserClientOrganizationsResponseModel> response = mutableResponseModel.getValue();
         return new UserClientOrganizationResponse(new GetUserClientOrganizationsGridResponseModel(response.size(), response));
     }
 
@@ -138,10 +160,14 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     @Override
     public GetClientOrganizationResultResponse getByUuid(final String uuid) {
         if (StringUtils.isBlank(uuid)) {
-            return new GetClientOrganizationResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.MISSING_UUID));
+            return new GetClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_UUID);
         }
         LOGGER.debug("Retrieving client organization by uuid - {}", uuid);
-        final ClientOrganization client = clientOrganizationService.getByUuid(uuid);
+        final Optional<ClientOrganization> clientOptional = clientOrganizationService.findByUuid(uuid);
+        if (!clientOptional.isPresent()) {
+            return new GetClientOrganizationResultResponse(HttpStatus.SC_NOT_FOUND, ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND);
+        }
+        final ClientOrganization client = clientOptional.get();
         LOGGER.debug("Successfully retrieved client organization with result - {}", client);
         final GetClientOrganizationResponseModel response = new GetClientOrganizationResponseModel(
                 client.getOrganization().getUuid(),
@@ -159,10 +185,10 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     @Override
     public GetClientOrganizationBySlugResultResponse getBySlug(final String organizationUuid, final String slug) {
         if (StringUtils.isBlank(organizationUuid)) {
-            return new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID));
+            return new GetClientOrganizationBySlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
         }
         if (StringUtils.isBlank(slug)) {
-            return new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.MISSING_SLUG));
+            return new GetClientOrganizationBySlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_SLUG);
         }
         LOGGER.debug("Retrieving client organization by organizationUuid - {} and slug - {}", organizationUuid, slug);
         return clientOrganizationService.findBySlugAndOrganization(slug, organizationUuid)
@@ -179,13 +205,14 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                                     client.getCreated()
                             ));
                 })
-                .orElseGet(() -> new GetClientOrganizationBySlugResultResponse(Collections.singletonList(ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND)));
+                .orElseGet(() -> new GetClientOrganizationBySlugResultResponse(HttpStatus.SC_NOT_FOUND, ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     @Override
     public GetAllOrganizationsResultResponse getAll() {
-        final List<GetAllOrganizationsResponseModel> responseModels = organizationService.getAll().stream()
+        final List<Organization> all = organizationService.getAll();
+        final List<GetAllOrganizationsResponseModel> responseModels = all.stream()
                 .flatMap(organization -> organization.getClientOrganizations().stream())
                 .map(clientOrganization -> new GetAllOrganizationsResponseModel(
                         clientOrganization.getOrganization().getUuid(),
@@ -207,12 +234,12 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return new UpdateClientOrganizationResultResponse(clientOrganization.getUuid());
     }
 
-    private List<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
+    private Optional<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
         LOGGER.debug("Validating client slug for slug - {}", slug);
         if (!slugValidationComponent.validate(slug)) {
-            return Collections.singletonList(ClientOrganizationErrorResponseModel.SLUG_NOT_VALID);
+            return Optional.of(ClientOrganizationErrorResponseModel.SLUG_NOT_VALID);
         }
-        return Collections.emptyList();
+        return Optional.empty();
     }
 
     private List<GetUserClientOrganizationsResponseModel> getClientsForSuperAdmin(

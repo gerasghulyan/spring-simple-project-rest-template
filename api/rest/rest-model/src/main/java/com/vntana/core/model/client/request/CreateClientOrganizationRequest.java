@@ -54,6 +54,9 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
         if (StringUtils.isBlank(slug)) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
         }
+        if (StringUtils.isBlank(getOrganizationUuid())) {
+            errors.add(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
         return errors;
     }
 

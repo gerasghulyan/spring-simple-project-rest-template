@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.organization.impl
 
+import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -20,8 +21,8 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { organizationServiceFacade.getByUuid(null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        restHelper.assertBasicErrorResultResponse(organizationServiceFacade.getByUuid(null), OrganizationErrorResponseModel.MISSING_UUID)
+        restHelper.assertBasicErrorResultResponse(organizationServiceFacade.getByUuid(""), OrganizationErrorResponseModel.MISSING_UUID)
         verifyAll()
     }
 
@@ -31,6 +32,7 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
         resetAll()
         val organization = commonTestHelper.buildOrganization()
         // expectations
+        expect(organizationService.existsByUuid(organization.uuid)).andReturn(true)
         expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
         replayAll()
         // test scenario
@@ -41,6 +43,20 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
         assertThat(resultResponse.response().slug).isEqualTo(organization.slug)
         assertThat(resultResponse.response().imageBlobId).isEqualTo(organization.imageBlobId)
         assertThat(resultResponse.response().created).isEqualTo(organization.created)
+        verifyAll()
+    }
+
+    @Test
+    fun `test getByUuid when not found`() {
+        // test data
+        resetAll()
+        val organization = commonTestHelper.buildOrganization()
+        // expectations
+        expect(organizationService.existsByUuid(organization.uuid)).andReturn(false)
+        replayAll()
+        // test scenario
+        val resultResponse = organizationServiceFacade.getByUuid(organization.uuid)
+        restHelper.assertBasicErrorResultResponse(resultResponse, OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND)
         verifyAll()
     }
 }

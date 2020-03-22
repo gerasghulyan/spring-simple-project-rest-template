@@ -3,8 +3,6 @@ package com.vntana.core.model.client.response.get;
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 
-import java.util.List;
-
 /**
  * Created by Geras Ghulyan.
  * Date: 10/9/19
@@ -14,11 +12,11 @@ public class GetClientOrganizationResultResponse extends AbstractResultResponseM
     public GetClientOrganizationResultResponse() {
     }
 
-    public GetClientOrganizationResultResponse(final List<ClientOrganizationErrorResponseModel> errors) {
-        super(errors);
-    }
-
     public GetClientOrganizationResultResponse(final GetClientOrganizationResponseModel response) {
         super(response);
+    }
+
+    public GetClientOrganizationResultResponse(final int httpStatusCode, final ClientOrganizationErrorResponseModel error) {
+        super(httpStatusCode, error);
     }
 }

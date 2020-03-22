@@ -4,8 +4,6 @@ import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.user.response.model.GetUserOrganizationsGridResponseModel;
 
-import java.util.List;
-
 /**
  * Created by Geras Ghulyan
  * Date: 04.11.19
@@ -16,12 +14,11 @@ public class UserOrganizationResponse extends AbstractResultResponseModel<GetUse
     public UserOrganizationResponse() {
     }
 
-    public UserOrganizationResponse(final List<OrganizationErrorResponseModel> errors) {
-        super(errors);
-    }
-
     public UserOrganizationResponse(final GetUserOrganizationsGridResponseModel response) {
         super(response);
     }
 
+    public UserOrganizationResponse(final int httpStatusCode, final OrganizationErrorResponseModel error) {
+        super(httpStatusCode, error);
+    }
 }

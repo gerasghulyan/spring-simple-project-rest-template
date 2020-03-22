@@ -22,8 +22,8 @@ class OrganizationGetBySlugServiceFacadeUnitTest : AbstractOrganizationServiceFa
         // expectations
         replayAll()
         // test scenario
-        Assertions.assertThatThrownBy { organizationServiceFacade.getBySlug(null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        restHelper.assertBasicErrorResultResponse( organizationServiceFacade.getBySlug(null), OrganizationErrorResponseModel.MISSING_SLUG)
+        restHelper.assertBasicErrorResultResponse( organizationServiceFacade.getBySlug(""), OrganizationErrorResponseModel.MISSING_SLUG)
         verifyAll()
     }
 

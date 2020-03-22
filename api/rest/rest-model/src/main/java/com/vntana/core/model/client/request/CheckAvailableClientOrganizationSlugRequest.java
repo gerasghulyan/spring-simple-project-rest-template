@@ -36,8 +36,11 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
     @Override
     public List<ClientOrganizationErrorResponseModel> validate() {
         final List<ClientOrganizationErrorResponseModel> errors = initializeNew();
-        if (StringUtils.isBlank(slug)) {
+        if (StringUtils.isBlank(getSlug())) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
+        }
+        if (StringUtils.isBlank(getOrganizationUuid())) {
+            errors.add(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
         }
         return errors;
     }

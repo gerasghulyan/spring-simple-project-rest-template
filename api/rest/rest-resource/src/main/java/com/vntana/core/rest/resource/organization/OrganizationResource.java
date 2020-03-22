@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.organization;
 
+import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
@@ -12,6 +13,7 @@ import com.vntana.core.model.user.response.UserOrganizationResponse;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,7 @@ import org.springframework.web.bind.annotation.*;
  * Time: 5:32 PM
  */
 @RestController
-@RequestMapping(value = "/organizations",
-        produces = "application/json"
-)
+@RequestMapping(value = "/organizations", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OrganizationResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationResource.class);
@@ -40,7 +40,7 @@ public class OrganizationResource {
         LOGGER.debug("Checking slug availability for request - {}", request);
         final CheckAvailableOrganizationSlugResultResponse resultResponse = organizationServiceFacade.checkSlugAvailability(request);
         LOGGER.debug("Successfully checked slug availability with response - {}", resultResponse);
-        return ResponseEntity.ok(resultResponse);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
     @PostMapping(path = "/create")
@@ -48,7 +48,7 @@ public class OrganizationResource {
         LOGGER.debug("Creating organization for request - {}", request);
         final CreateOrganizationResultResponse resultResponse = organizationServiceFacade.create(request);
         LOGGER.debug("Successfully created organization with response - {}", resultResponse);
-        return ResponseEntity.ok(resultResponse);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
     @GetMapping(path = "/users/{uuid}")
@@ -56,7 +56,7 @@ public class OrganizationResource {
         LOGGER.debug("Processing find organizations by user uuid - {}", uuid);
         final UserOrganizationResponse resultResponse = organizationServiceFacade.getUserOrganizations(uuid);
         LOGGER.debug("Successfully proceeded find organizations by user uuid with response - {}", resultResponse);
-        return ResponseEntity.ok(resultResponse);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
     @GetMapping(path = "/slug/{slug}")
@@ -64,7 +64,7 @@ public class OrganizationResource {
         LOGGER.debug("Retrieving organization by slug - {}", slug);
         final GetOrganizationBySlugResultResponse response = organizationServiceFacade.getBySlug(slug);
         LOGGER.debug("Successfully retrieved organization with response - {}", response);
-        return ResponseEntity.ok(response);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
     @GetMapping(path = "/{uuid}")
@@ -72,7 +72,7 @@ public class OrganizationResource {
         LOGGER.debug("Retrieving organization by uuid - {}", uuid);
         final GetOrganizationByUuidResultResponse response = organizationServiceFacade.getByUuid(uuid);
         LOGGER.debug("Successfully retrieved organization with response - {}", response);
-        return ResponseEntity.ok(response);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
     @PutMapping
@@ -80,6 +80,6 @@ public class OrganizationResource {
         LOGGER.debug("Processing organization resource update method for request - {}", request);
         final UpdateOrganizationResultResponse response = organizationServiceFacade.update(request);
         LOGGER.debug("Successfully processed organization resource update method for request - {}", request);
-        return ResponseEntity.ok(response);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 }
