@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.organization.impl;
 
+import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserClientOrganizationRole;
@@ -83,10 +84,9 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     @Override
     public CheckAvailableOrganizationSlugResultResponse checkSlugAvailability(
             final CheckAvailableOrganizationSlugRequest request) {
-        final Optional<CheckAvailableOrganizationSlugResultResponse> error = validateSlugErrors(request.getSlug())
-                .map(it -> new CheckAvailableOrganizationSlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
-        if (error.isPresent()) {
-            return error.get();
+        final SingleErrorWithStatus<OrganizationErrorResponseModel> errorResponse = validateSlugErrors(request.getSlug());
+        if (errorResponse.isPresent()) {
+            return new CheckAvailableOrganizationSlugResultResponse(errorResponse.getHttpStatus(), errorResponse.getError());
         }
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
@@ -99,9 +99,11 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
 
     @Override
     public CreateOrganizationResultResponse create(final CreateOrganizationRequest request) {
-        final Optional<CreateOrganizationResultResponse> error = validateSlugErrors(request.getSlug())
-                .map(it -> new CreateOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
-        return error.orElseGet(() -> organizationService.findBySlug(request.getSlug())
+        final SingleErrorWithStatus<OrganizationErrorResponseModel> errorResponse = validateSlugErrors(request.getSlug());
+        if (errorResponse.isPresent()) {
+            return new CreateOrganizationResultResponse(errorResponse.getHttpStatus(), errorResponse.getError());
+        }
+        return organizationService.findBySlug(request.getSlug())
                 .map(organization -> {
                     LOGGER.debug("Organization already exists for slug - {}", request.getSlug());
                     return new CreateOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.SLUG_ALREADY_EXISTS);
@@ -121,7 +123,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                         mutableResponse.setValue(organization.getUuid());
                     });
                     return new CreateOrganizationResultResponse(mutableResponse.getValue());
-                }));
+                });
     }
 
     @Override
@@ -259,10 +261,10 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .collect(Collectors.toList());
     }
 
-    private Optional<OrganizationErrorResponseModel> validateSlugErrors(final String slug) {
+    private SingleErrorWithStatus<OrganizationErrorResponseModel> validateSlugErrors(final String slug) {
         if (!slugValidationComponent.validate(slug)) {
-            return Optional.of(OrganizationErrorResponseModel.SLUG_NOT_VALID);
+            return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.SLUG_NOT_VALID);
         }
-        return Optional.empty();
+        return SingleErrorWithStatus.empty();
     }
 }
