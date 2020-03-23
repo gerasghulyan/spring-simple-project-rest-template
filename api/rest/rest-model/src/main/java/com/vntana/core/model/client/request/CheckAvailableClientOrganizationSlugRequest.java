@@ -39,9 +39,6 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
         if (StringUtils.isBlank(getSlug())) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
         }
-        if (StringUtils.isBlank(getOrganizationUuid())) {
-            errors.add(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
-        }
         return errors;
     }
 

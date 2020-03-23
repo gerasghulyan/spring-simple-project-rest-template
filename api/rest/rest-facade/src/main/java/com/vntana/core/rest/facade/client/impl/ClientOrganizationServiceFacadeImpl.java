@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.client.impl;
 
+import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
@@ -81,10 +82,12 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     @Override
     public CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableClientOrganizationSlugRequest request) {
-        final Optional<CheckAvailableClientOrganizationSlugResultResponse> error = validateSlugErrors(request.getSlug())
-                .map(it -> new CheckAvailableClientOrganizationSlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
-        if (error.isPresent()) {
-            return error.get();
+        if (StringUtils.isBlank(request.getOrganizationUuid())) {
+            return new CheckAvailableClientOrganizationSlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
+        final SingleErrorWithStatus<ClientOrganizationErrorResponseModel> errorResponse = validateSlugErrors(request.getSlug());
+        if (errorResponse.isPresent()) {
+            return new CheckAvailableClientOrganizationSlugResultResponse(errorResponse.getHttpStatus(), errorResponse.getError());
         }
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
@@ -102,9 +105,14 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     @Override
     public CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request) {
-        final Optional<CreateClientOrganizationResultResponse> error = validateSlugErrors(request.getSlug())
-                .map(it -> new CreateClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, it));
-        return error.orElseGet(() -> clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
+        if (StringUtils.isBlank(request.getOrganizationUuid())) {
+            return new CreateClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
+        final SingleErrorWithStatus<ClientOrganizationErrorResponseModel> errorResponse = validateSlugErrors(request.getSlug());
+        if (errorResponse.isPresent()) {
+            return new CreateClientOrganizationResultResponse(errorResponse.getHttpStatus(), errorResponse.getError());
+        }
+        return clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
                 .map(clientOrganization -> {
                     LOGGER.debug("Client organization already exists for a slug - {}", request.getSlug());
                     return new CreateClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS);
@@ -115,7 +123,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                     final ClientOrganization clientOrganization = clientOrganizationService.create(dto);
                     clientOrganizationLifecycleMediator.onCreated(clientOrganization);
                     return new CreateClientOrganizationResultResponse(clientOrganization.getUuid());
-                }));
+                });
     }
 
     @Override
@@ -234,12 +242,12 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return new UpdateClientOrganizationResultResponse(clientOrganization.getUuid());
     }
 
-    private Optional<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
+    private SingleErrorWithStatus<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
         LOGGER.debug("Validating client slug for slug - {}", slug);
         if (!slugValidationComponent.validate(slug)) {
-            return Optional.of(ClientOrganizationErrorResponseModel.SLUG_NOT_VALID);
+            return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.SLUG_NOT_VALID);
         }
-        return Optional.empty();
+        return SingleErrorWithStatus.empty();
     }
 
     private List<GetUserClientOrganizationsResponseModel> getClientsForSuperAdmin(
