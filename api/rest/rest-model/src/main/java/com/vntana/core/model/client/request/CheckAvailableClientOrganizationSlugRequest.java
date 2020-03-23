@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,6 +23,7 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
     private String slug;
 
     @JsonProperty("organizationUuid")
+    @ApiModelProperty(hidden = true)
     private String organizationUuid;
 
     public CheckAvailableClientOrganizationSlugRequest() {
@@ -38,9 +40,6 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
         final List<ClientOrganizationErrorResponseModel> errors = initializeNew();
         if (StringUtils.isBlank(getSlug())) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
-        }
-        if (StringUtils.isBlank(getOrganizationUuid())) {
-            errors.add(ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
         }
         return errors;
     }

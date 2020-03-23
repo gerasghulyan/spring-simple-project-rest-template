@@ -82,6 +82,9 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     @Override
     public CheckAvailableClientOrganizationSlugResultResponse checkSlugAvailability(final CheckAvailableClientOrganizationSlugRequest request) {
+        if (StringUtils.isBlank(request.getOrganizationUuid())) {
+            return new CheckAvailableClientOrganizationSlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
         final SingleErrorWithStatus<ClientOrganizationErrorResponseModel> errorResponse = validateSlugErrors(request.getSlug());
         if (errorResponse.isPresent()) {
             return new CheckAvailableClientOrganizationSlugResultResponse(errorResponse.getHttpStatus(), errorResponse.getError());
@@ -102,6 +105,9 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     @Override
     public CreateClientOrganizationResultResponse create(final CreateClientOrganizationRequest request) {
+        if (StringUtils.isBlank(request.getOrganizationUuid())) {
+            return new CreateClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
         final SingleErrorWithStatus<ClientOrganizationErrorResponseModel> errorResponse = validateSlugErrors(request.getSlug());
         if (errorResponse.isPresent()) {
             return new CreateClientOrganizationResultResponse(errorResponse.getHttpStatus(), errorResponse.getError());
