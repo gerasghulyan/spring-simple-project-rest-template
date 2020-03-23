@@ -91,7 +91,9 @@ public class AuthToken extends AbstractUuidAwareDomainEntity {
     }
 
     public void expire() {
-        this.expiration = LocalDateTime.now();
+        if (this.expiration == null) {
+            this.expiration = LocalDateTime.now();
+        }
     }
 
     public boolean isExpired() {

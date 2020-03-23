@@ -19,6 +19,8 @@ public interface AuthTokenService {
 
     Optional<AuthToken> findByUuid(final String uuid);
 
+    Optional<AuthToken> findByToken(final String token);
+
     AuthToken getByUuid(final String uuid);
 
     AuthToken expire(final String tokenUuid);

@@ -21,6 +21,8 @@ public interface AuthTokenRepository extends JpaRepository<AuthToken, Long> {
 
     Optional<AuthToken> findByUuid(final String uuid);
 
+    Optional<AuthToken> findByToken(final String token);
+
     List<AuthToken> findByUserUuidAndExpirationIsNull(final String userUuid);
 
     @Modifying
