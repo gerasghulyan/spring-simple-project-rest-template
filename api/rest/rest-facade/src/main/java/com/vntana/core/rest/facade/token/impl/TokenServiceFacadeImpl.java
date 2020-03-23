@@ -53,7 +53,7 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
         if (!tokenOptional.isPresent()) {
             return new TokenExpireResultResponse(SC_NOT_FOUND, TokenErrorResponseModel.TOKEN_NOT_FOUND);
         }
-        tokenOptional.get().expire();
+        tokenService.expire(tokenOptional.get().getUuid());
         return new TokenExpireResultResponse();
     }
 }

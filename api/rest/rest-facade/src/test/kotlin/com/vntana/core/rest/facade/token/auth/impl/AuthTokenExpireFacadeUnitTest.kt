@@ -38,6 +38,7 @@ class AuthTokenExpireFacadeUnitTest : AbstractAuthTokenServiceFacadeUnitTest() {
         val authToken = commonTestHelper.buildAuthToken()
         val token = authToken.token
         expect(authTokenService.findByToken(token)).andReturn(Optional.of(authToken))
+        expect(authTokenService.expire(authToken.uuid)).andReturn(authToken)
         replayAll()
         assertBasicSuccessResultResponse(authTokenServiceFacade.expire(token))
         verifyAll()

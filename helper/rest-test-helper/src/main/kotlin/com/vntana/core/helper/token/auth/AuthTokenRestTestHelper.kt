@@ -8,7 +8,7 @@ import com.vntana.core.model.token.auth.request.AuthTokenPersistRequest
  * Date: 3/23/20
  * Time: 11:44 AM
  */
-class AuthTokenRestTestHelper : AbstractRestTestHelper() {
+open class AuthTokenRestTestHelper : AbstractRestTestHelper() {
 
     fun buildAuthTokenPersistRequest(userUuid: String? = uuid(), token: String? = uuid()
     ): AuthTokenPersistRequest = AuthTokenPersistRequest(userUuid, token)

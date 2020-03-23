@@ -86,7 +86,7 @@ public class AuthTokenServiceFacadeImpl implements AuthTokenServiceFacade {
         if (!tokenOptional.isPresent()) {
             return new AuthTokenExpireResultResponse(SC_NOT_FOUND, AuthTokenErrorResponseModel.TOKEN_NOT_FOUND);
         }
-        tokenOptional.get().expire();
+        authTokenService.expire(tokenOptional.get().getUuid());
         return new AuthTokenExpireResultResponse();
     }
 
