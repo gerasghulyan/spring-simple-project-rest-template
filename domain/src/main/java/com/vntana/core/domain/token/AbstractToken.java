@@ -77,7 +77,9 @@ public abstract class AbstractToken extends AbstractUuidAwareDomainEntity {
     }
 
     public void expire() {
-        this.expiration = LocalDateTime.now();
+        if (expiration == null) {
+            this.expiration = LocalDateTime.now();
+        }
     }
 
     public boolean isExpired() {

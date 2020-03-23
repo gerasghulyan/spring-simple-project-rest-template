@@ -8,6 +8,8 @@ import com.vntana.commons.api.model.response.ErrorResponseModel;
  * Time: 3:19 PM
  */
 public enum TokenErrorResponseModel implements ErrorResponseModel {
+    MISSING_TOKEN,
     MISSING_EMAIL,
-    USER_NOT_FOUND
+    USER_NOT_FOUND,
+    TOKEN_NOT_FOUND
 }

@@ -68,6 +68,12 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     }
 
     @Override
+    public Optional<AuthToken> findByToken(final String token) {
+        Assert.hasText(token, "The AuthToken uuid should not be null or empty");
+        return authTokenRepository.findByToken(token);
+    }
+
+    @Override
     public AuthToken getByUuid(final String uuid) {
         Assert.hasText(uuid, "The AuthToken uuid should not be null or empty");
         LOGGER.debug("Retrieving auth token having uuid - {}", uuid);
