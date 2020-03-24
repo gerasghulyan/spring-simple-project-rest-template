@@ -611,7 +611,7 @@ configure(subprojects.findAll {
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
-                    minimum = 0.2
+                    minimum = 0.0
                 }
                 failOnViolation true
             }
@@ -693,7 +693,7 @@ configure(subprojects.findAll {
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
-                    minimum = 0.2
+                    minimum = 0.0
                 }
                 failOnViolation false
             }

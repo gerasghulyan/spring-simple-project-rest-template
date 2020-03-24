@@ -1,6 +1,7 @@
 package com.vntana.core.helper.unit.organization
 
 import com.vntana.core.domain.organization.Organization
+import com.vntana.core.domain.organization.status.OrganizationStatus
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
@@ -30,8 +31,9 @@ open class OrganizationCommonTestHelper : AbstractCommonTestHelper() {
     fun buildOrganization(
             name: String? = uuid(),
             slug: String? = uuid(),
-            imageBlobId: String? = uuid()
-    ): Organization = Organization(name, slug, imageBlobId)
+            imageBlobId: String? = uuid(),
+            status: OrganizationStatus? = OrganizationStatus.ACTIVE
+    ): Organization = Organization(name, slug, imageBlobId, status)
 
     fun buildGetUserOrganizationsByUserUuidAndRoleDto(
             userUuid: String? = uuid(),

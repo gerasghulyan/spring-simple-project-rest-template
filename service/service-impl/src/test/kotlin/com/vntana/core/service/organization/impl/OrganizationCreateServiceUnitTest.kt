@@ -25,11 +25,11 @@ class OrganizationCreateServiceUnitTest : AbstractOrganizationServiceUnitTest() 
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { organizationService.create(helper.buildCreateOrganizationDto(name = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationService.create(helper.buildCreateOrganizationDto(name = " ")) }
+        assertThatThrownBy { organizationService.create(helper.buildCreateOrganizationDto(name = emptyString())) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { organizationService.create(helper.buildCreateOrganizationDto(slug = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationService.create(helper.buildCreateOrganizationDto(slug = " ")) }
+        assertThatThrownBy { organizationService.create(helper.buildCreateOrganizationDto(slug = emptyString())) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
