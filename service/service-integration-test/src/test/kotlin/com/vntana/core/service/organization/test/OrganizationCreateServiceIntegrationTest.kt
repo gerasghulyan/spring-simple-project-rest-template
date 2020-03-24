@@ -1,5 +1,6 @@
 package com.vntana.core.service.organization.test
 
+import com.vntana.core.domain.organization.status.OrganizationStatus
 import com.vntana.core.service.organization.AbstractOrganizationServiceIntegrationTest
 import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
@@ -22,7 +23,8 @@ class OrganizationCreateServiceIntegrationTest : AbstractOrganizationServiceInte
                 assertThat(organization)
                         .hasFieldOrPropertyWithValue("name", StringUtils.trim(dto.name))
                         .hasFieldOrPropertyWithValue("slug", StringUtils.trim(dto.slug))
-                        .hasFieldOrPropertyWithValue("imageBlobId", StringUtils.trim(dto.imageBlobId))
+                        .hasFieldOrPropertyWithValue("imageBlobId", dto.imageBlobId)
+                        .hasFieldOrPropertyWithValue("status", OrganizationStatus.ACTIVE)
             }
         }
     }

@@ -4,8 +4,6 @@ import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
-import com.vntana.core.service.organization.dto.CreateOrganizationDto
-import com.vntana.core.service.user.dto.CreateUserDto
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.*
 import org.junit.Test
@@ -31,14 +29,20 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
                 .andReturn(Optional.empty())
         expect(persistenceUtilityService.runInNewTransaction(isA(Executable::class.java)))
                 .andAnswer { (getCurrentArguments()[0] as Executable).execute() }
-        expect(organizationService.create(CreateOrganizationDto(request.organizationName, request.organizationSlug, null))).andReturn(organization)
-        expect(userService.create(CreateUserDto(
-                request.fullName,
-                request.email,
-                request.password,
-                organization.uuid,
-                UserRole.ORGANIZATION_ADMIN
-        ))).andReturn(user)
+        val dto = organizationHelper.buildCreateOrganizationDto(
+                name = request.organizationName,
+                slug = request.organizationSlug,
+                imageBlobId = null
+        )
+        val createUserDto = userHelper.buildUserCreateDto(
+                fullName = request.fullName,
+                email = request.email,
+                password = request.password,
+                organizationUuid = organization.uuid,
+                role = UserRole.ORGANIZATION_ADMIN
+        )
+        expect(organizationService.create(dto)).andReturn(organization)
+        expect(userService.create(createUserDto)).andReturn(user)
         expect(organizationLifecycleMediator.onCreated(organization))
         replayAll()
         // test scenario
