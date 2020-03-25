@@ -1,7 +1,7 @@
 package com.vntana.core.service.organization.mediator.impl;
 
+import com.vntana.commons.indexation.payload.EntityLifecycle;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.listener.commons.EntityLifecycle;
 import com.vntana.core.listener.organization.OrganizationLifecyclePayload;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import org.slf4j.Logger;

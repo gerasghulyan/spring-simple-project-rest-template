@@ -1,9 +1,9 @@
 package com.vntana.core.listener.customer.create;
 
+import com.vntana.commons.indexation.listener.EntityLifecycleListener;
+import com.vntana.commons.indexation.payload.EntityLifecycle;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
-import com.vntana.core.listener.commons.EntityLifecycle;
-import com.vntana.core.listener.commons.EntityLifecycleListener;
 import com.vntana.core.listener.organization.OrganizationLifecyclePayload;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;

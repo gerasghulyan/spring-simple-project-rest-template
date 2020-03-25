@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.organization.test
 
+import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -21,12 +22,13 @@ class OrganizationGetByUuidWebTest : AbstractOrganizationWebTest() {
                 name = name,
                 imageBlobId = imageBlobId
         ).response().uuid
-        val response = organizationResourceClient.getByUuid(uuid)
-        assertBasicSuccessResultResponse(response)
-        assertThat(response.response().uuid).isEqualTo(uuid)
-        assertThat(response.response().name).isEqualTo(name)
-        assertThat(response.response().slug).isEqualTo(slug)
-        assertThat(response.response().imageBlobId).isEqualTo(imageBlobId)
-        assertThat(response.response().created).isNotNull()
+        val resultResponse = organizationResourceClient.getByUuid(uuid)
+        assertBasicSuccessResultResponse(resultResponse)
+        assertThat(resultResponse.response().uuid).isEqualTo(uuid)
+        assertThat(resultResponse.response().name).isEqualTo(name)
+        assertThat(resultResponse.response().slug).isEqualTo(slug)
+        assertThat(resultResponse.response().imageBlobId).isEqualTo(imageBlobId)
+        assertThat(resultResponse.response().status).isEqualTo(OrganizationStatusModel.ACTIVE)
+        assertThat(resultResponse.response().created).isNotNull()
     }
 }

@@ -3,9 +3,9 @@ package com.vntana.core.listener.organization
 import com.vntana.cache.service.organization.OrganizationCacheService
 import com.vntana.cache.service.organization.dto.CacheOrganizationCreateDto
 import com.vntana.cache.service.organization.model.CacheOrganizationModel
+import com.vntana.commons.indexation.payload.EntityLifecycle
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.listener.AbstractListenerUnitTest
-import com.vntana.core.listener.commons.EntityLifecycle
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.easymock.Mock

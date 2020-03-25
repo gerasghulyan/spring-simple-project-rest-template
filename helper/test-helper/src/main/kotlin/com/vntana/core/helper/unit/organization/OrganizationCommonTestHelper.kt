@@ -5,8 +5,12 @@ import com.vntana.core.domain.organization.status.OrganizationStatus
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
+import com.vntana.core.service.organization.dto.GetAllOrganizationDto
 import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 
 /**
  * Created by Arthur Asatryan.
@@ -40,4 +44,15 @@ open class OrganizationCommonTestHelper : AbstractCommonTestHelper() {
             userRole: UserRole? = UserRole.ORGANIZATION_ADMIN
     ) = GetUserOrganizationsByUserUuidAndRoleDto(userUuid, userRole)
 
+    fun buildGetAllOrganizationDto(
+            page: Int = 0,
+            size: Int = 5
+    ): GetAllOrganizationDto = GetAllOrganizationDto(page, size)
+
+    fun buildOrganizationPage(organizations: List<Organization> = listOf(buildOrganization(), buildOrganization(), buildOrganization()),
+                              pageAble: Pageable = buildPageRequest(0, 5),
+                              total: Long = organizations.size.toLong()
+    ): Page<Organization> {
+        return PageImpl(organizations, pageAble, total)
+    }
 }

@@ -1,7 +1,7 @@
 package com.vntana.core.service.client.mediator;
 
+import com.vntana.commons.indexation.mediator.EntityLifecycleMediator;
 import com.vntana.core.domain.client.ClientOrganization;
-import com.vntana.core.service.common.EntityLifecycleMediator;
 
 /**
  * Created by Geras Ghulyan

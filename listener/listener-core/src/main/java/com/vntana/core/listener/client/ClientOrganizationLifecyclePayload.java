@@ -1,8 +1,8 @@
 package com.vntana.core.listener.client;
 
+import com.vntana.commons.indexation.payload.AbstractEntityLifecyclePayload;
+import com.vntana.commons.indexation.payload.EntityLifecycle;
 import com.vntana.core.domain.client.ClientOrganization;
-import com.vntana.core.listener.commons.AbstractEntityLifecyclePayload;
-import com.vntana.core.listener.commons.EntityLifecycle;
 
 /**
  * Created by Geras Ghulyan

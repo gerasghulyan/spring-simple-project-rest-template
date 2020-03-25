@@ -16,6 +16,7 @@ import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResp
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResponseModel;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel;
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
 import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
@@ -26,6 +27,7 @@ import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
@@ -190,6 +192,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 organization.getName(),
                 organization.getSlug(),
                 organization.getImageBlobId(),
+                OrganizationStatusModel.valueOf(organization.getStatus().name()),
                 organization.getCreated()
         );
         return new GetOrganizationByUuidResultResponse(response);
@@ -249,7 +252,9 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
 
     private List<GetUserOrganizationsResponseModel> getOrganizationsWhenAdmin(final String userUuid) {
         LOGGER.debug("Retrieving user organizations for system admin user with uuid - {}", userUuid);
-        return organizationService.getAll().stream()
+        return organizationService.getAll(
+                new GetAllOrganizationDto(organizationService.count().intValue())
+        ).stream()
                 .map(organization -> new GetUserOrganizationsResponseModel(
                         organization.getUuid(),
                         organization.getSlug(),

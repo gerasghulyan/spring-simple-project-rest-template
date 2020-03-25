@@ -4,6 +4,7 @@ import com.sflpro.notifier.api.client.notification.email.EmailNotificationResour
 import com.vntana.cache.service.client.ClientOrganizationCacheService
 import com.vntana.cache.service.organization.OrganizationCacheService
 import com.vntana.cache.service.whitelist.WhitelistIpCacheService
+import com.vntana.core.indexation.producer.organization.OrganizationUuidAwareActionProducer
 import com.vntana.payment.client.customer.PaymentCustomerResourceClient
 import org.mockito.Mockito.mock
 import org.springframework.context.annotation.Bean
@@ -36,4 +37,8 @@ class MockingConf {
     @Bean
     @Primary
     fun olientOrganizationCacheService(): ClientOrganizationCacheService = mock(ClientOrganizationCacheService::class.java)
+
+    @Bean
+    @Primary
+    fun organizationUuidAwareActionProducer(): OrganizationUuidAwareActionProducer = mock(OrganizationUuidAwareActionProducer::class.java)
 }

@@ -13,9 +13,13 @@ import org.junit.Test
 class ClientOrganizationGetAllServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
     @Test
     fun `test getAll`() {
-        resetAll()
         val organizations = listOf(organizationCommonTestHelper.buildOrganization())
-        expect(organizationService.all).andReturn(organizations)
+        resetAll()
+        expect(organizationService.count()).andReturn(organizations.size.toLong())
+        expect(organizationService.getAll(organizationCommonTestHelper.buildGetAllOrganizationDto(size = organizations.size))).andReturn(organizationCommonTestHelper.buildOrganizationPage(
+                organizations = organizations,
+                pageAble = organizationCommonTestHelper.buildPageRequest(size = organizations.size)
+        ))
         replayAll()
         assertThat(clientOrganizationServiceFacade.all.response().items()).isEmpty()
         verifyAll()

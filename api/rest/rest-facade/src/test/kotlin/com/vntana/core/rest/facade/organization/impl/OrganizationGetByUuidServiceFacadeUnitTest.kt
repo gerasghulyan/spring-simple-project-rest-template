@@ -1,9 +1,9 @@
 package com.vntana.core.rest.facade.organization.impl
 
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
+import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.junit.Test
 
@@ -42,6 +42,7 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
         assertThat(resultResponse.response().name).isEqualTo(organization.name)
         assertThat(resultResponse.response().slug).isEqualTo(organization.slug)
         assertThat(resultResponse.response().imageBlobId).isEqualTo(organization.imageBlobId)
+        assertThat(resultResponse.response().status).isEqualTo(OrganizationStatusModel.valueOf(organization.status.name))
         assertThat(resultResponse.response().created).isEqualTo(organization.created)
         verifyAll()
     }

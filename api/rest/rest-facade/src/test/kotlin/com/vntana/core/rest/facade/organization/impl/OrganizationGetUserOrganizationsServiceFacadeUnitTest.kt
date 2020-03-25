@@ -38,11 +38,16 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         val organization2 = commonTestHelper.buildOrganization()
         val user = userHelper.buildUser()
         user.grantSuperAdminRole()
+        val organizations = listOf(organization, organization2)
         // expectations
         expect(persistenceUtilityService.runInNewTransaction(EasyMock.isA(Executable::class.java)))
                 .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))
-        expect(organizationService.all).andReturn(listOf(organization, organization2))
+        expect(organizationService.count()).andReturn(organizations.size.toLong())
+        expect(organizationService.getAll(commonTestHelper.buildGetAllOrganizationDto(size = 2))).andReturn(commonTestHelper.buildOrganizationPage(
+                organizations = organizations,
+                pageAble = commonTestHelper.buildPageRequest(size = organizations.size)
+        ))
         replayAll()
         // test scenario
         organizationServiceFacade.getUserOrganizations(user.uuid).let {

@@ -26,6 +26,7 @@ import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
+import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
 import com.vntana.core.service.user.UserService;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -219,7 +221,8 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     @Transactional(readOnly = true)
     @Override
     public GetAllOrganizationsResultResponse getAll() {
-        final List<Organization> all = organizationService.getAll();
+        final Page<Organization> all = organizationService
+                .getAll(new GetAllOrganizationDto(organizationService.count().intValue()));
         final List<GetAllOrganizationsResponseModel> responseModels = all.stream()
                 .flatMap(organization -> organization.getClientOrganizations().stream())
                 .map(clientOrganization -> new GetAllOrganizationsResponseModel(

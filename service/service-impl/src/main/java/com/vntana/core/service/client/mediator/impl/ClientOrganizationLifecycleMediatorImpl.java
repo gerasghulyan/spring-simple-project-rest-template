@@ -1,8 +1,8 @@
 package com.vntana.core.service.client.mediator.impl;
 
+import com.vntana.commons.indexation.payload.EntityLifecycle;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.listener.client.ClientOrganizationLifecyclePayload;
-import com.vntana.core.listener.commons.EntityLifecycle;
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

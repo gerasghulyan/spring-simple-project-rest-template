@@ -2,6 +2,7 @@ package com.vntana.core.model.organization.response.get;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel;
+import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,6 +25,9 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
     @JsonProperty("imageBlobId")
     private String imageBlobId;
 
+    @JsonProperty("status")
+    private OrganizationStatusModel status;
+
     @JsonProperty("created")
     private LocalDateTime created;
 
@@ -35,11 +39,13 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
                                               final String name,
                                               final String slug,
                                               final String imageBlobId,
+                                              final OrganizationStatusModel status,
                                               final LocalDateTime created) {
         super(uuid);
         this.name = name;
         this.slug = slug;
         this.imageBlobId = imageBlobId;
+        this.status = status;
         this.created = created;
     }
 
@@ -56,6 +62,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
                 .append(name, that.name)
                 .append(slug, that.slug)
                 .append(imageBlobId, that.imageBlobId)
+                .append(status, that.status)
                 .append(created, that.created)
                 .isEquals();
     }
@@ -66,6 +73,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
                 .append(name)
                 .append(slug)
                 .append(imageBlobId)
+                .append(status)
                 .append(created)
                 .toHashCode();
     }
@@ -76,6 +84,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
                 .append("name", name)
                 .append("slug", slug)
                 .append("imageBlobId", imageBlobId)
+                .append("status", status)
                 .append("created", created)
                 .toString();
     }
@@ -102,6 +111,14 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
 
     public void setImageBlobId(final String imageBlobId) {
         this.imageBlobId = imageBlobId;
+    }
+
+    public OrganizationStatusModel getStatus() {
+        return status;
+    }
+
+    public void setStatus(final OrganizationStatusModel status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreated() {
