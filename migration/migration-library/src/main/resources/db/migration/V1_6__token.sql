@@ -8,7 +8,7 @@ create table auth_token (
     updated timestamp,
     uuid varchar(255) not null,
     expiration timestamp,
-    token varchar(255) not null,
+    token varchar(500) not null,
     user_id int8 not null,
     primary key (id)
 );
@@ -20,7 +20,7 @@ create table token (
     removed timestamp, updated timestamp,
     uuid varchar(255) not null,
     expiration timestamp,
-    token varchar(255) not null,
+    token varchar(500) not null,
     primary key (id)
 );
 
