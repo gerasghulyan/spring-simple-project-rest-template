@@ -4,6 +4,9 @@ import com.vntana.core.domain.invitation.InvitationStatus
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 
 /**
  * Created by Arman Gevorgyan.
@@ -20,6 +23,13 @@ open class InvitationOrganizationCommonTestHelper : AbstractCommonTestHelper() {
             customerSubscriptionDefinitionUuid: String? = uuid(),
             status: InvitationStatus? = InvitationStatus.INVITED
     ) = CreateInvitationOrganizationDto(ownerFullName, email, organizationName, slug, customerSubscriptionDefinitionUuid, status)
+
+    fun buildInvitationOrganizationPage(entities: List<InvitationOrganization> = listOf(buildInvitationOrganization(), buildInvitationOrganization()),
+                                        pageAble: Pageable = buildPageRequest(0, 5),
+                                        total: Long = entities.size.toLong()
+    ): Page<InvitationOrganization> {
+        return PageImpl(entities, pageAble, total)
+    }
 
     fun buildInvitationOrganization(
             ownerFullName: String? = uuid(),
