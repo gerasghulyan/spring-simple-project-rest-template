@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * Date: 3/26/2020
  * Time: 12:19 PM
  */
-@FeignClient(name = "coreClients", path = "indexations", url = "${ms.core.url}", primary = false)
+@FeignClient(name = "coreIndexationResourceClients", path = "indexations", url = "${ms.core.url}", primary = false)
 public interface IndexationResourceClient {
 
     @GetMapping("/organizations")
