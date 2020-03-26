@@ -27,7 +27,7 @@ public class OrganizationUuidAwareActionProducerImpl implements OrganizationUuid
     private final KafkaTemplate<String, OrganizationUuidAwareActionQueueMessage> kafkaTemplate;
 
     public OrganizationUuidAwareActionProducerImpl(
-            @Value("${pre-indexation.organization.topic}") final String preIndexationOrganizationTopic,
+            @Value("${pre.indexation.organization.topic}") final String preIndexationOrganizationTopic,
             final KafkaTemplate<String, OrganizationUuidAwareActionQueueMessage> kafkaTemplate) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.preIndexationOrganizationTopic = preIndexationOrganizationTopic;
