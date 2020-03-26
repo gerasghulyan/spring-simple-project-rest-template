@@ -1,9 +1,11 @@
 package com.vntana.core.rest.resource.invitation.organization.impl
 
+import com.vntana.commons.queue.model.MessageActionType
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.rest.resource.invitation.organization.AbstractInvitationOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.Mockito
 
 /**
  * Created by Arman Gevorgyan.
@@ -73,9 +75,13 @@ class InvitationOrganizationCreateWebTest : AbstractInvitationOrganizationWebTes
     @Test
     fun `test when correct slug is available`() {
         val request = resourceTestHelper.buildCreateInvitationOrganizationRequest()
-        invitationOrganizationResourceClient.create(request).let {
+        val responseEntity = invitationOrganizationResourceClient.create(request)
+        responseEntity.let {
             assertBasicSuccessResultResponse(it)
             assertThat(it?.body?.response()?.uuid).isNotBlank()
         }
+        Mockito.verify(invitationOrganizationUuidAwareActionProducer).produce(Mockito.argThat { argument ->
+            argument.messageActionType == MessageActionType.CREATED && argument.uuid == responseEntity?.body?.response()?.uuid
+        })
     }
 }

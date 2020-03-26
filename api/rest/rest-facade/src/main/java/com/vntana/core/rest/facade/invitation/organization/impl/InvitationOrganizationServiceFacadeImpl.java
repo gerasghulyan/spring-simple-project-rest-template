@@ -12,6 +12,7 @@ import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizatio
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
+import com.vntana.core.service.invitation.organization.mediator.InvitationOrganizationUuidAwareLifecycleMediator;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +30,17 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
 
     private final InvitationOrganizationService invitationOrganizationService;
     private final InvitationOrganizationFacadePreconditionChecker preconditionChecker;
+    private final InvitationOrganizationUuidAwareLifecycleMediator invitationOrganizationUuidAwareLifecycleMediator;
     private final MapperFacade mapperFacade;
 
     public InvitationOrganizationServiceFacadeImpl(final InvitationOrganizationService invitationOrganizationService,
                                                    final InvitationOrganizationFacadePreconditionChecker preconditionChecker,
+                                                   final InvitationOrganizationUuidAwareLifecycleMediator invitationOrganizationUuidAwareLifecycleMediator,
                                                    final MapperFacade mapperFacade) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.invitationOrganizationService = invitationOrganizationService;
         this.preconditionChecker = preconditionChecker;
+        this.invitationOrganizationUuidAwareLifecycleMediator = invitationOrganizationUuidAwareLifecycleMediator;
         this.mapperFacade = mapperFacade;
     }
 
@@ -56,6 +60,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                 InvitationStatus.INVITED
         );
         final InvitationOrganization invitationOrganization = invitationOrganizationService.create(dto);
+        invitationOrganizationUuidAwareLifecycleMediator.onCreated(invitationOrganization.getUuid());
         LOGGER.debug("Successfully created invitation organization for request- {}", request);
         return new CreateInvitationOrganizationResultResponse(invitationOrganization.getUuid());
     }

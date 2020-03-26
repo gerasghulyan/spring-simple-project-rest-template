@@ -40,6 +40,7 @@ class InvitationOrganizationCreateFacadeUnitTest : AbstractInvitationOrganizatio
         val invitationOrganization = commonTestHelper.buildInvitationOrganization()
         expect(preconditionChecker.checkCreateForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(invitationOrganizationService.create(dto)).andReturn(invitationOrganization)
+        expect(invitationOrganizationUuidAwareLifecycleMediator.onCreated(invitationOrganization.uuid))
         replayAll()
         assertBasicSuccessResultResponse(invitationOrganizationServiceFacade.create(request))
         verifyAll()

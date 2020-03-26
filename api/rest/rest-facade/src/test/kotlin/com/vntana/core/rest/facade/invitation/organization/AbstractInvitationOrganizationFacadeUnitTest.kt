@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizatio
 import com.vntana.core.rest.facade.invitation.organization.impl.InvitationOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
+import com.vntana.core.service.invitation.organization.mediator.InvitationOrganizationUuidAwareLifecycleMediator
 import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
 import org.junit.Before
@@ -25,6 +26,9 @@ abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFac
     protected lateinit var preconditionChecker: InvitationOrganizationFacadePreconditionChecker
 
     @Mock
+    protected lateinit var invitationOrganizationUuidAwareLifecycleMediator: InvitationOrganizationUuidAwareLifecycleMediator
+
+    @Mock
     protected lateinit var mapperFacade: MapperFacade
 
     protected val restTestHelper = InvitationOrganizationRestTestHelper()
@@ -32,6 +36,10 @@ abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFac
 
     @Before
     fun prepare() {
-        invitationOrganizationServiceFacade = InvitationOrganizationServiceFacadeImpl(invitationOrganizationService, preconditionChecker, mapperFacade)
+        invitationOrganizationServiceFacade = InvitationOrganizationServiceFacadeImpl(invitationOrganizationService,
+                preconditionChecker,
+                invitationOrganizationUuidAwareLifecycleMediator,
+                mapperFacade
+        )
     }
 }
