@@ -1,9 +1,9 @@
 package com.vntana.core.rest.resource.indexation.impl
 
+import com.vntana.commons.queue.model.MessageActionType
 import com.vntana.core.rest.resource.indexation.AbstractIndexationWebTest
 import org.junit.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.times
+import org.mockito.Mockito
 import org.mockito.Mockito.verify
 
 /**
@@ -15,10 +15,11 @@ class IndexationAllOrganizationsWebTest : AbstractIndexationWebTest() {
 
     @Test
     fun `test indexAllOrganizations`() {
-        organizationResourceTestHelper.persistOrganization()
-        organizationResourceTestHelper.persistOrganization()
-        organizationResourceTestHelper.persistOrganization()
+        val resultResponse = userResourceTestHelper.persistUser()
+        val organizationUuid = resultResponse.response().organizationUuid
         assertBasicSuccessResultResponse(indexationResourceClient.indexAllOrganizations())
-        verify(organizationUuidAwareActionProducer, times(6)).produce(ArgumentMatchers.any())
+        verify(organizationUuidAwareActionProducer).produce(Mockito.argThat { argument ->
+            argument.messageActionType == MessageActionType.UPDATED && argument.uuid == organizationUuid
+        })
     }
 }
