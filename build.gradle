@@ -40,7 +40,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.springframework.boot' version '2.1.8.RELEASE' apply false
+    id 'org.springframework.boot' version '2.2.1.RELEASE' apply false
     id "jacoco"
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id "org.jetbrains.kotlin.plugin.spring" version "1.3.50"
@@ -144,7 +144,7 @@ allprojects {
 
     dependencyManagement {
         imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:2.1.8.RELEASE") {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:2.2.1.RELEASE") {
                 bomProperty("kotlin.version", kotlinVersion)
             }
             mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE'
@@ -161,6 +161,7 @@ allprojects {
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
             dependency("com.vntana.commons:api-models:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:queue-commons:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:queue:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:persistence-domain:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:cache:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:indexation:$vntanaCommonsVersion${versionPostfix()}")
@@ -483,6 +484,7 @@ project(":api:rest:rest-resource") {
         implementation "com.vntana.commons:web-utils"
         api project(":api:rest:rest-facade")
         api project(":api:rest:rest-model")
+        api "com.vntana.commons:queue"
         api "org.springframework.boot:spring-boot-starter-web"
         api "org.aspectj:aspectjrt"
         api "org.aspectj:aspectjweaver"
