@@ -22,7 +22,8 @@ import java.util.*
 @RunWith(SpringRunner::class)
 @ContextConfiguration(classes = [WebApplication::class])
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        classes = [WebIntegrationTestConfiguration::class, WebApplication::class])
+        classes = [WebIntegrationTestConfiguration::class, WebApplication::class],
+        properties = ["spring.main.allow-bean-definition-overriding=true"])
 abstract class AbstractWebIntegrationTest {
 
     fun uuid(): String = UUID.randomUUID().toString()

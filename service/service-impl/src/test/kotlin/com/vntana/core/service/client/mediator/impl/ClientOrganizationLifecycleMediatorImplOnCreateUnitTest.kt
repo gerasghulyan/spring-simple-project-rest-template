@@ -1,7 +1,7 @@
 package com.vntana.core.service.client.mediator.impl
 
+import com.vntana.commons.indexation.payload.EntityLifecycle
 import com.vntana.core.listener.client.ClientOrganizationLifecyclePayload
-import com.vntana.core.listener.commons.EntityLifecycle
 import com.vntana.core.service.client.mediator.AbstractClientOrganizationLifecycleMediatorUnitTest
 import org.assertj.core.api.Assertions
 import org.easymock.EasyMock.expect

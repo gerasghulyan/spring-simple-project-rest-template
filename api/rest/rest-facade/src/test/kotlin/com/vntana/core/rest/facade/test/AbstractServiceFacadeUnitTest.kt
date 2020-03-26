@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.test
 
 import com.vntana.commons.api.model.response.ErrorResponseModel
 import com.vntana.commons.api.model.response.ResultResponseModel
+import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions
 import org.easymock.EasyMockRunner
 import org.easymock.EasyMockSupport
@@ -16,6 +17,8 @@ import java.util.*
 @RunWith(EasyMockRunner::class)
 abstract class AbstractServiceFacadeUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
+
+    fun emptyString(): String = StringUtils.EMPTY
 
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {
         Assertions.assertThat(resultResponse).isNotNull
