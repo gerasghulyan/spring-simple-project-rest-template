@@ -1,5 +1,6 @@
 package com.vntana.core.service.invitation.organization.impl
 
+import com.vntana.core.domain.invitation.InvitationStatus
 import com.vntana.core.service.invitation.organization.AbstractInvitationOrganizationServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -21,7 +22,7 @@ class InvitationOrganizationCreateServiceIntegrationTest : AbstractInvitationOrg
             assertThat(it.organizationName).isEqualTo(dto.organizationName)
             assertThat(it.ownerFullName).isEqualTo(dto.ownerFullName)
             assertThat(it.slug).isEqualTo(dto.slug)
-            assertThat(it.status).isEqualTo(dto.status)
+            assertThat(it.status).isEqualTo(InvitationStatus.INVITED)
         }
     }
 }

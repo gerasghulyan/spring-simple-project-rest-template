@@ -20,9 +20,8 @@ open class InvitationOrganizationCommonTestHelper : AbstractCommonTestHelper() {
             email: String? = uuid(),
             organizationName: String? = uuid(),
             slug: String? = uuid(),
-            customerSubscriptionDefinitionUuid: String? = uuid(),
-            status: InvitationStatus? = InvitationStatus.INVITED
-    ) = CreateInvitationOrganizationDto(ownerFullName, email, organizationName, slug, customerSubscriptionDefinitionUuid, status)
+            customerSubscriptionDefinitionUuid: String? = uuid()
+    ) = CreateInvitationOrganizationDto(ownerFullName, email, organizationName, slug, customerSubscriptionDefinitionUuid)
 
     fun buildInvitationOrganizationPage(entities: List<InvitationOrganization> = listOf(buildInvitationOrganization(), buildInvitationOrganization()),
                                         pageAble: Pageable = buildPageRequest(0, 5),

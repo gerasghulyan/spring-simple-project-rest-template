@@ -1,6 +1,5 @@
 package com.vntana.core.helper.integration.invitation.organization
 
-import com.vntana.core.domain.invitation.InvitationStatus
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
@@ -22,14 +21,12 @@ class InvitationOrganizationIntegrationTestHelper : InvitationOrganizationCommon
                                       email: String? = uuid(),
                                       organizationName: String? = uuid(),
                                       slug: String? = uuid(),
-                                      customerSubscriptionDefinitionUuid: String? = uuid(),
-                                      status: InvitationStatus? = InvitationStatus.INVITED): InvitationOrganization {
+                                      customerSubscriptionDefinitionUuid: String? = uuid()): InvitationOrganization {
         val dto = buildCreateInvitationOrganizationDto(ownerFullName = ownerFullName,
                 email = email,
                 organizationName = organizationName,
                 slug = slug,
-                customerSubscriptionDefinitionUuid = customerSubscriptionDefinitionUuid,
-                status = status
+                customerSubscriptionDefinitionUuid = customerSubscriptionDefinitionUuid
         )
         return invitationOrganizationService.create(dto)
     }

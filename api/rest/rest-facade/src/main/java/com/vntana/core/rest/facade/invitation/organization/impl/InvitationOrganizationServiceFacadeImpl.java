@@ -1,7 +1,6 @@
 package com.vntana.core.rest.facade.invitation.organization.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
-import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
@@ -56,8 +55,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                 request.getEmail(),
                 request.getOrganizationName(),
                 request.getSlug(),
-                request.getCustomerSubscriptionDefinitionUuid(),
-                InvitationStatus.INVITED
+                request.getCustomerSubscriptionDefinitionUuid()
         );
         final InvitationOrganization invitationOrganization = invitationOrganizationService.create(dto);
         invitationOrganizationUuidAwareLifecycleMediator.onCreated(invitationOrganization.getUuid());

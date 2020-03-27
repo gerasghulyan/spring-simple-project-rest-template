@@ -1,5 +1,6 @@
 package com.vntana.core.service.invitation.organization.impl;
 
+import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.persistence.invitation.organization.InvitationOrganizationRepository;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
@@ -40,7 +41,7 @@ public class InvitationOrganizationServiceImpl implements InvitationOrganization
                 dto.getOrganizationName(),
                 dto.getSlug(),
                 dto.getCustomerSubscriptionDefinitionUuid(),
-                dto.getStatus()
+                InvitationStatus.INVITED
         );
         final InvitationOrganization saved = invitationOrganizationRepository.save(invitationOrganization);
         LOGGER.debug("Successfully created InvitationOrganization for dto - {}", dto);

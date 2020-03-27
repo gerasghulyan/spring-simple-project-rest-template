@@ -1,7 +1,6 @@
 package com.vntana.core.rest.facade.invitation.organization.impl
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus
-import com.vntana.core.domain.invitation.InvitationStatus
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.rest.facade.invitation.organization.AbstractInvitationOrganizationFacadeUnitTest
 import org.easymock.EasyMock.expect
@@ -34,8 +33,7 @@ class InvitationOrganizationCreateFacadeUnitTest : AbstractInvitationOrganizatio
                 email = request.email,
                 organizationName = request.organizationName,
                 slug = request.slug,
-                customerSubscriptionDefinitionUuid = request.customerSubscriptionDefinitionUuid,
-                status = InvitationStatus.INVITED
+                customerSubscriptionDefinitionUuid = request.customerSubscriptionDefinitionUuid
         )
         val invitationOrganization = commonTestHelper.buildInvitationOrganization()
         expect(preconditionChecker.checkCreateForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
