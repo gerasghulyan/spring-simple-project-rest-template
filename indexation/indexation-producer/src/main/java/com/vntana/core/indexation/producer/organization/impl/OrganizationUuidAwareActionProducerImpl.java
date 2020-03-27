@@ -27,7 +27,7 @@ public class OrganizationUuidAwareActionProducerImpl implements OrganizationUuid
     private final KafkaTemplate<String, OrganizationUuidAwareActionQueueMessage> kafkaTemplate;
 
     public OrganizationUuidAwareActionProducerImpl(
-            @Value("${pre-indexation.organization.topic}") final String preIndexationOrganizationTopic,
+            @Value("${pre.indexation.organization.topic}") final String preIndexationOrganizationTopic,
             final KafkaTemplate<String, OrganizationUuidAwareActionQueueMessage> kafkaTemplate) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.preIndexationOrganizationTopic = preIndexationOrganizationTopic;
@@ -44,9 +44,9 @@ public class OrganizationUuidAwareActionProducerImpl implements OrganizationUuid
                         message.getUuid(),
                         message
                 ).get(5000L, TimeUnit.MILLISECONDS))
-                .onFailure(ex -> LOGGER.error("Failed to send organization uuid aware action message - {} with exception - {}", message, ex))
+                .onFailure(ex -> LOGGER.error("Failed to send organization uuid aware action message - {} to topic -{} with exception - {}", message, preIndexationOrganizationTopic, ex))
                 .getOrElseThrow(() -> {
-                    throw new IllegalStateException(format("Failed to send organization uuid aware action message - %s", message));
+                    throw new IllegalStateException(format("Failed to send organization uuid aware action message - %s to topic -%s", message, preIndexationOrganizationTopic));
                 });
     }
 }

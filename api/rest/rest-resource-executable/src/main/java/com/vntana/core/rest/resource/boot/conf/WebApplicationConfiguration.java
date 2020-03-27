@@ -8,13 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import com.vntana.commons.queue.conf.CommonsQueueAnnotationDrivenConf;
 
 /**
  * Created by Arthur Asatryan.
  * Date: 10/4/19
  * Time: 5:23 PM
  */
-@Import(VntanaCacheConf.class)
+@Import({CommonsQueueAnnotationDrivenConf.class, VntanaCacheConf.class})
 @Configuration
 @EnableFeignClients({"com.vntana.core.rest.client", "com.vntana.payment.client"})
 @ComponentScan({"com.vntana.core"})
