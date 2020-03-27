@@ -1,5 +1,7 @@
 package com.vntana.core.rest.facade.token;
 
+import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
+import com.vntana.core.model.token.response.TokenCreateResultResponse;
 import com.vntana.core.model.token.response.TokenExpireResultResponse;
 import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
 
@@ -9,6 +11,8 @@ import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
  * Time: 2:49 PM
  */
 public interface TokenServiceFacade {
+
+    TokenCreateResultResponse createTokenInvitationOrganization(final CreateTokenInvitationOrganizationRequest request);
 
     TokenIsExpiredResultResponse isExpired(final String token);
 

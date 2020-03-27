@@ -10,6 +10,8 @@ import com.vntana.commons.api.model.response.ErrorResponseModel;
 public enum TokenErrorResponseModel implements ErrorResponseModel {
     MISSING_TOKEN,
     MISSING_EMAIL,
+    MISSING_INVITATION_ORGANIZATION_UUID,
     USER_NOT_FOUND,
-    TOKEN_NOT_FOUND
+    TOKEN_NOT_FOUND,
+    INVITATION_ORGANIZATION_NOT_FOUND
 }
