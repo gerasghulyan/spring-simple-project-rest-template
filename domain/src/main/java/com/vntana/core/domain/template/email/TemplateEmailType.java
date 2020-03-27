@@ -8,5 +8,6 @@ package com.vntana.core.domain.template.email;
 public enum TemplateEmailType {
     FORGOT_PASSWORD,
     USER_VERIFICATION,
-    PLATFORM_INVITATION
+    PLATFORM_INVITATION,
+    ORGANIZATION_INVITATION
 }

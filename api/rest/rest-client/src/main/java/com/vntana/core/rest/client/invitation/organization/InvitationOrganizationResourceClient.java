@@ -1,8 +1,10 @@
 package com.vntana.core.rest.client.invitation.organization;
 
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResultResponse;
-import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResultResponse;
+import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
+import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface InvitationOrganizationResourceClient {
 
     @PostMapping
-    ResponseEntity<CreateInvitationOrganizationResultResponse> create(@RequestBody final CreateInvitationOrganizationRequest request);
+    ResponseEntity<CreateInvitationOrganizationResponse> create(@RequestBody final CreateInvitationOrganizationRequest request);
 
     @GetMapping(path = "/{uuid}")
-    ResponseEntity<GetInvitationOrganizationResultResponse> getByUuid(@PathVariable("uuid") final String uuid);
+    ResponseEntity<GetInvitationOrganizationResponse> getByUuid(@PathVariable("uuid") final String uuid);
+
+    @PostMapping("/send-invitation")
+    ResponseEntity<SendInvitationOrganizationResponse> sendInvitation(@RequestBody SendInvitationOrganizationRequest request);
 }

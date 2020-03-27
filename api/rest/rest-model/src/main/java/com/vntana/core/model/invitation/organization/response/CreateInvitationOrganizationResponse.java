@@ -9,17 +9,17 @@ import com.vntana.core.model.invitation.organization.response.model.CreateInvita
  * Date: 3/26/20
  * Time: 12:07 PM
  */
-public class CreateInvitationOrganizationResultResponse extends AbstractResultResponseModel<CreateInvitationOrganizationResponseModel, InvitationOrganizationErrorResponseModel> {
+public class CreateInvitationOrganizationResponse extends AbstractResultResponseModel<CreateInvitationOrganizationResponseModel, InvitationOrganizationErrorResponseModel> {
 
-    public CreateInvitationOrganizationResultResponse() {
+    public CreateInvitationOrganizationResponse() {
         super();
     }
 
-    public CreateInvitationOrganizationResultResponse(final int httpStatusCode, final InvitationOrganizationErrorResponseModel error) {
+    public CreateInvitationOrganizationResponse(final int httpStatusCode, final InvitationOrganizationErrorResponseModel error) {
         super(httpStatusCode, error);
     }
 
-    public CreateInvitationOrganizationResultResponse(final String uuid) {
+    public CreateInvitationOrganizationResponse(final String uuid) {
         super(new CreateInvitationOrganizationResponseModel(uuid));
     }
 }

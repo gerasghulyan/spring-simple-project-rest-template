@@ -2,6 +2,7 @@ package com.vntana.core.helper.invitation.organization
 
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest
+import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest
 
 /**
  * Created by Arman Gevorgyan.
@@ -18,4 +19,9 @@ open class InvitationOrganizationRestTestHelper : AbstractRestTestHelper() {
     ): CreateInvitationOrganizationRequest = CreateInvitationOrganizationRequest(
             ownerFullName, email, organizationName, slug, customerSubscriptionDefinitionUuid
     )
+
+    fun buildSendInvitationOrganizationRequest(
+            email: String? = uuid(),
+            token: String? = uuid()
+    ): SendInvitationOrganizationRequest = SendInvitationOrganizationRequest(email, token)
 }

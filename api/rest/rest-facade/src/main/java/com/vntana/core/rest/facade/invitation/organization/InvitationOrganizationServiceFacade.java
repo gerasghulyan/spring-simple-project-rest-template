@@ -1,8 +1,10 @@
 package com.vntana.core.rest.facade.invitation.organization;
 
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResultResponse;
-import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResultResponse;
+import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
+import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
 
 /**
  * Created by Arman Gevorgyan.
@@ -11,7 +13,10 @@ import com.vntana.core.model.invitation.organization.response.GetInvitationOrgan
  */
 public interface InvitationOrganizationServiceFacade {
 
-    CreateInvitationOrganizationResultResponse create(final CreateInvitationOrganizationRequest request);
+    CreateInvitationOrganizationResponse create(final CreateInvitationOrganizationRequest request);
 
-    GetInvitationOrganizationResultResponse getByUuid(final String uuid);
+    GetInvitationOrganizationResponse getByUuid(final String uuid);
+
+    SendInvitationOrganizationResponse sendInvitation(final SendInvitationOrganizationRequest request);
+
 }
