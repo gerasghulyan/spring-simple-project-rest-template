@@ -40,7 +40,7 @@ class OrganizationUuidAwareActionProducerUnitTest : AbstractOrganizationUuidAwar
     }
 
     @Test
-    fun `test produce faild`() {
+    fun `test produce failed`() {
         // test data
         val message = OrganizationUuidAwareActionQueueMessage(MessageActionType.CREATED, uuid())
         resetAll()

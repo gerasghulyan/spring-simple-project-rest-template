@@ -1,12 +1,16 @@
 package com.vntana.core.service.invitation.organization.impl;
 
+import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.persistence.invitation.organization.InvitationOrganizationRepository;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
+import com.vntana.core.service.invitation.organization.dto.GetAllInvitationOrganizationsDto;
 import com.vntana.core.service.invitation.organization.exception.InvitationOrganizationNotFoundForUuidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -37,7 +41,7 @@ public class InvitationOrganizationServiceImpl implements InvitationOrganization
                 dto.getOrganizationName(),
                 dto.getSlug(),
                 dto.getCustomerSubscriptionDefinitionUuid(),
-                dto.getStatus()
+                InvitationStatus.INVITED
         );
         final InvitationOrganization saved = invitationOrganizationRepository.save(invitationOrganization);
         LOGGER.debug("Successfully created InvitationOrganization for dto - {}", dto);
@@ -61,5 +65,14 @@ public class InvitationOrganizationServiceImpl implements InvitationOrganization
         final boolean existence = invitationOrganizationRepository.existsByUuid(uuid);
         LOGGER.debug("Successfully checked existence of InvitationOrganization having uuid - {}", uuid);
         return existence;
+    }
+
+    @Override
+    public Page<InvitationOrganization> getAll(final GetAllInvitationOrganizationsDto dto) {
+        LOGGER.debug("Retrieving organization invitations for dto - {}", dto);
+        Assert.notNull(dto, "The GetAllInvitationOrganizationsDto should not be null");
+        final Page<InvitationOrganization> page = invitationOrganizationRepository.findAll(PageRequest.of(dto.getPage(), dto.getSize()));
+        LOGGER.debug("Successfully retrieved organization invitations for dto - {}", dto);
+        return page;
     }
 }

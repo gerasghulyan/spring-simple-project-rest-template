@@ -5,6 +5,7 @@ import com.vntana.commons.api.model.response.ErrorResponseModel
 import com.vntana.commons.api.model.response.ResultResponseModel
 import com.vntana.core.rest.resource.boot.WebApplication
 import com.vntana.core.rest.resource.conf.WebIntegrationTestConfiguration
+import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,6 +27,8 @@ import java.util.*
 abstract class AbstractWebIntegrationTest {
 
     fun uuid(): String = UUID.randomUUID().toString()
+
+    fun emptyString(): String = StringUtils.EMPTY
 
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {
         Assertions.assertThat(resultResponse).isNotNull

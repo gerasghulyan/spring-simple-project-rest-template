@@ -29,7 +29,6 @@ class InvitationOrganizationCreateServiceUnitTest : AbstractInvitationOrganizati
         assertThatThrownBy { commonTestHelper.buildCreateInvitationOrganizationDto(slug = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildCreateInvitationOrganizationDto(customerSubscriptionDefinitionUuid = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildCreateInvitationOrganizationDto(customerSubscriptionDefinitionUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { commonTestHelper.buildCreateInvitationOrganizationDto(status = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { invitationOrganizationService.create(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }

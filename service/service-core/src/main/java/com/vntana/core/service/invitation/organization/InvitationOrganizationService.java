@@ -2,6 +2,8 @@ package com.vntana.core.service.invitation.organization;
 
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
+import com.vntana.core.service.invitation.organization.dto.GetAllInvitationOrganizationsDto;
+import org.springframework.data.domain.Page;
 
 /**
  * Created by Arman Gevorgyan.
@@ -15,4 +17,6 @@ public interface InvitationOrganizationService {
     InvitationOrganization getByUuid(final String uuid);
 
     boolean existsByUuid(final String uuid);
+
+    Page<InvitationOrganization> getAll(final GetAllInvitationOrganizationsDto dto);
 }

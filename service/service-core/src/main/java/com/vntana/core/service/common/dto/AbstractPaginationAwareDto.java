@@ -14,6 +14,10 @@ public class AbstractPaginationAwareDto implements ServiceDto {
     private final int page;
     private final int size;
 
+    public AbstractPaginationAwareDto(final int size) {
+        this(0, size);
+    }
+
     public AbstractPaginationAwareDto(final int page, final int size) {
         if (page < 0)
             throw new IllegalArgumentException("The pagination page should not be negative");
