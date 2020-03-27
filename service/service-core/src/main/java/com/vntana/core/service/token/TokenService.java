@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public interface TokenService {
 
-    TokenInvitationOrganization createTokenInvitationOrganization(CreateTokenInvitationOrganizationDto dto);
+    TokenInvitationOrganization createTokenInvitationOrganization(final CreateTokenInvitationOrganizationDto dto);
 
     Optional<AbstractToken> findByToken(final String token);
 

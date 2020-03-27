@@ -14,7 +14,7 @@ import org.junit.Test
  * Date: 3/27/20
  * Time: 12:21 PM
  */
-class TokeFacadePreconditionCheckerCheckCreateTokeInvitationOrganizationUnitTest : AbstractTokenFacadePreconditionCheckerUnitTest() {
+class TokeFacadePreconditionCheckerCheckCreateTokenInvitationOrganizationUnitTest : AbstractTokenFacadePreconditionCheckerUnitTest() {
 
     @Test
     fun `test when invitation organization not found`() {

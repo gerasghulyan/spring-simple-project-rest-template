@@ -3,7 +3,7 @@ package com.vntana.core.rest.facade.token
 import com.vntana.core.helper.token.TokenRestTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
-import com.vntana.core.rest.facade.token.impl.TokeFacadePreconditionCheckerImpl
+import com.vntana.core.rest.facade.token.impl.TokenFacadePreconditionCheckerImpl
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
 import com.vntana.core.service.token.TokenService
 import org.easymock.Mock
@@ -16,7 +16,7 @@ import org.junit.Before
  */
 abstract class AbstractTokenFacadePreconditionCheckerUnitTest : AbstractServiceFacadeUnitTest() {
 
-    protected lateinit var preconditionChecker: TokeFacadePreconditionChecker
+    protected lateinit var preconditionChecker: TokenFacadePreconditionChecker
 
     @Mock
     protected lateinit var tokenService: TokenService
@@ -30,6 +30,6 @@ abstract class AbstractTokenFacadePreconditionCheckerUnitTest : AbstractServiceF
 
     @Before
     fun prepare() {
-        preconditionChecker = TokeFacadePreconditionCheckerImpl(tokenService, invitationOrganizationService)
+        preconditionChecker = TokenFacadePreconditionCheckerImpl(tokenService, invitationOrganizationService)
     }
 }

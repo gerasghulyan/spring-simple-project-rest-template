@@ -16,7 +16,7 @@ import java.util.*
  * Date: 3/27/20
  * Time: 2:09 PM
  */
-class TokeFacadePreconditionCheckerCheckExpireUnitTest : AbstractTokenFacadePreconditionCheckerUnitTest() {
+class TokenFacadePreconditionCheckerCheckExpireUnitTest : AbstractTokenFacadePreconditionCheckerUnitTest() {
 
     @Test
     fun `test with blank uuid`() {

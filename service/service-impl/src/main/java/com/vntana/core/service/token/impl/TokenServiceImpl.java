@@ -35,6 +35,7 @@ public class TokenServiceImpl implements TokenService {
         this.tokenRepository = tokenRepository;
     }
 
+    @Transactional
     @Override
     public TokenInvitationOrganization createTokenInvitationOrganization(final CreateTokenInvitationOrganizationDto dto) {
         LOGGER.debug("Creating organization invitation token for dto - {}", dto);

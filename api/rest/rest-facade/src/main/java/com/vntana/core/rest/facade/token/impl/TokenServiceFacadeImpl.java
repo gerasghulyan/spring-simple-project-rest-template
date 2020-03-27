@@ -8,7 +8,7 @@ import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequ
 import com.vntana.core.model.token.response.TokenCreateResultResponse;
 import com.vntana.core.model.token.response.TokenExpireResultResponse;
 import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
-import com.vntana.core.rest.facade.token.TokeFacadePreconditionChecker;
+import com.vntana.core.rest.facade.token.TokenFacadePreconditionChecker;
 import com.vntana.core.rest.facade.token.TokenServiceFacade;
 import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.dto.CreateTokenInvitationOrganizationDto;
@@ -29,9 +29,9 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenServiceFacadeImpl.class);
 
     private final TokenService tokenService;
-    private final TokeFacadePreconditionChecker preconditionChecker;
+    private final TokenFacadePreconditionChecker preconditionChecker;
 
-    public TokenServiceFacadeImpl(final TokenService tokenService, final TokeFacadePreconditionChecker preconditionChecker) {
+    public TokenServiceFacadeImpl(final TokenService tokenService, final TokenFacadePreconditionChecker preconditionChecker) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.tokenService = tokenService;
         this.preconditionChecker = preconditionChecker;

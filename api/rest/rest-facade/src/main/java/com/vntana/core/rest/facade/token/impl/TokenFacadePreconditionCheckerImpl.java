@@ -4,7 +4,7 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.model.token.error.TokenErrorResponseModel;
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
-import com.vntana.core.rest.facade.token.TokeFacadePreconditionChecker;
+import com.vntana.core.rest.facade.token.TokenFacadePreconditionChecker;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.token.TokenService;
 import org.apache.commons.lang3.StringUtils;
@@ -23,14 +23,14 @@ import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
  * Time: 11:45 AM
  */
 @Component
-public class TokeFacadePreconditionCheckerImpl implements TokeFacadePreconditionChecker {
+public class TokenFacadePreconditionCheckerImpl implements TokenFacadePreconditionChecker {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokeFacadePreconditionCheckerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenFacadePreconditionCheckerImpl.class);
 
     private final TokenService tokenService;
     private final InvitationOrganizationService invitationOrganizationService;
 
-    public TokeFacadePreconditionCheckerImpl(final TokenService tokenService, final InvitationOrganizationService invitationOrganizationService) {
+    public TokenFacadePreconditionCheckerImpl(final TokenService tokenService, final InvitationOrganizationService invitationOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.tokenService = tokenService;
         this.invitationOrganizationService = invitationOrganizationService;

@@ -11,7 +11,7 @@ import org.junit.Test
  * Date: 3/27/20
  * Time: 2:07 PM
  */
-class TokeFacadePreconditionCheckerCheckIsExpiredUnitTest : AbstractTokenFacadePreconditionCheckerUnitTest() {
+class TokenFacadePreconditionCheckerCheckIsExpiredUnitTest : AbstractTokenFacadePreconditionCheckerUnitTest() {
 
     @Test
     fun `test with blank uuid`() {

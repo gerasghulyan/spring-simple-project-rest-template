@@ -21,7 +21,7 @@ abstract class AbstractTokenFacadeUnitTest : AbstractServiceFacadeUnitTest() {
     protected lateinit var tokenService: TokenService
 
     @Mock
-    protected lateinit var preconditionChecker: TokeFacadePreconditionChecker
+    protected lateinit var preconditionChecker: TokenFacadePreconditionChecker
 
     protected val restTestHelper = TokenRestTestHelper()
     protected val commonTestHelper = TokenCommonTestHelper()

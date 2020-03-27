@@ -9,7 +9,7 @@ import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequ
  * Date: 3/27/20
  * Time: 11:45 AM
  */
-public interface TokeFacadePreconditionChecker {
+public interface TokenFacadePreconditionChecker {
 
     SingleErrorWithStatus<TokenErrorResponseModel> checkCreateTokenInvitationOrganization(final CreateTokenInvitationOrganizationRequest request);
 
