@@ -32,6 +32,8 @@ class InvitationOrganizationSenderComponentUnitTest : AbstractServiceFacadeUnitT
 
     private val senderEmail: String = uuid()
 
+    private val emailSubject: String = uuid()
+
     private val restTestHelper = InvitationOrganizationRestTestHelper()
 
     @Before
@@ -40,7 +42,8 @@ class InvitationOrganizationSenderComponentUnitTest : AbstractServiceFacadeUnitT
                 emailSenderService,
                 templateEmailService,
                 verificationUrlPrefix,
-                senderEmail
+                senderEmail,
+                emailSubject
         )
     }
 
