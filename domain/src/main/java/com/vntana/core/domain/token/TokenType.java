@@ -6,5 +6,6 @@ package com.vntana.core.domain.token;
  * Time: 12:16 PM
  */
 public enum TokenType {
-    RESET_PASSWORD
+    RESET_PASSWORD,
+    INVITATION_ORGANIZATION
 }
