@@ -16,6 +16,7 @@ public enum InvitationOrganizationErrorResponseModel implements ErrorResponseMod
     MISSING_SLUG,
     MISSING_CUSTOMER_SUBSCRIPTION_DEFINITION_UUID,
     INVALID_SLUG,
+    INVALID_TOKEN,
     SLUG_IS_NOT_AVAILABLE,
     NOT_FOUND
 }
