@@ -2,8 +2,10 @@ package com.vntana.core.rest.resource.invitation.organization;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResultResponse;
-import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResultResponse;
+import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
+import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,17 +31,25 @@ public class InvitationOrganizationResource {
     }
 
     @PostMapping
-    public ResponseEntity<CreateInvitationOrganizationResultResponse> create(@RequestBody final CreateInvitationOrganizationRequest request) {
+    public ResponseEntity<CreateInvitationOrganizationResponse> create(@RequestBody final CreateInvitationOrganizationRequest request) {
         LOGGER.debug("Processing InvitationOrganizationResource create method for request - {}", request);
-        final CreateInvitationOrganizationResultResponse resultResponse = invitationOrganizationServiceFacade.create(request);
+        final CreateInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.create(request);
         LOGGER.debug("Successfully processed InvitationOrganizationResource create method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
+    @PostMapping("/send-invitation")
+    public ResponseEntity<SendInvitationOrganizationResponse> sendInvitation(@RequestBody final SendInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource sendInvitation method for request - {}", request);
+        final SendInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.sendInvitation(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource sendInvitation method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
     @GetMapping(path = "/{uuid}")
-    public ResponseEntity<GetInvitationOrganizationResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
+    public ResponseEntity<GetInvitationOrganizationResponse> getByUuid(@PathVariable("uuid") final String uuid) {
         LOGGER.debug("Processing InvitationOrganizationResource getByUuid method for uuid - {}", uuid);
-        final GetInvitationOrganizationResultResponse resultResponse = invitationOrganizationServiceFacade.getByUuid(uuid);
+        final GetInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.getByUuid(uuid);
         LOGGER.debug("Successfully processed InvitationOrganizationResource getByUuid method for uuid - {}", uuid);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }

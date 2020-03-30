@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.invitation.organization
 
+import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient
 import com.vntana.core.helper.invitation.organization.InvitationOrganizationResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.indexation.producer.invitation.organization.InvitationOrganizationUuidAwareActionProducer
@@ -29,6 +30,11 @@ abstract class AbstractInvitationOrganizationWebTest : AbstractWebIntegrationTes
 
     @Autowired
     protected lateinit var invitationOrganizationUuidAwareActionProducer: InvitationOrganizationUuidAwareActionProducer
+
+    @Autowired
+    protected lateinit var emailNotificationResourceClient: EmailNotificationResourceClient
+
+    fun email(): String = uuid() + "@gmail.com"
 
     @Before
     fun before() {

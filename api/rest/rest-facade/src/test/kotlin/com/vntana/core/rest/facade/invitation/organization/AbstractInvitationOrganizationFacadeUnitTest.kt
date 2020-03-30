@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.invitation.organization
 
 import com.vntana.core.helper.invitation.organization.InvitationOrganizationRestTestHelper
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
+import com.vntana.core.rest.facade.invitation.organization.component.InvitationOrganizationSenderComponent
 import com.vntana.core.rest.facade.invitation.organization.impl.InvitationOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
@@ -29,6 +30,9 @@ abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFac
     protected lateinit var invitationOrganizationUuidAwareLifecycleMediator: InvitationOrganizationUuidAwareLifecycleMediator
 
     @Mock
+    protected lateinit var invitationOrganizationSenderComponent: InvitationOrganizationSenderComponent
+
+    @Mock
     protected lateinit var mapperFacade: MapperFacade
 
     protected val restTestHelper = InvitationOrganizationRestTestHelper()
@@ -39,6 +43,7 @@ abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFac
         invitationOrganizationServiceFacade = InvitationOrganizationServiceFacadeImpl(invitationOrganizationService,
                 preconditionChecker,
                 invitationOrganizationUuidAwareLifecycleMediator,
+                invitationOrganizationSenderComponent,
                 mapperFacade
         )
     }

@@ -9,6 +9,7 @@ import com.vntana.commons.api.model.response.ErrorResponseModel;
  */
 public enum InvitationOrganizationErrorResponseModel implements ErrorResponseModel {
     MISSING_UUID,
+    MISSING_TOKEN,
     MISSING_OWNER_FULL_NAME,
     MISSING_EMAIL,
     MISSING_ORGANIZATION_NAME,
