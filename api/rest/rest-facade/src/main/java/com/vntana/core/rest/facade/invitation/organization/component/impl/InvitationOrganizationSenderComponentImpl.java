@@ -26,19 +26,22 @@ public class InvitationOrganizationSenderComponentImpl implements InvitationOrga
 
     private final EmailSenderService emailSenderService;
     private final TemplateEmailService templateEmailService;
-    private final String verificationUrlPrefix;
+    private final String websiteUrl;
     private final String senderEmail;
+    private final String emailSubject;
 
     public InvitationOrganizationSenderComponentImpl(
             final EmailSenderService emailSenderService,
             final TemplateEmailService templateEmailService,
-            @Value("${organization.invitation.website.url}") final String verificationUrlPrefix,
-            @Value("${organization.invitation.email.send.from}") final String senderEmail) {
+            @Value("${organization.invitation.website.url}") final String websiteUrl,
+            @Value("${organization.invitation.email.send.from}") final String senderEmail,
+            @Value("${organization.invitation.email.subject}") final String emailSubject) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.emailSenderService = emailSenderService;
         this.templateEmailService = templateEmailService;
-        this.verificationUrlPrefix = verificationUrlPrefix;
+        this.websiteUrl = websiteUrl;
         this.senderEmail = senderEmail;
+        this.emailSubject = emailSubject;
     }
 
     @Override
@@ -48,8 +51,8 @@ public class InvitationOrganizationSenderComponentImpl implements InvitationOrga
                 templateEmail.getTemplateName(),
                 request.getEmail(),
                 senderEmail,
-                "You have been invited to join organization",
-                String.format("%s/%s", verificationUrlPrefix, request.getToken())
+                emailSubject,
+                String.format("%s/%s", websiteUrl, request.getToken())
         );
         emailSenderService.sendEmail(payload);
         return new SendInvitationOrganizationResponse(new SendInvitationOrganizationResponseModel());

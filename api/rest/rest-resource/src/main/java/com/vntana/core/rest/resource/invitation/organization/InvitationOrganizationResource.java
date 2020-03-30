@@ -39,7 +39,7 @@ public class InvitationOrganizationResource {
     }
 
     @PostMapping("/send-invitation")
-    public ResponseEntity<SendInvitationOrganizationResponse> sendInvitation(@RequestBody SendInvitationOrganizationRequest request) {
+    public ResponseEntity<SendInvitationOrganizationResponse> sendInvitation(@RequestBody final SendInvitationOrganizationRequest request) {
         LOGGER.debug("Processing InvitationOrganizationResource sendInvitation method for request - {}", request);
         final SendInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.sendInvitation(request);
         LOGGER.debug("Successfully processed InvitationOrganizationResource sendInvitation method for request - {}", request);
