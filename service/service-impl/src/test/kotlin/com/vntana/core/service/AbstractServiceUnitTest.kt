@@ -1,5 +1,6 @@
 package com.vntana.core.service
 
+import org.apache.commons.lang3.StringUtils
 import org.easymock.EasyMockRunner
 import org.easymock.EasyMockSupport
 import org.junit.runner.RunWith
@@ -13,4 +14,5 @@ import java.util.*
 @RunWith(EasyMockRunner::class)
 abstract class AbstractServiceUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
+    fun emptyString(): String = StringUtils.EMPTY
 }

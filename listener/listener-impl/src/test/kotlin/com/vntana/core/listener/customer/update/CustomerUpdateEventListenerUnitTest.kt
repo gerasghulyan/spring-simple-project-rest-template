@@ -1,9 +1,9 @@
 package com.vntana.core.listener.customer.update
 
+import com.vntana.commons.indexation.payload.EntityLifecycle
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.listener.AbstractListenerUnitTest
-import com.vntana.core.listener.commons.EntityLifecycle
 import com.vntana.core.listener.organization.OrganizationLifecyclePayload
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService

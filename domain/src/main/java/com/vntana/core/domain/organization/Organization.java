@@ -2,6 +2,7 @@ package com.vntana.core.domain.organization;
 
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.client.ClientOrganization;
+import com.vntana.core.domain.organization.status.OrganizationStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,16 +34,21 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     @Column(name = "image_blob_id")
     private String imageBlobId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "organization_status", nullable = false)
+    private OrganizationStatus status;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
     private List<ClientOrganization> clientOrganizations;
 
     public Organization() {
     }
 
-    public Organization(final String name, final String slug, final String imageBlobId) {
+    public Organization(final String name, final String slug, final String imageBlobId, final OrganizationStatus status) {
         this.name = name;
         this.slug = slug;
         this.imageBlobId = imageBlobId;
+        this.status = status;
     }
 
     //region Public methods
@@ -92,6 +98,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         final Organization that = (Organization) o;
         return new EqualsBuilder()
                 .append(getUuid(), that.getUuid())
+                .append(getUuid(), that.getUuid())
                 .isEquals();
     }
 
@@ -108,6 +115,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
                 .append("name", name)
                 .append("slug", slug)
                 .append("imageBlobId", imageBlobId)
+                .append("status", status)
                 .toString();
     }
 
@@ -129,5 +137,13 @@ public class Organization extends AbstractUuidAwareDomainEntity {
 
     public void setImageBlobId(final String imageBlobId) {
         this.imageBlobId = imageBlobId;
+    }
+
+    public OrganizationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(final OrganizationStatus status) {
+        this.status = status;
     }
 }

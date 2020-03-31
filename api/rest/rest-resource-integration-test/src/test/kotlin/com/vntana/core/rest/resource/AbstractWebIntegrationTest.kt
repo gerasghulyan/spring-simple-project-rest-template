@@ -1,13 +1,16 @@
 package com.vntana.core.rest.resource
 
+import com.vntana.commons.api.model.constants.Headers
 import com.vntana.commons.api.model.response.ErrorResponseModel
 import com.vntana.commons.api.model.response.ResultResponseModel
 import com.vntana.core.rest.resource.boot.WebApplication
 import com.vntana.core.rest.resource.conf.WebIntegrationTestConfiguration
+import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
@@ -23,10 +26,9 @@ import java.util.*
         classes = [WebIntegrationTestConfiguration::class, WebApplication::class])
 abstract class AbstractWebIntegrationTest {
 
-    @LocalServerPort
-    var port: Int = 0
-
     fun uuid(): String = UUID.randomUUID().toString()
+
+    fun emptyString(): String = StringUtils.EMPTY
 
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {
         Assertions.assertThat(resultResponse).isNotNull
@@ -39,4 +41,28 @@ abstract class AbstractWebIntegrationTest {
         Assertions.assertThat(resultResponse.success()).isFalse()
         Assertions.assertThat(resultResponse.errors()).isNotEmpty.containsExactlyInAnyOrder(*errors)
     }
+
+    fun assertBasicSuccessResultResponse(responseEntity: ResponseEntity<out ResultResponseModel<*, *>>) {
+        Assertions.assertThat(responseEntity).isNotNull
+        Assertions.assertThat(responseEntity.body).isNotNull
+        responseEntity.body?.let {
+            Assertions.assertThat(it.success()).isTrue()
+            Assertions.assertThat(it.errors()).isEmpty()
+        }
+    }
+
+    fun assertBasicErrorResultResponse(responseEntity: ResponseEntity<out ResultResponseModel<*, *>>, vararg errors: ErrorResponseModel) {
+        Assertions.assertThat(responseEntity).isNotNull
+        Assertions.assertThat(responseEntity.body).isNotNull
+        responseEntity.body?.let {
+            Assertions.assertThat(it.success()).isFalse()
+            Assertions.assertThat(it.errors()).isNotEmpty.containsExactlyInAnyOrder(*errors)
+        }
+    }
+
+    fun assertBasicErrorResultResponse(httpStatus: HttpStatus, responseEntity: ResponseEntity<out ResultResponseModel<*, *>>, vararg errors: ErrorResponseModel) {
+        assertBasicErrorResultResponse(responseEntity = responseEntity, errors = *errors)
+        Assertions.assertThat(responseEntity.headers[Headers.STATUS]?.get(0)).isEqualTo(httpStatus.value().toString())
+    }
+
 }

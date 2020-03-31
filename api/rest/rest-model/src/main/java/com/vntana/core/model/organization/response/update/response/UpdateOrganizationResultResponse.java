@@ -3,8 +3,6 @@ package com.vntana.core.model.organization.response.update.response;
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 
-import java.util.List;
-
 /**
  * Created by Arman Gevorgyan.
  * Date: 12/26/19
@@ -16,15 +14,11 @@ public class UpdateOrganizationResultResponse extends AbstractResultResponseMode
         super();
     }
 
-    public UpdateOrganizationResultResponse(final OrganizationErrorResponseModel error) {
-        super(error);
-    }
-
-    public UpdateOrganizationResultResponse(final List<OrganizationErrorResponseModel> errors) {
-        super(errors);
-    }
-
     public UpdateOrganizationResultResponse(final String uuid) {
         super(new UpdateOrganizationResponseModel(uuid));
+    }
+
+    public UpdateOrganizationResultResponse(final int httpStatusCode, final OrganizationErrorResponseModel error) {
+        super(httpStatusCode, error);
     }
 }

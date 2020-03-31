@@ -101,7 +101,7 @@ public class User extends AbstractUuidAwareDomainEntity {
 
     public Optional<UserSuperAdminRole> roleOfSuperAdmin() {
         return immutableRoles().stream()
-                .filter(role -> role.getType().equals(UserRoleType.SUPER_ADMIN_ROLE))
+                .filter(role -> role.getUserRole().equals(UserRole.SUPER_ADMIN))
                 .findAny()
                 .map(UserSuperAdminRole.class::cast);
     }

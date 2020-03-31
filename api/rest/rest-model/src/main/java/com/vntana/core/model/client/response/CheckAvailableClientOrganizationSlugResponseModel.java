@@ -22,7 +22,7 @@ public class CheckAvailableClientOrganizationSlugResponseModel implements Respon
     public CheckAvailableClientOrganizationSlugResponseModel() {
     }
 
-    CheckAvailableClientOrganizationSlugResponseModel(final boolean available, final String suggested) {
+    public CheckAvailableClientOrganizationSlugResponseModel(final boolean available, final String suggested) {
         this.available = available;
         this.suggested = suggested;
     }

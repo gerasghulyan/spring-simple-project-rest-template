@@ -1,7 +1,7 @@
 buildscript {
     ext {
         platformGroup = 'com.vntana.core'
-        platformVersion = '0.3.0'
+        platformVersion = '0.4.0'
         kotlinVersion = '1.3.61'
         vavrVersion = '0.10.2'
         easymockVersion = '4.0.2'
@@ -10,9 +10,10 @@ buildscript {
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
         sflNotifierVersion = '1.9.0-SNAPSHOT'
-        commonsApiModelsVersion = '0.3.0'
-        vntanaCacheVersion = '0.3.0'
-        vntanaPaymentVersion = '0.3.0'
+        vntanaCommonsVersion = '0.4.0'
+        vntanaCacheVersion = '0.4.0'
+        vntanaPaymentVersion = '0.4.0'
+        vntanaCommonsVersion = '0.4.0'
     }
 
     repositories {
@@ -39,7 +40,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.springframework.boot' version '2.1.8.RELEASE' apply false
+    id 'org.springframework.boot' version '2.2.1.RELEASE' apply false
     id "jacoco"
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id "org.jetbrains.kotlin.plugin.spring" version "1.3.50"
@@ -143,7 +144,7 @@ allprojects {
 
     dependencyManagement {
         imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:2.1.8.RELEASE") {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:2.2.1.RELEASE") {
                 bomProperty("kotlin.version", kotlinVersion)
             }
             mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE'
@@ -158,10 +159,15 @@ allprojects {
             dependency("net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaSpringBootVersion}")
             dependency("io.springfox:springfox-swagger2:$springFoxSwaggerVersion")
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
-            dependency("com.vntana.commons:api-models:$commonsApiModelsVersion${versionPostfix()}")
-            dependency("com.vntana.commons:persistence-domain:$commonsApiModelsVersion${versionPostfix()}")
-            dependency("com.vntana.commons:cache:$commonsApiModelsVersion${versionPostfix()}")
-            dependency("com.vntana.commons:rest-test-helper:$commonsApiModelsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:api-models:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:queue-commons:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:queue:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:persistence-domain:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:cache:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:indexation:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:rest-test-helper:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:web-utils:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:queue-core-indexation-consumer-message:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
             dependency("com.vntana.payment:rest-client-payment:$vntanaPaymentVersion${versionPostfix()}")
         }
@@ -278,7 +284,7 @@ project(":helper:rest-test-helper") {
 
     apply plugin: 'maven'
     apply plugin: "kotlin-spring"
-    
+
     sonarqube.skipProject = true
 
     archivesBaseName = 'rest-test-helper'
@@ -301,7 +307,7 @@ project(":helper:rest-test-helper") {
             }
         }
     }
-    
+
     dependencies {
         compile "com.vntana.commons:rest-test-helper"
         implementation project(":api:rest:rest-model")
@@ -336,6 +342,7 @@ project(":service:service-core") {
     group = "${platformGroup}.service"
 
     dependencies {
+        api("com.vntana.commons:indexation")
         implementation project(":domain")
     }
 }
@@ -452,6 +459,7 @@ project(":api:rest:rest-facade") {
     group = "${platformGroup}.rest.facade"
 
     dependencies {
+        api("com.vntana.commons:indexation")
         implementation project(":api:rest:rest-model")
         implementation project(":service:service-core")
         implementation project(":notification")
@@ -473,8 +481,10 @@ project(":api:rest:rest-resource") {
     sonarqube.skipProject = true
 
     dependencies {
+        implementation "com.vntana.commons:web-utils"
         api project(":api:rest:rest-facade")
         api project(":api:rest:rest-model")
+        api "com.vntana.commons:queue"
         api "org.springframework.boot:spring-boot-starter-web"
         api "org.aspectj:aspectjrt"
         api "org.aspectj:aspectjweaver"
@@ -526,10 +536,12 @@ project(":api:rest:rest-resource-integration-test") {
         implementation project(":api:rest:rest-client")
         implementation "org.springframework.boot:spring-boot-starter"
         testImplementation project(":api:rest:rest-resource")
+        testImplementation project(":indexation:indexation-producer")
         testImplementation project(":migration:migration-library")
         testImplementation project(":helper:rest-resource-test-helper")
         testImplementation 'com.vntana.payment:rest-client-payment'
         testImplementation "com.vntana.cache:vntana-cache"
+        testImplementation "com.vntana.commons:queue-core-indexation-consumer-message"
         testImplementation "com.sflpro.notifier:api-client-library"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
         testImplementation 'org.springframework.data:spring-data-jpa'
@@ -558,9 +570,22 @@ project(":listener:listener-impl") {
 
     dependencies {
         api project(":listener:listener-core")
+        api project(":indexation:indexation-producer")
         api "com.vntana.cache:vntana-cache"
         api 'com.vntana.payment:rest-client-payment'
+        implementation "com.vntana.commons:queue-core-indexation-consumer-message"
         testImplementation project(":helper:test-helper")
+    }
+}
+
+project(':indexation:indexation-producer') {
+    apply plugin: "kotlin-spring"
+
+    dependencies {
+        api("com.vntana.commons:queue-commons")
+        implementation "com.vntana.commons:queue-core-indexation-consumer-message"
+        testImplementation project(":helper:test-helper")
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
     }
 }
 
@@ -608,7 +633,7 @@ configure(subprojects.findAll {
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
-                    minimum = 0.2
+                    minimum = 0.0
                 }
                 failOnViolation true
             }
@@ -690,7 +715,7 @@ configure(subprojects.findAll {
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
-                    minimum = 0.2
+                    minimum = 0.0
                 }
                 failOnViolation false
             }

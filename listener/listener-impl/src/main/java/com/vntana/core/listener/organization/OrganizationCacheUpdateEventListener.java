@@ -2,8 +2,8 @@ package com.vntana.core.listener.organization;
 
 import com.vntana.cache.service.organization.OrganizationCacheService;
 import com.vntana.cache.service.organization.dto.CacheOrganizationCreateDto;
+import com.vntana.commons.indexation.listener.EntityLifecycleListener;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.listener.commons.EntityLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;

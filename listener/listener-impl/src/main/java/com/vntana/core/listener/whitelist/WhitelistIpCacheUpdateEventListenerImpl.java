@@ -31,7 +31,7 @@ public class WhitelistIpCacheUpdateEventListenerImpl implements WhitelistIpCache
     @EventListener
     @Override
     public void handleEvent(final WhitelistIpLifecyclePayload payload) {
-        Assert.notNull(payload, "The ProductLifecyclePayload should not be null");
+        Assert.notNull(payload, "The WhitelistIpLifecyclePayload should not be null");
         final SaveWhitelistIpLifecycleDto whitelistIpLifecycleDto = payload.getDto();
         final CacheWhitelistCreateDto dto = new CacheWhitelistCreateDto(
                 whitelistIpLifecycleDto.getOrganizationUuid(),

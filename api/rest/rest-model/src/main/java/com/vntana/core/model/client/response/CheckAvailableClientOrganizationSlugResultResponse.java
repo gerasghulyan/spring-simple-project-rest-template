@@ -3,8 +3,6 @@ package com.vntana.core.model.client.response;
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 
-import java.util.List;
-
 /**
  * Created by Arthur Asatryan.
  * Date: 10/9/19
@@ -12,13 +10,14 @@ import java.util.List;
  */
 public class CheckAvailableClientOrganizationSlugResultResponse extends AbstractResultResponseModel<CheckAvailableClientOrganizationSlugResponseModel, ClientOrganizationErrorResponseModel> {
     public CheckAvailableClientOrganizationSlugResultResponse() {
+        super();
     }
 
-    public CheckAvailableClientOrganizationSlugResultResponse(final boolean available, final String suggested) {
-        super(new CheckAvailableClientOrganizationSlugResponseModel(available, suggested));
+    public CheckAvailableClientOrganizationSlugResultResponse(final int httpStatusCode, final ClientOrganizationErrorResponseModel error) {
+        super(httpStatusCode, error);
     }
 
-    public CheckAvailableClientOrganizationSlugResultResponse(final List<ClientOrganizationErrorResponseModel> errors) {
-        super(errors);
+    public CheckAvailableClientOrganizationSlugResultResponse(final CheckAvailableClientOrganizationSlugResponseModel response) {
+        super(response);
     }
 }

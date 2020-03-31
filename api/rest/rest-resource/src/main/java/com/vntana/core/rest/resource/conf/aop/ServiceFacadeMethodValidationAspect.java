@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class ServiceFacadeMethodValidationAspect {
 
-    @Around("execution(public * com.vntana.core.rest.facade.*.impl..* (..)) " +
+    @Around("execution(public * com.vntana.core.rest.facade..*.impl..* (..)) " +
             "&& args(validatableRequest,..)"
     )
     public Object around(final ProceedingJoinPoint point, final ValidatableRequest<?> validatableRequest) throws Throwable {
@@ -36,6 +36,7 @@ public class ServiceFacadeMethodValidationAspect {
                     (type instanceof ParameterizedType) ? (Class<AbstractResultResponseModel>) ((ParameterizedType) type).getRawType() : (Class<AbstractResultResponseModel>) type;
             final AbstractResultResponseModel resultResponseModel = clazz.newInstance();
             resultResponseModel.errors(validationResult);
+            resultResponseModel.setHttpStatusCode(422);
             resultResponseModel.success(false);
             return resultResponseModel;
         }

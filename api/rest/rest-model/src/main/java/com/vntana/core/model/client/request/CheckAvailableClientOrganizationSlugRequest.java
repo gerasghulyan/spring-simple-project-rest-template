@@ -1,5 +1,6 @@
 package com.vntana.core.model.client.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
@@ -22,6 +23,7 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
     private String slug;
 
     @JsonProperty("organizationUuid")
+    @JsonIgnore
     private String organizationUuid;
 
     public CheckAvailableClientOrganizationSlugRequest() {
@@ -36,7 +38,7 @@ public class CheckAvailableClientOrganizationSlugRequest extends AbstractRequest
     @Override
     public List<ClientOrganizationErrorResponseModel> validate() {
         final List<ClientOrganizationErrorResponseModel> errors = initializeNew();
-        if (StringUtils.isBlank(slug)) {
+        if (StringUtils.isBlank(getSlug())) {
             errors.add(ClientOrganizationErrorResponseModel.MISSING_SLUG);
         }
         return errors;

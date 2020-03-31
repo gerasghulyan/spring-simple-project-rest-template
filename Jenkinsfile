@@ -102,23 +102,6 @@ pipeline {
                 }
             }
         }
-        stage("Deploy") {
-            when {
-                 expression {
-                    return env.BRANCH_NAME == 'develop'
-                }
-            }
-            steps {
-                build(
-                    job: 'Deploy/master',
-                    parameters: [
-                        booleanParam(name: "core", value: true)
-                    ],
-                    propagate: 'true',
-                    wait: 'false'
-                )
-            }
-        }
         stage("DeployDEV") {
             when {
                  expression {

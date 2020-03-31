@@ -1,15 +1,19 @@
 package com.vntana.core.service.organization.impl;
 
 import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.organization.status.OrganizationStatus;
 import com.vntana.core.persistence.organization.OrganizationRepository;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
 import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.exception.OrganizationOwnerNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -45,7 +49,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization create(final CreateOrganizationDto dto) {
         assertCreateOrganizationDto(dto);
         assertSlug(dto.getSlug());
-        return organizationRepository.save(new Organization(dto.getName(), dto.getSlug(), dto.getImageBlobId()));
+        return organizationRepository.save(new Organization(
+                dto.getName(),
+                dto.getSlug(),
+                dto.getImageBlobId(),
+                OrganizationStatus.ACTIVE
+        ));
     }
 
     @Transactional(readOnly = true)
@@ -57,9 +66,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Organization> getAll() {
+    public Page<Organization> getAll(final GetAllOrganizationDto dto) {
+        Assert.notNull(dto, "The GetAllOrganizationDto should not be null");
         LOGGER.debug("Trying to find all organization");
-        return organizationRepository.findAll();
+        return organizationRepository.findAll(PageRequest.of(dto.getPage(), dto.getSize()));
     }
 
     @Transactional(readOnly = true)
@@ -103,10 +113,17 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     @Transactional(readOnly = true)
     public List<Organization> getUserOrganizationsByUserUuidAndRole(final GetUserOrganizationsByUserUuidAndRoleDto dto) {
-        Assert.notNull(dto, "The 'GetUserOrganizationsByUserUuidAndRoleDto' should not be null");LOGGER.debug("Retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
+        Assert.notNull(dto, "The 'GetUserOrganizationsByUserUuidAndRoleDto' should not be null");
+        LOGGER.debug("Retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
         final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole().name());
         LOGGER.debug("Successfully processed retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
         return organizations;
+    }
+
+    @Override
+    public Long count() {
+        LOGGER.debug("Retrieving organizations records count");
+        return organizationRepository.count();
     }
 
     private Optional<Organization> findByUuid(final String uuid) {
@@ -117,8 +134,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private void assertCreateOrganizationDto(final CreateOrganizationDto dto) {
         Assert.notNull(dto, "The CreateOrganizationDto should not be null");
-        Assert.hasText(dto.getName(), "The name should contain text");
-        Assert.hasText(dto.getSlug(), "The slug should contain text");
     }
 
     private void assertSlug(final String slug) {
