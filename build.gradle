@@ -161,7 +161,6 @@ allprojects {
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
             dependency("com.vntana.commons:api-models:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:queue-commons:$vntanaCommonsVersion${versionPostfix()}")
-            dependency("com.vntana.commons:queue:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:persistence-domain:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:cache:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:indexation:$vntanaCommonsVersion${versionPostfix()}")
@@ -484,7 +483,7 @@ project(":api:rest:rest-resource") {
         implementation "com.vntana.commons:web-utils"
         api project(":api:rest:rest-facade")
         api project(":api:rest:rest-model")
-        api "com.vntana.commons:queue"
+        api "com.vntana.commons:queue-commons"
         api "org.springframework.boot:spring-boot-starter-web"
         api "org.aspectj:aspectjrt"
         api "org.aspectj:aspectjweaver"
