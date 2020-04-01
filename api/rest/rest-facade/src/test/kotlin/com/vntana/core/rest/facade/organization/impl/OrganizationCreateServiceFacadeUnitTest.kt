@@ -72,6 +72,7 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
                 UserRole.ORGANIZATION_ADMIN)
         ))
         expect(organizationLifecycleMediator.onCreated(organization))
+        expect(organizationUuidAwareLifecycleMediator.onCreated(organization.uuid))
         replayAll()
         // test scenario
         val resultResponse = organizationServiceFacade.create(request)
