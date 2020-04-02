@@ -2,6 +2,7 @@ package com.vntana.core.rest.client.indexation;
 
 import com.vntana.commons.api.model.response.indexation.IndexationResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -13,5 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface IndexationResourceClient {
 
     @GetMapping("/organizations")
-    IndexationResultResponse indexAllOrganizations();
+    ResponseEntity<IndexationResultResponse> indexAllOrganizations();
+
+    @GetMapping("/organization-invitations")
+    ResponseEntity<IndexationResultResponse> indexAllOrganizationInvitations();
 }
