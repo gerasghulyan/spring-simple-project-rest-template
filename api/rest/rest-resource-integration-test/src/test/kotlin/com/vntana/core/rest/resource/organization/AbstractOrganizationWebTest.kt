@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.organization
 
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
+import com.vntana.core.indexation.producer.organization.OrganizationUuidAwareActionProducer
 import com.vntana.core.rest.client.organization.OrganizationResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import com.vntana.payment.client.customer.PaymentCustomerResourceClient
@@ -31,10 +32,15 @@ abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
     @Autowired
     protected lateinit var customerResourceClient: PaymentCustomerResourceClient
 
+    @Autowired
+    protected lateinit var organizationUuidAwareActionProducer: OrganizationUuidAwareActionProducer
+
     @Before
     fun prepare() {
         Mockito.reset(customerResourceClient)
+        Mockito.reset(organizationUuidAwareActionProducer)
         Mockito.`when`(customerResourceClient.create(ArgumentMatchers.any())).thenReturn(CustomerCreateResultResponse())
         Mockito.`when`(customerResourceClient.update(ArgumentMatchers.any())).thenReturn(CustomerUpdateResultResponse())
+        Mockito.doNothing().`when`(organizationUuidAwareActionProducer).produce(ArgumentMatchers.any())
     }
 }

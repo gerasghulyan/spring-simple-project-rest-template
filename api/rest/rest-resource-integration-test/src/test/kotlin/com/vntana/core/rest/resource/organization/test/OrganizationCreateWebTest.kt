@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.organization.test
 
+import com.vntana.commons.queue.model.MessageActionType
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
@@ -36,5 +37,11 @@ class OrganizationCreateWebTest : AbstractOrganizationWebTest() {
         assertThat(response.success()).isTrue()
         assertThat(response.response().uuid).isNotBlank()
         Mockito.verify(customerResourceClient, times(2)).create(argThat { inRequest -> inRequest.email == email })
+        Mockito.verify(organizationUuidAwareActionProducer).produce(Mockito.argThat { argument ->
+            argument.messageActionType == MessageActionType.CREATED && argument.uuid == response.response().uuid
+        })
+        Mockito.verify(organizationUuidAwareActionProducer).produce(Mockito.argThat { argument ->
+            argument.messageActionType == MessageActionType.CREATED
+        })
     }
 }
