@@ -21,11 +21,11 @@ class OrganizationUpdateServiceUnitTest : AbstractOrganizationServiceUnitTest() 
         replayAll()
         assertThatThrownBy { helper.buildUpdateOrganizationDto(uuid = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { helper.buildUpdateOrganizationDto(uuid = "") }
+        assertThatThrownBy { helper.buildUpdateOrganizationDto(uuid = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { helper.buildUpdateOrganizationDto(name = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { helper.buildUpdateOrganizationDto(name = "") }
+        assertThatThrownBy { helper.buildUpdateOrganizationDto(name = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { organizationService.update(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
@@ -56,6 +56,26 @@ class OrganizationUpdateServiceUnitTest : AbstractOrganizationServiceUnitTest() 
         organizationService.update(dto).let {
             assertThat(it.imageBlobId).isEqualTo(dto.imageBlobId)
             assertThat(it.name).isEqualTo(dto.name)
+            assertThat(it.status).isEqualTo(dto.status.get())
+            assertThat(it.slug).isEqualTo(organizationSlug)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test update without status`() {
+        val organizationSlug = uuid()
+        val organization = helper.buildOrganization(slug = organizationSlug)
+        val dto = helper.buildUpdateOrganizationDto(status = null)
+        resetAll()
+        expect(organizationRepository.findByUuid(dto.uuid)).andReturn(Optional.of(organization))
+        expect(organizationRepository.save(isA(Organization::class.java)))
+                .andAnswer { getCurrentArguments()[0] as Organization }
+        replayAll()
+        organizationService.update(dto).let {
+            assertThat(it.imageBlobId).isEqualTo(dto.imageBlobId)
+            assertThat(it.name).isEqualTo(dto.name)
+            assertThat(it.status).isEqualTo(organization.status)
             assertThat(it.slug).isEqualTo(organizationSlug)
         }
         verifyAll()

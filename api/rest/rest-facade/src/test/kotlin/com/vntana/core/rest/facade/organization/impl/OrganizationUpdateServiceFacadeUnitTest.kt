@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.organization.impl
 
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
+import com.vntana.core.service.organization.dto.UpdateOrganizationDto
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -30,6 +31,7 @@ class OrganizationUpdateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         val updatedOrganization = commonTestHelper.buildOrganization()
         resetAll()
         expect(organizationService.existsByUuid(request.uuid)).andReturn(true)
+        expect(mapperFacade.map(request, UpdateOrganizationDto::class.java)).andReturn(dto)
         expect(organizationService.update(dto)).andReturn(updatedOrganization)
         expect(organizationLifecycleMediator.onUpdated(updatedOrganization)).andVoid()
         expect(organizationUuidAwareLifecycleMediator.onUpdated(updatedOrganization.uuid)).andVoid()

@@ -210,12 +210,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         if (!organizationService.existsByUuid(request.getUuid())) {
             return new UpdateOrganizationResultResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
         }
-        final UpdateOrganizationDto dto = new UpdateOrganizationDto(
-                request.getUuid(),
-                request.getImageBlobId(),
-                request.getName()
-        );
-        final Organization organization = organizationService.update(dto);
+        final Organization organization = organizationService.update(mapperFacade.map(request, UpdateOrganizationDto.class));
         organizationLifecycleMediator.onUpdated(organization);
         organizationUuidAwareLifecycleMediator.onUpdated(organization.getUuid());
         LOGGER.debug("Successfully processed organization facade update method for request - {}", request);
