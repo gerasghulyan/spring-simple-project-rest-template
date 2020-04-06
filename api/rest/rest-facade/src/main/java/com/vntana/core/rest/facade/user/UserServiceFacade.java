@@ -11,6 +11,8 @@ import com.vntana.core.model.user.response.*;
 public interface UserServiceFacade {
     CreateUserResponse create(final CreateUserRequest request);
 
+    ExistsUserByEmailResponse existsByEmail(final String email);
+
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
     FindUserByUuidResponse findByUuid(final String uuid);

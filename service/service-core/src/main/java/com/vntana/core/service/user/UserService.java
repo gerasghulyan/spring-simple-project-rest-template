@@ -31,5 +31,7 @@ public interface UserService {
 
     boolean existsByUuid(final String uuid);
 
+    boolean existsByEmail(final String email);
+
     boolean checkPassword(final String uuid, final String rawPassword);
 }

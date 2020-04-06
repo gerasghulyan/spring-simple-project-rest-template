@@ -127,6 +127,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existsByEmail(final String email) {
+        LOGGER.debug("Checking existence of user having email - {}", email);
+        Assert.hasText(email, "The email should not be null or empty");
+        final boolean exists = userRepository.existsByEmail(email);
+        LOGGER.debug("Successfully checked existence of user having email - {}", email);
+        return exists;
+    }
+
+    @Override
     public void grantOrganizationRole(final UserGrantOrganizationRoleDto dto) {
         LOGGER.debug("Setting user role for dto - {}", dto);
         Assert.notNull(dto, "The UserGrantOrganizationRoleDto should not be null");
