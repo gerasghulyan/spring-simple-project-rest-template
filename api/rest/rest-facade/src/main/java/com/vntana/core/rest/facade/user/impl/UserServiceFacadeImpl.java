@@ -33,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/1/19
@@ -96,6 +98,17 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             LOGGER.debug("Successfully created user - {} for request - {}", user, request);
         });
         return new CreateUserResponse(mutableResponse.getValue());
+    }
+
+    @Override
+    public ExistsUserByEmailResponse existsByEmail(final String email) {
+        LOGGER.debug("Processing user facade existsByEmail for email - {}", email);
+        if (StringUtils.isBlank(email)) {
+            return new ExistsUserByEmailResponse(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_EMAIL);
+        }
+        final boolean exists = userService.existsByEmail(email);
+        LOGGER.debug("Successfully processed user facade existsByEmail for email - {}", email);
+        return new ExistsUserByEmailResponse(exists);
     }
 
     @Override

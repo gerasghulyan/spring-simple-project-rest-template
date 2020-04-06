@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.user;
 
+import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
@@ -34,6 +35,14 @@ public class UserResource {
         final CreateUserResponse resultResponse = userServiceFacade.create(request);
         LOGGER.debug("Successfully processed resource create for request - {}", request);
         return ResponseEntity.ok(resultResponse);
+    }
+
+    @GetMapping(path = "existence/{email}")
+    public ResponseEntity<ExistsUserByEmailResponse> existsByEmail(@PathVariable("email") final String email) {
+        LOGGER.debug("Processing resource existsByEmail for email- {}", email);
+        final ExistsUserByEmailResponse response = userServiceFacade.existsByEmail(email);
+        LOGGER.debug("Successfully processed resource existsByEmail for email - {}", email);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
     @PostMapping(path = "/by-email")
