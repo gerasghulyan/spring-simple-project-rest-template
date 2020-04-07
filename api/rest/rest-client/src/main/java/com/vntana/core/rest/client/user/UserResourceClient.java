@@ -33,7 +33,7 @@ public interface UserResourceClient {
     );
 
     @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
-    GetUsersByRoleAndOrganizationUuidResponse getUsersByRoleAndOrganizationUuid(
+    ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(
             @PathVariable("role") final UserRoleModel role,
             @PathVariable("organizationUuid") final String organizationUuid);
 

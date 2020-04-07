@@ -79,7 +79,7 @@ public class UserResource {
         LOGGER.debug("Processing retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
         final GetUsersByRoleAndOrganizationUuidResponse response = userServiceFacade.getByRoleAndOrganizationUuid(role, organizationUuid);
         LOGGER.debug("Successfully proceeded retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
-        return ResponseEntity.ok(response);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
     @PutMapping(path = "/verify")

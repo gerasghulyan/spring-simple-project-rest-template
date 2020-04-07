@@ -5,7 +5,6 @@ import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.rest.resource.user.AbstractUserWebTest
 import org.junit.Test
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 
 /**
  * Created by Manuk Gharslyan.
@@ -26,7 +25,7 @@ class UserGetUsersByRoleAndOrganizationUuidWebTest : AbstractUserWebTest() {
     fun `test not found`() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val response = userResourceClient.getUsersByRoleAndOrganizationUuid(UserRoleModel.ASSET_MANAGER, organizationUuid)
-        assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, ResponseEntity.ok(response),
+        assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, response,
                 UserErrorResponseModel.NOT_FOUND_FOR_ROLE, UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)
     }
 }
