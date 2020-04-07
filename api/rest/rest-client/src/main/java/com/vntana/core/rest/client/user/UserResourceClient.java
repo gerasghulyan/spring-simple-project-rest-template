@@ -1,5 +1,6 @@
 package com.vntana.core.rest.client.user;
 
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -30,6 +31,11 @@ public interface UserResourceClient {
             @PathVariable("uuid") final String uuid,
             @PathVariable("organizationUuid") final String organizationUuid
     );
+
+    @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
+    GetUsersByRoleAndOrganizationUuidResponse getUsersByRoleAndOrganizationUuid(
+            @PathVariable("role") final UserRoleModel role,
+            @PathVariable("organizationUuid") final String organizationUuid);
 
     @PutMapping(path = "/verify")
     VerifyUserResponse verify(@RequestBody final VerifyUserRequest request);

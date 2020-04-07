@@ -33,4 +33,6 @@ class OrganizationResourceTestHelper : OrganizationRestTestHelper() {
         request.userUuid = userResponse.response().uuid
         return organizationResourceClient.create(request)
     }
+    
+    fun getOrganizationBySlug(slug: String = uuid()) = organizationResourceClient.getBySlug(slug)
 }
