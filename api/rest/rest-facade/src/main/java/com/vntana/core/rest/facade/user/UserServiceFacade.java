@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.user;
 
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 
@@ -30,4 +31,6 @@ public interface UserServiceFacade {
     UpdateUserResponse update(final UpdateUserRequest request);
 
     ChangeUserPasswordResponse changePassword(final ChangeUserPasswordRequest request);
+
+    GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid);
 }

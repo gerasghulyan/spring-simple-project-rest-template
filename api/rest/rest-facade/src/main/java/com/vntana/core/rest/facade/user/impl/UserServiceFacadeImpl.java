@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.user.impl;
 
+import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
@@ -23,16 +24,20 @@ import com.vntana.core.service.user.dto.UpdateUserDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static com.vntana.core.model.user.error.UserErrorResponseModel.*;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 
 /**
@@ -250,6 +255,45 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final User user = userService.changePassword(request.getUuid(), request.getNewPassword());
         LOGGER.debug("Successfully processed facade changePassword method for user having uuid - {}", request.getUuid());
         return new ChangeUserPasswordResponse(user.getUuid());
+    }
+
+    @Override
+    public GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid) {
+        LOGGER.debug("Processing facade getByRoleAndOrganizationUuid method for user role - {} and organization uuid - {}", userRole, organizationUuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> possibleErrors = checkGetByRoleAndOrganizationUuidPossibleErrors(userRole, organizationUuid);
+        if (possibleErrors.isPresent()) {
+            return new GetUsersByRoleAndOrganizationUuidResponse(possibleErrors.getHttpStatus(), possibleErrors.getError());
+        }
+        final List<User> response = userService.findByRoleAndOrganizationUuid(UserRole.valueOf(userRole.name()), organizationUuid);
+        if (response.isEmpty()) {
+            return new GetUsersByRoleAndOrganizationUuidResponse(HttpStatus.SC_NOT_FOUND, Arrays.asList(NOT_FOUND_FOR_ROLE, NOT_FOUND_FOR_ORGANIZATION));
+        }
+        if (userRole == UserRoleModel.ORGANIZATION_ADMIN && response.size() > 1) {
+            return new GetUsersByRoleAndOrganizationUuidResponse(HttpStatus.SC_CONFLICT, ORGANIZATION_ROLE_CONFLICT);
+        }
+        LOGGER.debug("Successfully processed facade getByRoleAndOrganizationUuid method for user role - {} and organization uuid - {}", userRole, organizationUuid);
+        return new GetUsersByRoleAndOrganizationUuidResponse(new GetUsersByRoleAndOrganizationUuidGridResponseModel(
+                response.size(),
+                response.stream()
+                        .map(user -> new GetUsersByRoleAndOrganizationUuidResponseModel(
+                                user.getUuid(),
+                                user.getFullName(),
+                                user.getEmail()
+                        )).collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
+        ));
+    }
+
+    private SingleErrorWithStatus<UserErrorResponseModel> checkGetByRoleAndOrganizationUuidPossibleErrors(final UserRoleModel userRole, final String organizationUuid) {
+        if (userRole == null) {
+            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_USER_ROLE);
+        }
+        if (StringUtils.isBlank(organizationUuid)) {
+            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_ORGANIZATION);
+        }
+        if (!organizationService.existsByUuid(organizationUuid)) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, ORGANIZATION_NOT_FOUND);
+        }
+        return SingleErrorWithStatus.empty();
     }
 
     private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String email) {

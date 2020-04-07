@@ -2,6 +2,7 @@ package com.vntana.core.service.user.impl;
 
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -152,6 +154,17 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("Checking user password for user having uuid - {}", uuid);
         final User user = getByUuid(uuid);
         return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<User> findByRoleAndOrganizationUuid(final UserRole userRole, final String organizationUuid) {
+        Assert.notNull(userRole, "The userRole should not be null");
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        LOGGER.debug("Retrieving the users having given role - {} on organization having uuid - {}", userRole, organizationUuid);
+        final List<User> users = userRepository.findByRoleAndOrganizationUuid(userRole, organizationUuid);
+        LOGGER.debug("Successfully retrieved the users having given role - {} on organization having uuid - {}", userRole, organizationUuid);
+        return users;
     }
 
     private User updateUser(final User user, final UpdateUserDto dto) {

@@ -1,5 +1,6 @@
 package com.vntana.core.service.user
 
+import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +15,9 @@ abstract class AbstractUserServiceIntegrationTest : AbstractServiceIntegrationTe
 
     @Autowired
     protected lateinit var integrationTestHelper: UserIntegrationTestHelper
+    
+    @Autowired
+    protected lateinit var organizationIntegrationTest: OrganizationIntegrationTestHelper
 
     @Autowired
     protected lateinit var userService: UserService

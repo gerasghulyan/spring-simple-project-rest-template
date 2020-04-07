@@ -1,6 +1,7 @@
 package com.vntana.core.rest.resource.user;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
@@ -68,6 +69,16 @@ public class UserResource {
         LOGGER.debug("Processing find user account by uuid - {} and organizationUuid - {}", uuid, organizationUuid);
         final AccountUserResponse response = userServiceFacade.accountDetails(uuid, organizationUuid);
         LOGGER.debug("Successfully proceeded find user account with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
+    public ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(
+            @PathVariable("role") final UserRoleModel role,
+            @PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
+        final GetUsersByRoleAndOrganizationUuidResponse response = userServiceFacade.getByRoleAndOrganizationUuid(role, organizationUuid);
+        LOGGER.debug("Successfully proceeded retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
         return ResponseEntity.ok(response);
     }
 
