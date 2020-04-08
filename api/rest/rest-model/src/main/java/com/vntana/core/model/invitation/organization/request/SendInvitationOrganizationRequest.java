@@ -82,7 +82,6 @@ public class SendInvitationOrganizationRequest extends AbstractRequestModel impl
     public String toString() {
         return new ToStringBuilder(this)
                 .append("email", email)
-                .append("token", token)
                 .append("organizationName", organizationName)
                 .toString();
     }
