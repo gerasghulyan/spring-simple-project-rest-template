@@ -52,7 +52,8 @@ public class InvitationOrganizationSenderComponentImpl implements InvitationOrga
                 request.getEmail(),
                 senderEmail,
                 emailSubject,
-                String.format("%s/%s", websiteUrl, request.getToken())
+                String.format("%s/%s", websiteUrl, request.getToken()),
+                request.getOrganizationName()
         );
         emailSenderService.sendEmail(payload);
         return new SendInvitationOrganizationResponse(new SendInvitationOrganizationResponseModel());
