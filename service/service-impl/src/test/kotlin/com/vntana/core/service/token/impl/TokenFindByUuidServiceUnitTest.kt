@@ -41,7 +41,7 @@ class TokenFindByUuidServiceUnitTest : AbstractTokenServiceUnitTest() {
     fun `test findByUuid`() {
         // test data
         val uuid = uuid()
-        val token = helper.buildResetPasswordToken()
+        val token = helper.buildTokenInvitationOrganization()
         resetAll()
         // expectations
         expect(tokenRepository.findByUuid(uuid)).andReturn(Optional.of(token))

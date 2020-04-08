@@ -42,12 +42,12 @@ class TokenFindByTokenServiceUnitTest : AbstractTokenServiceUnitTest() {
         // test data
         resetAll()
         val token = uuid()
-        val resetPasswordToken = helper.buildResetPasswordToken()
+        val abstractToken = helper.buildTokenInvitationOrganization()
         // expectations
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.of(resetPasswordToken))
+        expect(tokenRepository.findByToken(token)).andReturn(Optional.of(abstractToken))
         replayAll()
         // test scenario
-        assertThat(tokenService.findByToken(token)).hasValue(resetPasswordToken)
+        assertThat(tokenService.findByToken(token)).hasValue(abstractToken)
         verifyAll()
     }
 }

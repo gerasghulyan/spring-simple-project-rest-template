@@ -3,14 +3,13 @@ package com.vntana.core.rest.resource.token;
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
 import com.vntana.core.model.token.response.TokenCreateResultResponse;
+import com.vntana.core.model.token.response.TokenExpireResultResponse;
+import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
 import com.vntana.core.rest.facade.token.TokenServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arman Gevorgyan.
@@ -35,6 +34,22 @@ public class TokenResource {
         LOGGER.debug("Processing token resource createTokenInvitationOrganization for request - {}", request);
         final TokenCreateResultResponse resultResponse = tokenServiceFacade.createTokenInvitationOrganization(request);
         LOGGER.debug("Successfully processed token resource createTokenInvitationOrganization for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PutMapping(path = "expire")
+    public ResponseEntity<TokenExpireResultResponse> expire(@RequestBody final String token) {
+        LOGGER.debug("Processing token resource expire");
+        final TokenExpireResultResponse resultResponse = tokenServiceFacade.expire(token);
+        LOGGER.debug("Successfully processed token resource expire");
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @GetMapping(path = "check-expiration")
+    public ResponseEntity<TokenIsExpiredResultResponse> isExpire(@RequestParam("token") final String token) {
+        LOGGER.debug("Processing token resource isExpire");
+        final TokenIsExpiredResultResponse resultResponse = tokenServiceFacade.isExpired(token);
+        LOGGER.debug("Successfully processed token resource isExpire");
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }
