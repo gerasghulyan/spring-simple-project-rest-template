@@ -19,13 +19,17 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("imageBlobId")
+    private String imageBlobId;
+
     public GetUsersByRoleAndOrganizationUuidResponseModel() {
     }
 
-    public GetUsersByRoleAndOrganizationUuidResponseModel(final String uuid, final String fullName, final String email) {
+    public GetUsersByRoleAndOrganizationUuidResponseModel(final String uuid, final String fullName, final String email, final String imageBlobId) {
         super(uuid);
         this.fullName = fullName;
         this.email = email;
+        this.imageBlobId = imageBlobId;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
         return new EqualsBuilder()
                 .append(fullName, that.fullName)
                 .append(email, that.email)
+                .append(imageBlobId, that.imageBlobId)
                 .isEquals();
     }
 
@@ -47,6 +52,7 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
         return new HashCodeBuilder()
                 .append(fullName)
                 .append(email)
+                .append(imageBlobId)
                 .toHashCode();
     }
 
@@ -56,6 +62,7 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
                 .appendSuper(super.toString())
                 .append("fullName", fullName)
                 .append("email", email)
+                .append("imageBlobId", imageBlobId)
                 .toString();
     }
 
@@ -73,5 +80,13 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public String getImageBlobId() {
+        return imageBlobId;
+    }
+
+    public void setImageBlobId(final String imageBlobId) {
+        this.imageBlobId = imageBlobId;
     }
 }

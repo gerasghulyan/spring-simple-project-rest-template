@@ -276,8 +276,9 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                         .map(user -> new GetUsersByRoleAndOrganizationUuidResponseModel(
                                 user.getUuid(),
                                 user.getFullName(),
-                                user.getEmail()
-                        )).collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
+                                user.getEmail(),
+                                user.getImageBlobId())
+                        ).collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
         ));
     }
 
