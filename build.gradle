@@ -537,6 +537,7 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation project(":indexation:indexation-producer")
         testImplementation project(":migration:migration-library")
         testImplementation project(":helper:rest-resource-test-helper")
+        testImplementation project(":notification")
         testImplementation 'com.vntana.payment:rest-client-payment'
         testImplementation "com.vntana.cache:vntana-cache"
         testImplementation "com.vntana.commons:queue-core-indexation-consumer-message"
