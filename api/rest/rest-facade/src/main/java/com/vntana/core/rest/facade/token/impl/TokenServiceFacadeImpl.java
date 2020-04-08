@@ -67,11 +67,13 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
 
     @Override
     public TokenExpireResultResponse expire(final String token) {
+        LOGGER.debug("Processing token facade expire");
         final SingleErrorWithStatus<TokenErrorResponseModel> error = preconditionChecker.checkExpire(token);
         if (error.isPresent()) {
             return new TokenExpireResultResponse(error.getHttpStatus(), error.getError());
         }
         tokenService.findByToken(token).ifPresent(abstractToken -> tokenService.expire(abstractToken.getUuid()));
+        LOGGER.debug("Successfully processed token facade expire");
         return new TokenExpireResultResponse();
     }
 }
