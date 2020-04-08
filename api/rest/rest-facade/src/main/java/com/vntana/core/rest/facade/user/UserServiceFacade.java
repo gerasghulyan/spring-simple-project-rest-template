@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -18,7 +19,7 @@ public interface UserServiceFacade {
 
     FindUserByUuidResponse findByUuid(final String uuid);
 
-    AccountUserResponse accountDetails(final String uuid, final String organizationUuid);
+    AccountUserResponse accountDetails(final String uuid);
 
     VerifyUserResponse verify(final String uuid);
 

@@ -479,9 +479,9 @@ project(":api:rest:rest-resource") {
     sonarqube.skipProject = true
 
     dependencies {
-        implementation "com.vntana.commons:web-utils"
         api project(":api:rest:rest-facade")
         api project(":api:rest:rest-model")
+        api "com.vntana.commons:web-utils"
         api "com.vntana.commons:queue-commons"
         api "org.springframework.boot:spring-boot-starter-web"
         api "org.aspectj:aspectjrt"

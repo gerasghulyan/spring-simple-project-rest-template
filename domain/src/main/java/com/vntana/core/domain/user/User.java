@@ -148,6 +148,17 @@ public class User extends AbstractUuidAwareDomainEntity {
     //endregion
 
     //region Utility methods
+    public List<UserOrganizationRole> immutableOrganizationRoles() {
+        return Optional.ofNullable(roles)
+                .map(theRoles -> theRoles.stream()
+                        .filter(UserOrganizationRole.class::isInstance)
+                        .map(UserOrganizationRole.class::cast)
+                        .collect(Collectors.toList())
+                )
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
+    }
+
     private List<AbstractUserRole> mutableRoles() {
         if (roles == null) {
             roles = new ArrayList<>();
@@ -162,17 +173,6 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .map(theRoles -> theRoles.stream()
                         .filter(UserClientOrganizationRole.class::isInstance)
                         .map(UserClientOrganizationRole.class::cast)
-                        .collect(Collectors.toList())
-                )
-                .map(Collections::unmodifiableList)
-                .orElseGet(Collections::emptyList);
-    }
-
-    private List<UserOrganizationRole> immutableOrganizationRoles() {
-        return Optional.ofNullable(roles)
-                .map(theRoles -> theRoles.stream()
-                        .filter(UserOrganizationRole.class::isInstance)
-                        .map(UserOrganizationRole.class::cast)
                         .collect(Collectors.toList())
                 )
                 .map(Collections::unmodifiableList)

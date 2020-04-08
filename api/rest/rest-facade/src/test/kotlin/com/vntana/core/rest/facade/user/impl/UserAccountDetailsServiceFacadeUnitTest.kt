@@ -1,11 +1,9 @@
 package com.vntana.core.rest.facade.user.impl
 
-import com.vntana.core.model.auth.response.UserRoleModel
+import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.user.error.UserErrorResponseModel
-import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
-import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
 import org.junit.Test
 
@@ -17,68 +15,83 @@ import org.junit.Test
 class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
 
     @Test
-    fun `test when not found`() {
-        // test data
-        val user = userHelper.buildUser()
-        val organization = organizationHelper.buildOrganization()
+    fun `test when precondition failed`() {
         resetAll()
-        restHelper.buildFindUserByEmailRequest()
-        // expectations
-        expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
-                .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
-        expect(userService.getByUuid(user.uuid)).andReturn(user)
-        expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
+        val userUuid = uuid()
+        val httpStatusCode = randomInt()
+        val errorModel = UserErrorResponseModel.MISSING_UUID
+        expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.of(httpStatusCode, errorModel))
         replayAll()
-        // test scenario
-        val resultResponse = userServiceFacade.accountDetails(user.uuid, organization.uuid)
-        restHelper.assertBasicErrorResultResponse(resultResponse, UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)
+        assertBasicErrorResultResponse(userServiceFacade.accountDetails(userUuid), errorModel)
         verifyAll()
     }
 
     @Test
-    fun `test when found`() {
-        // test data
-        val user = userHelper.buildUser()
-        val organization = organizationHelper.buildOrganization()
-        user.grantOrganizationRole(organization)
+    fun `test when super admin`() {
         resetAll()
-        // expectations
-        expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
-                .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
-        expect(userService.getByUuid(user.uuid)).andReturn(user)
-        expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
-        replayAll()
-        // test scenario
-        val resultResponse = userServiceFacade.accountDetails(user.uuid, organization.uuid)
-        restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.response().uuid).isEqualTo(user.uuid)
-        assertThat(resultResponse.response().email).isEqualTo(user.email)
-        assertThat(resultResponse.response().role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
-        assertThat(resultResponse.response().fullName).isEqualTo(user.fullName)
-        verifyAll()
-    }
-
-    @Test
-    fun `test when found and role is super admin`() {
-        // test data
+        val userUuid = uuid()
         val user = userHelper.buildUser()
-        val organization = organizationHelper.buildOrganization()
         user.grantSuperAdminRole()
-        resetAll()
-        // expectations
-        expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
-                .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
-        expect(userService.getByUuid(user.uuid)).andReturn(user)
+        expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
+        expect(userService.getByUuid(userUuid)).andReturn(user)
         replayAll()
-        // test scenario
-        val resultResponse = userServiceFacade.accountDetails(user.uuid, organization.uuid)
-        restHelper.assertBasicSuccessResultResponse(resultResponse)
-        assertThat(resultResponse.response().uuid).isEqualTo(user.uuid)
-        assertThat(resultResponse.response().email).isEqualTo(user.email)
-        assertThat(resultResponse.response().role).isEqualTo(UserRoleModel.SUPER_ADMIN)
-        assertThat(resultResponse.response().fullName).isEqualTo(user.fullName)
-        assertThat(resultResponse.response().isEmailVerified).isEqualTo(user.verified)
+        userServiceFacade.accountDetails(userUuid).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().uuid).isEqualTo(user.uuid)
+            assertThat(it.response().fullName).isEqualTo(user.fullName)
+            assertThat(it.response().email).isEqualTo(user.email)
+            assertThat(it.response().roles.superAdmin).isTrue()
+            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(1)
+            assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
+            assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
+        }
         verifyAll()
     }
 
+    @Test
+    fun `test when is not super admin`() {
+        resetAll()
+        val userUuid = uuid()
+        val user = userHelper.buildUser()
+        expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
+        expect(userService.getByUuid(userUuid)).andReturn(user)
+        replayAll()
+        userServiceFacade.accountDetails(userUuid).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().uuid).isEqualTo(user.uuid)
+            assertThat(it.response().fullName).isEqualTo(user.fullName)
+            assertThat(it.response().email).isEqualTo(user.email)
+            assertThat(it.response().roles.superAdmin).isFalse()
+            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(1)
+            assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
+            assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test when is organization admin in 2 organizations`() {
+        resetAll()
+        val userUuid = uuid()
+        val user = userHelper.buildUser()
+        val organization1 = organizationHelper.buildOrganization()
+        val organization2 = organizationHelper.buildOrganization()
+        user.grantOrganizationRole(organization1)
+        user.grantOrganizationRole(organization2)
+        expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
+        expect(userService.getByUuid(userUuid)).andReturn(user)
+        replayAll()
+        userServiceFacade.accountDetails(userUuid).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().uuid).isEqualTo(user.uuid)
+            assertThat(it.response().fullName).isEqualTo(user.fullName)
+            assertThat(it.response().email).isEqualTo(user.email)
+            assertThat(it.response().roles.superAdmin).isFalse()
+            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(3)
+            assertThat(it.response().roles.adminInOrganization).contains(organization1.uuid, organization2.uuid)
+            assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
+            assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
+        }
+        verifyAll()
+    }
 }

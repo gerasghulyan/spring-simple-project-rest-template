@@ -1,18 +1,24 @@
 package com.vntana.core.rest.facade.user.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserOrganizationRole;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.account.model.AccountUserResponseModel;
+import com.vntana.core.model.user.response.account.model.AccountUserRolesModel;
 import com.vntana.core.model.user.response.model.*;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent;
 import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent;
+import com.vntana.core.rest.facade.user.component.precondition.UserFacadePreconditionCheckerComponent;
 import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
@@ -53,6 +59,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final UserService userService;
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
+    private final UserFacadePreconditionCheckerComponent preconditionCheckerComponent;
     private final EmailValidationComponent emailValidationComponent;
     private final UserVerificationSenderComponent verificationSenderComponent;
     private final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent;
@@ -61,6 +68,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     public UserServiceFacadeImpl(final UserService userService,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService,
+                                 final UserFacadePreconditionCheckerComponent preconditionCheckerComponent,
                                  final EmailValidationComponent emailValidationComponent,
                                  final UserVerificationSenderComponent verificationSenderComponent,
                                  final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent,
@@ -69,6 +77,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         this.userService = userService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
+        this.preconditionCheckerComponent = preconditionCheckerComponent;
         this.emailValidationComponent = emailValidationComponent;
         this.verificationSenderComponent = verificationSenderComponent;
         this.resetPasswordEmailSenderComponent = resetPasswordEmailSenderComponent;
@@ -145,40 +154,29 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return response;
     }
 
+    @Transactional
     @Override
-    public AccountUserResponse accountDetails(final String uuid, final String organizationUuid) {
-        final Mutable<AccountUserResponse> mutableResponse = new MutableObject<>();
-        persistenceUtilityService.runInPersistenceSession(() -> {
-            final User user = userService.getByUuid(uuid);
-            //TODO HasSubscription implementation later
-            final AccountUserResponse response = user.roleOfSuperAdmin()
-                    .map(userSuperAdminRole -> new AccountUserResponse(new AccountUserResponseModel(
-                            user.getUuid(),
-                            user.getFullName(),
-                            user.getEmail(),
-                            UserRoleModel.SUPER_ADMIN,
-                            user.getVerified(),
-                            user.getImageBlobId(),
-                            false
-                    )))
-                    .orElseGet(() -> {
-                        final Organization organization = organizationService.getByUuid(organizationUuid);
-                        return user.roleOfOrganization(organization)
-                                .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
-                                .map(userRoleModel -> new AccountUserResponse(new AccountUserResponseModel(
-                                        user.getUuid(),
-                                        user.getFullName(),
-                                        user.getEmail(),
-                                        userRoleModel,
-                                        user.getVerified(),
-                                        user.getImageBlobId(),
-                                        false
-                                )))
-                                .orElseGet(() -> new AccountUserResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)));
-                    });
-            mutableResponse.setValue(response);
-        });
-        return mutableResponse.getValue();
+    public AccountUserResponse accountDetails(final String uuid) {
+        LOGGER.debug("Processing user facade accountDetails for uuid - {}", uuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkAccountDetails(uuid);
+        if (error.isPresent()) {
+            return new AccountUserResponse(error.getHttpStatus(), error.getError());
+        }
+        final User user = userService.getByUuid(uuid);
+        final AccountUserRolesModel rolesModel = new AccountUserRolesModel();
+        rolesModel.setSuperAdmin(user.roleOfSuperAdmin().isPresent());
+        rolesModel.setAdminInOrganization(user.immutableOrganizationRoles().stream()
+                .map(UserOrganizationRole::getOrganization)
+                .map(AbstractUuidAwareDomainEntity::getUuid)
+                .collect(Collectors.toList()));
+        final AccountUserResponseModel responseModel = new AccountUserResponseModel();
+        responseModel.setRoles(rolesModel);
+        responseModel.setUuid(user.getUuid());
+        responseModel.setFullName(user.getFullName());
+        responseModel.setEmail(user.getEmail());
+        responseModel.setEmailVerified(user.getVerified());
+        responseModel.setImageBlobId(user.getImageBlobId());
+        return new AccountUserResponse(responseModel);
     }
 
     @Override

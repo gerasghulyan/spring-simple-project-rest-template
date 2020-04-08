@@ -8,6 +8,7 @@ import org.easymock.EasyMockRunner
 import org.easymock.EasyMockSupport
 import org.junit.runner.RunWith
 import java.util.*
+import kotlin.random.Random
 
 /**
  * Created by Arthur Asatryan.
@@ -17,6 +18,8 @@ import java.util.*
 @RunWith(EasyMockRunner::class)
 abstract class AbstractServiceFacadeUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
+    
+    fun randomInt(): Int = Random.nextInt()
 
     fun emptyString(): String = StringUtils.EMPTY
 
