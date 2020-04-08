@@ -4,6 +4,7 @@ import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,14 +63,12 @@ public class UserResource {
         return ResponseEntity.ok(resultResponse);
     }
 
-    @GetMapping(path = "/{uuid}/account-details/organizations/{organizationUuid}")
-    public ResponseEntity<AccountUserResponse> accountDetails(
-            @PathVariable("uuid") final String uuid,
-            @PathVariable("organizationUuid") final String organizationUuid) {
-        LOGGER.debug("Processing find user account by uuid - {} and organizationUuid - {}", uuid, organizationUuid);
-        final AccountUserResponse response = userServiceFacade.accountDetails(uuid, organizationUuid);
-        LOGGER.debug("Successfully proceeded find user account with response - {}", response);
-        return ResponseEntity.ok(response);
+    @GetMapping(path = "/{uuid}/account-details")
+    public ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Processing user facade accountDetails method by uuid - {}", uuid);
+        final AccountUserResponse response = userServiceFacade.accountDetails(uuid);
+        LOGGER.debug("Successfully processed user facade accountDetails method by uuid - {}", uuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
     @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")

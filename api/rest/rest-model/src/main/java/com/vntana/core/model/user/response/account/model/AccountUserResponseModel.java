@@ -1,8 +1,7 @@
-package com.vntana.core.model.user.response.model;
+package com.vntana.core.model.user.response.account.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.ResponseModel;
-import com.vntana.core.model.auth.response.UserRoleModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -23,8 +22,8 @@ public class AccountUserResponseModel implements ResponseModel {
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("role")
-    private UserRoleModel role;
+    @JsonProperty("roles")
+    private AccountUserRolesModel roles;
 
     @JsonProperty("isEmailVerified")
     private boolean emailVerified;
@@ -32,20 +31,22 @@ public class AccountUserResponseModel implements ResponseModel {
     @JsonProperty("imageBlobId")
     private String imageBlobId;
 
-    @JsonProperty("hasSubscription")
-    private Boolean hasSubscription;
-
     public AccountUserResponseModel() {
+        super();
     }
 
-    public AccountUserResponseModel(final String uuid, final String fullName, final String email, final UserRoleModel role, final boolean emailVerified, final String imageBlobId, final Boolean hasSubscription) {
+    public AccountUserResponseModel(final String uuid,
+                                    final String fullName,
+                                    final String email,
+                                    final AccountUserRolesModel roles,
+                                    final boolean emailVerified,
+                                    final String imageBlobId) {
         this.uuid = uuid;
         this.fullName = fullName;
         this.email = email;
-        this.role = role;
+        this.roles = roles;
         this.emailVerified = emailVerified;
         this.imageBlobId = imageBlobId;
-        this.hasSubscription = hasSubscription;
     }
 
     @Override
@@ -61,10 +62,8 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append(uuid, that.uuid)
                 .append(fullName, that.fullName)
                 .append(email, that.email)
-                .append(role, that.role)
                 .append(emailVerified, that.emailVerified)
                 .append(imageBlobId, that.imageBlobId)
-                .append(hasSubscription, that.hasSubscription)
                 .isEquals();
     }
 
@@ -74,10 +73,8 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append(uuid)
                 .append(fullName)
                 .append(email)
-                .append(role)
                 .append(emailVerified)
                 .append(imageBlobId)
-                .append(hasSubscription)
                 .toHashCode();
     }
 
@@ -87,10 +84,9 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append("uuid", uuid)
                 .append("fullName", fullName)
                 .append("email", email)
-                .append("role", role)
+                .append("roles", roles)
                 .append("emailVerified", emailVerified)
                 .append("imageBlobId", imageBlobId)
-                .append("hasSubscription", hasSubscription)
                 .toString();
     }
 
@@ -118,12 +114,13 @@ public class AccountUserResponseModel implements ResponseModel {
         this.email = email;
     }
 
-    public UserRoleModel getRole() {
-        return role;
+    public AccountUserRolesModel getRoles() {
+        return roles;
     }
 
-    public void setRole(final UserRoleModel role) {
-        this.role = role;
+    public AccountUserResponseModel setRoles(final AccountUserRolesModel roles) {
+        this.roles = roles;
+        return this;
     }
 
     public boolean isEmailVerified() {
@@ -140,13 +137,5 @@ public class AccountUserResponseModel implements ResponseModel {
 
     public void setImageBlobId(final String imageBlobId) {
         this.imageBlobId = imageBlobId;
-    }
-
-    public Boolean getHasSubscription() {
-        return hasSubscription;
-    }
-
-    public void setHasSubscription(final Boolean hasSubscription) {
-        this.hasSubscription = hasSubscription;
     }
 }
