@@ -30,5 +30,6 @@ public enum UserErrorResponseModel implements ErrorResponseModel {
     USER_NOT_FOUND,
     PASSWORD_MISMATCH,
     INVALID_VERIFICATION_TOKEN,
-    ORGANIZATION_ROLE_CONFLICT
+    ORGANIZATION_ROLE_CONFLICT,
+    NOT_A_SUPER_ADMIN
 }
