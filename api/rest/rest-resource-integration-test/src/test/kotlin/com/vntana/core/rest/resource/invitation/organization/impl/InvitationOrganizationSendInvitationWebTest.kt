@@ -3,6 +3,7 @@ package com.vntana.core.rest.resource.invitation.organization.impl
 import com.sflpro.notifier.api.model.common.result.ResultResponseModel
 import com.sflpro.notifier.api.model.email.response.CreateEmailNotificationResponse
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
+import com.vntana.core.notification.payload.invitation.organization.InvitationOrganizationEmailSendPayload
 import com.vntana.core.rest.resource.invitation.organization.AbstractInvitationOrganizationWebTest
 import org.junit.Test
 import org.mockito.ArgumentMatchers
@@ -33,6 +34,14 @@ class InvitationOrganizationSendInvitationWebTest : AbstractInvitationOrganizati
                 invitationOrganizationResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationOrganizationRequest(token = emptyString())),
                 InvitationOrganizationErrorResponseModel.MISSING_TOKEN
         )
+        assertBasicErrorResultResponse(
+                invitationOrganizationResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationOrganizationRequest(organizationName = null)),
+                InvitationOrganizationErrorResponseModel.MISSING_ORGANIZATION_NAME
+        )
+        assertBasicErrorResultResponse(
+                invitationOrganizationResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationOrganizationRequest(organizationName = emptyString())),
+                InvitationOrganizationErrorResponseModel.MISSING_ORGANIZATION_NAME
+        )
     }
 
     @Test
@@ -43,7 +52,11 @@ class InvitationOrganizationSendInvitationWebTest : AbstractInvitationOrganizati
         val request = resourceTestHelper.buildSendInvitationOrganizationRequest(email = email)
         assertBasicSuccessResultResponse(invitationOrganizationResourceClient.sendInvitation(request))
         verify(emailNotificationResourceClient, times(1))
-                .createEmailNotification(ArgumentMatchers.argThat { argument -> argument.recipientEmail == request.email })
+                .createEmailNotification(ArgumentMatchers.argThat { argument ->
+                    argument.recipientEmail == request.email &&
+                            argument.properties[InvitationOrganizationEmailSendPayload.PROPERTIES_ORGANIZATION_NAME] == request.organizationName &&
+                            argument.properties[InvitationOrganizationEmailSendPayload.PROPERTIES_LINK]!!.contains(request.token)
+                })
 
     }
 }

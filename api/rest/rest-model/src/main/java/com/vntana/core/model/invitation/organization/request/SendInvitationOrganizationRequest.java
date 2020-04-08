@@ -17,7 +17,7 @@ import java.util.List;
  * Date: 3/27/20
  * Time: 5:16 PM
  */
-public class SendInvitationOrganizationRequest  extends AbstractRequestModel implements ValidatableRequest<InvitationOrganizationErrorResponseModel> {
+public class SendInvitationOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<InvitationOrganizationErrorResponseModel> {
 
     @JsonProperty("email")
     private String email;
@@ -25,13 +25,17 @@ public class SendInvitationOrganizationRequest  extends AbstractRequestModel imp
     @JsonProperty("token")
     private String token;
 
+    @JsonProperty("organizationName")
+    private String organizationName;
+
     public SendInvitationOrganizationRequest() {
         super();
     }
 
-    public SendInvitationOrganizationRequest(final String email, final String token) {
+    public SendInvitationOrganizationRequest(final String email, final String token, final String organizationName) {
         this.email = email;
         this.token = token;
+        this.organizationName = organizationName;
     }
 
     @Override
@@ -42,6 +46,9 @@ public class SendInvitationOrganizationRequest  extends AbstractRequestModel imp
         }
         if (StringUtils.isBlank(token)) {
             errors.add(InvitationOrganizationErrorResponseModel.MISSING_TOKEN);
+        }
+        if (StringUtils.isBlank(organizationName)) {
+            errors.add(InvitationOrganizationErrorResponseModel.MISSING_ORGANIZATION_NAME);
         }
         return errors;
     }
@@ -58,6 +65,7 @@ public class SendInvitationOrganizationRequest  extends AbstractRequestModel imp
         return new EqualsBuilder()
                 .append(email, that.email)
                 .append(token, that.token)
+                .append(organizationName, that.organizationName)
                 .isEquals();
     }
 
@@ -66,6 +74,7 @@ public class SendInvitationOrganizationRequest  extends AbstractRequestModel imp
         return new HashCodeBuilder()
                 .append(email)
                 .append(token)
+                .append(organizationName)
                 .toHashCode();
     }
 
@@ -74,6 +83,7 @@ public class SendInvitationOrganizationRequest  extends AbstractRequestModel imp
         return new ToStringBuilder(this)
                 .append("email", email)
                 .append("token", token)
+                .append("organizationName", organizationName)
                 .toString();
     }
 
@@ -91,5 +101,14 @@ public class SendInvitationOrganizationRequest  extends AbstractRequestModel imp
 
     public void setToken(final String token) {
         this.token = token;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public SendInvitationOrganizationRequest setOrganizationName(final String organizationName) {
+        this.organizationName = organizationName;
+        return this;
     }
 }

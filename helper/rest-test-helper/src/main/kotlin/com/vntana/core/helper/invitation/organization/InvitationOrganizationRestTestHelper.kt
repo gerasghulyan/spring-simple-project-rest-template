@@ -22,6 +22,7 @@ open class InvitationOrganizationRestTestHelper : AbstractRestTestHelper() {
 
     fun buildSendInvitationOrganizationRequest(
             email: String? = uuid(),
-            token: String? = uuid()
-    ): SendInvitationOrganizationRequest = SendInvitationOrganizationRequest(email, token)
+            token: String? = uuid(),
+            organizationName: String? = uuid()
+    ): SendInvitationOrganizationRequest = SendInvitationOrganizationRequest(email, token, organizationName)
 }
