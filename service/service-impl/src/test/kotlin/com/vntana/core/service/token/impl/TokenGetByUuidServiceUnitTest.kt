@@ -40,7 +40,7 @@ class TokenGetByUuidServiceUnitTest : AbstractTokenServiceUnitTest() {
     @Test
     fun test() {
         resetAll()
-        val token = helper.buildResetPasswordToken()
+        val token = helper.buildTokenInvitationOrganization()
         val tokenUuid = token.uuid
         expect(tokenRepository.findByUuid(tokenUuid)).andReturn(Optional.of(token))
         replayAll()
