@@ -3,6 +3,7 @@ package com.vntana.core.helper.invitation.organization
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.invitation.InvitationStatusModel
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest
+import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest
 import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest
 import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest
 
@@ -32,4 +33,9 @@ open class InvitationOrganizationRestTestHelper : AbstractRestTestHelper() {
             uuid: String? = uuid(),
             status: InvitationStatusModel? = InvitationStatusModel.ACCEPTED
     ) = UpdateInvitationOrganizationStatusRequest(uuid, status)
+
+    fun buildRejectInvitationOrganizationRequest(
+            uuid: String? = uuid(),
+            token: String? = uuid()
+    ) = RejectInvitationOrganizationRequest(uuid, token)
 }

@@ -1,12 +1,10 @@
 package com.vntana.core.rest.client.invitation.organization;
 
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
+import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest;
-import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.UpdateInvitationOrganizationStatusResponse;
+import com.vntana.core.model.invitation.organization.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,4 +28,7 @@ public interface InvitationOrganizationResourceClient {
 
     @PutMapping(path = "/status")
     ResponseEntity<UpdateInvitationOrganizationStatusResponse> updateStatus(@RequestBody final UpdateInvitationOrganizationStatusRequest request);
+
+    @PutMapping(path = "/reject")
+    ResponseEntity<RejectInvitationOrganizationResponse> reject(@RequestBody final RejectInvitationOrganizationRequest request);
 }

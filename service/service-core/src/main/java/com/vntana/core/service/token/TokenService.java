@@ -17,10 +17,15 @@ public interface TokenService {
 
     Optional<AbstractToken> findByToken(final String token);
 
+    AbstractToken getByToken(final String token);
+
     Optional<AbstractToken> findByUuid(final String uuid);
 
     AbstractToken getByUuid(final String uuid);
 
+    AbstractToken findByTokenAndExpire(final String token);
+
     AbstractToken expire(final String tokenUuid);
 
+    boolean existsByToken(final String token);
 }
