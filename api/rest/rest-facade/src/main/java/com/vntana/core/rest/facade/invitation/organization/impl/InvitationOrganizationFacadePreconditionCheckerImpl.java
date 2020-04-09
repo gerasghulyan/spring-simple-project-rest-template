@@ -1,6 +1,8 @@
 package com.vntana.core.rest.facade.invitation.organization.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.invitation.InvitationStatus;
+import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest;
@@ -14,6 +16,8 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * Created by Arman Gevorgyan.
@@ -69,11 +73,16 @@ public class InvitationOrganizationFacadePreconditionCheckerImpl implements Invi
     @Override
     public SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkRejectInvitationForPossibleErrors(final RejectInvitationOrganizationRequest request) {
         LOGGER.debug("Checking reject invitation organization precondition for uuid - {}", request.getUuid());
-        if (!tokenService.existsByToken(request.getToken())) {
+        final Optional<AbstractToken> abstractTokenOptional = tokenService.findByToken(request.getToken());
+        if (!abstractTokenOptional.isPresent()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationOrganizationErrorResponseModel.TOKEN_NOT_FOUND);
         }
         if (!invitationOrganizationService.existsByUuid(request.getUuid())) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationOrganizationErrorResponseModel.NOT_FOUND);
+        }
+        if (abstractTokenOptional.get().isExpired()
+                && InvitationStatus.REJECTED == invitationOrganizationService.getByUuid(request.getUuid()).getStatus()) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationOrganizationErrorResponseModel.ALREADY_REJECTED_INVITATION);
         }
         return SingleErrorWithStatus.empty();
     }

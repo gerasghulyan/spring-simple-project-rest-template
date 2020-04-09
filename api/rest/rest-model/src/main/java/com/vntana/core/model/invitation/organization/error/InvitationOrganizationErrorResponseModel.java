@@ -20,5 +20,6 @@ public enum InvitationOrganizationErrorResponseModel implements ErrorResponseMod
     INVALID_TOKEN,
     SLUG_IS_NOT_AVAILABLE,
     NOT_FOUND,
-    TOKEN_NOT_FOUND
+    TOKEN_NOT_FOUND, 
+    ALREADY_REJECTED_INVITATION
 }
