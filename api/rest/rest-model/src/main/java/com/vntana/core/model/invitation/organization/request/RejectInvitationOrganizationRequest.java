@@ -3,7 +3,6 @@ package com.vntana.core.model.invitation.organization.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractUuidAwareRequestModel;
-import com.vntana.core.model.invitation.InvitationStatusModel;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,19 +15,19 @@ import java.util.List;
 /**
  * Created by Manuk Gharslyan.
  * Date: 4/9/2020
- * Time: 10:58 AM
+ * Time: 1:45 PM
  */
-public class UpdateInvitationOrganizationStatusRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<InvitationOrganizationErrorResponseModel> {
+public class RejectInvitationOrganizationRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<InvitationOrganizationErrorResponseModel> {
 
-    @JsonProperty("status")
-    private InvitationStatusModel status;
+    @JsonProperty("token")
+    private String token;
 
-    public UpdateInvitationOrganizationStatusRequest() {
+    public RejectInvitationOrganizationRequest() {
     }
 
-    public UpdateInvitationOrganizationStatusRequest(final String uuid, final InvitationStatusModel status) {
+    public RejectInvitationOrganizationRequest(final String uuid, final String token) {
         super(uuid);
-        this.status = status;
+        this.token = token;
     }
 
     @Override
@@ -36,8 +35,8 @@ public class UpdateInvitationOrganizationStatusRequest extends AbstractUuidAware
         if (StringUtils.isBlank(getUuid())) {
             return Collections.singletonList(InvitationOrganizationErrorResponseModel.MISSING_UUID);
         }
-        if (status == null) {
-            return Collections.singletonList(InvitationOrganizationErrorResponseModel.MISSING_INVITATION_STATUS);
+        if (StringUtils.isBlank(token)) {
+            return Collections.singletonList(InvitationOrganizationErrorResponseModel.MISSING_TOKEN);
         }
         return Collections.emptyList();
     }
@@ -46,13 +45,13 @@ public class UpdateInvitationOrganizationStatusRequest extends AbstractUuidAware
     public boolean equals(final Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof UpdateInvitationOrganizationStatusRequest)) return false;
+        if (!(o instanceof RejectInvitationOrganizationRequest)) return false;
 
-        final UpdateInvitationOrganizationStatusRequest that = (UpdateInvitationOrganizationStatusRequest) o;
+        final RejectInvitationOrganizationRequest that = (RejectInvitationOrganizationRequest) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(status, that.status)
+                .append(token, that.token)
                 .isEquals();
     }
 
@@ -60,7 +59,7 @@ public class UpdateInvitationOrganizationStatusRequest extends AbstractUuidAware
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(status)
+                .append(token)
                 .toHashCode();
     }
 
@@ -68,15 +67,10 @@ public class UpdateInvitationOrganizationStatusRequest extends AbstractUuidAware
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("status", status)
                 .toString();
     }
 
-    public InvitationStatusModel getStatus() {
-        return status;
-    }
-
-    public void setStatus(final InvitationStatusModel status) {
-        this.status = status;
+    public String getToken() {
+        return token;
     }
 }

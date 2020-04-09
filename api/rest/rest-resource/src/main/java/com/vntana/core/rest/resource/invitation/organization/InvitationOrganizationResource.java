@@ -2,12 +2,10 @@ package com.vntana.core.rest.resource.invitation.organization;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
+import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest;
-import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.UpdateInvitationOrganizationStatusResponse;
+import com.vntana.core.model.invitation.organization.response.*;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,4 +62,11 @@ public class InvitationOrganizationResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
+    @PutMapping(path = "/reject")
+    public ResponseEntity<RejectInvitationOrganizationResponse> reject(@RequestBody final RejectInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource reject method for uuid - {}", request.getUuid());
+        final RejectInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.reject(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource reject method for uuid - {}", request.getUuid());
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
 }

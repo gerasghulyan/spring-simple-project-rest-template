@@ -7,6 +7,7 @@ import com.vntana.core.persistence.token.TokenRepository;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.dto.CreateTokenInvitationOrganizationDto;
+import com.vntana.core.service.token.exception.TokenNotFoundException;
 import com.vntana.core.service.token.exception.TokenNotFoundForUuidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +51,19 @@ public class TokenServiceImpl implements TokenService {
     @Transactional(readOnly = true)
     @Override
     public Optional<AbstractToken> findByToken(final String token) {
-        Assert.notNull(token, "The token should not be null");
+        Assert.hasText(token, "The token should not be null");
         LOGGER.debug("Trying to find token entity for token - {}", token);
         return tokenRepository.findByToken(token);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public AbstractToken getByToken(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
+        LOGGER.debug("Trying to retrieve abstract token");
+        final AbstractToken abstractToken = findByToken(token).orElseThrow(() -> new TokenNotFoundException("Unable to find token"));
+        LOGGER.debug("Successfully retrieved abstract token");
+        return abstractToken;
     }
 
     @Transactional(readOnly = true)
@@ -74,6 +85,17 @@ public class TokenServiceImpl implements TokenService {
 
     @Transactional
     @Override
+    public AbstractToken findByTokenAndExpire(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
+        LOGGER.debug("Try to find and expire token");
+        final AbstractToken expiredToken = getByToken(token);
+        expiredToken.expire();
+        LOGGER.debug("Successfully found and expired token");
+        return expiredToken;
+    }
+
+    @Transactional
+    @Override
     public AbstractToken expire(final String tokenUuid) {
         Assert.hasText(tokenUuid, "The token uuid should not be null or empty");
         LOGGER.debug("Expiring token having uuid - {}", tokenUuid);
@@ -81,5 +103,15 @@ public class TokenServiceImpl implements TokenService {
         token.expire();
         LOGGER.debug("Expiring token having uuid - {}", tokenUuid);
         return token;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsByToken(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
+        LOGGER.debug("Checking existence of AbstractToken");
+        final boolean existence = findByToken(token).isPresent();
+        LOGGER.debug("Successfully checked existence of AbstractToken");
+        return existence;
     }
 }
