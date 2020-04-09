@@ -5,15 +5,18 @@ import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
+import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest;
 import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
 import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
 import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.UpdateInvitationOrganizationStatusResponse;
 import com.vntana.core.model.invitation.organization.response.model.GetInvitationOrganizationResponseModel;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import com.vntana.core.rest.facade.invitation.organization.component.InvitationOrganizationSenderComponent;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
+import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto;
 import com.vntana.core.service.invitation.organization.mediator.InvitationOrganizationUuidAwareLifecycleMediator;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
@@ -88,5 +91,17 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         final SendInvitationOrganizationResponse response = invitationOrganizationSenderComponent.sendInvitation(request);
         LOGGER.debug("Successfully processed invitation organization facade sendInvitation for request - {}", request);
         return response;
+    }
+
+    @Override
+    public UpdateInvitationOrganizationStatusResponse updateStatus(final UpdateInvitationOrganizationStatusRequest request) {
+        LOGGER.debug("Processing invitation organization facade updateStatus for request - {}", request);
+        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkGetByUuidForPossibleErrors(request.getUuid());
+        if (singleErrorWithStatus.isPresent()) {
+            return new UpdateInvitationOrganizationStatusResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
+        }
+        final InvitationOrganization response = invitationOrganizationService.updateStatus(mapperFacade.map(request, UpdateInvitationOrganizationStatusDto.class));
+        LOGGER.debug("Successfully processed invitation organization facade updateStatus for request - {}", request);
+        return new UpdateInvitationOrganizationStatusResponse(response.getUuid());
     }
 }

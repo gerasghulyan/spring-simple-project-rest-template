@@ -3,9 +3,11 @@ package com.vntana.core.rest.resource.invitation.organization;
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
+import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest;
 import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
 import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
 import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.response.UpdateInvitationOrganizationStatusResponse;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,14 @@ public class InvitationOrganizationResource {
         LOGGER.debug("Processing InvitationOrganizationResource getByUuid method for uuid - {}", uuid);
         final GetInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.getByUuid(uuid);
         LOGGER.debug("Successfully processed InvitationOrganizationResource getByUuid method for uuid - {}", uuid);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PutMapping(path = "/status")
+    public ResponseEntity<UpdateInvitationOrganizationStatusResponse> updateStatus(@RequestBody final UpdateInvitationOrganizationStatusRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource updateStatus method for request - {}", request);
+        final UpdateInvitationOrganizationStatusResponse resultResponse = invitationOrganizationServiceFacade.updateStatus(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource updateStatus method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
