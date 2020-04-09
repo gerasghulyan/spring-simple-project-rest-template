@@ -6,12 +6,14 @@ import com.vntana.core.persistence.invitation.organization.InvitationOrganizatio
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
 import com.vntana.core.service.invitation.organization.dto.GetAllInvitationOrganizationsDto;
+import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto;
 import com.vntana.core.service.invitation.organization.exception.InvitationOrganizationNotFoundForUuidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /**
@@ -74,5 +76,17 @@ public class InvitationOrganizationServiceImpl implements InvitationOrganization
         final Page<InvitationOrganization> page = invitationOrganizationRepository.findAll(PageRequest.of(dto.getPage(), dto.getSize()));
         LOGGER.debug("Successfully retrieved organization invitations for dto - {}", dto);
         return page;
+    }
+
+    @Transactional
+    @Override
+    public InvitationOrganization updateStatus(final UpdateInvitationOrganizationStatusDto dto) {
+        LOGGER.debug("Update organization invitations for dto - {}", dto);
+        Assert.notNull(dto, "The UpdateInvitationOrganizationStatusDto should not be null");
+        final InvitationOrganization invitationOrganization = getByUuid(dto.getUuid());
+        invitationOrganization.setStatus(dto.getStatus());
+        final InvitationOrganization updatedInvitationOrganization = invitationOrganizationRepository.save(invitationOrganization);
+        LOGGER.debug("Successfully updated organization invitations for dto - {}", dto);
+        return updatedInvitationOrganization;
     }
 }

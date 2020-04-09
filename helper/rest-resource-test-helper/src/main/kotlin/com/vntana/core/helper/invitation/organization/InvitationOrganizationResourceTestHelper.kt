@@ -31,4 +31,5 @@ class InvitationOrganizationResourceTestHelper : InvitationOrganizationRestTestH
         return invitationOrganizationResourceClient.create(request)?.body?.response()?.uuid.toString()
     }
 
+    fun fetchGetByUuid(uuid: String) = invitationOrganizationResourceClient.getByUuid(uuid)?.body?.response();
 }
