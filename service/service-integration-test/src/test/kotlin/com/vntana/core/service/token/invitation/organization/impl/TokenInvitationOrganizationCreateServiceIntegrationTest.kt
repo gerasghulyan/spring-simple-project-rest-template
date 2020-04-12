@@ -1,15 +1,15 @@
-package com.vntana.core.service.token.impl
+package com.vntana.core.service.token.invitation.organization.impl
 
-import com.vntana.core.service.token.AbstractTokenServiceIntegrationTest
+import com.vntana.core.service.token.invitation.organization.AbstractTokenInvitationOrganizationServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 /**
- * Created by Arman Gevorgyan.
- * Date: 3/27/20
- * Time: 10:44 AM
+ * Created by Geras Ghulyan
+ * Date: 11.04.20
+ * Time: 23:37
  */
-class TokenInvitationOrganizationCreateServiceIntegrationTest : AbstractTokenServiceIntegrationTest() {
+class TokenInvitationOrganizationCreateServiceIntegrationTest : AbstractTokenInvitationOrganizationServiceIntegrationTest() {
 
     @Test
     fun test() {
@@ -18,7 +18,7 @@ class TokenInvitationOrganizationCreateServiceIntegrationTest : AbstractTokenSer
         val dto = integrationTestHelper.buildCreateTokenInvitationOrganizationDto(
                 invitationOrganizationUuid = invitationOrganizationUuid
         )
-        tokenService.createTokenInvitationOrganization(dto).let {
+        tokenInvitationOrganizationService.create(dto).let {
             flushAndClear()
             assertThat(it.token).isEqualTo(dto.token)
             assertThat(it.invitationOrganization).isEqualTo(invitationOrganization)

@@ -31,8 +31,6 @@ abstract class AbstractTokenServiceUnitTest : AbstractServiceUnitTest() {
     
     protected val helper = TokenCommonTestHelper()
 
-    protected val userHelper = UserCommonTestHelper()
-
     protected val invitationOrganizationCommonTestHelper = InvitationOrganizationCommonTestHelper()
 
     @Before

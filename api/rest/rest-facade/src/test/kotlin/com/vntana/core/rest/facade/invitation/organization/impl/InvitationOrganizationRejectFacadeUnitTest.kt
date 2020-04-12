@@ -27,16 +27,16 @@ class InvitationOrganizationRejectFacadeUnitTest : AbstractInvitationOrganizatio
     }
 
     @Test
-    fun `test update status`() {
+    fun `test reject`() {
         val request = restTestHelper.buildRejectInvitationOrganizationRequest()
+        val tokenInvitationOrganization = tokenInvitationOrganizationCommonTestHelper.buildTokenInvitationOrganization()
         val dto = commonTestHelper.buildUpdateInvitationOrganizationStatusDto(
-                uuid = request.uuid,
                 status = InvitationStatus.REJECTED
         )
         val rejectedInvitationOrganization = commonTestHelper.buildInvitationOrganization()
         resetAll()
-        expect(preconditionChecker.checkRejectInvitationForPossibleErrors(request))
-                .andReturn(SingleErrorWithStatus.empty())
+        expect(preconditionChecker.checkRejectInvitationForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(tokenInvitationOrganizationService.getByToken(request.getToken())).andReturn(tokenInvitationOrganization)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(anyObject())
         expect(invitationOrganizationService.updateStatus(dto)).andReturn(rejectedInvitationOrganization)
         expect(invitationOrganizationUuidAwareLifecycleMediator.onUpdated(rejectedInvitationOrganization.uuid)).andVoid()

@@ -1,9 +1,9 @@
-package com.vntana.core.rest.facade.invitation.organization.impl
+package com.vntana.core.rest.facade.invitation.organization.checker.impl
 
 import com.vntana.commons.api.model.response.ErrorResponseModel
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
-import com.vntana.core.rest.facade.invitation.organization.AbstractInvitationOrganizationFacadePreconditionCheckerFacadeUnitTest
+import com.vntana.core.rest.facade.invitation.organization.checker.AbstractInvitationOrganizationFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect

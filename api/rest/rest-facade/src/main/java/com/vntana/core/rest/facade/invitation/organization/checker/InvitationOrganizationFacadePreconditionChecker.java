@@ -1,7 +1,8 @@
-package com.vntana.core.rest.facade.invitation.organization;
+package com.vntana.core.rest.facade.invitation.organization.checker;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
+import com.vntana.core.model.invitation.organization.request.AcceptInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
 import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest;
 
@@ -17,4 +18,6 @@ public interface InvitationOrganizationFacadePreconditionChecker {
     SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkGetByUuidForPossibleErrors(final String uuid);
 
     SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkRejectInvitationForPossibleErrors(final RejectInvitationOrganizationRequest request);
+    
+    SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptInvitationForPossibleErrors(final AcceptInvitationOrganizationRequest request);
 }

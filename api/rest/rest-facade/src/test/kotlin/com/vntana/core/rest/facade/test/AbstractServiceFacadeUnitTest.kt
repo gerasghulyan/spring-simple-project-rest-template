@@ -9,6 +9,7 @@ import org.easymock.EasyMockRunner
 import org.easymock.EasyMockSupport
 import org.junit.runner.RunWith
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random
 
 /**
@@ -21,6 +22,8 @@ abstract class AbstractServiceFacadeUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
     
     fun randomInt(): Int = Random.nextInt()
+
+    fun randomPositiveInt(): Int = ThreadLocalRandom.current().nextInt(1, Int.MAX_VALUE)
 
     fun emptyString(): String = StringUtils.EMPTY
     

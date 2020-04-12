@@ -6,6 +6,7 @@ import com.vntana.core.model.token.response.TokenCreateResultResponse;
 import com.vntana.core.model.token.response.TokenExpireResultResponse;
 import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
 import com.vntana.core.rest.facade.token.TokenServiceFacade;
+import com.vntana.core.rest.facade.token.invitation.organization.TokenInvitationOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +24,18 @@ public class TokenResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
     private final TokenServiceFacade tokenServiceFacade;
+    private final TokenInvitationOrganizationServiceFacade tokenInvitationOrganizationServiceFacade;
 
-    public TokenResource(final TokenServiceFacade tokenServiceFacade) {
-        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+    public TokenResource(final TokenServiceFacade tokenServiceFacade, final TokenInvitationOrganizationServiceFacade tokenInvitationOrganizationServiceFacade) {
+        this.tokenInvitationOrganizationServiceFacade = tokenInvitationOrganizationServiceFacade;
         this.tokenServiceFacade = tokenServiceFacade;
+        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
     @PostMapping(path = "organization-invitations")
     public ResponseEntity<TokenCreateResultResponse> createTokenInvitationOrganization(@RequestBody final CreateTokenInvitationOrganizationRequest request) {
         LOGGER.debug("Processing token resource createTokenInvitationOrganization for request - {}", request);
-        final TokenCreateResultResponse resultResponse = tokenServiceFacade.createTokenInvitationOrganization(request);
+        final TokenCreateResultResponse resultResponse = tokenInvitationOrganizationServiceFacade.create(request);
         LOGGER.debug("Successfully processed token resource createTokenInvitationOrganization for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }

@@ -1,10 +1,7 @@
 package com.vntana.core.rest.resource.invitation.organization;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
-import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest;
+import com.vntana.core.model.invitation.organization.request.*;
 import com.vntana.core.model.invitation.organization.response.*;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import org.slf4j.Logger;
@@ -64,9 +61,17 @@ public class InvitationOrganizationResource {
 
     @PutMapping(path = "/reject")
     public ResponseEntity<RejectInvitationOrganizationResponse> reject(@RequestBody final RejectInvitationOrganizationRequest request) {
-        LOGGER.debug("Processing InvitationOrganizationResource reject method for uuid - {}", request.getUuid());
+        LOGGER.debug("Processing InvitationOrganizationResource reject method for request - {}", request);
         final RejectInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.reject(request);
-        LOGGER.debug("Successfully processed InvitationOrganizationResource reject method for uuid - {}", request.getUuid());
+        LOGGER.debug("Successfully processed InvitationOrganizationResource reject method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PutMapping(path = "/accept")
+    public ResponseEntity<AcceptInvitationOrganizationResponse> accept(@RequestBody final AcceptInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource accept method for request - {}", request);
+        final AcceptInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.accept(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource accept method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }

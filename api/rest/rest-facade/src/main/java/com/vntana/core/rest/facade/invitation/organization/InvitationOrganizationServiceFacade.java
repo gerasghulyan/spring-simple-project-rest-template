@@ -1,9 +1,6 @@
 package com.vntana.core.rest.facade.invitation.organization;
 
-import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest;
+import com.vntana.core.model.invitation.organization.request.*;
 import com.vntana.core.model.invitation.organization.response.*;
 
 /**
@@ -22,4 +19,6 @@ public interface InvitationOrganizationServiceFacade {
     UpdateInvitationOrganizationStatusResponse updateStatus(final UpdateInvitationOrganizationStatusRequest request);
 
     RejectInvitationOrganizationResponse reject(final RejectInvitationOrganizationRequest request);
+
+    AcceptInvitationOrganizationResponse accept(final AcceptInvitationOrganizationRequest request);
 }

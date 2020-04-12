@@ -16,16 +16,6 @@ class InvitationOrganizationRejectWebTest : AbstractInvitationOrganizationWebTes
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationOrganizationResourceClient.reject(resourceTestHelper.buildRejectInvitationOrganizationRequest(uuid = null)),
-                InvitationOrganizationErrorResponseModel.MISSING_UUID
-        )
-        assertBasicErrorResultResponse(
-                HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationOrganizationResourceClient.reject(resourceTestHelper.buildRejectInvitationOrganizationRequest(uuid = emptyString())),
-                InvitationOrganizationErrorResponseModel.MISSING_UUID
-        )
-        assertBasicErrorResultResponse(
-                HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationOrganizationResourceClient.reject(resourceTestHelper.buildRejectInvitationOrganizationRequest(token = null)),
                 InvitationOrganizationErrorResponseModel.MISSING_TOKEN
         )
@@ -46,25 +36,10 @@ class InvitationOrganizationRejectWebTest : AbstractInvitationOrganizationWebTes
     }
 
     @Test
-    fun `test when organization invitation does not exist`() {
-        val invitationOrganizationUuid = resourceTestHelper.persistInvitationOrganization()
-        val token = uuid()
-        tokenResourceTestHelper.persistTokenInvitationOrganization(
-                invitationOrganizationUuid = invitationOrganizationUuid,
-                token = token
-        )
-        assertBasicErrorResultResponse(
-                HttpStatus.NOT_FOUND,
-                invitationOrganizationResourceClient.reject(resourceTestHelper.buildRejectInvitationOrganizationRequest(token = token)),
-                InvitationOrganizationErrorResponseModel.NOT_FOUND
-        )
-    }
-
-    @Test
     fun `test reject`() {
         val invitationOrganizationUuid = resourceTestHelper.persistInvitationOrganization()
         val token = uuid()
-        val request = resourceTestHelper.buildRejectInvitationOrganizationRequest(token = token, uuid = invitationOrganizationUuid)
+        val request = resourceTestHelper.buildRejectInvitationOrganizationRequest(token = token)
         tokenResourceTestHelper.persistTokenInvitationOrganization(
                 invitationOrganizationUuid = invitationOrganizationUuid,
                 token = token

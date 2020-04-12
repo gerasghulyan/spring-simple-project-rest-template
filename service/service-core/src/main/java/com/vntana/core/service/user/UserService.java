@@ -38,4 +38,6 @@ public interface UserService {
     boolean checkPassword(final String uuid, final String rawPassword);
 
     List<User> findByRoleAndOrganizationUuid(final UserRole userRole, final String organizationUuid);
+
+    User getByEmail(final String email);
 }

@@ -38,22 +38,6 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
     }
 
     @Override
-    public TokenCreateResultResponse createTokenInvitationOrganization(final CreateTokenInvitationOrganizationRequest request) {
-        LOGGER.debug("Processing token facade createTokenInvitationOrganization for request - {}", request);
-        final SingleErrorWithStatus<TokenErrorResponseModel> error = preconditionChecker.checkCreateTokenInvitationOrganization(request);
-        if (error.isPresent()) {
-            return new TokenCreateResultResponse(error.getHttpStatus(), error.getError());
-        }
-        final CreateTokenInvitationOrganizationDto dto = new CreateTokenInvitationOrganizationDto(
-                request.getToken(),
-                request.getInvitationOrganizationUuid()
-        );
-        final TokenInvitationOrganization tokenInvitationOrganization = tokenService.createTokenInvitationOrganization(dto);
-        LOGGER.debug("Successfully processed token facade createTokenInvitationOrganization for request - {}", request);
-        return new TokenCreateResultResponse(tokenInvitationOrganization.getUuid());
-    }
-
-    @Override
     public TokenIsExpiredResultResponse isExpired(final String token) {
         final SingleErrorWithStatus<TokenErrorResponseModel> error = preconditionChecker.checkIsExpired(token);
         if (error.isPresent()) {

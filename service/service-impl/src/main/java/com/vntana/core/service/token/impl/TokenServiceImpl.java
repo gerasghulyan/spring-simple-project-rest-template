@@ -1,12 +1,9 @@
 package com.vntana.core.service.token.impl;
 
-import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.domain.token.AbstractToken;
-import com.vntana.core.domain.token.TokenInvitationOrganization;
 import com.vntana.core.persistence.token.TokenRepository;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.token.TokenService;
-import com.vntana.core.service.token.dto.CreateTokenInvitationOrganizationDto;
 import com.vntana.core.service.token.exception.TokenNotFoundException;
 import com.vntana.core.service.token.exception.TokenNotFoundForUuidException;
 import org.slf4j.Logger;
@@ -34,18 +31,6 @@ public class TokenServiceImpl implements TokenService {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.invitationOrganizationService = invitationOrganizationService;
         this.tokenRepository = tokenRepository;
-    }
-
-    @Transactional
-    @Override
-    public TokenInvitationOrganization createTokenInvitationOrganization(final CreateTokenInvitationOrganizationDto dto) {
-        LOGGER.debug("Creating organization invitation token for dto - {}", dto);
-        Assert.notNull(dto, "The CreateInvitationOrganizationDto should not be null");
-        final InvitationOrganization invitationOrganization = invitationOrganizationService.getByUuid(dto.getInvitationOrganizationUuid());
-        final TokenInvitationOrganization token = new TokenInvitationOrganization(dto.getToken(), invitationOrganization);
-        final TokenInvitationOrganization savedToken = tokenRepository.save(token);
-        LOGGER.debug("Successfully created organization invitation token for dto - {}", dto);
-        return savedToken;
     }
 
     @Transactional(readOnly = true)

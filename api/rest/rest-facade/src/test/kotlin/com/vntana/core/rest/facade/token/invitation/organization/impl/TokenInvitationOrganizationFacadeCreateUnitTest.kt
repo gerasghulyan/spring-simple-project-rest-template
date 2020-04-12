@@ -1,8 +1,9 @@
-package com.vntana.core.rest.facade.token.impl
+package com.vntana.core.rest.facade.token.invitation.organization.impl
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.token.error.TokenErrorResponseModel
 import com.vntana.core.rest.facade.token.AbstractTokenFacadeUnitTest
+import com.vntana.core.rest.facade.token.invitation.organization.AbstractTokenInvitationOrganizationFacadeUnitTest
 import org.easymock.EasyMock.expect
 import org.junit.Test
 
@@ -11,7 +12,7 @@ import org.junit.Test
  * Date: 3/27/20
  * Time: 2:16 PM
  */
-class TokenFacadeCreateTokenInvitationOrganization : AbstractTokenFacadeUnitTest() {
+class TokenInvitationOrganizationFacadeCreateUnitTest : AbstractTokenInvitationOrganizationFacadeUnitTest() {
 
     @Test
     fun `test when precondition failed`() {
@@ -20,12 +21,12 @@ class TokenFacadeCreateTokenInvitationOrganization : AbstractTokenFacadeUnitTest
         expect(preconditionChecker.checkCreateTokenInvitationOrganization(request))
                 .andReturn(SingleErrorWithStatus.of(404, TokenErrorResponseModel.TOKEN_NOT_FOUND))
         replayAll()
-        assertBasicErrorResultResponse(tokenServiceFacade.createTokenInvitationOrganization(request), TokenErrorResponseModel.TOKEN_NOT_FOUND)
+        assertBasicErrorResultResponse(tokenInvitationOrganizationServiceFacade.create(request), TokenErrorResponseModel.TOKEN_NOT_FOUND)
         verifyAll()
     }
 
     @Test
-    fun `test`() {
+    fun test() {
         resetAll()
         val request = restTestHelper.buildCreateTokenInvitationOrganizationRequest()
         val dto = commonTestHelper.buildCreateTokenInvitationOrganizationDto(
@@ -34,9 +35,9 @@ class TokenFacadeCreateTokenInvitationOrganization : AbstractTokenFacadeUnitTest
         )
         val tokenInvitationOrganization = commonTestHelper.buildTokenInvitationOrganization()
         expect(preconditionChecker.checkCreateTokenInvitationOrganization(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(tokenService.createTokenInvitationOrganization(dto)).andReturn(tokenInvitationOrganization)
+        expect(tokenInvitationOrganizationService.create(dto)).andReturn(tokenInvitationOrganization)
         replayAll()
-        assertBasicSuccessResultResponse(tokenServiceFacade.createTokenInvitationOrganization(request))
+        assertBasicSuccessResultResponse(tokenInvitationOrganizationServiceFacade.create(request))
         verifyAll()
     }
 }

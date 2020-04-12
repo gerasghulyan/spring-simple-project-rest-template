@@ -10,6 +10,7 @@ import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
+import com.vntana.core.service.user.exception.UserNotFoundForTokenException;
 import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,7 @@ public class UserServiceImpl implements UserService {
         return updatedUser;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findByEmail(final String email) {
         Assert.notNull(email, "The user email should not be null");
@@ -79,12 +81,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findByUuid(final String uuid) {
         Assert.notNull(uuid, "The user uuid should not be null");
         return userRepository.findByUuid(uuid);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User getByUuid(final String uuid) {
         Assert.notNull(uuid, "The user uuid should not be null");
@@ -94,10 +98,11 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional
     @Override
     public User makeVerified(final String email) {
         LOGGER.debug("Making user verified having uuid - {}", email);
-        Assert.hasText(email, "The user uuid should not be null or empty");
+        assertEmail(email);
         final User user = findByEmail(email).orElseThrow(() -> new IllegalStateException(format("Can not find user to verify with email - %s", email)));
         if (Boolean.TRUE.equals(user.getVerified())) {
             throw new UserAlreadyVerifiedException(format("The user having %s uuid is already verified", email));
@@ -108,10 +113,11 @@ public class UserServiceImpl implements UserService {
         return updatedUser;
     }
 
+    @Transactional
     @Override
     public User changePassword(final String uuid, final String password) {
         LOGGER.debug("Changing user password having uuid - {}", uuid);
-        Assert.hasText(uuid, "The user uuid should not be null or empty");
+        assertEmail(uuid);
         Assert.hasText(password, "The user password should not be null or empty");
         final User user = getByUuid(uuid);
         user.setPassword(passwordEncoder.encode(password));
@@ -123,11 +129,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public boolean existsByUuid(final String uuid) {
-        Assert.hasText(uuid, "The user uuid should not be null or empty");
+        assertEmail(uuid);
         LOGGER.debug("Checking existence of user having uuid - {}", uuid);
         return userRepository.existsByUuid(uuid);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean existsByEmail(final String email) {
         LOGGER.debug("Checking existence of user having email - {}", email);
@@ -137,6 +144,7 @@ public class UserServiceImpl implements UserService {
         return exists;
     }
 
+    @Transactional
     @Override
     public void grantOrganizationRole(final UserGrantOrganizationRoleDto dto) {
         LOGGER.debug("Setting user role for dto - {}", dto);
@@ -147,6 +155,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("Successfully created user role for dto - {}", dto);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean checkPassword(final String uuid, final String rawPassword) {
         Assert.hasText(uuid, "The uuid should not be null or empty");
@@ -167,6 +176,14 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public User getByEmail(final String email) {
+        Assert.notNull(email, "The user email should not be null");
+        LOGGER.debug("Getting user for email - {}", email);
+        return findByEmail(email).orElseThrow(() -> new UserNotFoundForTokenException(String.format("User not found for email %s", email)) );
+    }
+
     private User updateUser(final User user, final UpdateUserDto dto) {
         user.setFullName(dto.getFullName());
         user.setImageBlobId(dto.getImageBlobId());
@@ -176,9 +193,13 @@ public class UserServiceImpl implements UserService {
     private void assertCreateDto(final CreateUserDto dto) {
         Assert.notNull(dto, "The user creation dto should not be null");
         Assert.hasText(dto.getFullName(), "The user full name should not be null or empty");
-        Assert.hasText(dto.getEmail(), "The user email should not be null or empty");
+        assertEmail(dto.getEmail());
         Assert.hasText(dto.getPassword(), "The user password should not be null or empty");
         Assert.hasText(dto.getOrganizationUuid(), "The organization uuid should not be null or empty");
         Assert.notNull(dto.getRole(), "The user role should not be null");
+    }
+    
+    private void assertEmail(final String email) {
+        Assert.hasText(email, "The email should not be null or empty");
     }
 }

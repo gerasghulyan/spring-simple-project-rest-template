@@ -1,9 +1,6 @@
 package com.vntana.core.rest.client.invitation.organization;
 
-import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.RejectInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.UpdateInvitationOrganizationStatusRequest;
+import com.vntana.core.model.invitation.organization.request.*;
 import com.vntana.core.model.invitation.organization.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +28,7 @@ public interface InvitationOrganizationResourceClient {
 
     @PutMapping(path = "/reject")
     ResponseEntity<RejectInvitationOrganizationResponse> reject(@RequestBody final RejectInvitationOrganizationRequest request);
+
+    @PutMapping(path = "/accept")
+    ResponseEntity<AcceptInvitationOrganizationResponse> accept(@RequestBody final AcceptInvitationOrganizationRequest request);
 }

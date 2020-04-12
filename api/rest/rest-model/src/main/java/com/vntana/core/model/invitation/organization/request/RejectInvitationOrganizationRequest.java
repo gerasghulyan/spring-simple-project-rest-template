@@ -2,7 +2,7 @@ package com.vntana.core.model.invitation.organization.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
-import com.vntana.commons.api.model.request.impl.AbstractUuidAwareRequestModel;
+import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,7 +17,7 @@ import java.util.List;
  * Date: 4/9/2020
  * Time: 1:45 PM
  */
-public class RejectInvitationOrganizationRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<InvitationOrganizationErrorResponseModel> {
+public class RejectInvitationOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<InvitationOrganizationErrorResponseModel> {
 
     @JsonProperty("token")
     private String token;
@@ -25,16 +25,12 @@ public class RejectInvitationOrganizationRequest extends AbstractUuidAwareReques
     public RejectInvitationOrganizationRequest() {
     }
 
-    public RejectInvitationOrganizationRequest(final String uuid, final String token) {
-        super(uuid);
+    public RejectInvitationOrganizationRequest(final String token) {
         this.token = token;
     }
 
     @Override
     public List<InvitationOrganizationErrorResponseModel> validate() {
-        if (StringUtils.isBlank(getUuid())) {
-            return Collections.singletonList(InvitationOrganizationErrorResponseModel.MISSING_UUID);
-        }
         if (StringUtils.isBlank(token)) {
             return Collections.singletonList(InvitationOrganizationErrorResponseModel.MISSING_TOKEN);
         }

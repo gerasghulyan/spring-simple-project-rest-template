@@ -1,14 +1,20 @@
-package com.vntana.core.rest.facade.invitation.organization
+package com.vntana.core.rest.facade.invitation.organization.checker
 
 import com.vntana.core.helper.invitation.organization.InvitationOrganizationRestTestHelper
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
+import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
-import com.vntana.core.rest.facade.invitation.organization.impl.InvitationOrganizationFacadePreconditionCheckerImpl
+import com.vntana.core.helper.unit.token.invitation.organization.TokenInvitationOrganizationCommonTestHelper
+import com.vntana.core.helper.unit.user.UserCommonTestHelper
+import com.vntana.core.rest.facade.invitation.organization.checker.InvitationOrganizationFacadePreconditionChecker
+import com.vntana.core.rest.facade.invitation.organization.checker.impl.InvitationOrganizationFacadePreconditionCheckerImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.common.component.SlugValidationComponent
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.token.TokenService
+import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService
+import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before
 
@@ -29,22 +35,29 @@ abstract class AbstractInvitationOrganizationFacadePreconditionCheckerFacadeUnit
 
     @Mock
     protected lateinit var organizationService: OrganizationService
+
+    @Mock
+    protected lateinit var userService: UserService
+
+    @Mock
+    protected lateinit var tokenInvitationOrganizationService: TokenInvitationOrganizationService
     
     @Mock
     protected lateinit var tokenService: TokenService
 
     protected val restTestHelper = InvitationOrganizationRestTestHelper()
-    
     protected val invitationOrganizationCommonTestHelper = InvitationOrganizationCommonTestHelper()
-    
     protected val tokenCommonHelper = TokenCommonTestHelper()
+    protected val tokenInvitationOrganizationCommonTestHelper = TokenInvitationOrganizationCommonTestHelper()
+    protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
     @Before
     fun prepare() {
         preconditionChecker = InvitationOrganizationFacadePreconditionCheckerImpl(invitationOrganizationService,
-                tokenService,
                 slugValidationComponent,
-                organizationService
+                organizationService,
+                userService,
+                tokenInvitationOrganizationService
         )
     }
 }
