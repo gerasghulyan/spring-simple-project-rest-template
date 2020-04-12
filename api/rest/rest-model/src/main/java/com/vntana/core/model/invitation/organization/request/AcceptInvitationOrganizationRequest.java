@@ -53,14 +53,14 @@ public class AcceptInvitationOrganizationRequest extends AbstractRequestModel im
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof AcceptInvitationOrganizationRequest)) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AcceptInvitationOrganizationRequest)) {
+            return false;
+        }
         final AcceptInvitationOrganizationRequest that = (AcceptInvitationOrganizationRequest) o;
-
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(token, that.token)
                 .append(organizationName, that.organizationName)
                 .append(organizationSlug, that.organizationSlug)
@@ -70,7 +70,6 @@ public class AcceptInvitationOrganizationRequest extends AbstractRequestModel im
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
                 .append(token)
                 .append(organizationName)
                 .append(organizationSlug)

@@ -83,7 +83,7 @@ public class InvitationOrganizationFacadePreconditionCheckerImpl implements Invi
         LOGGER.debug("Checking reject invitation organization precondition for request - {}", request);
         final Optional<TokenInvitationOrganization> tokenInvitationOrganizationOptional = tokenInvitationOrganizationService.findByToken(request.getToken());
         if (!tokenInvitationOrganizationOptional.isPresent()) {
-            LOGGER.debug("Can not find TokenInvitationOrganization by token - {}", request.getToken());
+            LOGGER.debug("Can not find TokenInvitationOrganization by request - {}", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationOrganizationErrorResponseModel.TOKEN_NOT_FOUND);
         }
         final TokenInvitationOrganization tokenInvitationOrganization = tokenInvitationOrganizationOptional.get();
@@ -119,10 +119,25 @@ public class InvitationOrganizationFacadePreconditionCheckerImpl implements Invi
         if (organizationOptional.isPresent()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationOrganizationErrorResponseModel.SLUG_IS_NOT_AVAILABLE);
         }
-        final Optional<User> userOptional = userService.findByEmail(invitation.getEmail());
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptInvitationWhenUserExistsForPossibleErrors(final String email) {
+        final Optional<User> userOptional = userService.findByEmail(email);
         if (!userOptional.isPresent()) {
-            LOGGER.debug("Can not find User by email from Invitation - {}", invitation.getEmail());
+            LOGGER.debug("Can not find User by email from Invitation - {}", email);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationOrganizationErrorResponseModel.USER_NOT_FOUND);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptInvitationWhenUserNotExistsForPossibleErrors(final String email) {
+        final Optional<User> userOptional = userService.findByEmail(email);
+        if (userOptional.isPresent()) {
+            LOGGER.debug("User Already exists for email from Invitation - {}", email);
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationOrganizationErrorResponseModel.USER_ALREADY_EXISTS_FOR_EMAIL);
         }
         return SingleErrorWithStatus.empty();
     }

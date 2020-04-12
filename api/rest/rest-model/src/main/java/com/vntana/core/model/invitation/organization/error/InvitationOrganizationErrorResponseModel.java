@@ -27,4 +27,7 @@ public enum InvitationOrganizationErrorResponseModel implements ErrorResponseMod
     MISSING_USER_UUID,
     USER_NOT_FOUND,
     TOKEN_IS_EXPIRED,
+    MISSING_USER_FULL_NAME,
+    MISSING_USER_PASSWORD,
+    USER_ALREADY_EXISTS_FOR_EMAIL,
 }

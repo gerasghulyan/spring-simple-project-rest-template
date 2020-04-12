@@ -31,4 +31,7 @@ public interface InvitationOrganizationResourceClient {
 
     @PutMapping(path = "/accept")
     ResponseEntity<AcceptInvitationOrganizationResponse> accept(@RequestBody final AcceptInvitationOrganizationRequest request);
+
+    @PutMapping(path = "/accept-sign-up")
+    ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request);
 }

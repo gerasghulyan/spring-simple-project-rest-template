@@ -74,4 +74,12 @@ public class InvitationOrganizationResource {
         LOGGER.debug("Successfully processed InvitationOrganizationResource accept method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
+
+    @PutMapping(path = "/accept-sign-up")
+    public ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource acceptAndSignUp method for request - {}", request);
+        final AcceptInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.acceptAndSignUp(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource acceptAndSignUp method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
 }

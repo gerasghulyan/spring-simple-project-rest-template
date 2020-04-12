@@ -20,4 +20,8 @@ public interface InvitationOrganizationFacadePreconditionChecker {
     SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkRejectInvitationForPossibleErrors(final RejectInvitationOrganizationRequest request);
     
     SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptInvitationForPossibleErrors(final AcceptInvitationOrganizationRequest request);
+    
+    SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptInvitationWhenUserExistsForPossibleErrors(String email);
+
+    SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptInvitationWhenUserNotExistsForPossibleErrors(String email);
 }

@@ -21,4 +21,6 @@ public interface InvitationOrganizationServiceFacade {
     RejectInvitationOrganizationResponse reject(final RejectInvitationOrganizationRequest request);
 
     AcceptInvitationOrganizationResponse accept(final AcceptInvitationOrganizationRequest request);
+
+    AcceptInvitationOrganizationResponse acceptAndSignUp(AcceptAndSignUpInvitationOrganizationRequest request);
 }

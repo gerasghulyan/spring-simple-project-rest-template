@@ -12,8 +12,8 @@ import com.vntana.core.model.invitation.organization.request.*;
 import com.vntana.core.model.invitation.organization.response.*;
 import com.vntana.core.model.invitation.organization.response.model.GetInvitationOrganizationResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
-import com.vntana.core.rest.facade.invitation.organization.checker.InvitationOrganizationFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
+import com.vntana.core.rest.facade.invitation.organization.checker.InvitationOrganizationFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.organization.component.InvitationOrganizationSenderComponent;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
@@ -26,6 +26,7 @@ import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecy
 import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService;
 import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.mutable.Mutable;
@@ -161,35 +162,94 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
     @Override
     public AcceptInvitationOrganizationResponse accept(final AcceptInvitationOrganizationRequest request) {
         LOGGER.debug("Processing invitation organization facade accept for request - {}", request);
-        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkAcceptInvitationForPossibleErrors(request);
+        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = getAcceptErrorWithStatus(request);
         if (singleErrorWithStatus.isPresent()) {
             return new AcceptInvitationOrganizationResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        final TokenInvitationOrganization tokenInvitationOrganization = tokenInvitationOrganizationService.getByToken(request.getToken());
-        final InvitationOrganization invitation = tokenInvitationOrganization.getInvitationOrganization();
+        final InvitationOrganization invitation = getInvitationOrganizationEmail(request.getToken());
+        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> errorForUser = preconditionChecker.checkAcceptInvitationWhenUserExistsForPossibleErrors(invitation.getEmail());
+        if (errorForUser.isPresent()) {
+            return new AcceptInvitationOrganizationResponse(errorForUser.getHttpStatus(), errorForUser.getError());
+        }
         final User user = userService.getByEmail(invitation.getEmail());
-        LOGGER.debug("Creating organization for invitation request - {}", request);
         final Mutable<String> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
-            final Organization organization = organizationService.create(new CreateOrganizationDto(
-                    request.getOrganizationName(),
-                    request.getOrganizationSlug())
-            );
+            final Organization organization = createOrganization(request.getOrganizationName(), request.getOrganizationSlug());
             userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
                     user.getUuid(),
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN)
             );
-            organizationLifecycleMediator.onCreated(organization);
-            organizationUuidAwareLifecycleMediator.onCreated(organization.getUuid());
-            mutableResponse.setValue(organization.getUuid());
-            tokenService.findByTokenAndExpire(request.getToken());
-            final InvitationOrganization acceptedInvitationOrganization = invitationOrganizationService.updateStatus(new UpdateInvitationOrganizationStatusDto(
-                    invitation.getUuid(),
-                    InvitationStatus.ACCEPTED
-            ));
-            invitationOrganizationUuidAwareLifecycleMediator.onUpdated(acceptedInvitationOrganization.getUuid());
+            afterOrganizationSuccessfullyCreated(request.getToken(), invitation, mutableResponse, organization);
         });
         return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());
     }
+
+    @Override
+    public AcceptInvitationOrganizationResponse acceptAndSignUp(final AcceptAndSignUpInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing invitation organization facade acceptAndSignUp for request - {}", request);
+        final AcceptInvitationOrganizationRequest acceptRequest = new AcceptInvitationOrganizationRequest(
+                request.getToken(),
+                request.getOrganizationName(),
+                request.getOrganizationSlug()
+        );
+        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = getAcceptErrorWithStatus(acceptRequest);
+        if (singleErrorWithStatus.isPresent()) {
+            return new AcceptInvitationOrganizationResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
+        }
+        final InvitationOrganization invitation = getInvitationOrganizationEmail(request.getToken());
+        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> errorForUser = preconditionChecker.checkAcceptInvitationWhenUserNotExistsForPossibleErrors(invitation.getEmail());
+        if (errorForUser.isPresent()) {
+            return new AcceptInvitationOrganizationResponse(errorForUser.getHttpStatus(), errorForUser.getError());
+        }
+        final Mutable<String> mutableResponse = new MutableObject<>();
+        persistenceUtilityService.runInNewTransaction(() -> {
+            final Organization organization = createOrganization(request.getOrganizationName(), request.getOrganizationSlug());
+            userService.create(new CreateUserDto(
+                    request.getUserFullName(),
+                    invitation.getEmail(),
+                    request.getUserPassword(),
+                    organization.getUuid(),
+                    UserRole.ORGANIZATION_ADMIN
+            ));
+            afterOrganizationSuccessfullyCreated(request.getToken(), invitation, mutableResponse, organization);
+        });
+        return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());
+    }
+
+    //region Utility methods
+    private void afterOrganizationSuccessfullyCreated(
+            final String token,
+            final InvitationOrganization invitation,
+            final Mutable<String> mutableResponse,
+            final Organization organization) {
+        organizationLifecycleMediator.onCreated(organization);
+        organizationUuidAwareLifecycleMediator.onCreated(organization.getUuid());
+        mutableResponse.setValue(organization.getUuid());
+        tokenService.findByTokenAndExpire(token);
+        final InvitationOrganization acceptedInvitationOrganization = invitationOrganizationService.updateStatus(
+                new UpdateInvitationOrganizationStatusDto(
+                        invitation.getUuid(),
+                        InvitationStatus.ACCEPTED
+                ));
+        invitationOrganizationUuidAwareLifecycleMediator.onUpdated(acceptedInvitationOrganization.getUuid());
+    }
+
+    private InvitationOrganization getInvitationOrganizationEmail(final String token) {
+        final TokenInvitationOrganization tokenInvitationOrganization = tokenInvitationOrganizationService.getByToken(token);
+        return tokenInvitationOrganization.getInvitationOrganization();
+    }
+
+    private Organization createOrganization(final String name, final String slug) {
+        LOGGER.debug("Creating organization for invitation name - {} nad slug - {}", name, slug);
+        return organizationService.create(new CreateOrganizationDto(
+                name,
+                slug)
+        );
+    }
+    
+    private SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> getAcceptErrorWithStatus(final AcceptInvitationOrganizationRequest request) {
+        return preconditionChecker.checkAcceptInvitationForPossibleErrors(request);
+    }
+    //endregion
 }

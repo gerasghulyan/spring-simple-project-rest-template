@@ -40,4 +40,12 @@ open class InvitationOrganizationRestTestHelper : AbstractRestTestHelper() {
             organizationName: String? = uuid(),
             organizationSlug: String? = uuid()
     ) = AcceptInvitationOrganizationRequest(token, organizationName, organizationSlug)
+
+    fun buildAcceptAndSignUpInvitationOrganizationRequest(
+            token: String? = uuid(),
+            organizationName: String? = uuid(),
+            organizationSlug: String? = uuid(),
+            userFullName: String? = uuid(),
+            userPassword: String? = uuid()
+    ) = AcceptAndSignUpInvitationOrganizationRequest(token, organizationName, organizationSlug, userFullName, userPassword)
 }

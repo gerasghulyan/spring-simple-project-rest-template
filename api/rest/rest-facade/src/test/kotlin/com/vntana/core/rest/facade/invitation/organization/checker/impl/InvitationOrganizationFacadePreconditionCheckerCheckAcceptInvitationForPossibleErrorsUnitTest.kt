@@ -95,21 +95,4 @@ class InvitationOrganizationFacadePreconditionCheckerCheckAcceptInvitationForPos
         }
         verifyAll()
     }
-
-    @Test
-    fun `test check when USER_NOT_FOUND`() {
-        val request = restTestHelper.buildAcceptInvitationOrganizationRequest()
-        val tokenInvitationOrganization = tokenInvitationOrganizationCommonTestHelper.buildTokenInvitationOrganization()
-        val invitationOrganization = tokenInvitationOrganization.invitationOrganization
-        resetAll()
-        expect(tokenInvitationOrganizationService.findByToken(request.token)).andReturn(Optional.of(tokenInvitationOrganization))
-        expect(organizationService.findBySlug(request.organizationSlug)).andReturn(Optional.empty())
-        expect(userService.findByEmail(invitationOrganization.getEmail())).andReturn(Optional.empty())
-        replayAll()
-        preconditionChecker.checkAcceptInvitationForPossibleErrors(request).let {
-            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
-            assertThat(it.error).isEqualTo(InvitationOrganizationErrorResponseModel.USER_NOT_FOUND)
-        }
-        verifyAll()
-    }
 }

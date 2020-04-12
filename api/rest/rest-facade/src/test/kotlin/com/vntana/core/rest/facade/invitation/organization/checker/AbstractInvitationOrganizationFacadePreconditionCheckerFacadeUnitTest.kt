@@ -6,7 +6,6 @@ import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.helper.unit.token.invitation.organization.TokenInvitationOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.rest.facade.invitation.organization.checker.InvitationOrganizationFacadePreconditionChecker
 import com.vntana.core.rest.facade.invitation.organization.checker.impl.InvitationOrganizationFacadePreconditionCheckerImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.common.component.SlugValidationComponent
@@ -41,15 +40,13 @@ abstract class AbstractInvitationOrganizationFacadePreconditionCheckerFacadeUnit
 
     @Mock
     protected lateinit var tokenInvitationOrganizationService: TokenInvitationOrganizationService
-    
-    @Mock
-    protected lateinit var tokenService: TokenService
 
     protected val restTestHelper = InvitationOrganizationRestTestHelper()
     protected val invitationOrganizationCommonTestHelper = InvitationOrganizationCommonTestHelper()
     protected val tokenCommonHelper = TokenCommonTestHelper()
     protected val tokenInvitationOrganizationCommonTestHelper = TokenInvitationOrganizationCommonTestHelper()
     protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
+    protected val userCommonTestHelper = UserCommonTestHelper()
 
     @Before
     fun prepare() {
