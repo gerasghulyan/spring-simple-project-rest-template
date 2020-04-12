@@ -162,11 +162,11 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
     @Override
     public AcceptInvitationOrganizationResponse accept(final AcceptInvitationOrganizationRequest request) {
         LOGGER.debug("Processing invitation organization facade accept for request - {}", request);
-        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = getAcceptErrorWithStatus(request);
+        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = checkAcceptErrorWithStatus(request);
         if (singleErrorWithStatus.isPresent()) {
             return new AcceptInvitationOrganizationResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        final InvitationOrganization invitation = getInvitationOrganizationEmail(request.getToken());
+        final InvitationOrganization invitation = getInvitationOrganizationFromToken(request.getToken());
         final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> errorForUser = preconditionChecker.checkAcceptInvitationWhenUserExistsForPossibleErrors(invitation.getEmail());
         if (errorForUser.isPresent()) {
             return new AcceptInvitationOrganizationResponse(errorForUser.getHttpStatus(), errorForUser.getError());
@@ -180,7 +180,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN)
             );
-            afterOrganizationSuccessfullyCreated(request.getToken(), invitation, mutableResponse, organization);
+            afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);
         });
         return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());
     }
@@ -193,11 +193,11 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                 request.getOrganizationName(),
                 request.getOrganizationSlug()
         );
-        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = getAcceptErrorWithStatus(acceptRequest);
+        final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> singleErrorWithStatus = checkAcceptErrorWithStatus(acceptRequest);
         if (singleErrorWithStatus.isPresent()) {
             return new AcceptInvitationOrganizationResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        final InvitationOrganization invitation = getInvitationOrganizationEmail(request.getToken());
+        final InvitationOrganization invitation = getInvitationOrganizationFromToken(request.getToken());
         final SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> errorForUser = preconditionChecker.checkAcceptInvitationWhenUserNotExistsForPossibleErrors(invitation.getEmail());
         if (errorForUser.isPresent()) {
             return new AcceptInvitationOrganizationResponse(errorForUser.getHttpStatus(), errorForUser.getError());
@@ -212,13 +212,13 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN
             ));
-            afterOrganizationSuccessfullyCreated(request.getToken(), invitation, mutableResponse, organization);
+            afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);
         });
         return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());
     }
 
     //region Utility methods
-    private void afterOrganizationSuccessfullyCreated(
+    private void afterOrganizationCreatedInTransaction(
             final String token,
             final InvitationOrganization invitation,
             final Mutable<String> mutableResponse,
@@ -235,7 +235,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         invitationOrganizationUuidAwareLifecycleMediator.onUpdated(acceptedInvitationOrganization.getUuid());
     }
 
-    private InvitationOrganization getInvitationOrganizationEmail(final String token) {
+    private InvitationOrganization getInvitationOrganizationFromToken(final String token) {
         final TokenInvitationOrganization tokenInvitationOrganization = tokenInvitationOrganizationService.getByToken(token);
         return tokenInvitationOrganization.getInvitationOrganization();
     }
@@ -248,7 +248,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         );
     }
     
-    private SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> getAcceptErrorWithStatus(final AcceptInvitationOrganizationRequest request) {
+    private SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptErrorWithStatus(final AcceptInvitationOrganizationRequest request) {
         return preconditionChecker.checkAcceptInvitationForPossibleErrors(request);
     }
     //endregion
