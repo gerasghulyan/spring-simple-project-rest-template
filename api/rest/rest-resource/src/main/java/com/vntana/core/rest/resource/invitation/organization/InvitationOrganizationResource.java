@@ -67,7 +67,7 @@ public class InvitationOrganizationResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PutMapping(path = "/accept")
+    @PostMapping(path = "/accept")
     public ResponseEntity<AcceptInvitationOrganizationResponse> accept(@RequestBody final AcceptInvitationOrganizationRequest request) {
         LOGGER.debug("Processing InvitationOrganizationResource accept method for request - {}", request);
         final AcceptInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.accept(request);
@@ -75,7 +75,7 @@ public class InvitationOrganizationResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PutMapping(path = "/accept-sign-up")
+    @PostMapping(path = "/accept-sign-up")
     public ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request) {
         LOGGER.debug("Processing InvitationOrganizationResource acceptAndSignUp method for request - {}", request);
         final AcceptInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.acceptAndSignUp(request);

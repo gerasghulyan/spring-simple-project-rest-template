@@ -29,9 +29,9 @@ public interface InvitationOrganizationResourceClient {
     @PutMapping(path = "/reject")
     ResponseEntity<RejectInvitationOrganizationResponse> reject(@RequestBody final RejectInvitationOrganizationRequest request);
 
-    @PutMapping(path = "/accept")
+    @PostMapping(path = "/accept")
     ResponseEntity<AcceptInvitationOrganizationResponse> accept(@RequestBody final AcceptInvitationOrganizationRequest request);
 
-    @PutMapping(path = "/accept-sign-up")
+    @PostMapping(path = "/accept-sign-up")
     ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request);
 }
