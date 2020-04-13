@@ -38,7 +38,7 @@ public class InvitationOrganization extends AbstractUuidAwareDomainEntity {
     private InvitationStatus status;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", foreignKey = @ForeignKey(name = "fk_invitation_organization_organization_id"), updatable = false)
+    @JoinColumn(name = "organization_id", foreignKey = @ForeignKey(name = "fk_invitation_organization_organization_id"))
     private Organization organization;
 
     InvitationOrganization() {
