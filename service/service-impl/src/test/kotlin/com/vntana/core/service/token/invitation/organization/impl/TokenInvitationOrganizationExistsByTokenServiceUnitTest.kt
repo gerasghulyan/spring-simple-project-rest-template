@@ -1,12 +1,10 @@
 package com.vntana.core.service.token.invitation.organization.impl
 
-import com.vntana.core.service.token.AbstractTokenServiceUnitTest
 import com.vntana.core.service.token.invitation.organization.AbstractTokenInvitationOrganizationServiceUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by Geras Ghulyan
@@ -44,7 +42,6 @@ class TokenInvitationOrganizationExistsByTokenServiceUnitTest : AbstractTokenInv
     fun `test existsByToken`() {
         // test data
         val token = uuid()
-        val abstractToken = helper.buildTokenInvitationOrganization()
         resetAll()
         // expectations
         expect(tokenInvitationOrganizationRepository.existsByToken(token)).andReturn(true)

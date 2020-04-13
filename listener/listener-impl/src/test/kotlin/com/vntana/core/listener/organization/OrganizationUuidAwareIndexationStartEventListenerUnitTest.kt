@@ -1,6 +1,6 @@
 package com.vntana.core.listener.organization
 
-import com.vntana.cache.service.organization.OrganizationLockService
+import com.vntana.cache.service.organization.CombinedOrganizationLockService
 import com.vntana.commons.indexation.payload.EntityLifecycle
 import com.vntana.commons.queue.model.MessageActionType
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
@@ -30,14 +30,14 @@ class OrganizationUuidAwareIndexationStartEventListenerUnitTest : AbstractListen
     private lateinit var organizationUuidAwareActionProducer: OrganizationUuidAwareActionProducer
     
     @Mock
-    private lateinit var organizationLockService: OrganizationLockService
+    private lateinit var combinedOrganizationLockService: CombinedOrganizationLockService
 
     @Mock
     private lateinit var organizationService: OrganizationService
 
     @Before
     fun prepare() {
-        organizationUuidAwareIndexationStartEventListener = OrganizationUuidAwareIndexationStartEventListener(organizationUuidAwareActionProducer, organizationService, organizationLockService)
+        organizationUuidAwareIndexationStartEventListener = OrganizationUuidAwareIndexationStartEventListener(organizationUuidAwareActionProducer, organizationService, combinedOrganizationLockService)
     }
 
     @Test
@@ -56,7 +56,7 @@ class OrganizationUuidAwareIndexationStartEventListenerUnitTest : AbstractListen
         val message = OrganizationUuidAwareActionQueueMessage(MessageActionType.CREATED, organization.uuid)
         resetAll()
         expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
-        expect(organizationLockService.lock(organization.uuid)).andVoid()
+        expect(combinedOrganizationLockService.lock(organization.uuid)).andVoid()
         expect(organizationUuidAwareActionProducer.produce(message)).andVoid()
         replayAll()
         organizationUuidAwareIndexationStartEventListener.handleEvent(payload)

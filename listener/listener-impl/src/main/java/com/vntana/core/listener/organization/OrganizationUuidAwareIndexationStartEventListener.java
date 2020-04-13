@@ -1,6 +1,6 @@
 package com.vntana.core.listener.organization;
 
-import com.vntana.cache.service.organization.OrganizationLockService;
+import com.vntana.cache.service.organization.CombinedOrganizationLockService;
 import com.vntana.commons.indexation.listener.EntityUuidAwareLifecycleListener;
 import com.vntana.commons.indexation.payload.EntityLifecycle;
 import com.vntana.commons.queue.model.MessageActionType;
@@ -29,14 +29,14 @@ public class OrganizationUuidAwareIndexationStartEventListener implements Entity
 
     private final OrganizationUuidAwareActionProducer organizationUuidAwareActionProducer;
     private final OrganizationService organizationService;
-    private final OrganizationLockService organizationLockService;
+    private final CombinedOrganizationLockService combinedOrganizationLockService;
 
     public OrganizationUuidAwareIndexationStartEventListener(final OrganizationUuidAwareActionProducer organizationUuidAwareActionProducer,
-                                                             final OrganizationService organizationService, final OrganizationLockService organizationLockService) {
+                                                             final OrganizationService organizationService, final CombinedOrganizationLockService combinedOrganizationLockService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.organizationUuidAwareActionProducer = organizationUuidAwareActionProducer;
         this.organizationService = organizationService;
-        this.organizationLockService = organizationLockService;
+        this.combinedOrganizationLockService = combinedOrganizationLockService;
     }
 
     @EventListener
@@ -48,7 +48,7 @@ public class OrganizationUuidAwareIndexationStartEventListener implements Entity
             LOGGER.debug("Exiting from indexation. Organization with uuid - {} is deleted. Update is not supported", payload.entityUuid());
             return;
         }
-        organizationLockService.lock(payload.entityUuid());
+        combinedOrganizationLockService.lock(payload.entityUuid());
         organizationUuidAwareActionProducer.produce(new OrganizationUuidAwareActionQueueMessage(MessageActionType.valueOf(payload.lifecycle().name()), payload.entityUuid()));
         LOGGER.debug("Successfully produced OrganizationUuidAwareActionQueueMessage to organization pre-indexation topic for uuid - {}", payload.entityUuid());
     }
