@@ -19,7 +19,7 @@ class TokenInvitationOrganizationFindByTokenServiceIntegrationTest : AbstractTok
     @Test
     fun `test findByToken`() {
         val token = uuid()
-        val persistInvitationOrganization = invitationOrganizationIntegrationTestHelper.persistInvitationOrganization(token = token)
+        invitationOrganizationIntegrationTestHelper.persistInvitationOrganization(token = token)
         flushAndClear()
         tokenInvitationOrganizationService.findByToken(token).let {
             assertThat(it).isPresent
