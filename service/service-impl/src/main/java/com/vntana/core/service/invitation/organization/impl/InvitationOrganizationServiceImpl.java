@@ -4,10 +4,12 @@ import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.persistence.invitation.organization.InvitationOrganizationRepository;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
+import com.vntana.core.service.invitation.organization.dto.AcceptInvitationOrganizationDto;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
 import com.vntana.core.service.invitation.organization.dto.GetAllInvitationOrganizationsDto;
 import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto;
 import com.vntana.core.service.invitation.organization.exception.InvitationOrganizationNotFoundForUuidException;
+import com.vntana.core.service.organization.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import java.util.Optional;
 
 /**
  * Created by Arman Gevorgyan.
@@ -27,10 +31,12 @@ public class InvitationOrganizationServiceImpl implements InvitationOrganization
     private static final Logger LOGGER = LoggerFactory.getLogger(InvitationOrganizationServiceImpl.class);
 
     private final InvitationOrganizationRepository invitationOrganizationRepository;
+    private final OrganizationService organizationService;
 
-    public InvitationOrganizationServiceImpl(final InvitationOrganizationRepository invitationOrganizationRepository) {
-        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+    public InvitationOrganizationServiceImpl(final InvitationOrganizationRepository invitationOrganizationRepository, final OrganizationService organizationService) {
         this.invitationOrganizationRepository = invitationOrganizationRepository;
+        this.organizationService = organizationService;
+        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
     @Override
@@ -88,5 +94,26 @@ public class InvitationOrganizationServiceImpl implements InvitationOrganization
         final InvitationOrganization updatedInvitationOrganization = invitationOrganizationRepository.save(invitationOrganization);
         LOGGER.debug("Successfully updated organization invitations for dto - {}", dto);
         return updatedInvitationOrganization;
+    }
+
+    @Transactional
+    @Override
+    public InvitationOrganization accept(final AcceptInvitationOrganizationDto dto) {
+        LOGGER.debug("Accept organization invitations for dto - {}", dto);
+        Assert.notNull(dto, "The AcceptInvitationOrganizationDto should not be null");
+        final InvitationOrganization invitationOrganization = updateStatus(
+                new UpdateInvitationOrganizationStatusDto(dto.getUuid(), InvitationStatus.ACCEPTED)
+        );
+        invitationOrganization.setOrganization(organizationService.getByUuid(dto.getOrganizationUuid()));
+        final InvitationOrganization updatedInvitationOrganization = invitationOrganizationRepository.save(invitationOrganization);
+        LOGGER.debug("Successfully updated organization invitations for dto - {}", dto);
+        return updatedInvitationOrganization;
+    }
+
+    @Override
+    public Optional<InvitationOrganization> findByOrganizationUuid(final String organizationUuid) {
+        LOGGER.debug("Retrieving InvitationOrganization having organizationUuid - {}", organizationUuid);
+        Assert.hasText(organizationUuid, "The InvitationOrganization organizationUuid should not be null or empty");
+        return invitationOrganizationRepository.findByOrganization_Uuid(organizationUuid);
     }
 }
