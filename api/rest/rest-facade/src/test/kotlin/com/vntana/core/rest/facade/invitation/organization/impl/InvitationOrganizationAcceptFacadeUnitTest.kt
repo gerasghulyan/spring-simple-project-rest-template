@@ -6,6 +6,7 @@ import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.invitation.organization.AbstractInvitationOrganizationFacadeUnitTest
+import com.vntana.core.service.invitation.organization.dto.AcceptInvitationOrganizationDto
 import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto
@@ -71,10 +72,10 @@ class InvitationOrganizationAcceptFacadeUnitTest : AbstractInvitationOrganizatio
                 organization.uuid,
                 UserRole.ORGANIZATION_ADMIN)
         )).andVoid()
-        expect(tokenService.findByTokenAndExpire(request.getToken())).andReturn(tokenInvitationOrganization)
-        expect(invitationOrganizationService.updateStatus(UpdateInvitationOrganizationStatusDto(
+        expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationOrganization)
+        expect(invitationOrganizationService.accept(AcceptInvitationOrganizationDto(
                 invitationOrganization.uuid,
-                InvitationStatus.ACCEPTED
+                organization.uuid
         ))).andReturn(invitationOrganization)
         expect(invitationOrganizationUuidAwareLifecycleMediator.onUpdated(invitationOrganization.uuid)).andVoid()
         replayAll()

@@ -15,4 +15,6 @@ public interface InvitationOrganizationRepository extends JpaRepository<Invitati
     Optional<InvitationOrganization> findByUuid(final String uuid);
 
     boolean existsByUuid(final String uuid);
+
+    Optional<InvitationOrganization> findByOrganization_Uuid(final String organizationUuid);
 }
