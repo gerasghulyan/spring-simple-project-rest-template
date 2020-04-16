@@ -30,6 +30,13 @@ public class CreateOrganizationDto implements ServiceDto {
         this.imageBlobId = imageBlobId;
     }
 
+    public CreateOrganizationDto(final String name, final String slug) {
+        Assert.hasText(name, "The name should not be null or empty");
+        Assert.hasText(slug, "The slug should not be null or empty");
+        this.name = name;
+        this.slug = slug;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

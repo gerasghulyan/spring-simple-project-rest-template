@@ -7,6 +7,7 @@ import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent
 import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent
+import com.vntana.core.rest.facade.user.component.precondition.UserFacadePreconditionCheckerComponent
 import com.vntana.core.rest.facade.user.impl.UserServiceFacadeImpl
 import com.vntana.core.service.email.EmailValidationComponent
 import com.vntana.core.service.organization.OrganizationService
@@ -40,6 +41,9 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
     protected lateinit var persistenceUtilityService: PersistenceUtilityService
 
     @Mock
+    protected lateinit var preconditionCheckerComponent: UserFacadePreconditionCheckerComponent
+
+    @Mock
     protected lateinit var emailValidationComponent: EmailValidationComponent
 
     @Mock
@@ -56,6 +60,7 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest
         userServiceFacade = UserServiceFacadeImpl(userService,
                 organizationService,
                 persistenceUtilityService,
+                preconditionCheckerComponent,
                 emailValidationComponent,
                 userVerificationSenderComponent,
                 resetPasswordEmailSenderComponent,

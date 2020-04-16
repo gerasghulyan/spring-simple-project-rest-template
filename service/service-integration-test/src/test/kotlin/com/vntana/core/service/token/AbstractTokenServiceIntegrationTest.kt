@@ -1,7 +1,7 @@
 package com.vntana.core.service.token
 
 import com.vntana.core.helper.integration.invitation.organization.InvitationOrganizationIntegrationTestHelper
-import com.vntana.core.helper.integration.token.TokenIntegrationTestHelper
+import com.vntana.core.helper.integration.token.invitation.organization.TokenInvitationOrganizationIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -16,7 +16,7 @@ abstract class AbstractTokenServiceIntegrationTest : AbstractServiceIntegrationT
     protected lateinit var tokenService: TokenService
 
     @Autowired
-    protected lateinit var integrationTestHelper: TokenIntegrationTestHelper
+    protected lateinit var integrationTestHelper: TokenInvitationOrganizationIntegrationTestHelper
 
     @Autowired
     protected lateinit var invitationOrganizationIntegrationTestHelper: InvitationOrganizationIntegrationTestHelper

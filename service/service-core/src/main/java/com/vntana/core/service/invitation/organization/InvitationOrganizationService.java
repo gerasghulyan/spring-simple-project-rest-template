@@ -3,7 +3,11 @@ package com.vntana.core.service.invitation.organization;
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
 import com.vntana.core.service.invitation.organization.dto.GetAllInvitationOrganizationsDto;
+import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto;
+import com.vntana.core.service.invitation.organization.dto.AcceptInvitationOrganizationDto;
 import org.springframework.data.domain.Page;
+
+import java.util.Optional;
 
 /**
  * Created by Arman Gevorgyan.
@@ -19,4 +23,10 @@ public interface InvitationOrganizationService {
     boolean existsByUuid(final String uuid);
 
     Page<InvitationOrganization> getAll(final GetAllInvitationOrganizationsDto dto);
+
+    InvitationOrganization updateStatus(final UpdateInvitationOrganizationStatusDto dto);
+
+    InvitationOrganization accept(final AcceptInvitationOrganizationDto dto);
+
+    Optional<InvitationOrganization> findByOrganizationUuid(final String organizationUuid);
 }

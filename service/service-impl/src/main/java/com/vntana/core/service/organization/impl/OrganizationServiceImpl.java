@@ -96,6 +96,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         final Organization organization = getByUuid(dto.getUuid());
         organization.setImageBlobId(dto.getImageBlobId());
         organization.setName(dto.getName());
+        dto.getStatus().ifPresent(organization::setStatus);
         organizationRepository.save(organization);
         LOGGER.debug("Successfully updating organization for dto - {}", dto);
         return organization;

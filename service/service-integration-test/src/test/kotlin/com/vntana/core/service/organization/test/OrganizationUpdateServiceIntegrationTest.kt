@@ -22,6 +22,22 @@ class OrganizationUpdateServiceIntegrationTest : AbstractOrganizationServiceInte
             assertThat(it.slug).isEqualTo(organization.slug)
             assertThat(it.imageBlobId).isEqualTo(updateDto.imageBlobId)
             assertThat(it.name).isEqualTo(updateDto.name)
+            assertThat(it.status).isEqualTo(updateDto.status.get())
+        }
+    }
+
+    @Test
+    fun `test update without status`() {
+        val organization = integrationTestHelper.persistOrganization()
+        flushAndClear()
+        val updateDto = integrationTestHelper.buildUpdateOrganizationDto(uuid = organization.uuid, status = null)
+        organizationService.update(updateDto).let {
+            flushAndClear()
+            assertThat(it.uuid).isEqualTo(organization.uuid)
+            assertThat(it.slug).isEqualTo(organization.slug)
+            assertThat(it.imageBlobId).isEqualTo(updateDto.imageBlobId)
+            assertThat(it.name).isEqualTo(updateDto.name)
+            assertThat(it.status).isEqualTo(organization.status)
         }
     }
 }

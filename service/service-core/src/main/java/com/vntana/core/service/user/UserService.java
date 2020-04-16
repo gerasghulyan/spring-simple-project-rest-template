@@ -1,10 +1,12 @@
 package com.vntana.core.service.user;
 
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,5 +33,11 @@ public interface UserService {
 
     boolean existsByUuid(final String uuid);
 
+    boolean existsByEmail(final String email);
+
     boolean checkPassword(final String uuid, final String rawPassword);
+
+    List<User> findByRoleAndOrganizationUuid(final UserRole userRole, final String organizationUuid);
+
+    User getByEmail(final String email);
 }

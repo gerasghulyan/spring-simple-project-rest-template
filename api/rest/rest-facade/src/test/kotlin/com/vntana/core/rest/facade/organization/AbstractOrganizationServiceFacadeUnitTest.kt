@@ -10,6 +10,7 @@ import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.common.component.SlugValidationComponent
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator
+import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecycleMediator
 import com.vntana.core.service.user.UserService
 import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
@@ -47,6 +48,9 @@ abstract class AbstractOrganizationServiceFacadeUnitTest : AbstractServiceFacade
     protected lateinit var organizationLifecycleMediator: OrganizationLifecycleMediator
 
     @Mock
+    protected lateinit var organizationUuidAwareLifecycleMediator: OrganizationUuidAwareLifecycleMediator
+
+    @Mock
     protected lateinit var userService: UserService
 
     @Before
@@ -57,6 +61,7 @@ abstract class AbstractOrganizationServiceFacadeUnitTest : AbstractServiceFacade
                 userService,
                 persistenceUtilityService,
                 organizationLifecycleMediator,
+                organizationUuidAwareLifecycleMediator,
                 slugValidationComponent
         )
     }

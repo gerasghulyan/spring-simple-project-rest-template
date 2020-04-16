@@ -1,8 +1,8 @@
 package com.vntana.core.helper.invitation.organization
 
 import com.vntana.commons.helper.AbstractRestTestHelper
-import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest
-import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest
+import com.vntana.core.model.invitation.InvitationStatusModel
+import com.vntana.core.model.invitation.organization.request.*
 
 /**
  * Created by Arman Gevorgyan.
@@ -22,6 +22,30 @@ open class InvitationOrganizationRestTestHelper : AbstractRestTestHelper() {
 
     fun buildSendInvitationOrganizationRequest(
             email: String? = uuid(),
+            token: String? = uuid(),
+            organizationName: String? = uuid()
+    ): SendInvitationOrganizationRequest = SendInvitationOrganizationRequest(email, token, organizationName)
+
+    fun buildUpdateInvitationOrganizationStatusRequest(
+            uuid: String? = uuid(),
+            status: InvitationStatusModel? = InvitationStatusModel.ACCEPTED
+    ) = UpdateInvitationOrganizationStatusRequest(uuid, status)
+
+    fun buildRejectInvitationOrganizationRequest(
             token: String? = uuid()
-    ): SendInvitationOrganizationRequest = SendInvitationOrganizationRequest(email, token)
+    ) = RejectInvitationOrganizationRequest(token)
+
+    fun buildAcceptInvitationOrganizationRequest(
+            token: String? = uuid(),
+            organizationName: String? = uuid(),
+            organizationSlug: String? = uuid()
+    ) = AcceptInvitationOrganizationRequest(token, organizationName, organizationSlug)
+
+    fun buildAcceptAndSignUpInvitationOrganizationRequest(
+            token: String? = uuid(),
+            organizationName: String? = uuid(),
+            organizationSlug: String? = uuid(),
+            userFullName: String? = uuid(),
+            userPassword: String? = uuid()
+    ) = AcceptAndSignUpInvitationOrganizationRequest(token, organizationName, organizationSlug, userFullName, userPassword)
 }

@@ -1,5 +1,6 @@
 package com.vntana.core.listener.invitation.organization
 
+import com.vntana.cache.service.organization.CombinedOrganizationLockService
 import com.vntana.commons.indexation.payload.EntityLifecycle
 import com.vntana.commons.queue.model.MessageActionType
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
@@ -30,10 +31,14 @@ class InvitationOrganizationUuidAwareIndexationStartEventListenerUnitTest : Abst
 
     @Mock
     private lateinit var invitationOrganizationService: InvitationOrganizationService
+    
+    @Mock
+    private lateinit var combinedOrganizationLockService: CombinedOrganizationLockService
 
     @Before
     fun prepare() {
         indexationStartEventListener = InvitationOrganizationUuidAwareIndexationStartEventListener(invitationOrganizationService,
+                combinedOrganizationLockService,
                 actionProducer
         )
     }
@@ -54,6 +59,7 @@ class InvitationOrganizationUuidAwareIndexationStartEventListenerUnitTest : Abst
         val message = InvitationOrganizationUuidAwareActionQueueMessage(MessageActionType.CREATED, invitationOrganization.uuid)
         resetAll()
         expect(invitationOrganizationService.getByUuid(invitationOrganization.uuid)).andReturn(invitationOrganization)
+        expect(combinedOrganizationLockService.lock(invitationOrganization.uuid)).andVoid()
         expect(actionProducer.produce(message)).andVoid()
         replayAll()
         indexationStartEventListener.handleEvent(payload)

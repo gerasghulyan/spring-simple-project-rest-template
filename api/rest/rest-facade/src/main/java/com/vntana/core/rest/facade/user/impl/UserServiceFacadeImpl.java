@@ -1,17 +1,24 @@
 package com.vntana.core.rest.facade.user.impl;
 
+import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserOrganizationRole;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.account.model.AccountUserResponseModel;
+import com.vntana.core.model.user.response.account.model.AccountUserRolesModel;
 import com.vntana.core.model.user.response.model.*;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent;
 import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent;
+import com.vntana.core.rest.facade.user.component.precondition.UserFacadePreconditionCheckerComponent;
 import com.vntana.core.service.email.EmailValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
@@ -23,15 +30,21 @@ import com.vntana.core.service.user.dto.UpdateUserDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.vntana.core.model.user.error.UserErrorResponseModel.*;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 
 /**
  * Created by Arthur Asatryan.
@@ -46,6 +59,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final UserService userService;
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
+    private final UserFacadePreconditionCheckerComponent preconditionCheckerComponent;
     private final EmailValidationComponent emailValidationComponent;
     private final UserVerificationSenderComponent verificationSenderComponent;
     private final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent;
@@ -54,6 +68,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     public UserServiceFacadeImpl(final UserService userService,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService,
+                                 final UserFacadePreconditionCheckerComponent preconditionCheckerComponent,
                                  final EmailValidationComponent emailValidationComponent,
                                  final UserVerificationSenderComponent verificationSenderComponent,
                                  final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent,
@@ -62,6 +77,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         this.userService = userService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
+        this.preconditionCheckerComponent = preconditionCheckerComponent;
         this.emailValidationComponent = emailValidationComponent;
         this.verificationSenderComponent = verificationSenderComponent;
         this.resetPasswordEmailSenderComponent = resetPasswordEmailSenderComponent;
@@ -99,6 +115,17 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     }
 
     @Override
+    public ExistsUserByEmailResponse existsByEmail(final String email) {
+        LOGGER.debug("Processing user facade existsByEmail for email - {}", email);
+        if (StringUtils.isBlank(email)) {
+            return new ExistsUserByEmailResponse(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_EMAIL);
+        }
+        final boolean exists = userService.existsByEmail(email);
+        LOGGER.debug("Successfully processed user facade existsByEmail for email - {}", email);
+        return new ExistsUserByEmailResponse(exists);
+    }
+
+    @Override
     public FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request) {
         return userService.findByEmail(request.getEmail())
                 .map(user -> new FindUserByEmailResponse(
@@ -127,40 +154,29 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return response;
     }
 
+    @Transactional
     @Override
-    public AccountUserResponse accountDetails(final String uuid, final String organizationUuid) {
-        final Mutable<AccountUserResponse> mutableResponse = new MutableObject<>();
-        persistenceUtilityService.runInPersistenceSession(() -> {
-            final User user = userService.getByUuid(uuid);
-            //TODO HasSubscription implementation later
-            final AccountUserResponse response = user.roleOfSuperAdmin()
-                    .map(userSuperAdminRole -> new AccountUserResponse(new AccountUserResponseModel(
-                            user.getUuid(),
-                            user.getFullName(),
-                            user.getEmail(),
-                            UserRoleModel.SUPER_ADMIN,
-                            user.getVerified(),
-                            user.getImageBlobId(),
-                            false
-                    )))
-                    .orElseGet(() -> {
-                        final Organization organization = organizationService.getByUuid(organizationUuid);
-                        return user.roleOfOrganization(organization)
-                                .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
-                                .map(userRoleModel -> new AccountUserResponse(new AccountUserResponseModel(
-                                        user.getUuid(),
-                                        user.getFullName(),
-                                        user.getEmail(),
-                                        userRoleModel,
-                                        user.getVerified(),
-                                        user.getImageBlobId(),
-                                        false
-                                )))
-                                .orElseGet(() -> new AccountUserResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)));
-                    });
-            mutableResponse.setValue(response);
-        });
-        return mutableResponse.getValue();
+    public AccountUserResponse accountDetails(final String uuid) {
+        LOGGER.debug("Processing user facade accountDetails for uuid - {}", uuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkAccountDetails(uuid);
+        if (error.isPresent()) {
+            return new AccountUserResponse(error.getHttpStatus(), error.getError());
+        }
+        final User user = userService.getByUuid(uuid);
+        final AccountUserRolesModel rolesModel = new AccountUserRolesModel();
+        rolesModel.setSuperAdmin(user.roleOfSuperAdmin().isPresent());
+        rolesModel.setAdminInOrganization(user.immutableOrganizationRoles().stream()
+                .map(UserOrganizationRole::getOrganization)
+                .map(AbstractUuidAwareDomainEntity::getUuid)
+                .collect(Collectors.toList()));
+        final AccountUserResponseModel responseModel = new AccountUserResponseModel();
+        responseModel.setRoles(rolesModel);
+        responseModel.setUuid(user.getUuid());
+        responseModel.setFullName(user.getFullName());
+        responseModel.setEmail(user.getEmail());
+        responseModel.setEmailVerified(user.getVerified());
+        responseModel.setImageBlobId(user.getImageBlobId());
+        return new AccountUserResponse(responseModel);
     }
 
     @Override
@@ -237,6 +253,46 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final User user = userService.changePassword(request.getUuid(), request.getNewPassword());
         LOGGER.debug("Successfully processed facade changePassword method for user having uuid - {}", request.getUuid());
         return new ChangeUserPasswordResponse(user.getUuid());
+    }
+
+    @Override
+    public GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid) {
+        LOGGER.debug("Processing facade getByRoleAndOrganizationUuid method for user role - {} and organization uuid - {}", userRole, organizationUuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> possibleErrors = checkGetByRoleAndOrganizationUuidPossibleErrors(userRole, organizationUuid);
+        if (possibleErrors.isPresent()) {
+            return new GetUsersByRoleAndOrganizationUuidResponse(possibleErrors.getHttpStatus(), possibleErrors.getError());
+        }
+        final List<User> response = userService.findByRoleAndOrganizationUuid(UserRole.valueOf(userRole.name()), organizationUuid);
+        if (response.isEmpty()) {
+            return new GetUsersByRoleAndOrganizationUuidResponse(HttpStatus.SC_NOT_FOUND, Arrays.asList(NOT_FOUND_FOR_ROLE, NOT_FOUND_FOR_ORGANIZATION));
+        }
+        if (userRole == UserRoleModel.ORGANIZATION_ADMIN && response.size() > 1) {
+            return new GetUsersByRoleAndOrganizationUuidResponse(HttpStatus.SC_CONFLICT, ORGANIZATION_ROLE_CONFLICT);
+        }
+        LOGGER.debug("Successfully processed facade getByRoleAndOrganizationUuid method for user role - {} and organization uuid - {}", userRole, organizationUuid);
+        return new GetUsersByRoleAndOrganizationUuidResponse(new GetUsersByRoleAndOrganizationUuidGridResponseModel(
+                response.size(),
+                response.stream()
+                        .map(user -> new GetUsersByRoleAndOrganizationUuidResponseModel(
+                                user.getUuid(),
+                                user.getFullName(),
+                                user.getEmail(),
+                                user.getImageBlobId())
+                        ).collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
+        ));
+    }
+
+    private SingleErrorWithStatus<UserErrorResponseModel> checkGetByRoleAndOrganizationUuidPossibleErrors(final UserRoleModel userRole, final String organizationUuid) {
+        if (userRole == null) {
+            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_USER_ROLE);
+        }
+        if (StringUtils.isBlank(organizationUuid)) {
+            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_ORGANIZATION);
+        }
+        if (!organizationService.existsByUuid(organizationUuid)) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, ORGANIZATION_NOT_FOUND);
+        }
+        return SingleErrorWithStatus.empty();
     }
 
     private List<UserErrorResponseModel> checkVerifyForPossibleErrors(final String email) {

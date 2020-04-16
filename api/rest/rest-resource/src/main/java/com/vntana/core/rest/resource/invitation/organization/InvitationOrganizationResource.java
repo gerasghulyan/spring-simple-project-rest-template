@@ -1,11 +1,8 @@
 package com.vntana.core.rest.resource.invitation.organization;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
-import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.request.*;
+import com.vntana.core.model.invitation.organization.response.*;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,4 +51,43 @@ public class InvitationOrganizationResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
+    @PutMapping(path = "/status")
+    public ResponseEntity<UpdateInvitationOrganizationStatusResponse> updateStatus(@RequestBody final UpdateInvitationOrganizationStatusRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource updateStatus method for request - {}", request);
+        final UpdateInvitationOrganizationStatusResponse resultResponse = invitationOrganizationServiceFacade.updateStatus(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource updateStatus method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PutMapping(path = "/reject")
+    public ResponseEntity<RejectInvitationOrganizationResponse> reject(@RequestBody final RejectInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource reject method for request - {}", request);
+        final RejectInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.reject(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource reject method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "/accept")
+    public ResponseEntity<AcceptInvitationOrganizationResponse> accept(@RequestBody final AcceptInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource accept method for request - {}", request);
+        final AcceptInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.accept(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource accept method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "/accept-sign-up")
+    public ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request) {
+        LOGGER.debug("Processing InvitationOrganizationResource acceptAndSignUp method for request - {}", request);
+        final AcceptInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.acceptAndSignUp(request);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource acceptAndSignUp method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @GetMapping(path = "/subscription-definition/{organizationUuid}")
+    public ResponseEntity<GetByOrganizationInvitationOrganizationResponse> getByOrganization(@PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
+        final GetByOrganizationInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.getByOrganization(organizationUuid);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
 }

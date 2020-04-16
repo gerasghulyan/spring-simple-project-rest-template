@@ -30,6 +30,7 @@ import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
+import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecycleMediator;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
@@ -65,6 +66,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     private final UserService userService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
+    private final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator;
     private final SlugValidationComponent slugValidationComponent;
 
     public OrganizationServiceFacadeImpl(
@@ -73,6 +75,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             final UserService userService,
             final PersistenceUtilityService persistenceUtilityService,
             final OrganizationLifecycleMediator organizationLifecycleMediator,
+            final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator,
             final SlugValidationComponent slugValidationComponent) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
@@ -80,6 +83,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.organizationLifecycleMediator = organizationLifecycleMediator;
+        this.organizationUuidAwareLifecycleMediator = organizationUuidAwareLifecycleMediator;
         this.slugValidationComponent = slugValidationComponent;
     }
 
@@ -122,6 +126,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                                 UserRole.ORGANIZATION_ADMIN)
                         );
                         organizationLifecycleMediator.onCreated(organization);
+                        organizationUuidAwareLifecycleMediator.onCreated(organization.getUuid());
                         mutableResponse.setValue(organization.getUuid());
                     });
                     return new CreateOrganizationResultResponse(mutableResponse.getValue());
@@ -205,13 +210,9 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         if (!organizationService.existsByUuid(request.getUuid())) {
             return new UpdateOrganizationResultResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
         }
-        final UpdateOrganizationDto dto = new UpdateOrganizationDto(
-                request.getUuid(),
-                request.getImageBlobId(),
-                request.getName()
-        );
-        final Organization organization = organizationService.update(dto);
+        final Organization organization = organizationService.update(mapperFacade.map(request, UpdateOrganizationDto.class));
         organizationLifecycleMediator.onUpdated(organization);
+        organizationUuidAwareLifecycleMediator.onUpdated(organization.getUuid());
         LOGGER.debug("Successfully processed organization facade update method for request - {}", request);
         return new UpdateOrganizationResultResponse(organization.getUuid());
     }

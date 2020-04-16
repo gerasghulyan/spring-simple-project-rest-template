@@ -1,10 +1,13 @@
 package com.vntana.core.service.organization.dto;
 
+import com.vntana.core.domain.organization.status.OrganizationStatus;
 import com.vntana.core.service.common.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
+
+import java.util.Optional;
 
 /**
  * Created by Arman Gevorgyan.
@@ -16,13 +19,15 @@ public class UpdateOrganizationDto implements ServiceDto {
     private final String uuid;
     private final String imageBlobId;
     private final String name;
+    private final OrganizationStatus status;
 
-    public UpdateOrganizationDto(final String uuid, final String imageBlobId, final String name) {
+    public UpdateOrganizationDto(final String uuid, final String imageBlobId, final String name, final OrganizationStatus status) {
         Assert.hasText(uuid, "The uuid should not be null or empty");
         Assert.hasText(name, "The name should not be null or empty");
         this.uuid = uuid;
         this.imageBlobId = imageBlobId;
         this.name = name;
+        this.status = status;
     }
 
     @Override
@@ -38,6 +43,7 @@ public class UpdateOrganizationDto implements ServiceDto {
                 .append(uuid, that.uuid)
                 .append(imageBlobId, that.imageBlobId)
                 .append(name, that.name)
+                .append(status, that.status)
                 .isEquals();
     }
 
@@ -47,6 +53,7 @@ public class UpdateOrganizationDto implements ServiceDto {
                 .append(uuid)
                 .append(imageBlobId)
                 .append(name)
+                .append(status)
                 .toHashCode();
     }
 
@@ -56,6 +63,7 @@ public class UpdateOrganizationDto implements ServiceDto {
                 .append("uuid", uuid)
                 .append("imageBlobId", imageBlobId)
                 .append("name", name)
+                .append("status", status)
                 .toString();
     }
 
@@ -69,5 +77,9 @@ public class UpdateOrganizationDto implements ServiceDto {
 
     public String getName() {
         return name;
+    }
+
+    public Optional<OrganizationStatus> getStatus() {
+        return Optional.ofNullable(status);
     }
 }

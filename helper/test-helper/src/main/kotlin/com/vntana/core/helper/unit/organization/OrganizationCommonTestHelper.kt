@@ -28,8 +28,9 @@ open class OrganizationCommonTestHelper : AbstractCommonTestHelper() {
     fun buildUpdateOrganizationDto(
             uuid: String? = uuid(),
             imageBlobId: String? = uuid(),
-            name: String? = uuid()
-    ): UpdateOrganizationDto = UpdateOrganizationDto(uuid, imageBlobId, name)
+            name: String? = uuid(),
+            status: OrganizationStatus? = OrganizationStatus.DISABLED
+    ): UpdateOrganizationDto = UpdateOrganizationDto(uuid, imageBlobId, name, status)
 
 
     fun buildOrganization(

@@ -12,6 +12,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +38,7 @@ public class OrganizationIndexationServiceFacadeImpl implements OrganizationInde
         this.organizationIndexationComponent = organizationIndexationComponent;
     }
 
+    @Transactional
     @Override
     public IndexationResultResponse reindexAll() {
         LOGGER.debug("Processing the re-indexation of all organizations");
