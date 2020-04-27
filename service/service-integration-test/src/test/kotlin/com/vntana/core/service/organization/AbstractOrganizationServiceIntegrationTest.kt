@@ -1,5 +1,6 @@
 package com.vntana.core.service.organization
 
+import com.vntana.core.helper.integration.invitation.organization.InvitationOrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
@@ -20,6 +21,9 @@ abstract class AbstractOrganizationServiceIntegrationTest : AbstractServiceInteg
 
     @Autowired
     protected lateinit var userIntegrationTestHelper: UserIntegrationTestHelper
+
+    @Autowired
+    protected lateinit var invitationOrganizationIntegrationTestHelper: InvitationOrganizationIntegrationTestHelper
 
     protected val commonTestHelper: OrganizationCommonTestHelper = OrganizationCommonTestHelper()
 }

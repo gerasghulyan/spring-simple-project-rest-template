@@ -1,4 +1,4 @@
-package com.vntana.core.service.organization.test
+package com.vntana.core.service.organization.impl
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat

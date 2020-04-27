@@ -34,7 +34,4 @@ public interface InvitationOrganizationResourceClient {
 
     @PostMapping(path = "/accept-sign-up")
     ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request);
-
-    @GetMapping(path = "/subscription-definition/{organizationUuid}")
-    ResponseEntity<GetByOrganizationInvitationOrganizationResponse> getByOrganization(@PathVariable("organizationUuid") final String organizationUuid);
 }
