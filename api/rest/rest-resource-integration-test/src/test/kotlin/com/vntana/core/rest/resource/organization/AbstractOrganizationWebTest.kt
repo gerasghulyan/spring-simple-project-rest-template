@@ -1,9 +1,13 @@
 package com.vntana.core.rest.resource.organization
 
+import com.vntana.core.helper.invitation.organization.InvitationOrganizationResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
+import com.vntana.core.helper.token.TokenResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.indexation.producer.organization.OrganizationUuidAwareActionProducer
+import com.vntana.core.rest.client.invitation.organization.InvitationOrganizationResourceClient
 import com.vntana.core.rest.client.organization.OrganizationResourceClient
+import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import com.vntana.payment.client.customer.PaymentCustomerResourceClient
 import com.vntana.payment.reset.model.customer.create.response.CustomerCreateResultResponse
@@ -34,6 +38,20 @@ abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var organizationUuidAwareActionProducer: OrganizationUuidAwareActionProducer
+
+    @Autowired
+    protected lateinit var userResourceClient: UserResourceClient
+
+    @Autowired
+    protected lateinit var invitationOrganizationResourceTestHelper: InvitationOrganizationResourceTestHelper
+
+    @Autowired
+    protected lateinit var tokenResourceTestHelper: TokenResourceTestHelper
+
+    @Autowired
+    protected lateinit var invitationOrganizationResourceClient: InvitationOrganizationResourceClient
+
+    fun email(): String = uuid() + "@test.com"
 
     @Before
     fun prepare() {

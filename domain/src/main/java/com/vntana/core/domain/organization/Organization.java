@@ -2,16 +2,14 @@ package com.vntana.core.domain.organization;
 
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.client.ClientOrganization;
+import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.domain.organization.status.OrganizationStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by Arthur Asatryan.
@@ -41,6 +39,10 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
     private List<ClientOrganization> clientOrganizations;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invitation_organization_id", foreignKey = @ForeignKey(name = "fk_organization_invitation_organization_id"), updatable = false)
+    private InvitationOrganization invitation;
+
     public Organization() {
     }
 
@@ -49,6 +51,13 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         this.slug = slug;
         this.imageBlobId = imageBlobId;
         this.status = status;
+    }
+
+    public Organization(final String name, final String slug, final InvitationOrganization invitation) {
+        this.name = name;
+        this.slug = slug;
+        this.status = OrganizationStatus.ACTIVE;
+        this.invitation = invitation;
     }
 
     //region Public methods
@@ -85,6 +94,10 @@ public class Organization extends AbstractUuidAwareDomainEntity {
                 .map(Collections::unmodifiableList)
                 .orElseGet(Collections::emptyList);
     }
+
+    public Boolean hasBeenCreatedFromInvitation() {
+        return !Objects.isNull(invitation);
+    }
     //endregion
 
     @Override
@@ -97,7 +110,6 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         }
         final Organization that = (Organization) o;
         return new EqualsBuilder()
-                .append(getUuid(), that.getUuid())
                 .append(getUuid(), that.getUuid())
                 .isEquals();
     }
@@ -115,7 +127,8 @@ public class Organization extends AbstractUuidAwareDomainEntity {
                 .append("name", name)
                 .append("slug", slug)
                 .append("imageBlobId", imageBlobId)
-                .append("status", status)
+                .append("", status)
+                .append("invitation", getIdOrNull(invitation))
                 .toString();
     }
 
@@ -145,5 +158,9 @@ public class Organization extends AbstractUuidAwareDomainEntity {
 
     public void setStatus(final OrganizationStatus status) {
         this.status = status;
+    }
+
+    public InvitationOrganization getInvitation() {
+        return invitation;
     }
 }

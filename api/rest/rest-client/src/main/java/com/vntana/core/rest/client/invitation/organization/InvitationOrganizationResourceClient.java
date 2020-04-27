@@ -2,6 +2,7 @@ package com.vntana.core.rest.client.invitation.organization;
 
 import com.vntana.core.model.invitation.organization.request.*;
 import com.vntana.core.model.invitation.organization.response.*;
+import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +37,5 @@ public interface InvitationOrganizationResourceClient {
     ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request);
 
     @GetMapping(path = "/subscription-definition/{organizationUuid}")
-    ResponseEntity<GetByOrganizationInvitationOrganizationResponse> getByOrganization(@PathVariable("organizationUuid") final String organizationUuid);
+    ResponseEntity<GetOrganizationInvitationByOrganizationResponse> getByOrganization(@PathVariable("organizationUuid") final String organizationUuid);
 }

@@ -2,7 +2,6 @@ package com.vntana.core.domain.invitation.organization;
 
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.invitation.InvitationStatus;
-import com.vntana.core.domain.organization.Organization;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -36,10 +35,6 @@ public class InvitationOrganization extends AbstractUuidAwareDomainEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", nullable = false)
     private InvitationStatus status;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", foreignKey = @ForeignKey(name = "fk_invitation_organization_organization_id"))
-    private Organization organization;
 
     InvitationOrganization() {
         super();
@@ -77,7 +72,6 @@ public class InvitationOrganization extends AbstractUuidAwareDomainEntity {
                 .append(slug, that.slug)
                 .append(customerSubscriptionDefinitionUuid, that.customerSubscriptionDefinitionUuid)
                 .append(status, that.status)
-                .append(organization, that.organization)
                 .isEquals();
     }
 
@@ -91,7 +85,6 @@ public class InvitationOrganization extends AbstractUuidAwareDomainEntity {
                 .append(slug)
                 .append(customerSubscriptionDefinitionUuid)
                 .append(status)
-                .append(organization)
                 .toHashCode();
     }
 
@@ -104,7 +97,6 @@ public class InvitationOrganization extends AbstractUuidAwareDomainEntity {
                 .append("slug", slug)
                 .append("customerSubscriptionDefinitionUuid", customerSubscriptionDefinitionUuid)
                 .append("status", status)
-                .append("organization", organization)
                 .toString();
     }
 
@@ -134,13 +126,5 @@ public class InvitationOrganization extends AbstractUuidAwareDomainEntity {
 
     public void setStatus(final InvitationStatus status) {
         this.status = status;
-    }
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(final Organization organization) {
-        this.organization = organization;
     }
 }

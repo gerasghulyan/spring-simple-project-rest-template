@@ -17,6 +17,8 @@ import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResu
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResponseModel;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
 import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel;
+import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
+import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponseModel;
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
 import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
@@ -24,6 +26,7 @@ import com.vntana.core.model.user.response.model.GetUserOrganizationsGridRespons
 import com.vntana.core.model.user.response.model.GetUserOrganizationsResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
+import com.vntana.core.rest.facade.organization.component.precondition.OrganizationServiceFacadePreconditionCheckerComponent;
 import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
@@ -68,6 +71,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
     private final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator;
     private final SlugValidationComponent slugValidationComponent;
+    private final OrganizationServiceFacadePreconditionCheckerComponent organizationServiceFacadePreconditionChecker;
 
     public OrganizationServiceFacadeImpl(
             final MapperFacade mapperFacade,
@@ -76,7 +80,8 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             final PersistenceUtilityService persistenceUtilityService,
             final OrganizationLifecycleMediator organizationLifecycleMediator,
             final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator,
-            final SlugValidationComponent slugValidationComponent) {
+            final SlugValidationComponent slugValidationComponent,
+            final OrganizationServiceFacadePreconditionCheckerComponent organizationServiceFacadePreconditionChecker) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.mapperFacade = mapperFacade;
@@ -85,6 +90,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         this.organizationLifecycleMediator = organizationLifecycleMediator;
         this.organizationUuidAwareLifecycleMediator = organizationUuidAwareLifecycleMediator;
         this.slugValidationComponent = slugValidationComponent;
+        this.organizationServiceFacadePreconditionChecker = organizationServiceFacadePreconditionChecker;
     }
 
     @Override
@@ -215,6 +221,20 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         organizationUuidAwareLifecycleMediator.onUpdated(organization.getUuid());
         LOGGER.debug("Successfully processed organization facade update method for request - {}", request);
         return new UpdateOrganizationResultResponse(organization.getUuid());
+    }
+
+    @Transactional
+    @Override
+    public GetOrganizationInvitationByOrganizationResponse getOrganizationInvitation(final String organizationUuid) {
+        LOGGER.debug("Retrieving invitation organization having organizationUuid - {}", organizationUuid);
+        final SingleErrorWithStatus<OrganizationErrorResponseModel> error = organizationServiceFacadePreconditionChecker.checkGetOrganizationInvitation(organizationUuid);
+        if (error.isPresent()) {
+            return new GetOrganizationInvitationByOrganizationResponse(error.getHttpStatus(), error.getError());
+        }
+        final Organization organization = organizationService.getByUuid(organizationUuid);
+        return new GetOrganizationInvitationByOrganizationResponse(
+                new GetOrganizationInvitationByOrganizationResponseModel(organizationUuid, organization.getInvitation().getCustomerSubscriptionDefinitionUuid())
+        );
     }
 
     private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotAdmin(final User user) {

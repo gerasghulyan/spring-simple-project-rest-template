@@ -10,19 +10,17 @@ import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
 import com.vntana.core.model.invitation.organization.request.*;
 import com.vntana.core.model.invitation.organization.response.*;
-import com.vntana.core.model.invitation.organization.response.model.GetByOrganizationInvitationOrganizationResponseModel;
 import com.vntana.core.model.invitation.organization.response.model.GetInvitationOrganizationResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.invitation.organization.InvitationOrganizationServiceFacade;
 import com.vntana.core.rest.facade.invitation.organization.checker.InvitationOrganizationFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.organization.component.InvitationOrganizationSenderComponent;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
-import com.vntana.core.service.invitation.organization.dto.AcceptInvitationOrganizationDto;
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto;
 import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto;
 import com.vntana.core.service.invitation.organization.mediator.InvitationOrganizationUuidAwareLifecycleMediator;
 import com.vntana.core.service.organization.OrganizationService;
-import com.vntana.core.service.organization.dto.CreateOrganizationDto;
+import com.vntana.core.service.organization.dto.CreateOrganizationFromInvitationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecycleMediator;
 import com.vntana.core.service.token.TokenService;
@@ -31,10 +29,8 @@ import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -178,7 +174,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         final User user = userService.getByEmail(invitation.getEmail());
         final Mutable<String> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
-            final Organization organization = createOrganization(request.getOrganizationName(), request.getOrganizationSlug());
+            final Organization organization = createOrganizationWithInvitation(invitation, request.getOrganizationName(), request.getOrganizationSlug());
             userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
                     user.getUuid(),
                     organization.getUuid(),
@@ -208,7 +204,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         }
         final Mutable<String> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
-            final Organization organization = createOrganization(request.getOrganizationName(), request.getOrganizationSlug());
+            final Organization organization = createOrganizationWithInvitation(invitation, request.getOrganizationName(), request.getOrganizationSlug());
             userService.create(new CreateUserDto(
                     request.getUserFullName(),
                     invitation.getEmail(),
@@ -221,23 +217,6 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());
     }
 
-    @Override
-    public GetByOrganizationInvitationOrganizationResponse getByOrganization(final String organizationUuid) {
-        LOGGER.debug("Retrieving invitation organization having organizationUuid - {}", organizationUuid);
-        if (StringUtils.isEmpty(organizationUuid)) {
-            return new GetByOrganizationInvitationOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, InvitationOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
-        }
-        return invitationOrganizationService.findByOrganizationUuid(organizationUuid)
-                .map(invitationOrganization -> new GetByOrganizationInvitationOrganizationResponse(
-                        new GetByOrganizationInvitationOrganizationResponseModel(
-                                invitationOrganization.getUuid(),
-                                invitationOrganization.getCustomerSubscriptionDefinitionUuid())
-                ))
-                .orElseGet(() -> new GetByOrganizationInvitationOrganizationResponse(
-                        HttpStatus.SC_NOT_FOUND, InvitationOrganizationErrorResponseModel.NOT_FOUND
-                ));
-    }
-
     //region Utility methods
     private void afterOrganizationCreatedInTransaction(
             final String token,
@@ -246,14 +225,10 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
             final Organization organization) {
         mutableResponse.setValue(organization.getUuid());
         tokenService.findByTokenAndExpire(token);
-        final InvitationOrganization acceptedInvitationOrganization = invitationOrganizationService.accept(
-                new AcceptInvitationOrganizationDto(
-                        invitation.getUuid(),
-                        organization.getUuid()
-                ));
+        invitationOrganizationService.updateStatus(new UpdateInvitationOrganizationStatusDto(invitation.getUuid(), InvitationStatus.ACCEPTED));
         organizationLifecycleMediator.onCreated(organization);
         organizationUuidAwareLifecycleMediator.onCreated(organization.getUuid());
-        invitationOrganizationUuidAwareLifecycleMediator.onUpdated(acceptedInvitationOrganization.getUuid());
+        invitationOrganizationUuidAwareLifecycleMediator.onUpdated(invitation.getUuid());
     }
 
     private InvitationOrganization getInvitationOrganizationFromToken(final String token) {
@@ -261,12 +236,13 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         return tokenInvitationOrganization.getInvitationOrganization();
     }
 
-    private Organization createOrganization(final String name, final String slug) {
+    private Organization createOrganizationWithInvitation(final InvitationOrganization invitation, final String name, final String slug) {
         LOGGER.debug("Creating organization for invitation name - {} nad slug - {}", name, slug);
-        return organizationService.create(new CreateOrganizationDto(
+        return organizationService.createWithInvitation(new CreateOrganizationFromInvitationDto(
                 name,
-                slug)
-        );
+                slug,
+                invitation.getUuid()
+        ));
     }
 
     private SingleErrorWithStatus<InvitationOrganizationErrorResponseModel> checkAcceptErrorWithStatus(final AcceptInvitationOrganizationRequest request) {

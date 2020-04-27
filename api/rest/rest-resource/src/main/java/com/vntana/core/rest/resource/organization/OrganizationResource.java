@@ -1,6 +1,7 @@
 package com.vntana.core.rest.resource.organization;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
+import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
@@ -81,5 +82,13 @@ public class OrganizationResource {
         final UpdateOrganizationResultResponse response = organizationServiceFacade.update(request);
         LOGGER.debug("Successfully processed organization resource update method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "{organizationUuid}/organization-invitations/")
+    public ResponseEntity<GetOrganizationInvitationByOrganizationResponse> getOrganizationInvitation(@PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
+        final GetOrganizationInvitationByOrganizationResponse resultResponse = organizationServiceFacade.getOrganizationInvitation(organizationUuid);
+        LOGGER.debug("Successfully processed InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }

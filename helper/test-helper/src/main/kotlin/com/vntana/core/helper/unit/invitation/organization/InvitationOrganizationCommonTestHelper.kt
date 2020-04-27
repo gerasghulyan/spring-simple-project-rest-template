@@ -5,7 +5,6 @@ import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.invitation.organization.dto.CreateInvitationOrganizationDto
 import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto
-import com.vntana.core.service.invitation.organization.dto.AcceptInvitationOrganizationDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -45,9 +44,4 @@ open class InvitationOrganizationCommonTestHelper : AbstractCommonTestHelper() {
             uuid: String? = uuid(),
             status: InvitationStatus? = InvitationStatus.INVITED
     ) = UpdateInvitationOrganizationStatusDto(uuid, status)
-
-    fun buildUpdateOrganizationInvitationOrganizationDto(
-            uuid: String? = uuid(),
-            organizationUuid: String? = uuid()
-    ) = AcceptInvitationOrganizationDto(uuid, organizationUuid)
 }

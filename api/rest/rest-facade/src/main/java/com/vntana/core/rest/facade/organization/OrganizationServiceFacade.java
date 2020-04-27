@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.organization;
 
+import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
@@ -27,4 +28,6 @@ public interface OrganizationServiceFacade {
     GetOrganizationByUuidResultResponse getByUuid(final String uuid);
 
     UpdateOrganizationResultResponse update(final UpdateOrganizationRequest request);
+
+    GetOrganizationInvitationByOrganizationResponse getOrganizationInvitation(final String uuid);
 }
