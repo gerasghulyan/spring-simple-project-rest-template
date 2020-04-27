@@ -15,14 +15,17 @@ import org.junit.Test
 class OrganizationGetOrganizationInvitationServiceFacadeUnitTest : AbstractOrganizationServiceFacadeUnitTest() {
 
     @Test
-    fun `test getOrganizationInvitation when precondititon has error`() {
+    fun `test getOrganizationInvitation when precondition has error`() {
         resetAll()
         val organization = commonTestHelper.buildOrganizationWithInvitation()
         val httpStatusCode = randomInt()
         val errorModel = OrganizationErrorResponseModel.MISSING_UUID
         expect(organizationServiceFacadePreconditionCheckerComponent.checkGetOrganizationInvitation(organization.uuid)).andReturn(SingleErrorWithStatus.of(httpStatusCode, errorModel))
         replayAll()
-        assertBasicErrorResultResponse(organizationServiceFacade.getOrganizationInvitation(organization.uuid), errorModel)
+        organizationServiceFacade.getOrganizationInvitation(organization.uuid).let {
+            assertBasicErrorResultResponse(it, errorModel)
+            assertThat(it.httpStatusCode).isEqualTo(httpStatusCode)
+        }
         verifyAll()
     }
 

@@ -1,7 +1,6 @@
 package com.vntana.core.rest.resource.organization.test
 
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
-import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -16,7 +15,7 @@ class OrganizationGetOrganizationInvitationWebTest : AbstractOrganizationWebTest
     @Test
     fun `test getOrganizationInvitation`() {
         val email = email()
-        userResourceClient.createUser(userResourceTestHelper.buildCreateUserRequest(email = email))
+        userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = email))
         val invitationOrganizationUuid = invitationOrganizationResourceTestHelper.persistInvitationOrganization(email = email)
         val token = uuid()
         val request = invitationOrganizationResourceTestHelper.buildAcceptInvitationOrganizationRequest(token = token)

@@ -1,13 +1,13 @@
 package com.vntana.core.rest.resource.organization;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
-import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
 import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
@@ -86,9 +86,9 @@ public class OrganizationResource {
 
     @GetMapping(path = "{organizationUuid}/organization-invitations/")
     public ResponseEntity<GetOrganizationInvitationByOrganizationResponse> getOrganizationInvitation(@PathVariable("organizationUuid") final String organizationUuid) {
-        LOGGER.debug("Processing InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
+        LOGGER.debug("Processing getOrganizationInvitation method for organizationUuid - {}", organizationUuid);
         final GetOrganizationInvitationByOrganizationResponse resultResponse = organizationServiceFacade.getOrganizationInvitation(organizationUuid);
-        LOGGER.debug("Successfully processed InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
+        LOGGER.debug("Successfully processed getOrganizationInvitation method for organizationUuid - {}", organizationUuid);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }

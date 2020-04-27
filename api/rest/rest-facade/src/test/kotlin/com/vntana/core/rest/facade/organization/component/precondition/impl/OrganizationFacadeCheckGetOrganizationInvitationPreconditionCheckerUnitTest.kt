@@ -4,7 +4,6 @@ import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.facade.organization.component.precondition.AbstractOrganizationServicePreconditionCheckerUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions
-import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
 import org.junit.Test
 
@@ -57,4 +56,16 @@ class OrganizationFacadeCheckGetOrganizationInvitationPreconditionCheckerUnitTes
         verifyAll()
     }
 
+    @Test
+    fun `test when no errors`() {
+        resetAll()
+        val organization = commonTestHelper.buildOrganizationWithInvitation()
+        expect(organizationService.existsByUuid(organization.uuid)).andReturn(true)
+        expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
+        replayAll()
+        preconditionChecker.checkGetOrganizationInvitation(organization.uuid).let {
+            Assertions.assertThat(it.isPresent).isFalse()
+        }
+        verifyAll()
+    }
 }

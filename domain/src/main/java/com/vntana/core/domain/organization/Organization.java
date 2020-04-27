@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 import java.util.*;
 
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/15/19
@@ -19,7 +20,8 @@ import java.util.*;
 @Entity
 @Table(name = "organization", uniqueConstraints = {
         @UniqueConstraint(name = "uk_organization_id_slug", columnNames = {"organization_slug"}),
-        @UniqueConstraint(name = "uk_organization_uuid", columnNames = {"uuid"})
+        @UniqueConstraint(name = "uk_organization_uuid", columnNames = {"uuid"}),
+        @UniqueConstraint(name = "uk_organization_invitation_organization_id", columnNames = {"invitation_organization_id"})
 })
 public class Organization extends AbstractUuidAwareDomainEntity {
 
@@ -127,7 +129,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
                 .append("name", name)
                 .append("slug", slug)
                 .append("imageBlobId", imageBlobId)
-                .append("", status)
+                .append("status", status)
                 .append("invitation", getIdOrNull(invitation))
                 .toString();
     }
