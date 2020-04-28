@@ -1,6 +1,5 @@
 package com.vntana.core.rest.resource.health;
 
-import com.vntana.core.rest.facade.common.exception.ServiceFacadeRuntimeException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +16,6 @@ public class HealthCheckResource {
     @GetMapping(path = "/health")
     public String health() {
         return "OK";
-    }
-
-    @GetMapping(path = "/test-error")
-    public String error() {
-        throw new ServiceFacadeRuntimeException("test");
     }
 
 }
