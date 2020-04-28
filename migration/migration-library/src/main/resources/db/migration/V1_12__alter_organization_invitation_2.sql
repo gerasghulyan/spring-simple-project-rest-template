@@ -5,6 +5,6 @@ alter table organization
     add constraint uk_organization_invitation_organization_id unique (invitation_organization_id);
 
 alter table invitation_organization
-    drop constraint fk_settings_whitelist_ip_organization_id;
+    drop constraint if exists fk_settings_whitelist_ip_organization_id;
 alter table invitation_organization
-    drop column organization_id;
+    drop column if exists organization_id;
