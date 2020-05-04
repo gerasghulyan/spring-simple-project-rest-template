@@ -180,7 +180,6 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN)
             );
-            userService.makeVerified(user.getEmail());
             afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);
         });
         return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());
