@@ -1,14 +1,12 @@
 package com.vntana.core.rest.resource.boot.conf;
 
 import com.vntana.cache.conf.VntanaCacheConf;
+import com.vntana.commons.queue.conf.CommonsQueueAnnotationDrivenConf;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import com.vntana.commons.queue.conf.CommonsQueueAnnotationDrivenConf;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * Created by Arthur Asatryan.
@@ -23,4 +21,13 @@ import com.vntana.commons.queue.conf.CommonsQueueAnnotationDrivenConf;
 @EntityScan("com.vntana.core.domain")
 @PropertySource("classpath:application.properties")
 public class WebApplicationConfiguration {
+
+    @Bean(name = "notificationSenderExecutor")
+    public ThreadPoolTaskExecutor executor() {
+        final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        threadPoolTaskExecutor.setCorePoolSize(4);
+        threadPoolTaskExecutor.setCorePoolSize(64);
+        threadPoolTaskExecutor.setQueueCapacity(1024);
+        return threadPoolTaskExecutor;
+    }
 }
