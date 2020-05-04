@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.invitation.organization.impl
 
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.rest.resource.invitation.organization.AbstractInvitationOrganizationWebTest
+import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.springframework.http.HttpStatus
 
@@ -49,7 +50,7 @@ class InvitationOrganizationAcceptWebTest : AbstractInvitationOrganizationWebTes
     @Test
     fun `test accept`() {
         val email = email()
-        userResourceClient.createUser(userResourceTestHelper.buildCreateUserRequest(email = email))
+        val userUuid = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = email)).response().uuid
         val invitationOrganizationUuid = resourceTestHelper.persistInvitationOrganization(email = email)
         val token = uuid()
         val request = resourceTestHelper.buildAcceptInvitationOrganizationRequest(token = token)
@@ -57,7 +58,12 @@ class InvitationOrganizationAcceptWebTest : AbstractInvitationOrganizationWebTes
                 invitationOrganizationUuid = invitationOrganizationUuid,
                 token = token
         )
-        val response = invitationOrganizationResourceClient.accept(request)
-        assertBasicSuccessResultResponse(response)
+        invitationOrganizationResourceClient.accept(request).let {
+            assertBasicSuccessResultResponse(it)
+        }
+        userResourceClient.accountDetails(userUuid).let {
+            assertBasicSuccessResultResponse(it)
+            Assertions.assertThat(it.body.response().uuid).isEqualTo(userUuid)
+        }
     }
 }

@@ -180,6 +180,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN)
             );
+            userService.makeVerified(user.getEmail());
             afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);
         });
         return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());
@@ -205,13 +206,14 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         final Mutable<String> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
             final Organization organization = createOrganizationWithInvitation(invitation, request.getOrganizationName(), request.getOrganizationSlug());
-            userService.create(new CreateUserDto(
+            final User user = userService.create(new CreateUserDto(
                     request.getUserFullName(),
                     invitation.getEmail(),
                     request.getUserPassword(),
                     organization.getUuid(),
                     UserRole.ORGANIZATION_ADMIN
             ));
+            userService.makeVerified(user.getEmail());
             afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);
         });
         return new AcceptInvitationOrganizationResponse(mutableResponse.getValue());

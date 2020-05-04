@@ -3,6 +3,8 @@ package com.vntana.core.rest.resource.invitation.organization.impl
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.model.user.request.FindUserByEmailRequest
 import com.vntana.core.rest.resource.invitation.organization.AbstractInvitationOrganizationWebTest
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert
 import org.junit.Test
 import org.springframework.http.HttpStatus
 
@@ -77,7 +79,13 @@ class InvitationOrganizationAcceptAndSignUpWebTest : AbstractInvitationOrganizat
                 invitationOrganizationUuid = invitationOrganizationUuid,
                 token = token
         )
-        assertBasicSuccessResultResponse(invitationOrganizationResourceClient.acceptAndSignUp(request))
-        assertBasicSuccessResultResponse(userResourceClient.findByEmail(FindUserByEmailRequest(email)))
+        invitationOrganizationResourceClient.acceptAndSignUp(request).let {
+            assertBasicSuccessResultResponse(it)
+        }
+        val userUuid = userResourceClient.findByEmail(FindUserByEmailRequest(email)).response().uuid
+        userResourceClient.accountDetails(userUuid).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body.response().uuid).isEqualTo(userUuid)
+        }
     }
 }

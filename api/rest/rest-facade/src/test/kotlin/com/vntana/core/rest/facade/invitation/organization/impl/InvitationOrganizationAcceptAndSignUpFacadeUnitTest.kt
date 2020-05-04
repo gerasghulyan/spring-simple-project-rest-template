@@ -84,6 +84,7 @@ class InvitationOrganizationAcceptAndSignUpFacadeUnitTest : AbstractInvitationOr
                 organization.uuid,
                 UserRole.ORGANIZATION_ADMIN)
         )).andReturn(user)
+        expect(userService.makeVerified(user.email)).andReturn(user)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationOrganization)
         expect(invitationOrganizationService.updateStatus(UpdateInvitationOrganizationStatusDto(
                 invitationOrganization.uuid,
