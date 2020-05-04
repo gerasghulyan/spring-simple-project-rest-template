@@ -3,6 +3,7 @@ package com.vntana.core.rest.resource.invitation.organization.impl
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.rest.resource.invitation.organization.AbstractInvitationOrganizationWebTest
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.springframework.http.HttpStatus
 
@@ -63,7 +64,8 @@ class InvitationOrganizationAcceptWebTest : AbstractInvitationOrganizationWebTes
         }
         userResourceClient.accountDetails(userUuid).let {
             assertBasicSuccessResultResponse(it)
-            Assertions.assertThat(it.body.response().uuid).isEqualTo(userUuid)
+            assertThat(it.body.response().uuid).isEqualTo(userUuid)
+            assertThat(it.body.response().isEmailVerified).isTrue()
         }
     }
 }

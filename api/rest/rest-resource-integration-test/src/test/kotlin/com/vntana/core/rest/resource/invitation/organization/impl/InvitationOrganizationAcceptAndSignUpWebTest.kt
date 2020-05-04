@@ -86,6 +86,7 @@ class InvitationOrganizationAcceptAndSignUpWebTest : AbstractInvitationOrganizat
         userResourceClient.accountDetails(userUuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body.response().uuid).isEqualTo(userUuid)
+            assertThat(it.body.response().isEmailVerified).isTrue()
         }
     }
 }
