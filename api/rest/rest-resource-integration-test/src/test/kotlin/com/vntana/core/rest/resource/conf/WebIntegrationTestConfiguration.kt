@@ -5,8 +5,6 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Lazy
-import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import java.util.concurrent.Executor
 
@@ -22,8 +20,6 @@ import java.util.concurrent.Executor
 @TestConfiguration
 class WebIntegrationTestConfiguration {
 
-    @Primary
-    @Lazy(false)
     @Bean(name = ["notificationSenderExecutor"])
     fun executor(): Executor = Executor { it.run() }
 
