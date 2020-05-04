@@ -82,12 +82,4 @@ public class InvitationOrganizationResource {
         LOGGER.debug("Successfully processed InvitationOrganizationResource acceptAndSignUp method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
-
-    @GetMapping(path = "/subscription-definition/{organizationUuid}")
-    public ResponseEntity<GetByOrganizationInvitationOrganizationResponse> getByOrganization(@PathVariable("organizationUuid") final String organizationUuid) {
-        LOGGER.debug("Processing InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
-        final GetByOrganizationInvitationOrganizationResponse resultResponse = invitationOrganizationServiceFacade.getByOrganization(organizationUuid);
-        LOGGER.debug("Successfully processed InvitationOrganizationResource getByOrganization method for organizationUuid - {}", organizationUuid);
-        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
-    }
 }

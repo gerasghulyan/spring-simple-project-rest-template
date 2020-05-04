@@ -23,6 +23,4 @@ public interface InvitationOrganizationServiceFacade {
     AcceptInvitationOrganizationResponse accept(final AcceptInvitationOrganizationRequest request);
 
     AcceptInvitationOrganizationResponse acceptAndSignUp(AcceptAndSignUpInvitationOrganizationRequest request);
-
-    GetByOrganizationInvitationOrganizationResponse getByOrganization(final String organizationUuid);
 }

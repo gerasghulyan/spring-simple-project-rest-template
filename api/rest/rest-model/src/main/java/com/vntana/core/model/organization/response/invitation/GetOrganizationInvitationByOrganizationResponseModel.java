@@ -1,4 +1,4 @@
-package com.vntana.core.model.invitation.organization.response.model;
+package com.vntana.core.model.organization.response.invitation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel;
@@ -11,16 +11,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 3/26/20
  * Time: 2:23 PM
  */
-public class GetByOrganizationInvitationOrganizationResponseModel extends AbstractUuidAwareResponseModel {
+public class GetOrganizationInvitationByOrganizationResponseModel extends AbstractUuidAwareResponseModel {
 
     @JsonProperty("customerSubscriptionDefinitionUuid")
     private String customerSubscriptionDefinitionUuid;
 
-    public GetByOrganizationInvitationOrganizationResponseModel() {
+    public GetOrganizationInvitationByOrganizationResponseModel() {
         super();
     }
 
-    public GetByOrganizationInvitationOrganizationResponseModel(final String uuid, final String customerSubscriptionDefinitionUuid) {
+    public GetOrganizationInvitationByOrganizationResponseModel(final String uuid, final String customerSubscriptionDefinitionUuid) {
         super(uuid);
         this.customerSubscriptionDefinitionUuid = customerSubscriptionDefinitionUuid;
     }
@@ -30,10 +30,10 @@ public class GetByOrganizationInvitationOrganizationResponseModel extends Abstra
         if (this == o) {
             return true;
         }
-        if (!(o instanceof GetByOrganizationInvitationOrganizationResponseModel)) {
+        if (!(o instanceof GetOrganizationInvitationByOrganizationResponseModel)) {
             return false;
         }
-        final GetByOrganizationInvitationOrganizationResponseModel that = (GetByOrganizationInvitationOrganizationResponseModel) o;
+        final GetOrganizationInvitationByOrganizationResponseModel that = (GetOrganizationInvitationByOrganizationResponseModel) o;
         return new EqualsBuilder()
                 .append(customerSubscriptionDefinitionUuid, that.customerSubscriptionDefinitionUuid)
                 .isEquals();

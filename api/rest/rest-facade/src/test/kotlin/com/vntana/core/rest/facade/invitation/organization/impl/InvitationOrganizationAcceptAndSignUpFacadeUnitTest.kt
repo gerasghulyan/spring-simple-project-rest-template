@@ -4,17 +4,12 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.domain.invitation.InvitationStatus
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
-import com.vntana.core.model.invitation.organization.request.AcceptInvitationOrganizationRequest
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.invitation.organization.AbstractInvitationOrganizationFacadeUnitTest
-import com.vntana.core.service.invitation.organization.dto.AcceptInvitationOrganizationDto
 import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto
-import com.vntana.core.service.organization.dto.CreateOrganizationDto
 import com.vntana.core.service.user.dto.CreateUserDto
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto
 import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
-import org.junit.Ignore
 import org.junit.Test
 
 /**
@@ -72,16 +67,14 @@ class InvitationOrganizationAcceptAndSignUpFacadeUnitTest : AbstractInvitationOr
         val invitationOrganization = tokenInvitationOrganization.invitationOrganization
         val user = userCommonTestHelper.buildUser()
         val organization = organizationCommonTestHelper.buildOrganization()
+        val dto = organizationCommonTestHelper.buildCreateOrganizationFromInvitationDto(request.organizationName, request.organizationSlug, invitationOrganization.uuid)
         resetAll()
         expect(preconditionChecker.checkAcceptInvitationForPossibleErrors(acceptRequest)).andReturn(SingleErrorWithStatus.empty())
-        expect(tokenInvitationOrganizationService.getByToken(request.getToken())).andReturn(tokenInvitationOrganization)
+        expect(tokenInvitationOrganizationService.getByToken(request.token)).andReturn(tokenInvitationOrganization)
         expect(preconditionChecker.checkAcceptInvitationWhenUserNotExistsForPossibleErrors(invitationOrganization.email)).andReturn(SingleErrorWithStatus.empty())
         expect(persistenceUtilityService.runInNewTransaction(EasyMock.isA(Executable::class.java)))
                 .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
-        expect(organizationService.create(CreateOrganizationDto(
-                request.organizationName,
-                request.organizationSlug)
-        )).andReturn(organization)
+        expect(organizationService.createWithInvitation(dto)).andReturn(organization)
         expect(organizationLifecycleMediator.onCreated(organization))
         expect(organizationUuidAwareLifecycleMediator.onCreated(organization.uuid)).andVoid()
         expect(userService.create(CreateUserDto(
@@ -91,10 +84,11 @@ class InvitationOrganizationAcceptAndSignUpFacadeUnitTest : AbstractInvitationOr
                 organization.uuid,
                 UserRole.ORGANIZATION_ADMIN)
         )).andReturn(user)
+        expect(userService.makeVerified(user.email)).andReturn(user)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationOrganization)
-        expect(invitationOrganizationService.accept(AcceptInvitationOrganizationDto(
+        expect(invitationOrganizationService.updateStatus(UpdateInvitationOrganizationStatusDto(
                 invitationOrganization.uuid,
-                organization.uuid
+                InvitationStatus.ACCEPTED
         ))).andReturn(invitationOrganization)
         expect(invitationOrganizationUuidAwareLifecycleMediator.onUpdated(invitationOrganization.uuid)).andVoid()
         replayAll()

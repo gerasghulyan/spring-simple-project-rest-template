@@ -2,9 +2,11 @@ package com.vntana.core.rest.facade.organization
 
 import com.vntana.core.helper.organization.OrganizationRestTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
+import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
+import com.vntana.core.rest.facade.organization.component.precondition.OrganizationServiceFacadePreconditionCheckerComponent
 import com.vntana.core.rest.facade.organization.impl.OrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.common.component.SlugValidationComponent
@@ -53,6 +55,9 @@ abstract class AbstractOrganizationServiceFacadeUnitTest : AbstractServiceFacade
     @Mock
     protected lateinit var userService: UserService
 
+    @Mock
+    protected lateinit var organizationServiceFacadePreconditionCheckerComponent: OrganizationServiceFacadePreconditionCheckerComponent
+
     @Before
     fun before() {
         organizationServiceFacade = OrganizationServiceFacadeImpl(
@@ -62,7 +67,8 @@ abstract class AbstractOrganizationServiceFacadeUnitTest : AbstractServiceFacade
                 persistenceUtilityService,
                 organizationLifecycleMediator,
                 organizationUuidAwareLifecycleMediator,
-                slugValidationComponent
+                slugValidationComponent,
+                organizationServiceFacadePreconditionCheckerComponent
         )
     }
 }

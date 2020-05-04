@@ -7,6 +7,7 @@ import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlu
 import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
 import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
@@ -81,5 +82,13 @@ public class OrganizationResource {
         final UpdateOrganizationResultResponse response = organizationServiceFacade.update(request);
         LOGGER.debug("Successfully processed organization resource update method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "{organizationUuid}/organization-invitations/")
+    public ResponseEntity<GetOrganizationInvitationByOrganizationResponse> getOrganizationInvitation(@PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing getOrganizationInvitation method for organizationUuid - {}", organizationUuid);
+        final GetOrganizationInvitationByOrganizationResponse resultResponse = organizationServiceFacade.getOrganizationInvitation(organizationUuid);
+        LOGGER.debug("Successfully processed getOrganizationInvitation method for organizationUuid - {}", organizationUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }

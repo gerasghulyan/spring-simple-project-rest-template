@@ -6,9 +6,7 @@ import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.invitation.organization.AbstractInvitationOrganizationFacadeUnitTest
-import com.vntana.core.service.invitation.organization.dto.AcceptInvitationOrganizationDto
 import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto
-import com.vntana.core.service.organization.dto.CreateOrganizationDto
 import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto
 import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
@@ -54,17 +52,15 @@ class InvitationOrganizationAcceptFacadeUnitTest : AbstractInvitationOrganizatio
         val invitationOrganization = tokenInvitationOrganization.invitationOrganization
         val user = userCommonTestHelper.buildUser()
         val organization = organizationCommonTestHelper.buildOrganization()
+        val dto = organizationCommonTestHelper.buildCreateOrganizationFromInvitationDto(request.organizationName, request.organizationSlug, invitationOrganization.uuid)
         resetAll()
         expect(preconditionChecker.checkAcceptInvitationForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(tokenInvitationOrganizationService.getByToken(request.getToken())).andReturn(tokenInvitationOrganization)
         expect(preconditionChecker.checkAcceptInvitationWhenUserExistsForPossibleErrors(invitationOrganization.email)).andReturn(SingleErrorWithStatus.empty())
-        expect(userService.getByEmail(invitationOrganization.getEmail())).andReturn(user)
+        expect(userService.getByEmail(invitationOrganization.email)).andReturn(user)
         expect(persistenceUtilityService.runInNewTransaction(EasyMock.isA(Executable::class.java)))
                 .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
-        expect(organizationService.create(CreateOrganizationDto(
-                request.organizationName,
-                request.organizationSlug)
-        )).andReturn(organization)
+        expect(organizationService.createWithInvitation(dto)).andReturn(organization)
         expect(organizationLifecycleMediator.onCreated(organization))
         expect(organizationUuidAwareLifecycleMediator.onCreated(organization.uuid)).andVoid()
         expect(userService.grantOrganizationRole(UserGrantOrganizationRoleDto(
@@ -73,9 +69,9 @@ class InvitationOrganizationAcceptFacadeUnitTest : AbstractInvitationOrganizatio
                 UserRole.ORGANIZATION_ADMIN)
         )).andVoid()
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationOrganization)
-        expect(invitationOrganizationService.accept(AcceptInvitationOrganizationDto(
+        expect(invitationOrganizationService.updateStatus(UpdateInvitationOrganizationStatusDto(
                 invitationOrganization.uuid,
-                organization.uuid
+                InvitationStatus.ACCEPTED
         ))).andReturn(invitationOrganization)
         expect(invitationOrganizationUuidAwareLifecycleMediator.onUpdated(invitationOrganization.uuid)).andVoid()
         replayAll()

@@ -29,6 +29,6 @@ abstract class AbstractInvitationOrganizationServiceUnitTest : AbstractServiceUn
 
     @Before
     fun prepare() {
-        invitationOrganizationService = InvitationOrganizationServiceImpl(invitationOrganizationRepository, organizationService)
+        invitationOrganizationService = InvitationOrganizationServiceImpl(invitationOrganizationRepository)
     }
 }

@@ -1,6 +1,7 @@
 package com.vntana.core.helper.unit
 
 import com.vntana.core.helper.AbstractTestHelper
+import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import org.springframework.data.domain.PageRequest
 
 /**
