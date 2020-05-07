@@ -22,8 +22,8 @@ import com.vntana.core.model.organization.response.invitation.GetOrganizationInv
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
 import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
-import com.vntana.core.model.user.response.model.GetUserOrganizationsGridResponseModel;
-import com.vntana.core.model.user.response.model.GetUserOrganizationsResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserOrganizationsGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserOrganizationsResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import com.vntana.core.rest.facade.organization.component.precondition.OrganizationServiceFacadePreconditionCheckerComponent;

@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user.impl;
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserOrganizationRole;
 import com.vntana.core.domain.user.UserRole;
@@ -13,7 +14,16 @@ import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.account.model.AccountUserResponseModel;
 import com.vntana.core.model.user.response.account.model.AccountUserRolesModel;
-import com.vntana.core.model.user.response.model.*;
+import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
+import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.get.model.GetUsersByOrganizationGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUsersByOrganizationResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUsersByRoleAndOrganizationUuidGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUsersByRoleAndOrganizationUuidResponseModel;
+import com.vntana.core.model.user.response.model.CreateUserResponseModel;
+import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
+import com.vntana.core.model.user.response.model.FindUserByUuidResponseModel;
+import com.vntana.core.model.user.response.model.ResetUserPasswordResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent;
@@ -27,6 +37,7 @@ import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediat
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
+import com.vntana.core.service.user.role.UserRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -57,6 +68,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceFacadeImpl.class);
 
     private final UserService userService;
+    private final UserRoleService userRoleService;
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final UserFacadePreconditionCheckerComponent preconditionCheckerComponent;
@@ -66,6 +78,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
 
     public UserServiceFacadeImpl(final UserService userService,
+                                 final UserRoleService userRoleService,
                                  final OrganizationService organizationService,
                                  final PersistenceUtilityService persistenceUtilityService,
                                  final UserFacadePreconditionCheckerComponent preconditionCheckerComponent,
@@ -75,6 +88,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                                  final OrganizationLifecycleMediator organizationLifecycleMediator) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
+        this.userRoleService = userRoleService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.preconditionCheckerComponent = preconditionCheckerComponent;
@@ -280,6 +294,29 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                                 user.getImageBlobId())
                         ).collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
         ));
+    }
+
+    @Transactional
+    @Override
+    public GetUsersByOrganizationResponse getByOrganizationUuid(final String organizationUuid) {
+        LOGGER.debug("Processing user facade getByOrganizationUuid for organizationUuid - {}", organizationUuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkGetByOrganizationUuid(organizationUuid);
+        if (error.isPresent()) {
+            return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
+        }
+        final List<AbstractUserRole> userRoles = userRoleService.findAllByOrganizationUuid(organizationUuid);
+        final GetUsersByOrganizationGridResponseModel responseModel = userRoles.stream().map(userRole -> {
+            final User user = userRole.getUser();
+            return new GetUsersByOrganizationResponseModel(
+                    user.getUuid(),
+                    user.getFullName(),
+                    user.getEmail(),
+                    user.getImageBlobId(),
+                    UserRoleModel.valueOf(userRole.getUserRole().name())
+            );
+        }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
+        LOGGER.debug("Successfully processed user facade getByOrganizationUuid for organizationUuid - {}", organizationUuid);
+        return new GetUsersByOrganizationResponse(responseModel);
     }
 
     private SingleErrorWithStatus<UserErrorResponseModel> checkGetByRoleAndOrganizationUuidPossibleErrors(final UserRoleModel userRole, final String organizationUuid) {

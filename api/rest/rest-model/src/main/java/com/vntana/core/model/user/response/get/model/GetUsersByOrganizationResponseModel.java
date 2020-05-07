@@ -1,17 +1,18 @@
-package com.vntana.core.model.user.response.model;
+package com.vntana.core.model.user.response.get.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel;
+import com.vntana.core.model.auth.response.UserRoleModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Created by Manuk Gharslyan.
- * Date: 4/7/2020
- * Time: 1:27 PM
+ * Created by Arman Gevorgyan.
+ * Date: 5/7/20
+ * Time: 4:44 PM
  */
-public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuidAwareResponseModel {
+public class GetUsersByOrganizationResponseModel extends AbstractUuidAwareResponseModel {
 
     @JsonProperty("fullName")
     private String fullName;
@@ -22,37 +23,51 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
     @JsonProperty("imageBlobId")
     private String imageBlobId;
 
-    public GetUsersByRoleAndOrganizationUuidResponseModel() {
+    @JsonProperty("role")
+    private UserRoleModel userRoleModel;
+
+    public GetUsersByOrganizationResponseModel() {
+        super();
     }
 
-    public GetUsersByRoleAndOrganizationUuidResponseModel(final String uuid, final String fullName, final String email, final String imageBlobId) {
+    public GetUsersByOrganizationResponseModel(final String uuid,
+                                               final String fullName,
+                                               final String email,
+                                               final String imageBlobId,
+                                               final UserRoleModel userRoleModel) {
         super(uuid);
         this.fullName = fullName;
         this.email = email;
         this.imageBlobId = imageBlobId;
+        this.userRoleModel = userRoleModel;
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof GetUsersByRoleAndOrganizationUuidResponseModel)) return false;
-
-        final GetUsersByRoleAndOrganizationUuidResponseModel that = (GetUsersByRoleAndOrganizationUuidResponseModel) o;
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GetUsersByOrganizationResponseModel)) {
+            return false;
+        }
+        final GetUsersByOrganizationResponseModel that = (GetUsersByOrganizationResponseModel) o;
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(imageBlobId, that.imageBlobId)
+                .append(userRoleModel, that.userRoleModel)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .appendSuper(super.hashCode())
                 .append(fullName)
                 .append(email)
                 .append(imageBlobId)
+                .append(userRoleModel)
                 .toHashCode();
     }
 
@@ -63,6 +78,7 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
                 .append("fullName", fullName)
                 .append("email", email)
                 .append("imageBlobId", imageBlobId)
+                .append("userRoleModel", userRoleModel)
                 .toString();
     }
 
@@ -88,5 +104,13 @@ public class GetUsersByRoleAndOrganizationUuidResponseModel extends AbstractUuid
 
     public void setImageBlobId(final String imageBlobId) {
         this.imageBlobId = imageBlobId;
+    }
+
+    public UserRoleModel getUserRoleModel() {
+        return userRoleModel;
+    }
+
+    public void setUserRoleModel(final UserRoleModel userRoleModel) {
+        this.userRoleModel = userRoleModel;
     }
 }
