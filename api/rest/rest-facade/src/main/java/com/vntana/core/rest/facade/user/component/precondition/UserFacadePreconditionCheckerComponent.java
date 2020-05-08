@@ -11,4 +11,6 @@ import com.vntana.core.model.user.error.UserErrorResponseModel;
 public interface UserFacadePreconditionCheckerComponent {
 
     SingleErrorWithStatus<UserErrorResponseModel> checkAccountDetails(final String userUuid);
+
+    SingleErrorWithStatus<UserErrorResponseModel> checkGetByOrganizationUuid(final String organizationUuid);
 }

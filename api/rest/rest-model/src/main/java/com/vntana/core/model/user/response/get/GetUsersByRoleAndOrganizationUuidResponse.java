@@ -1,8 +1,8 @@
-package com.vntana.core.model.user.response;
+package com.vntana.core.model.user.response.get;
 
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
-import com.vntana.core.model.user.response.model.GetUsersByRoleAndOrganizationUuidGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUsersByRoleAndOrganizationUuidGridResponseModel;
 
 import java.util.List;
 

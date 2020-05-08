@@ -22,7 +22,7 @@ class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
         flushAndClear()
         val createDto = integrationTestHelper.buildUserCreateDto(organizationUuid = organization.uuid)
         userService.create(createDto).let {
-            flush()
+            flushAndClear()
             assertThat(it).isNotNull
             assertThat(it.fullName).isEqualTo(createDto.fullName)
             assertThat(it.email).isEqualTo(createDto.email)

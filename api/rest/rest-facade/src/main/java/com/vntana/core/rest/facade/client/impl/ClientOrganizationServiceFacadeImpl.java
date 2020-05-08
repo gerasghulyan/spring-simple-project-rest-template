@@ -16,8 +16,8 @@ import com.vntana.core.model.client.response.CreateClientOrganizationResultRespo
 import com.vntana.core.model.client.response.UpdateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.get.*;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
-import com.vntana.core.model.user.response.model.GetUserClientOrganizationsGridResponseModel;
-import com.vntana.core.model.user.response.model.GetUserClientOrganizationsResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.service.client.ClientOrganizationService;

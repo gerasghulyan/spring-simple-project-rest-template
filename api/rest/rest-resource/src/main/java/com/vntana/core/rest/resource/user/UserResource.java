@@ -5,6 +5,8 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
+import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +80,14 @@ public class UserResource {
         LOGGER.debug("Processing retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
         final GetUsersByRoleAndOrganizationUuidResponse response = userServiceFacade.getByRoleAndOrganizationUuid(role, organizationUuid);
         LOGGER.debug("Successfully proceeded retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "/organizations/{organizationUuid}")
+    public ResponseEntity<GetUsersByOrganizationResponse> getUsersByOrganization(@PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing retrieve users by organizationUuid - {}", organizationUuid);
+        final GetUsersByOrganizationResponse response = userServiceFacade.getByOrganizationUuid(organizationUuid);
+        LOGGER.debug("Successfully proceeded retrieve users by organizationUuid - {}", organizationUuid);
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 

@@ -1,4 +1,4 @@
-package com.vntana.core.model.user.response.model;
+package com.vntana.core.model.user.response.get.model;
 
 import com.vntana.commons.api.model.response.impl.AbstractGridResponseModel;
 
