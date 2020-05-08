@@ -7,7 +7,7 @@ package com.vntana.core.model.auth.response;
  */
 public enum UserRoleModel {
     SUPER_ADMIN,
-    ORGANIZATION_ADMIN,
+    ORGANIZATION_OWNER,
     CLIENT_ADMIN,
     ASSET_MANAGER
 }

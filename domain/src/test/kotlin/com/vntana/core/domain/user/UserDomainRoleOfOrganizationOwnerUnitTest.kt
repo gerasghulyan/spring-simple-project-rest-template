@@ -10,7 +10,7 @@ import org.junit.Test
  * Date: 10/11/19
  * Time: 3:42 PM
  */
-class UserDomainRoleOfOrganizationAdminUnitTest : AbstractDomainUnitTest() {
+class UserDomainRoleOfOrganizationOwnerUnitTest : AbstractDomainUnitTest() {
     @Test
     fun `test roleOf when not found`() {
         val organization = Organization()
@@ -24,7 +24,7 @@ class UserDomainRoleOfOrganizationAdminUnitTest : AbstractDomainUnitTest() {
         val user = User(uuid(), uuid(), uuid())
         user.grantOrganizationRole(organization)
         val role = user.roleOfOrganization(organization).get()
-        assertThat(role.userRole).isEqualTo(UserRole.ORGANIZATION_ADMIN)
+        assertThat(role.userRole).isEqualTo(UserRole.ORGANIZATION_OWNER)
         assertThat(role.user).isEqualTo(user)
         assertThat(role.organization).isEqualTo(organization)
     }

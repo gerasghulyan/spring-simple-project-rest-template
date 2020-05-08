@@ -23,7 +23,7 @@ class OrganizationGetUserOrganizationsByUserUuidAndRoleServiceIntegrationTest : 
         flushAndClear()
         organizationService.getUserOrganizationsByUserUuidAndRole(integrationTestHelper.buildGetUserOrganizationsByUserUuidAndRoleDto(
                 userUuid = user.uuid,
-                userRole = UserRole.ORGANIZATION_ADMIN
+                userRole = UserRole.ORGANIZATION_OWNER
         )).let {
             assertThat(it).isNotEmpty
             assertThat(it.size).isEqualTo(3)

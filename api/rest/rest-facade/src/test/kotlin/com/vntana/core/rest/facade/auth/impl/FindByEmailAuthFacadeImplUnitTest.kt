@@ -39,7 +39,7 @@ class FindByEmailAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTest() {
     fun `test findByEmail`() {
         // test data
         val user = userHelper.buildUser()
-        val secureUser = SecureFindUserByEmailResponseModel(user.uuid, user.email, user.password, listOf(UserRoleModel.ORGANIZATION_ADMIN))
+        val secureUser = SecureFindUserByEmailResponseModel(user.uuid, user.email, user.password, listOf(UserRoleModel.ORGANIZATION_OWNER))
         resetAll()
         // expectations
         expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))

@@ -84,7 +84,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
             assertThat(it.response().totalCount()).isEqualTo(2)
             assertThat(it.response().items()[0].uuid).isEqualTo(organization.uuid)
             assertThat(it.response().items()[0].name).isEqualTo(organization.name)
-            assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             assertThat(it.response().items()[1].uuid).isEqualTo(clientOrganization.organization.uuid)
             assertThat(it.response().items()[1].name).isEqualTo(clientOrganization.organization.name)
             assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.CLIENT_ADMIN)

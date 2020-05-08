@@ -17,6 +17,6 @@ public interface UserRoleRepository extends JpaRepository<AbstractUserRole, Long
     @Query("select role from AbstractUserRole role where role.id in " +
             "(Select aur.id from UserClientOrganizationRole ucor join AbstractUserRole aur on aur.id = ucor.id where ucor.clientOrganization.organization.uuid = :organizationUuid)" +
             " or role.id in " +
-            "(Select aur.id from UserOrganizationRole uor join AbstractUserRole aur on aur.id = uor.id where uor.organization.uuid = :organizationUuid)")
+            "(Select aur.id from UserOrganizationOwnerRole uoor join AbstractUserRole aur on aur.id = uoor.id where uoor.organization.uuid = :organizationUuid)")
     List<AbstractUserRole> findAllByOrganizationUuid(@Param("organizationUuid") final String organizationUuid);
 }

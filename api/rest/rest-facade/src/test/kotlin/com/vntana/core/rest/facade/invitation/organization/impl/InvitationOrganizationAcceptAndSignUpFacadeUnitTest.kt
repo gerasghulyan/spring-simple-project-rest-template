@@ -82,7 +82,7 @@ class InvitationOrganizationAcceptAndSignUpFacadeUnitTest : AbstractInvitationOr
                 invitationOrganization.email,
                 request.userPassword,
                 organization.uuid,
-                UserRole.ORGANIZATION_ADMIN)
+                UserRole.ORGANIZATION_OWNER)
         )).andReturn(user)
         expect(userService.makeVerified(user.email)).andReturn(user)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationOrganization)

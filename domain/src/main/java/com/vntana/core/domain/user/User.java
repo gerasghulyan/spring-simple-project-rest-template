@@ -69,7 +69,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         if (roleOfOrganization(organization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in organization - %s", this, organization));
         }
-        final AbstractUserRole role = new UserOrganizationRole(this, organization);
+        final AbstractUserRole role = new UserOrganizationOwnerRole(this, organization);
         mutableRoles().add(role);
     }
 
@@ -93,7 +93,7 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .findAny();
     }
 
-    public Optional<UserOrganizationRole> roleOfOrganization(final Organization organization) {
+    public Optional<UserOrganizationOwnerRole> roleOfOrganization(final Organization organization) {
         return immutableOrganizationRoles().stream()
                 .filter(role -> role.getOrganization().equals(organization))
                 .findAny();
@@ -148,11 +148,11 @@ public class User extends AbstractUuidAwareDomainEntity {
     //endregion
 
     //region Utility methods
-    public List<UserOrganizationRole> immutableOrganizationRoles() {
+    public List<UserOrganizationOwnerRole> immutableOrganizationRoles() {
         return Optional.ofNullable(roles)
                 .map(theRoles -> theRoles.stream()
-                        .filter(UserOrganizationRole.class::isInstance)
-                        .map(UserOrganizationRole.class::cast)
+                        .filter(UserOrganizationOwnerRole.class::isInstance)
+                        .map(UserOrganizationOwnerRole.class::cast)
                         .collect(Collectors.toList())
                 )
                 .map(Collections::unmodifiableList)

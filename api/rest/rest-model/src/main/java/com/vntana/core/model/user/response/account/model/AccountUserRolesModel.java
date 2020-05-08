@@ -18,17 +18,17 @@ public class AccountUserRolesModel implements ResponseModel {
     @JsonProperty("isSuperAdmin")
     private Boolean isSuperAdmin;
 
-    @JsonProperty("adminInOrganization")
-    private List<String> adminInOrganization;
+    @JsonProperty("ownerInOrganization")
+    private List<String> ownerInOrganization;
 
     public AccountUserRolesModel() {
         super();
     }
 
-    public AccountUserRolesModel(final Boolean isSuperAdmin, final List<String> adminInOrganization) {
+    public AccountUserRolesModel(final Boolean isSuperAdmin, final List<String> ownerInOrganization) {
         super();
         this.isSuperAdmin = isSuperAdmin;
-        this.adminInOrganization = adminInOrganization;
+        this.ownerInOrganization = ownerInOrganization;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class AccountUserRolesModel implements ResponseModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("isSuperAdmin", isSuperAdmin)
-                .append("adminInOrganization", adminInOrganization)
+                .append("adminInOrganization", ownerInOrganization)
                 .toString();
     }
 
@@ -69,12 +69,12 @@ public class AccountUserRolesModel implements ResponseModel {
         return this;
     }
 
-    public List<String> getAdminInOrganization() {
-        return adminInOrganization;
+    public List<String> getOwnerInOrganization() {
+        return ownerInOrganization;
     }
 
-    public AccountUserRolesModel setAdminInOrganization(final List<String> adminInOrganization) {
-        this.adminInOrganization = adminInOrganization;
+    public AccountUserRolesModel setOwnerInOrganization(final List<String> ownerInOrganization) {
+        this.ownerInOrganization = ownerInOrganization;
         return this;
     }
 }

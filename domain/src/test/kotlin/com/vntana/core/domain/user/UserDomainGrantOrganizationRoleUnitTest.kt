@@ -29,6 +29,6 @@ class UserDomainGrantOrganizationRoleUnitTest : AbstractDomainUnitTest() {
         val role = user.roleOfOrganization(organization).get()
         assertThat(role.user).isEqualTo(user)
         assertThat(role.organization).isEqualTo(organization)
-        assertThat(role.userRole).isEqualTo(UserRole.ORGANIZATION_ADMIN)
+        assertThat(role.userRole).isEqualTo(UserRole.ORGANIZATION_OWNER)
     }
 }

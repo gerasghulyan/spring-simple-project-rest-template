@@ -18,7 +18,7 @@ import java.util.*
 class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractClientOrganizationServiceFacadeUnitTest() {
 
     @Test
-    fun `test getClientOrganizations when organization admin`() {
+    fun `test getClientOrganizations when organization owner`() {
         // test data
         resetAll()
         val organization = organizationCommonTestHelper.buildOrganization()
@@ -42,7 +42,7 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
             assertThat(organizationClientOrganization.slug).isEqualTo(clientOrganization.slug)
             assertThat(organizationClientOrganization.uuid).isEqualTo(clientOrganization.uuid)
             assertThat(organizationClientOrganization.imageBlobId).isEqualTo(clientOrganization.imageBlobId)
-            assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             assertThat(organizationClientOrganization.created).isEqualTo(clientOrganization.created)
         }
         verifyAll()

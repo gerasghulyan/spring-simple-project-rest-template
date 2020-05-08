@@ -16,7 +16,7 @@ class UserFindByRoleAndOrganizationUuidServiceIntegrationTest : AbstractUserServ
     fun `test find`() {
         val organization = organizationIntegrationTest.persistOrganization()
         val user = integrationTestHelper.persistUser(organizationUuid = organization.uuid)
-        userService.findByRoleAndOrganizationUuid(UserRole.ORGANIZATION_ADMIN, organization.uuid).let {
+        userService.findByRoleAndOrganizationUuid(UserRole.ORGANIZATION_OWNER, organization.uuid).let {
             assertThat(it).isNotEmpty
             assertThat(it).containsOnly(user)
         }

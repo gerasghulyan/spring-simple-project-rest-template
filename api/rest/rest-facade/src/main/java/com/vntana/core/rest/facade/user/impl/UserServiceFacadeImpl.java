@@ -5,7 +5,7 @@ import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserOrganizationRole;
+import com.vntana.core.domain.user.UserOrganizationOwnerRole;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
@@ -119,7 +119,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                     request.getEmail(),
                     request.getPassword(),
                     organization.getUuid(),
-                    UserRole.ORGANIZATION_ADMIN
+                    UserRole.ORGANIZATION_OWNER
             ));
             organizationLifecycleMediator.onCreated(organization);
             mutableResponse.setValue(new CreateUserResponseModel(user.getUuid(), organization.getUuid()));
@@ -179,8 +179,8 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final User user = userService.getByUuid(uuid);
         final AccountUserRolesModel rolesModel = new AccountUserRolesModel();
         rolesModel.setSuperAdmin(user.roleOfSuperAdmin().isPresent());
-        rolesModel.setAdminInOrganization(user.immutableOrganizationRoles().stream()
-                .map(UserOrganizationRole::getOrganization)
+        rolesModel.setOwnerInOrganization(user.immutableOrganizationRoles().stream()
+                .map(UserOrganizationOwnerRole::getOrganization)
                 .map(AbstractUuidAwareDomainEntity::getUuid)
                 .collect(Collectors.toList()));
         final AccountUserResponseModel responseModel = new AccountUserResponseModel();
@@ -280,7 +280,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (response.isEmpty()) {
             return new GetUsersByRoleAndOrganizationUuidResponse(HttpStatus.SC_NOT_FOUND, Arrays.asList(NOT_FOUND_FOR_ROLE, NOT_FOUND_FOR_ORGANIZATION));
         }
-        if (userRole == UserRoleModel.ORGANIZATION_ADMIN && response.size() > 1) {
+        if (userRole == UserRoleModel.ORGANIZATION_OWNER && response.size() > 1) {
             return new GetUsersByRoleAndOrganizationUuidResponse(HttpStatus.SC_CONFLICT, ORGANIZATION_ROLE_CONFLICT);
         }
         LOGGER.debug("Successfully processed facade getByRoleAndOrganizationUuid method for user role - {} and organization uuid - {}", userRole, organizationUuid);
@@ -349,7 +349,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private void fireUserOwnedOrganizationsOnUpdateEvent(final String userUuid) {
         organizationService.getUserOrganizationsByUserUuidAndRole(new GetUserOrganizationsByUserUuidAndRoleDto(
                         userUuid,
-                        UserRole.ORGANIZATION_ADMIN
+                        UserRole.ORGANIZATION_OWNER
                 )
         ).forEach(organizationLifecycleMediator::onUpdated);
     }

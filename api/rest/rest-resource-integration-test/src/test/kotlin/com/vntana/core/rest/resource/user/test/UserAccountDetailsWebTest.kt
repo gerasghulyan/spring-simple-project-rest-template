@@ -21,8 +21,8 @@ class UserAccountDetailsWebTest : AbstractUserWebTest() {
     fun test() {
         val createRequest = resourceHelper.buildCreateUserRequest()
         val response = resourceHelper.persistUser(createRequest).response()
-        var organizationUuid = response.organizationUuid
-        var userUuid = response.uuid
+        val organizationUuid = response.organizationUuid
+        val userUuid = response.uuid
         userResourceClient.accountDetails(userUuid).let {
             assertBasicSuccessResultResponse(it)
             it?.body?.response()?.run {
@@ -32,7 +32,7 @@ class UserAccountDetailsWebTest : AbstractUserWebTest() {
                 assertThat(this.fullName).isEqualTo(createRequest.fullName)
                 assertThat(this.imageBlobId).isNull()
                 assertThat(this.roles.superAdmin).isFalse()
-                assertThat(this.roles.adminInOrganization).containsOnly(organizationUuid)
+                assertThat(this.roles.ownerInOrganization).containsOnly(organizationUuid)
             }
         }
     }

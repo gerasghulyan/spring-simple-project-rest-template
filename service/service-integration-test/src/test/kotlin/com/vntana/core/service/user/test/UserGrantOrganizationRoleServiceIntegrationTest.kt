@@ -25,7 +25,7 @@ class UserGrantOrganizationRoleServiceIntegrationTest : AbstractUserServiceInteg
         val dto = integrationTestHelper.buildUserGrantOrganizationRoleDto(
                 organizationUuid = organization.uuid,
                 uuid = user.uuid,
-                role = UserRole.ORGANIZATION_ADMIN
+                role = UserRole.ORGANIZATION_OWNER
         )
         userService.grantOrganizationRole(dto).let {
             flush()

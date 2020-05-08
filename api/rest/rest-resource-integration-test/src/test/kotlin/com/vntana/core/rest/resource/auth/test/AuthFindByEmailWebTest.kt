@@ -20,13 +20,13 @@ class AuthFindByEmailWebTest : AbstractAuthWebTest() {
     }
 
     @Test
-    fun `test when organization admin was found`() {
+    fun `test when organization owner was found`() {
         val email = userResourceTestHelper.email()
         userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = email))
         authResourceClient.findByEmail(FindUserByEmailRequest(email)).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().username).isEqualTo(email)
-            assertThat(it.response().roles).containsOnly(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(it.response().roles).containsOnly(UserRoleModel.ORGANIZATION_OWNER)
         }
     }
 }
