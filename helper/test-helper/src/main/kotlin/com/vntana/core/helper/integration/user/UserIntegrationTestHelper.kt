@@ -35,7 +35,7 @@ class UserIntegrationTestHelper : UserCommonTestHelper() {
     fun grantOrganizationRole(
             uuid: String? = uuid(),
             organizationUuid: String? = uuid(),
-            role: UserRole? = UserRole.ORGANIZATION_ADMIN
+            role: UserRole? = UserRole.ORGANIZATION_OWNER
     ) {
         userService.grantOrganizationRole(UserGrantOrganizationRoleDto(uuid, organizationUuid, role))
     }

@@ -4,7 +4,7 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserClientOrganizationRole;
-import com.vntana.core.domain.user.UserOrganizationRole;
+import com.vntana.core.domain.user.UserOrganizationOwnerRole;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
@@ -129,7 +129,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                         userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
                                 request.getUserUuid(),
                                 organization.getUuid(),
-                                UserRole.ORGANIZATION_ADMIN)
+                                UserRole.ORGANIZATION_OWNER)
                         );
                         organizationLifecycleMediator.onCreated(organization);
                         organizationUuidAwareLifecycleMediator.onCreated(organization.getUuid());
@@ -155,8 +155,8 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             }
             final User user = userOptional.get();
             final List<GetUserOrganizationsResponseModel> response = user.roleOfSuperAdmin()
-                    .map(userSuperAdminRole -> getOrganizationsWhenAdmin(userUuid))
-                    .orElseGet(() -> getOrganizationsWhenNotAdmin(user));
+                    .map(userSuperAdminRole -> getOrganizationsWhenSuperAdmin(userUuid))
+                    .orElseGet(() -> getOrganizationsWhenNotSuperAdmin(user));
             mutableResponse.setValue(response);
         });
         if (Objects.nonNull(mutableErrorResponse.getValue())) {
@@ -237,22 +237,22 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         );
     }
 
-    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotAdmin(final User user) {
+    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotSuperAdmin(final User user) {
         LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {}", user.getUuid());
         return user.roles()
                 .stream()
                 .map(userRole -> {
-                    LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
+                    LOGGER.debug("Retrieving user organizations for not super admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
                     switch (userRole.getUserRole()) {
-                        case ORGANIZATION_ADMIN:
-                            final UserOrganizationRole userOrganizationRole = (UserOrganizationRole) userRole;
+                        case ORGANIZATION_OWNER:
+                            final UserOrganizationOwnerRole userOrganizationOwnerRole = (UserOrganizationOwnerRole) userRole;
                             return new GetUserOrganizationsResponseModel(
-                                    userOrganizationRole.getOrganization().getUuid(),
-                                    userOrganizationRole.getOrganization().getSlug(),
-                                    userOrganizationRole.getOrganization().getName(),
-                                    UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()),
-                                    userOrganizationRole.getOrganization().getImageBlobId(),
-                                    userOrganizationRole.getOrganization().getCreated()
+                                    userOrganizationOwnerRole.getOrganization().getUuid(),
+                                    userOrganizationOwnerRole.getOrganization().getSlug(),
+                                    userOrganizationOwnerRole.getOrganization().getName(),
+                                    UserRoleModel.valueOf(userOrganizationOwnerRole.getUserRole().name()),
+                                    userOrganizationOwnerRole.getOrganization().getImageBlobId(),
+                                    userOrganizationOwnerRole.getOrganization().getCreated()
                             );
                         case CLIENT_ADMIN:
                             final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
@@ -271,7 +271,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .collect(Collectors.toList());
     }
 
-    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenAdmin(final String userUuid) {
+    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenSuperAdmin(final String userUuid) {
         LOGGER.debug("Retrieving user organizations for system admin user with uuid - {}", userUuid);
         return organizationService.getAll(
                 new GetAllOrganizationDto(organizationService.count().intValue())

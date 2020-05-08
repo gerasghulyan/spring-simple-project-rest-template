@@ -91,7 +91,7 @@ public class AuthFacadeImpl implements AuthFacade {
                 mutableResponse.setValue(response);
             } else {
                 final SecureFindUserByUuidAndOrganizationResponse response = user.roleOfOrganization(organization)
-                        .map(userOrganizationRole -> UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()))
+                        .map(userOrganizationOwnerRole -> UserRoleModel.valueOf(userOrganizationOwnerRole.getUserRole().name()))
                         .map(userRoleModel -> new SecureFindUserByUuidAndOrganizationResponse(
                                         new SecureUserOrganizationResponseModel(
                                                 user.getUuid(),

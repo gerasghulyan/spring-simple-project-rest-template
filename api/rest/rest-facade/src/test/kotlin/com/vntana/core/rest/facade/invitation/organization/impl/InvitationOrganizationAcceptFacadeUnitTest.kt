@@ -66,7 +66,7 @@ class InvitationOrganizationAcceptFacadeUnitTest : AbstractInvitationOrganizatio
         expect(userService.grantOrganizationRole(UserGrantOrganizationRoleDto(
                 user.uuid,
                 organization.uuid,
-                UserRole.ORGANIZATION_ADMIN)
+                UserRole.ORGANIZATION_OWNER)
         )).andVoid()
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationOrganization)
         expect(invitationOrganizationService.updateStatus(UpdateInvitationOrganizationStatusDto(

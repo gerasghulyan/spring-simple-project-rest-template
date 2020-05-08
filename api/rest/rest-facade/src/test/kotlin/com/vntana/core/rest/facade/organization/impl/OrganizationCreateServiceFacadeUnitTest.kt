@@ -69,7 +69,7 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         expect(userService.grantOrganizationRole(UserGrantOrganizationRoleDto(
                 request.userUuid,
                 organization.uuid,
-                UserRole.ORGANIZATION_ADMIN)
+                UserRole.ORGANIZATION_OWNER)
         ))
         expect(organizationLifecycleMediator.onCreated(organization))
         expect(organizationUuidAwareLifecycleMediator.onCreated(organization.uuid))

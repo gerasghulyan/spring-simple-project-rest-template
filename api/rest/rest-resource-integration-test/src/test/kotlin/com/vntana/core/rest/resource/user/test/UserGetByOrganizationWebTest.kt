@@ -35,7 +35,7 @@ class UserGetByOrganizationWebTest : AbstractUserWebTest() {
                 assertThat(it.totalCount()).isEqualTo(1)
                 assertThat(it.items()[0].email).isEqualTo(email)
                 assertThat(it.items()[0].fullName).isEqualTo(fullName)
-                assertThat(it.items()[0].userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+                assertThat(it.items()[0].userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             }
         }
     }

@@ -178,7 +178,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
             userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
                     user.getUuid(),
                     organization.getUuid(),
-                    UserRole.ORGANIZATION_ADMIN)
+                    UserRole.ORGANIZATION_OWNER)
             );
             afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);
         });
@@ -210,7 +210,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                     invitation.getEmail(),
                     request.getUserPassword(),
                     organization.getUuid(),
-                    UserRole.ORGANIZATION_ADMIN
+                    UserRole.ORGANIZATION_OWNER
             ));
             userService.makeVerified(user.getEmail());
             afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);

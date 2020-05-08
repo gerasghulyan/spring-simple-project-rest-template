@@ -4,7 +4,7 @@ import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserClientOrganizationRole
-import com.vntana.core.domain.user.UserOrganizationRole
+import com.vntana.core.domain.user.UserOrganizationOwnerRole
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.AbstractTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
@@ -22,9 +22,9 @@ class UserRoleCommonTestHelper : AbstractTestHelper() {
     private val organizationCommonTestHelper = OrganizationCommonTestHelper()
     private val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
-    fun buildUserOrganizationRole(user: User? = userCommonTestHelper.buildUser(),
-                                  organization: Organization? = organizationCommonTestHelper.buildOrganization()
-    ): UserOrganizationRole = UserOrganizationRole(user, organization)
+    fun buildUserOrganizationOwnerRole(user: User? = userCommonTestHelper.buildUser(),
+                                       organization: Organization? = organizationCommonTestHelper.buildOrganization()
+    ): UserOrganizationOwnerRole = UserOrganizationOwnerRole(user, organization)
 
     fun buildUserClientOrganizationRole(user: User? = userCommonTestHelper.buildUser(),
                                        clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()

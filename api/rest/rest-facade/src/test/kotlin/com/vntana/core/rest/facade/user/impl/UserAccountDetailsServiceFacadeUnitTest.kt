@@ -41,7 +41,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
             assertThat(it.response().fullName).isEqualTo(user.fullName)
             assertThat(it.response().email).isEqualTo(user.email)
             assertThat(it.response().roles.superAdmin).isTrue()
-            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(1)
+            assertThat(it.response().roles.ownerInOrganization.size).isEqualTo(1)
             assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
             assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
         }
@@ -62,7 +62,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
             assertThat(it.response().fullName).isEqualTo(user.fullName)
             assertThat(it.response().email).isEqualTo(user.email)
             assertThat(it.response().roles.superAdmin).isFalse()
-            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(1)
+            assertThat(it.response().roles.ownerInOrganization.size).isEqualTo(1)
             assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
             assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
         }
@@ -70,7 +70,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     }
 
     @Test
-    fun `test when is organization admin in 2 organizations`() {
+    fun `test when is organization owner in 2 organizations`() {
         resetAll()
         val userUuid = uuid()
         val user = userHelper.buildUser()
@@ -87,8 +87,8 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
             assertThat(it.response().fullName).isEqualTo(user.fullName)
             assertThat(it.response().email).isEqualTo(user.email)
             assertThat(it.response().roles.superAdmin).isFalse()
-            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(3)
-            assertThat(it.response().roles.adminInOrganization).contains(organization1.uuid, organization2.uuid)
+            assertThat(it.response().roles.ownerInOrganization.size).isEqualTo(3)
+            assertThat(it.response().roles.ownerInOrganization).contains(organization1.uuid, organization2.uuid)
             assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
             assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
         }

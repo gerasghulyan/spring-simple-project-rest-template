@@ -155,7 +155,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
             if (user.roleOfSuperAdmin().isPresent()) {
                 response = getClientsForSuperAdmin(user, organization);
             } else {
-                response = getClientsForOrganizationAdmin(user, organization);
+                response = getClientsForOrganizationOwner(user, organization);
             }
             mutableResponseModel.setValue(response);
         });
@@ -261,7 +261,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 .orElseThrow(() -> new IllegalStateException(format("Super Admin can't find the clients for organization - %s", organization.getUuid())));
     }
 
-    private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationAdmin(
+    private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationOwner(
             final User user,
             final Organization organization) {
         return user.roleOfOrganization(organization)

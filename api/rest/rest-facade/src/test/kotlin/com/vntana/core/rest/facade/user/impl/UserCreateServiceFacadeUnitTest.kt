@@ -39,7 +39,7 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
                 email = request.email,
                 password = request.password,
                 organizationUuid = organization.uuid,
-                role = UserRole.ORGANIZATION_ADMIN
+                role = UserRole.ORGANIZATION_OWNER
         )
         expect(organizationService.create(dto)).andReturn(organization)
         expect(userService.create(createUserDto)).andReturn(user)

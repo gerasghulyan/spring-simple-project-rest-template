@@ -42,7 +42,7 @@ class UserGrantOrganizationRoleServiceUnitTest : AbstractUserServiceUnitTest() {
         val dto = helper.buildUserGrantOrganizationRoleDto(
                 uuid = user.uuid,
                 organizationUuid = organization.uuid,
-                role = UserRole.ORGANIZATION_ADMIN
+                role = UserRole.ORGANIZATION_OWNER
         )
         // expectations
         expect(userRepository.findByUuid(dto.uuid)).andReturn(Optional.of(user))
