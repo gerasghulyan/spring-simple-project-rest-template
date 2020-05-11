@@ -2,6 +2,7 @@ package com.vntana.core.service.user.role.impl
 
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.user.role.AbstractUserRoleServiceIntegrationTest
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -14,9 +15,9 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
 
     @Test
     fun `test when noting found`() {
-        organizationIntegrationTest.persistOrganization()
-        val organization = organizationIntegrationTest.persistOrganization()
-        integrationTestHelper.persistUser(organizationUuid = organization.uuid)
+        organizationIntegrationTestHelper.persistOrganization()
+        val organization = organizationIntegrationTestHelper.persistOrganization()
+        userIntegrationTestHelper.persistUser(organizationUuid = organization.uuid)
         flushAndClear()
         userRoleService.findAllByOrganizationUuid(uuid()).let {
             assertThat(it.size).isEqualTo(0)
@@ -25,9 +26,9 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
 
     @Test
     fun `test only owner role`() {
-        organizationIntegrationTest.persistOrganization()
-        val organization = organizationIntegrationTest.persistOrganization()
-        val user = integrationTestHelper.persistUser(organizationUuid = organization.uuid)
+        organizationIntegrationTestHelper.persistOrganization()
+        val organization = organizationIntegrationTestHelper.persistOrganization()
+        val user = userIntegrationTestHelper.persistUser(organizationUuid = organization.uuid)
         flushAndClear()
         userRoleService.findAllByOrganizationUuid(organization.uuid).let {
             assertThat(it.size).isEqualTo(1)
@@ -38,10 +39,10 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
 
     @Test
     fun `test owner and client role`() {
-        organizationIntegrationTest.persistOrganization()
-        val organization = organizationIntegrationTest.persistOrganization()
-        val clientOrganization = clientOrganizationIntegrationTest.persistClientOrganization(organizationUuid = organization.uuid)
-        val user = integrationTestHelper.persistUser(organizationUuid = organization.uuid)
+        organizationIntegrationTestHelper.persistOrganization()
+        val organization = organizationIntegrationTestHelper.persistOrganization()
+        val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
+        val user = userIntegrationTestHelper.persistUser(organizationUuid = organization.uuid)
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
         flushAndClear()
         userRoleService.findAllByOrganizationUuid(organization.uuid).let {
@@ -54,14 +55,14 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
     @Test
     fun `test when other user with roles in other organization exists`() {
         let {
-            val organization1 = organizationIntegrationTest.persistOrganization()
-            val clientOrganization = clientOrganizationIntegrationTest.persistClientOrganization(organizationUuid = organization1.uuid)
-            val user = integrationTestHelper.persistUser(organizationUuid = organization1.uuid)
+            val organization1 = organizationIntegrationTestHelper.persistOrganization()
+            val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization1.uuid)
+            val user = userIntegrationTestHelper.persistUser(organizationUuid = organization1.uuid)
             user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
         }
-        val organization = organizationIntegrationTest.persistOrganization()
-        val clientOrganization = clientOrganizationIntegrationTest.persistClientOrganization(organizationUuid = organization.uuid)
-        val user = integrationTestHelper.persistUser(organizationUuid = organization.uuid)
+        val organization = organizationIntegrationTestHelper.persistOrganization()
+        val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
+        val user = userIntegrationTestHelper.persistUser(organizationUuid = organization.uuid)
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
         flushAndClear()
         userRoleService.findAllByOrganizationUuid(organization.uuid).let {
@@ -73,15 +74,19 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
 
     @Test
     fun `test multiple users in one organization`() {
-        val organization = organizationIntegrationTest.persistOrganization()
-        val clientOrganization = clientOrganizationIntegrationTest.persistClientOrganization(organizationUuid = organization.uuid)
-        val user1 = integrationTestHelper.persistUser(organizationUuid = organization.uuid)
-        //TODO("add new user with admin role")
+        val organization = organizationIntegrationTestHelper.persistOrganization()
+        val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
+        val user1 = userIntegrationTestHelper.persistUser(organizationUuid = organization.uuid)
         user1.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        userRoleService.grantOrganizationAdminRole(UserGrantOrganizationRoleDto(user1.uuid, organization.uuid))
         flushAndClear()
         userRoleService.findAllByOrganizationUuid(organization.uuid).let {
             it.map { role -> role.user }.forEach { u -> assertThat(u).isEqualTo(user1) }
-            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.CLIENT_ADMIN, UserRole.ORGANIZATION_OWNER)
+            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(
+                    UserRole.CLIENT_ADMIN,
+                    UserRole.ORGANIZATION_OWNER,
+                    UserRole.ORGANIZATION_ADMIN
+            )
         }
     }
 }

@@ -40,7 +40,7 @@ class OrganizationGetUserOrganizationsByUserUuidAndRoleServiceUnitTest : Abstrac
         val organization = helper.buildOrganization()
         resetAll()
         // expectations
-        expect(organizationRepository.findUserOrganizationsByUserUuidAndRole(userUuid, UserRole.ORGANIZATION_OWNER.name)).andReturn(listOf(organization))
+        expect(organizationRepository.findUserOrganizationsByUserUuidAndRole(userUuid, UserRole.ORGANIZATION_OWNER)).andReturn(listOf(organization))
         replayAll()
         // test scenario
         organizationService.getUserOrganizationsByUserUuidAndRole(helper.buildGetUserOrganizationsByUserUuidAndRoleDto(userUuid = userUuid))

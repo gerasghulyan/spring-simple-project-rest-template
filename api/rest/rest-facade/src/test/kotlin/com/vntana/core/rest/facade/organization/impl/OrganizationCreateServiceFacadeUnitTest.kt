@@ -1,11 +1,10 @@
 package com.vntana.core.rest.facade.organization.impl
 
-import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import com.vntana.core.service.organization.dto.CreateOrganizationDto
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
@@ -59,6 +58,7 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         val request = restHelper.buildCreateOrganizationRequest(slug = slug)
         val dto = commonTestHelper.buildCreateOrganizationDto()
         val organization = commonTestHelper.buildOrganization()
+        val ownerRole = userRoleCommonTestHelper.buildUserOrganizationOwnerRole()
         // expectations
         expect(slugValidationComponent.validate(slug)).andReturn(true)
         expect(organizationService.findBySlug(slug)).andReturn(Optional.empty())
@@ -66,11 +66,10 @@ class OrganizationCreateServiceFacadeUnitTest : AbstractOrganizationServiceFacad
         expect(persistenceUtilityService.runInNewTransaction(EasyMock.isA(Executable::class.java)))
                 .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
         expect(organizationService.create(dto)).andReturn(organization)
-        expect(userService.grantOrganizationRole(UserGrantOrganizationRoleDto(
+        expect(userRoleService.grantOrganizationOwnerRole(UserGrantOrganizationRoleDto(
                 request.userUuid,
-                organization.uuid,
-                UserRole.ORGANIZATION_OWNER)
-        ))
+                organization.uuid)
+        )).andReturn(ownerRole)
         expect(organizationLifecycleMediator.onCreated(organization))
         expect(organizationUuidAwareLifecycleMediator.onCreated(organization.uuid))
         replayAll()

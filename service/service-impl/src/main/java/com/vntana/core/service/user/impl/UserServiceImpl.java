@@ -8,7 +8,6 @@ import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
 import com.vntana.core.service.user.exception.UserNotFoundForTokenException;
 import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
         final String password = passwordEncoder.encode(dto.getPassword());
         final User user = new User(dto.getFullName(), dto.getEmail(), password);
         final User savedUser = userRepository.save(user);
-        savedUser.grantOrganizationRole(organization);
+        savedUser.grantOrganizationOwnerRole(organization);
         LOGGER.debug("Successfully created user for dto - {}", dto);
         return savedUser;
     }
@@ -142,17 +141,6 @@ public class UserServiceImpl implements UserService {
         final boolean exists = userRepository.existsByEmail(email);
         LOGGER.debug("Successfully checked existence of user having email - {}", email);
         return exists;
-    }
-
-    @Transactional
-    @Override
-    public void grantOrganizationRole(final UserGrantOrganizationRoleDto dto) {
-        LOGGER.debug("Setting user role for dto - {}", dto);
-        Assert.notNull(dto, "The UserGrantOrganizationRoleDto should not be null");
-        final User user = getByUuid(dto.getUuid());
-        final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
-        user.grantOrganizationRole(organization);
-        LOGGER.debug("Successfully created user role for dto - {}", dto);
     }
 
     @Transactional(readOnly = true)

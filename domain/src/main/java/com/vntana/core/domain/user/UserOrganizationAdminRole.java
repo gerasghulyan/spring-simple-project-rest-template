@@ -8,27 +8,27 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 
 /**
- * Created by Arthur Asatryan.
- * Date: 10/10/19
- * Time: 4:53 PM
+ * Created by Arman Gevorgyan.
+ * Date: 5/8/20
+ * Time: 3:59 PM
  */
 @Entity
-@Table(name = "user_role_organization_owner", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_user_role_organization_owner_organization_id", columnNames = {"organization_id"}),
+@Table(name = "user_role_organization_admin", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_user_role_organization_admin_organization_id", columnNames = {"organization_id"}),
 })
-@DiscriminatorValue("ORGANIZATION_OWNER_ROLE")
-public class UserOrganizationOwnerRole extends AbstractUserRole {
+@DiscriminatorValue("ORGANIZATION_ADMIN_ROLE")
+public class UserOrganizationAdminRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organization_id"), updatable = false)
     private Organization organization;
 
-    UserOrganizationOwnerRole() {
+    UserOrganizationAdminRole() {
         super();
     }
 
-    public UserOrganizationOwnerRole(final User user, final Organization organization) {
-        super(user, UserRole.ORGANIZATION_OWNER);
+    public UserOrganizationAdminRole(final User user, final Organization organization) {
+        super(user, UserRole.ORGANIZATION_ADMIN);
         this.organization = organization;
     }
 
@@ -37,10 +37,10 @@ public class UserOrganizationOwnerRole extends AbstractUserRole {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserOrganizationOwnerRole)) {
+        if (!(o instanceof UserOrganizationAdminRole)) {
             return false;
         }
-        final UserOrganizationOwnerRole that = (UserOrganizationOwnerRole) o;
+        final UserOrganizationAdminRole that = (UserOrganizationAdminRole) o;
         return new EqualsBuilder()
                 .append(getId(), that.getId())
                 .append(getIdOrNull(organization), that.getIdOrNull(organization))
@@ -58,7 +58,7 @@ public class UserOrganizationOwnerRole extends AbstractUserRole {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("organization_id", getIdOrNull(organization))
+                .append("organizationId", getIdOrNull(organization))
                 .toString();
     }
 

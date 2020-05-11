@@ -264,7 +264,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationOwner(
             final User user,
             final Organization organization) {
-        return user.roleOfOrganization(organization)
+        return user.roleOfOrganizationOwner(organization)
                 .map(role -> buildClients(organization, role.getUserRole()))
                 .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"));
     }

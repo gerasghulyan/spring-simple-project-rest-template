@@ -58,7 +58,7 @@ class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
             assertThat(it.fullName).isEqualTo(createDto.fullName)
             assertThat(it.email).isEqualTo(createDto.email)
             assertThat(it.password).isEqualTo(encodedPassword)
-            val role = it.roleOfOrganization(organization).get()
+            val role = it.roleOfOrganizationOwner(organization).get()
             assertThat(role.organization).isEqualTo(organization)
             assertThat(role.user).isEqualTo(it)
         }

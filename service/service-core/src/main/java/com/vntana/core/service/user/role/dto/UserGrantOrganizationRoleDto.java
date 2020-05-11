@@ -1,6 +1,5 @@
-package com.vntana.core.service.user.dto;
+package com.vntana.core.service.user.role.dto;
 
-import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.service.common.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,19 +13,15 @@ import org.springframework.util.Assert;
  */
 public class UserGrantOrganizationRoleDto implements ServiceDto {
 
-    private final String uuid;
+    private final String userUuid;
 
     private final String organizationUuid;
 
-    private final UserRole role;
-
-    public UserGrantOrganizationRoleDto(final String uuid, final String organizationUuid, final UserRole role) {
-        Assert.hasText(uuid, "The user uuid should not be null or empty");
+    public UserGrantOrganizationRoleDto(final String userUuid, final String organizationUuid) {
+        Assert.hasText(userUuid, "The user uuid should not be null or empty");
         Assert.hasText(organizationUuid, "The organization uuid should not be null or empty");
-        Assert.notNull(role, "The user role should not be null");
-        this.uuid = uuid;
+        this.userUuid = userUuid;
         this.organizationUuid = organizationUuid;
-        this.role = role;
     }
 
     @Override
@@ -39,27 +34,24 @@ public class UserGrantOrganizationRoleDto implements ServiceDto {
         }
         final UserGrantOrganizationRoleDto that = (UserGrantOrganizationRoleDto) o;
         return new EqualsBuilder()
-                .append(uuid, that.uuid)
+                .append(userUuid, that.userUuid)
                 .append(organizationUuid, that.organizationUuid)
-                .append(role, that.role)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(uuid)
+                .append(userUuid)
                 .append(organizationUuid)
-                .append(role)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("uuid", uuid)
+                .append("uuid", userUuid)
                 .append("organizationUuid", organizationUuid)
-                .append("role", role)
                 .toString();
     }
 
@@ -67,11 +59,7 @@ public class UserGrantOrganizationRoleDto implements ServiceDto {
         return organizationUuid;
     }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public String getUuid() {
-        return uuid;
+    public String getUserUuid() {
+        return userUuid;
     }
 }

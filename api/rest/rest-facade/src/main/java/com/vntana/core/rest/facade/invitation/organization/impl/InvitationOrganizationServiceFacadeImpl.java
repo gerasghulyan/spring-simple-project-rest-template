@@ -27,7 +27,8 @@ import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
+import com.vntana.core.service.user.role.UserRoleService;
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -55,6 +56,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
     private final OrganizationService organizationService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final UserService userService;
+    private final UserRoleService userRoleService;
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
     private final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator;
     private final TokenInvitationOrganizationService tokenInvitationOrganizationService;
@@ -68,6 +70,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
                                                    final OrganizationService organizationService,
                                                    final PersistenceUtilityService persistenceUtilityService,
                                                    final UserService userService,
+                                                   final UserRoleService userRoleService,
                                                    final OrganizationLifecycleMediator organizationLifecycleMediator,
                                                    final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator,
                                                    final TokenInvitationOrganizationService tokenInvitationOrganizationService) {
@@ -80,6 +83,7 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.userService = userService;
+        this.userRoleService = userRoleService;
         this.organizationLifecycleMediator = organizationLifecycleMediator;
         this.organizationUuidAwareLifecycleMediator = organizationUuidAwareLifecycleMediator;
         this.tokenInvitationOrganizationService = tokenInvitationOrganizationService;
@@ -175,10 +179,9 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         final Mutable<String> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
             final Organization organization = createOrganizationWithInvitation(invitation, request.getOrganizationName(), request.getOrganizationSlug());
-            userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
+            userRoleService.grantOrganizationOwnerRole(new UserGrantOrganizationRoleDto(
                     user.getUuid(),
-                    organization.getUuid(),
-                    UserRole.ORGANIZATION_OWNER)
+                    organization.getUuid())
             );
             afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);
         });

@@ -22,6 +22,7 @@ public class UserClientOrganizationRole extends AbstractUserRole {
     private ClientOrganization clientOrganization;
 
     UserClientOrganizationRole() {
+        super();
     }
 
     public UserClientOrganizationRole(final User user, final UserRole userRole, final ClientOrganization clientOrganization) {

@@ -27,8 +27,8 @@ class UserRoleFindAllByOrganizationUuidServiceUnitTest : AbstractUserRoleService
         resetAll()
         val organizationUuid = uuid()
         val roles = listOf(
-                userRoleCommonTestHelper.buildUserOrganizationOwnerRole(),
-                userRoleCommonTestHelper.buildUserOrganizationOwnerRole()
+                commonTestHelper.buildUserOrganizationOwnerRole(),
+                commonTestHelper.buildUserOrganizationOwnerRole()
         )
         expect(userRoleRepository.findAllByOrganizationUuid(organizationUuid)).andReturn(roles)
         replayAll()

@@ -1,8 +1,10 @@
 package com.vntana.core.persistence.organization;
 
 import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.user.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,18 +23,11 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 
     boolean existsByUuid(final String uuid);
 
-    @Query(value = "select u.email from organization o " +
-            "         inner join user_role_organization_owner uroo on o.id = uroo.organization_id" +
-            "         inner join user_role ur on uroo.id = ur.id" +
-            "         inner join user_ u on ur.user_id = u.id " +
-            "where o.uuid = ?1", nativeQuery = true)
-    Optional<String> findOrganizationOwnerEmail(final String organizationUuid);
+    @Query("select uoor.user.email from UserOrganizationOwnerRole uoor where uoor.organization.uuid = :organizationUuid")
+    Optional<String> findOrganizationOwnerEmail(@Param("organizationUuid") final String organizationUuid);
 
 
-    @Query(value = "select o.* from organization o" +
-            "         inner join user_role_organization_owner uroo on o.id = uroo.organization_id" +
-            "         inner join user_role ur on uroo.id = ur.id" +
-            "         inner join user_ u on ur.user_id = u.id " +
-            "where u.uuid = ?1 and ur.user_role = ?2", nativeQuery = true)
-    List<Organization> findUserOrganizationsByUserUuidAndRole(final String userUuid, final String userRole);
+    @Query("select o from Organization o where o.id in (select uoor.organization.id from UserOrganizationOwnerRole uoor where uoor.user.uuid = :userUuid and uoor.userRole = :userRole)" +
+            " or o.id in (select uoar.organization.id from UserOrganizationAdminRole uoar where uoar.user.uuid = :userUuid and uoar.userRole = :userRole)")
+    List<Organization> findUserOrganizationsByUserUuidAndRole(@Param("userUuid") final String userUuid, @Param("userRole") final UserRole userRole);
 }

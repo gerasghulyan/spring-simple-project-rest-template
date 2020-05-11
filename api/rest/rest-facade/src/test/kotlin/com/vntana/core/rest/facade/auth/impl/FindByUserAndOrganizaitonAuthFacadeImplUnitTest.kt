@@ -23,7 +23,7 @@ class FindByUserAndOrganizaitonAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         val user = userHelper.buildUser()
         val organization = organizationCommonTestHelper.buildOrganization()
         val secureUser = SecureUserOrganizationResponseModel(user.uuid, user.email, UserRoleModel.ORGANIZATION_OWNER, organization.uuid)
-        user.grantOrganizationRole(organization)
+        user.grantOrganizationOwnerRole(organization)
         resetAll()
         // expectations
         expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))

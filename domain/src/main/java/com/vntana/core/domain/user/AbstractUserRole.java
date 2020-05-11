@@ -27,6 +27,7 @@ public abstract class AbstractUserRole extends AbstractDomainEntity {
     private UserRole userRole;
 
     AbstractUserRole() {
+        super();
     }
 
     public AbstractUserRole(final User user, final UserRole userRole) {
