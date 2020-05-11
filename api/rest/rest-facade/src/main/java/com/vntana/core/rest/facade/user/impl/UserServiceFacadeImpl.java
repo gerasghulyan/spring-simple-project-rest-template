@@ -179,7 +179,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final User user = userService.getByUuid(uuid);
         final AccountUserRolesModel rolesModel = new AccountUserRolesModel();
         rolesModel.setSuperAdmin(user.roleOfSuperAdmin().isPresent());
-        rolesModel.setOwnerInOrganization(user.immutableOrganizationRoles().stream()
+        rolesModel.setOwnerInOrganization(user.immutableOrganizationOwnerRoles().stream()
                 .map(UserOrganizationOwnerRole::getOrganization)
                 .map(AbstractUuidAwareDomainEntity::getUuid)
                 .collect(Collectors.toList()));

@@ -7,7 +7,6 @@ import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.service.user.dto.CreateUserDto
 import com.vntana.core.service.user.dto.UpdateUserDto
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto
 
 /**
  * Created by Arthur Asatryan.
@@ -33,18 +32,11 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
             clientOrganization: Organization? = organizationCommonTestHelper.buildOrganization()
     ): User {
         val user = User(fullName, email, password)
-        user.grantOrganizationRole(clientOrganization)
+        user.grantOrganizationOwnerRole(clientOrganization)
         return user
     }
 
     fun buildUserInvalidEmail(): String = uuid()
-
-    fun buildUserGrantOrganizationRoleDto(
-            uuid: String? = uuid(),
-            organizationUuid: String? = uuid(),
-            role: UserRole? = UserRole.CLIENT_ADMIN
-    ): UserGrantOrganizationRoleDto = UserGrantOrganizationRoleDto(uuid, organizationUuid, role)
-
     fun buildUpdateUserDto(
             uuid: String? = uuid(),
             imageBlobId: String? = uuid(),

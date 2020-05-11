@@ -26,7 +26,7 @@ class UserCreateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
             assertThat(it).isNotNull
             assertThat(it.fullName).isEqualTo(createDto.fullName)
             assertThat(it.email).isEqualTo(createDto.email)
-            val role = it.roleOfOrganization(organization).get()
+            val role = it.roleOfOrganizationOwner(organization).get()
             assertThat(role.organization).isEqualTo(organization)
             assertThat(role.user.fullName).isEqualTo(it.fullName)
             assertThat(passwordEncoder.matches(role.user.password, passwordEncoder.encode(it.password))).isTrue()

@@ -5,7 +5,6 @@ import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserClientOrganizationRole;
 import com.vntana.core.domain.user.UserOrganizationOwnerRole;
-import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
@@ -35,7 +34,8 @@ import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecycleMediator;
 import com.vntana.core.service.user.UserService;
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
+import com.vntana.core.service.user.role.UserRoleService;
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
@@ -67,6 +67,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     private final MapperFacade mapperFacade;
     private final OrganizationService organizationService;
     private final UserService userService;
+    private final UserRoleService userRoleService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
     private final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator;
@@ -77,6 +78,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             final MapperFacade mapperFacade,
             final OrganizationService organizationService,
             final UserService userService,
+            final UserRoleService userRoleService,
             final PersistenceUtilityService persistenceUtilityService,
             final OrganizationLifecycleMediator organizationLifecycleMediator,
             final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator,
@@ -86,6 +88,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         this.userService = userService;
         this.mapperFacade = mapperFacade;
         this.organizationService = organizationService;
+        this.userRoleService = userRoleService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.organizationLifecycleMediator = organizationLifecycleMediator;
         this.organizationUuidAwareLifecycleMediator = organizationUuidAwareLifecycleMediator;
@@ -126,10 +129,9 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                     final Mutable<String> mutableResponse = new MutableObject<>();
                     persistenceUtilityService.runInNewTransaction(() -> {
                         final Organization organization = organizationService.create(dto);
-                        userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
+                        userRoleService.grantOrganizationOwnerRole(new UserGrantOrganizationRoleDto(
                                 request.getUserUuid(),
-                                organization.getUuid(),
-                                UserRole.ORGANIZATION_OWNER)
+                                organization.getUuid())
                         );
                         organizationLifecycleMediator.onCreated(organization);
                         organizationUuidAwareLifecycleMediator.onCreated(organization.getUuid());

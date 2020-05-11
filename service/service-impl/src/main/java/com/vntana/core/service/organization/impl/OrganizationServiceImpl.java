@@ -133,7 +133,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<Organization> getUserOrganizationsByUserUuidAndRole(final GetUserOrganizationsByUserUuidAndRoleDto dto) {
         Assert.notNull(dto, "The 'GetUserOrganizationsByUserUuidAndRoleDto' should not be null");
         LOGGER.debug("Retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
-        final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole().name());
+        final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole());
         LOGGER.debug("Successfully processed retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
         return organizations;
     }

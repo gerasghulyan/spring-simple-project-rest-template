@@ -3,7 +3,9 @@ package com.vntana.core.service.user.role
 import com.vntana.core.helper.integration.client.ClientOrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
+import com.vntana.core.helper.integration.user.role.UserRoleIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
+import com.vntana.core.service.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
@@ -17,11 +19,17 @@ abstract class AbstractUserRoleServiceIntegrationTest : AbstractServiceIntegrati
     protected lateinit var userRoleService: UserRoleService
 
     @Autowired
-    protected lateinit var integrationTestHelper: UserIntegrationTestHelper
+    protected lateinit var userService: UserService
 
     @Autowired
-    protected lateinit var organizationIntegrationTest: OrganizationIntegrationTestHelper
+    protected lateinit var integrationTestHelper: UserRoleIntegrationTestHelper
 
     @Autowired
-    protected lateinit var clientOrganizationIntegrationTest: ClientOrganizationIntegrationTestHelper
+    protected lateinit var userIntegrationTestHelper: UserIntegrationTestHelper
+
+    @Autowired
+    protected lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper
+
+    @Autowired
+    protected lateinit var clientOrganizationIntegrationTestHelper: ClientOrganizationIntegrationTestHelper
 }
