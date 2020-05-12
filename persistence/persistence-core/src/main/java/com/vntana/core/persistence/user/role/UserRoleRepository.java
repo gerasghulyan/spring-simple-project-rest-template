@@ -25,5 +25,5 @@ public interface UserRoleRepository extends JpaRepository<AbstractUserRole, Long
 
     @Query("select aur from UserOrganizationAdminRole uoar join AbstractUserRole aur on aur.id = uoar.id where uoar.organization.uuid = :organizationUuid and uoar.user.uuid = :userUuid")
     Optional<AbstractUserRole> findAdminRoleByUserAndOrganization(@Param("userUuid") final String userUuid,
-                                                                           @Param("organizationUuid") final String organizationUuid);
+                                                                  @Param("organizationUuid") final String organizationUuid);
 }

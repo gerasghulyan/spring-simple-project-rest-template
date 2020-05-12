@@ -1,10 +1,7 @@
 package com.vntana.core.service.user.role.impl;
 
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.AbstractUserRole;
-import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.persistence.user.role.UserRoleRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -17,9 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 /**
  * Created by Arman Gevorgyan.
@@ -52,6 +53,22 @@ public class UserRoleServiceImpl implements UserRoleService {
         final List<AbstractUserRole> userRoles = userRoleRepository.findAllByOrganizationUuid(organizationUuid);
         LOGGER.debug("Successfully userRoles users belonging to organization - {}", organizationUuid);
         return userRoles;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole) {
+        LOGGER.debug("Checking existence of userRole belonging to organization - {}, user - {}  with role - {}", organizationUuid, userUuid, userRole);
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        Assert.notNull(userRole, "The userRole should not be null");
+        final List<AbstractUserRole> roles = userRoleRepository.findAllByOrganizationUuid(organizationUuid).stream()
+                .filter(abstractUserRole -> abstractUserRole.getUserRole() == userRole && abstractUserRole.getUser().getUuid().equals(userUuid))
+                .collect(Collectors.toList());
+        if (roles.size() > 1) {
+            throw new IllegalStateException(format("More then 1 role found in organization %s for user %s and role %s", organizationUuid, userUuid, userRole));
+        }
+        LOGGER.debug("Successfully checked existence of userRole belonging to organization - {}, user - {}  with role - {}", organizationUuid, userUuid, userRole);
+        return !CollectionUtils.isEmpty(roles);
     }
 
     @Transactional

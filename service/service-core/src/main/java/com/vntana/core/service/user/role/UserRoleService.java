@@ -3,6 +3,7 @@ package com.vntana.core.service.user.role;
 import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.UserOrganizationAdminRole;
 import com.vntana.core.domain.user.UserOrganizationOwnerRole;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
 
@@ -17,6 +18,8 @@ import java.util.List;
 public interface UserRoleService {
 
     List<AbstractUserRole> findAllByOrganizationUuid(final String organizationUuid);
+
+    boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole);
 
     UserOrganizationOwnerRole grantOrganizationOwnerRole(final UserGrantOrganizationRoleDto dto);
 
