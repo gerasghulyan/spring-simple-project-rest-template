@@ -4,6 +4,7 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserClientOrganizationRole;
+import com.vntana.core.domain.user.UserOrganizationAdminRole;
 import com.vntana.core.domain.user.UserOrganizationOwnerRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
@@ -255,6 +256,16 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                                     UserRoleModel.valueOf(userOrganizationOwnerRole.getUserRole().name()),
                                     userOrganizationOwnerRole.getOrganization().getImageBlobId(),
                                     userOrganizationOwnerRole.getOrganization().getCreated()
+                            );
+                        case ORGANIZATION_ADMIN:
+                            final UserOrganizationAdminRole userOrganizationAdminRole = (UserOrganizationAdminRole) userRole;
+                            return new GetUserOrganizationsResponseModel(
+                                    userOrganizationAdminRole.getOrganization().getUuid(),
+                                    userOrganizationAdminRole.getOrganization().getSlug(),
+                                    userOrganizationAdminRole.getOrganization().getName(),
+                                    UserRoleModel.valueOf(userOrganizationAdminRole.getUserRole().name()),
+                                    userOrganizationAdminRole.getOrganization().getImageBlobId(),
+                                    userOrganizationAdminRole.getOrganization().getCreated()
                             );
                         case CLIENT_ADMIN:
                             final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
