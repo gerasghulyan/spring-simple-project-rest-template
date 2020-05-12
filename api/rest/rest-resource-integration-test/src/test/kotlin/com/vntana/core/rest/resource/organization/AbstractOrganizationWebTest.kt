@@ -50,9 +50,7 @@ abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var invitationOrganizationResourceClient: InvitationOrganizationResourceClient
-
-    fun email(): String = uuid() + "@test.com"
-
+    
     @Before
     fun prepare() {
         Mockito.reset(customerResourceClient)

@@ -9,6 +9,7 @@ import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto
+import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -47,6 +48,16 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
 
     fun buildUpdateInvitationUserStatusDto(
             uuid: String? = uuid(),
-            status: InvitationStatus? = InvitationStatus.INVITED
+            status: InvitationStatus? = InvitationStatus.NOT_APPLICABLE
     ) = UpdateInvitationUserStatusDto(uuid, status)
+
+    fun buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
+            email: String? = uuid(),
+            organizationUuid: String? = uuid(),
+            status: InvitationStatus? = InvitationStatus.INVITED
+    ): GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto = GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
+            email,
+            organizationUuid,
+            status
+    )
 }

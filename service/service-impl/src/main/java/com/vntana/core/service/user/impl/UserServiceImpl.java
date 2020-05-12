@@ -166,10 +166,21 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid) {
+        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        LOGGER.debug("Retrieving the user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
+        final Optional<User> userOptional = userRepository.findByEmailAndOrganizationUuid(email, organizationUuid);
+        LOGGER.debug("Successfully retrieved user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
+        return userOptional;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public User getByEmail(final String email) {
         Assert.notNull(email, "The user email should not be null");
         LOGGER.debug("Getting user for email - {}", email);
-        return findByEmail(email).orElseThrow(() -> new UserNotFoundForTokenException(String.format("User not found for email %s", email)) );
+        return findByEmail(email).orElseThrow(() -> new UserNotFoundForTokenException(String.format("User not found for email %s", email)));
     }
 
     private User updateUser(final User user, final UpdateUserDto dto) {
@@ -186,7 +197,7 @@ public class UserServiceImpl implements UserService {
         Assert.hasText(dto.getOrganizationUuid(), "The organization uuid should not be null or empty");
         Assert.notNull(dto.getRole(), "The user role should not be null");
     }
-    
+
     private void assertEmail(final String email) {
         Assert.hasText(email, "The email should not be null or empty");
     }

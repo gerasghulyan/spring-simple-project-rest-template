@@ -2,6 +2,7 @@ package com.vntana.core.service.invitation.user;
 
 import com.vntana.core.domain.invitation.user.InvitationUser;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
+import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import org.springframework.data.domain.Page;
@@ -17,13 +18,15 @@ public interface InvitationUserService {
 
     InvitationUser create(final CreateInvitationUserDto dto);
 
-    InvitationUser getByUuid(final String uuid);
-
     boolean existsByUuid(final String uuid);
+
+    InvitationUser getByUuid(final String uuid);
 
     Page<InvitationUser> getAll(final GetAllInvitationUsersDto dto);
 
+    List<InvitationUser> getByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto dto);
+
+    List<InvitationUser> getByInviterUserUuid(final String userUuid);
+
     InvitationUser updateStatus(final UpdateInvitationUserStatusDto dto);
-    
-    List<InvitationUser> findByInviterUserUuid(final String userUuid);
 }

@@ -22,10 +22,10 @@ class InvitationUserGetAllServiceIntegrationTest : AbstractInvitationUserService
 
     @Test
     fun test() {
-        val invitation1 = integrationUserTestHelper.persistInvitationUser(
+        val invitation1 = integrationInvitationUserTestHelper.persistInvitationUser(
                 inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
         )
-        val invitation2 = integrationUserTestHelper.persistInvitationUser(
+        val invitation2 = integrationInvitationUserTestHelper.persistInvitationUser(
                 inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
         )
         flushAndClear()

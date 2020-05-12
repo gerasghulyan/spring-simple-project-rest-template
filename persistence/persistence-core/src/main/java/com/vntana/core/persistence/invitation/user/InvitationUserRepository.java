@@ -1,5 +1,6 @@
 package com.vntana.core.persistence.invitation.user;
 
+import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,6 @@ public interface InvitationUserRepository extends JpaRepository<InvitationUser, 
     boolean existsByUuid(final String uuid);
 
     List<InvitationUser> findByInviterUserUuid(final String uuid);
+
+    List<InvitationUser> findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final String email, final String organizationUuid, final InvitationStatus status);
 }
