@@ -2,6 +2,7 @@ package com.vntana.core.service.invitation.user.impl;
 
 import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationUser;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.persistence.invitation.user.InvitationUserRepository;
 import com.vntana.core.service.invitation.user.InvitationUserService;
@@ -9,6 +10,7 @@ import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import com.vntana.core.service.invitation.user.exception.InvitationUserNotFoundForUuidException;
+import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
 import org.slf4j.Logger;
@@ -32,11 +34,13 @@ public class InvitationUserServiceImpl implements InvitationUserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(InvitationUserServiceImpl.class);
     private final InvitationUserRepository invitationUserRepository;
     private final UserService userService;
+    private final OrganizationService organizationService;
 
-    public InvitationUserServiceImpl(final InvitationUserRepository invitationUserRepository, final UserService userService) {
+    public InvitationUserServiceImpl(final InvitationUserRepository invitationUserRepository, final UserService userService, final OrganizationService organizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.invitationUserRepository = invitationUserRepository;
         this.userService = userService;
+        this.organizationService = organizationService;
     }
 
     @Transactional
@@ -45,12 +49,13 @@ public class InvitationUserServiceImpl implements InvitationUserService {
         Assert.notNull(dto, "The CreateInvitationUserDto should not be null");
         LOGGER.debug("Creating user invitation for dto - {}", dto);
         final User inviterUser = userService.getByUuid(dto.getInviterUserUuid());
+        final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         final InvitationUser invitationUser = invitationUserRepository.save(new InvitationUser(
                 dto.getUserRole(),
                 dto.getEmail(),
                 InvitationStatus.INVITED,
-                inviterUser
-        ));
+                inviterUser,
+                organization));
         LOGGER.debug("Successfully created user invitation for dto - {}", dto);
         return invitationUser;
     }

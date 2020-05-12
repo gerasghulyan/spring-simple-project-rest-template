@@ -1,10 +1,12 @@
 package com.vntana.core.service.invitation.user
 
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
+import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.invitation.user.InvitationUserRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.invitation.user.impl.InvitationUserServiceImpl
+import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before
@@ -24,12 +26,17 @@ abstract class AbstractInvitationUserServiceUnitTest : AbstractServiceUnitTest()
     @Mock
     protected lateinit var userService: UserService
 
+    @Mock
+    protected lateinit var organizationService: OrganizationService
+
     protected val commonTestHelper = InvitationUserCommonTestHelper()
 
     protected val userCommonTestHelper = UserCommonTestHelper()
 
+    protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
+
     @Before
     fun prepare() {
-        invitationUserService = InvitationUserServiceImpl(invitationUserRepository, userService)
+        invitationUserService = InvitationUserServiceImpl(invitationUserRepository, userService, organizationService)
     }
 }

@@ -2,6 +2,7 @@ package com.vntana.core.domain.invitation.user;
 
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.invitation.InvitationStatus;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -36,6 +37,10 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invitation_user_user_id"), updatable = false)
     private User inviterUser;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invitation_user_organization_id"), updatable = false)
+    private Organization organization;
+
     public InvitationUser() {
         super();
     }
@@ -43,12 +48,13 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
     public InvitationUser(final UserRole role,
                           final String email,
                           final InvitationStatus status,
-                          final User inviterUser) {
+                          final User inviterUser, final Organization organization) {
         super();
         this.role = role;
         this.email = email;
         this.status = status;
         this.inviterUser = inviterUser;
+        this.organization = organization;
     }
 
     @Override
@@ -64,7 +70,8 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
                 .append(role, that.role)
                 .append(email, that.email)
                 .append(status, that.status)
-                .append(inviterUser, that.inviterUser)
+                .append(getIdOrNull(inviterUser), getIdOrNull(that.inviterUser))
+                .append(getIdOrNull(organization), getIdOrNull(that.organization))
                 .isEquals();
     }
 
@@ -75,7 +82,8 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
                 .append(role)
                 .append(email)
                 .append(status)
-                .append(inviterUser)
+                .append(getIdOrNull(inviterUser))
+                .append(getIdOrNull(organization))
                 .toHashCode();
     }
 
@@ -87,6 +95,7 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
                 .append("email", email)
                 .append("status", status)
                 .append("inviterUser", getIdOrNull(inviterUser))
+                .append("organization", getIdOrNull(organization))
                 .toString();
     }
 
@@ -120,5 +129,13 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
 
     public void setInviterUser(final User inviterUser) {
         this.inviterUser = inviterUser;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(final Organization organization) {
+        this.organization = organization;
     }
 }
