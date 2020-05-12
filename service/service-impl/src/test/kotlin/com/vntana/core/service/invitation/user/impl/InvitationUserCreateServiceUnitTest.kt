@@ -24,6 +24,8 @@ class InvitationUserCreateServiceUnitTest : AbstractInvitationUserServiceUnitTes
         assertThatThrownBy { commonTestHelper.buildCreateInvitationUserDto(email = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildCreateInvitationUserDto(inviterUserUuid = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildCreateInvitationUserDto(inviterUserUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { invitationUserService.create(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -32,6 +34,7 @@ class InvitationUserCreateServiceUnitTest : AbstractInvitationUserServiceUnitTes
     fun test() {
         resetAll()
         val inviterUser = userCommonTestHelper.buildUser()
+        val organization = organizationCommonTestHelper.buildOrganization()
         val dto = commonTestHelper.buildCreateInvitationUserDto(inviterUserUuid = inviterUser.uuid)
         val invitationUser = commonTestHelper.buildInvitationUser(
                 userRole = dto.userRole,
@@ -40,6 +43,7 @@ class InvitationUserCreateServiceUnitTest : AbstractInvitationUserServiceUnitTes
         )
         resetAll()
         expect(userService.getByUuid(dto.inviterUserUuid)).andReturn(inviterUser)
+        expect(organizationService.getByUuid(dto.organizationUuid)).andReturn(organization)
         expect(invitationUserRepository.save(EasyMock.isA(InvitationUser::class.java))).andReturn(invitationUser)
         replayAll()
         assertThat(invitationUserService.create(dto)).isEqualTo(invitationUser)

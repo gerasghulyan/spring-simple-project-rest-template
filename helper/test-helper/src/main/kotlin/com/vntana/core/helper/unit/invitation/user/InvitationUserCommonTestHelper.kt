@@ -2,9 +2,11 @@ package com.vntana.core.helper.unit.invitation.user
 
 import com.vntana.core.domain.invitation.InvitationStatus
 import com.vntana.core.domain.invitation.user.InvitationUser
+import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
+import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto
@@ -19,12 +21,14 @@ import org.springframework.data.domain.Pageable
  */
 open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
     private val userCommonTestHelper = UserCommonTestHelper()
+    private val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
     fun buildCreateInvitationUserDto(
             userRole: UserRole? = UserRole.ORGANIZATION_ADMIN,
             email: String? = uuid(),
-            inviterUserUuid: String? = uuid()
-    ) = CreateInvitationUserDto(userRole, email, inviterUserUuid)
+            inviterUserUuid: String? = uuid(),
+            organizationUuid: String? = uuid()
+    ) = CreateInvitationUserDto(userRole, email, inviterUserUuid, organizationUuid)
 
     fun buildInvitationUserPage(entities: List<InvitationUser> = listOf(buildInvitationUser(), buildInvitationUser()),
                                 pageAble: Pageable = buildPageRequest(0, 5),
@@ -37,8 +41,9 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             userRole: UserRole? = UserRole.ORGANIZATION_ADMIN,
             email: String? = uuid(),
             status: InvitationStatus? = InvitationStatus.INVITED,
-            invitedByUser: User? = userCommonTestHelper.buildUser()
-    ) = InvitationUser(userRole, email, status, invitedByUser)
+            invitedByUser: User? = userCommonTestHelper.buildUser(),
+            organization: Organization? = organizationCommonTestHelper.buildOrganization()
+    ) = InvitationUser(userRole, email, status, invitedByUser, organization)
 
     fun buildUpdateInvitationUserStatusDto(
             uuid: String? = uuid(),

@@ -15,7 +15,8 @@ class InvitationUserCreateServiceIntegrationTest : AbstractInvitationUserService
     @Test
     fun test() {
         val dto = integrationUserTestHelper.buildCreateInvitationUserDto(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid,
+                organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid
         )
         invitationUserService.create(dto).let {
             flushAndClear()
@@ -23,6 +24,7 @@ class InvitationUserCreateServiceIntegrationTest : AbstractInvitationUserService
             assertThat(it.role).isEqualTo(dto.userRole)
             assertThat(it.email).isEqualTo(dto.email)
             assertThat(it.inviterUser.uuid).isEqualTo(dto.inviterUserUuid)
+            assertThat(it.organization.uuid).isEqualTo(dto.organizationUuid)
             assertThat(it.status).isEqualTo(InvitationStatus.INVITED)
         }
     }

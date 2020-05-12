@@ -19,7 +19,8 @@ class InvitationUserExistsByUuidServiceIntegrationTest : AbstractInvitationUserS
     @Test
     fun `test when found`() {
         val uuid = integrationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid,
+                organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid
         ).uuid
         flushAndClear()
         assertThat(invitationUserService.existsByUuid(uuid)).isTrue()
