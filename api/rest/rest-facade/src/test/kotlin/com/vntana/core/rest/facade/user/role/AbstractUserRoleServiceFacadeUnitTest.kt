@@ -5,6 +5,7 @@ import com.vntana.core.helper.user.role.UserRoleRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent
 import com.vntana.core.rest.facade.user.role.impl.UserRoleServiceFacadeImpl
+import com.vntana.core.service.token.auth.AuthTokenService
 import com.vntana.core.service.user.role.UserRoleService
 import org.easymock.Mock
 import org.junit.Before
@@ -25,10 +26,17 @@ abstract class AbstractUserRoleServiceFacadeUnitTest : AbstractServiceFacadeUnit
     protected lateinit var preconditionChecker: UserRoleFacadePreconditionCheckerComponent
 
     @Mock
+    protected lateinit var authTokenService: AuthTokenService
+
+    @Mock
     protected lateinit var userRoleService: UserRoleService
 
     @Before
     fun prepare() {
-        userRoleServiceFacade = UserRoleServiceFacadeImpl(preconditionChecker, userRoleService)
+        authTokenService
+        userRoleServiceFacade = UserRoleServiceFacadeImpl(preconditionChecker,
+                authTokenService,
+                userRoleService
+        )
     }
 }

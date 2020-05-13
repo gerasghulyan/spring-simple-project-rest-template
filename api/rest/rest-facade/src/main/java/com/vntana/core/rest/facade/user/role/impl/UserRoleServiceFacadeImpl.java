@@ -9,6 +9,7 @@ import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminRe
 import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse;
 import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
+import com.vntana.core.service.token.auth.AuthTokenService;
 import com.vntana.core.service.user.role.UserRoleService;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
@@ -28,11 +29,15 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleServiceFacadeImpl.class);
 
     private final UserRoleFacadePreconditionCheckerComponent preconditionChecker;
+    private final AuthTokenService authTokenService;
     private final UserRoleService userRoleService;
 
-    public UserRoleServiceFacadeImpl(final UserRoleFacadePreconditionCheckerComponent preconditionChecker, final UserRoleService userRoleService) {
+    public UserRoleServiceFacadeImpl(final UserRoleFacadePreconditionCheckerComponent preconditionChecker,
+                                     final AuthTokenService authTokenService,
+                                     final UserRoleService userRoleService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.preconditionChecker = preconditionChecker;
+        this.authTokenService = authTokenService;
         this.userRoleService = userRoleService;
     }
 
@@ -58,6 +63,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
             return new UserRoleRevokeOrganizationAdminResponse(error.getHttpStatus(), error.getError());
         }
         userRoleService.revokeOrganizationAdminRole(new UserRevokeOrganizationAdminRoleDto(request.getUserUuid(), request.getOrganizationUuid()));
+        authTokenService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user organization role for request - {}", request);
         return new UserRoleRevokeOrganizationAdminResponse(request.getUserUuid());
     }
