@@ -1,6 +1,5 @@
 package com.vntana.core.rest.facade.auth.impl;
 
-import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
@@ -15,14 +14,19 @@ import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.auth.AuthFacade;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.role.UserRoleService;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.vntana.core.model.user.error.UserErrorResponseModel.NOT_FOUND_FOR_ROLE;
 
 /**
  * Created by Geras Ghulyan.
@@ -35,17 +39,17 @@ public class AuthFacadeImpl implements AuthFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthFacadeImpl.class);
 
     private final UserService userService;
-
+    private final UserRoleService userRoleService;
     private final OrganizationService organizationService;
-
     private final PersistenceUtilityService persistenceUtilityService;
 
-    public AuthFacadeImpl(
-            final UserService userService,
-            final OrganizationService organizationService,
-            final PersistenceUtilityService persistenceUtilityService) {
+    public AuthFacadeImpl(final UserService userService,
+                          final UserRoleService userRoleService,
+                          final OrganizationService organizationService,
+                          final PersistenceUtilityService persistenceUtilityService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
+        this.userRoleService = userRoleService;
         this.organizationService = organizationService;
         this.persistenceUtilityService = persistenceUtilityService;
     }
@@ -73,41 +77,30 @@ public class AuthFacadeImpl implements AuthFacade {
         return mutableResponse.getValue();
     }
 
+    @Transactional
     @Override
     public SecureFindUserByUuidAndOrganizationResponse findByUserAndOrganization(final FindUserByUuidAndOrganizationRequest request) {
-        final Mutable<SecureFindUserByUuidAndOrganizationResponse> mutableResponse = new MutableObject<>();
-        persistenceUtilityService.runInPersistenceSession(() -> {
-            final User user = userService.getByUuid(request.getUuid());
-            final Organization organization = organizationService.getByUuid(request.getOrganizationUuid());
-            if (user.roleOfSuperAdmin().isPresent()) {
-                final SecureFindUserByUuidAndOrganizationResponse response = new SecureFindUserByUuidAndOrganizationResponse(
-                        new SecureUserOrganizationResponseModel(
-                                user.getUuid(),
-                                user.getEmail(),
-                                UserRoleModel.SUPER_ADMIN,
-                                organization.getUuid()
-                        )
-                );
-                mutableResponse.setValue(response);
+        LOGGER.debug("Processing auth facade findByUserAndOrganization for request - {}", request);
+        final Optional<User> userOptional = userService.findByUuid(request.getUuid());
+        if (!userOptional.isPresent()) {
+            return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE));
+        }
+        final User user = userOptional.get();
+        final SecureUserOrganizationResponseModel responseModel = new SecureUserOrganizationResponseModel();
+        responseModel.setUuid(user.getUuid());
+        responseModel.setUsername(user.getEmail());
+        responseModel.setOrganizationUuid(request.getOrganizationUuid());
+        if (user.roleOfSuperAdmin().isPresent()) {
+            responseModel.setUserRole(UserRoleModel.SUPER_ADMIN);
+        } else {
+            final Optional<AbstractUserRole> userRoleOptional = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
+            if (userRoleOptional.isPresent()) {
+                responseModel.setUserRole(UserRoleModel.valueOf(userRoleOptional.get().getUserRole().name()));
             } else {
-                final SecureFindUserByUuidAndOrganizationResponse response = user.roleOfOrganizationOwner(organization)
-                        .map(userOrganizationOwnerRole -> UserRoleModel.valueOf(userOrganizationOwnerRole.getUserRole().name()))
-                        .map(userRoleModel -> new SecureFindUserByUuidAndOrganizationResponse(
-                                        new SecureUserOrganizationResponseModel(
-                                                user.getUuid(),
-                                                user.getEmail(),
-                                                userRoleModel,
-                                                organization.getUuid()
-                                        )
-                                )
-                        ).orElseGet(() -> errorFindByEmailAndOrganization(UserErrorResponseModel.NOT_FOUND_FOR_ROLE));
-                mutableResponse.setValue(response);
+                return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE));
             }
-        });
-        return mutableResponse.getValue();
-    }
-
-    private SecureFindUserByUuidAndOrganizationResponse errorFindByEmailAndOrganization(final UserErrorResponseModel notFoundForOrganization) {
-        return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(notFoundForOrganization));
+        }
+        LOGGER.debug("Successfully processed auth facade findByUserAndOrganization for request - {}", request);
+        return new SecureFindUserByUuidAndOrganizationResponse(responseModel);
     }
 }
