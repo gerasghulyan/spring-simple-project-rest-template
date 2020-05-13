@@ -55,6 +55,16 @@ public class UserRoleServiceImpl implements UserRoleService {
         return userRoles;
     }
 
+    @Override
+    public Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
+        LOGGER.debug("Retrieving userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        Assert.hasText(userUuid, "The userUuid should not be null or empty");
+        final Optional<AbstractUserRole> userRole = userRoleRepository.findAllByOrganizationAndUser(organizationUuid, userUuid);
+        LOGGER.debug("Successfully retrieved userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
+        return userRole;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole) {

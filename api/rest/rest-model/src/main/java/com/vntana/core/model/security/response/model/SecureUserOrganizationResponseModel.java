@@ -27,6 +27,7 @@ public class SecureUserOrganizationResponseModel implements ResponseModel {
     private String organizationUuid;
 
     public SecureUserOrganizationResponseModel() {
+        super();
     }
 
     public SecureUserOrganizationResponseModel(final String uuid, final String username, final UserRoleModel userRole, final String organizationUuid) {

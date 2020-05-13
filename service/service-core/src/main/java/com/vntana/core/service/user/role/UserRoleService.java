@@ -8,6 +8,7 @@ import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Arman Gevorgyan.
@@ -18,6 +19,8 @@ import java.util.List;
 public interface UserRoleService {
 
     List<AbstractUserRole> findAllByOrganizationUuid(final String organizationUuid);
+
+    Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
     boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole);
 
