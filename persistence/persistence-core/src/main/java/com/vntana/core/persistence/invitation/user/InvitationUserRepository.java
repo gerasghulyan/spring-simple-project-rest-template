@@ -2,6 +2,8 @@ package com.vntana.core.persistence.invitation.user;
 
 import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +25,6 @@ public interface InvitationUserRepository extends JpaRepository<InvitationUser, 
     List<InvitationUser> findByInviterUserUuid(final String uuid);
 
     List<InvitationUser> findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final String email, final String organizationUuid, final InvitationStatus status);
+
+    Page<InvitationUser> findAllByStatus(final InvitationStatus status, final Pageable pageable);
 }

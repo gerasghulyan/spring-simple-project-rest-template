@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.invitation.user.impl
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.rest.facade.invitation.user.AbstractInvitationUserFacadeUnitTest
+import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto
 import org.easymock.EasyMock.anyObject
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -44,7 +45,8 @@ class InvitationUserCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
         val updateDto = invitationUserCommonTestHelper.buildUpdateInvitationUserStatusDto(uuid = userInvitations[0].uuid)
         resetAll()
         expect(preconditionChecker.checkCreateForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(invitationUserService.getByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(getAllDto)).andReturn(userInvitations)
+        expect(mapperFacade.map(request, CreateInvitationUserDto::class.java)).andReturn(dto)
+        expect(invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(getAllDto)).andReturn(userInvitations)
         expect(invitationUserService.updateStatus(updateDto)).andReturn(anyObject())
         expect(invitationUserService.create(dto)).andReturn(userInvitations[0])
         replayAll()

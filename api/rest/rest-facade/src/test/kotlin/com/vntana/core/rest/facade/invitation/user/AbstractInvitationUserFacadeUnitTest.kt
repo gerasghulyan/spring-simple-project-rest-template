@@ -8,6 +8,7 @@ import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadeP
 import com.vntana.core.rest.facade.invitation.user.impl.InvitationUserServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.invitation.user.InvitationUserService
+import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
 import org.junit.Before
 
@@ -25,8 +26,11 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitT
     @Mock
     protected lateinit var invitationUserService: InvitationUserService
 
+    @Mock
+    protected lateinit var mapperFacade: MapperFacade
+
     protected val invitationUserRestTestHelper = InvitationUserRestTestHelper()
-    
+
     protected val invitationUserCommonTestHelper = InvitationUserCommonTestHelper()
 
     protected val userCommonTestHelper = UserCommonTestHelper()
@@ -35,6 +39,6 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitT
 
     @Before
     fun prepare() {
-        invitationUserServiceFacade = InvitationUserServiceFacadeImpl(invitationUserService, preconditionChecker)
+        invitationUserServiceFacade = InvitationUserServiceFacadeImpl(invitationUserService, preconditionChecker, mapperFacade)
     }
 }

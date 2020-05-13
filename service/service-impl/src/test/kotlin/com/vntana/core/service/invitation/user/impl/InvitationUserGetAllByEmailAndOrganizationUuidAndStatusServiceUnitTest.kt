@@ -12,7 +12,7 @@ import org.junit.Test
  * Date: 5/12/2020
  * Time: 3:10 PM
  */
-class InvitationUserGetByEmailAndOrganizationUuidAndStatusServiceUnitTest : AbstractInvitationUserServiceUnitTest() {
+class InvitationUserGetAllByEmailAndOrganizationUuidAndStatusServiceUnitTest : AbstractInvitationUserServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
@@ -23,7 +23,7 @@ class InvitationUserGetByEmailAndOrganizationUuidAndStatusServiceUnitTest : Abst
         assertThatThrownBy { commonTestHelper.buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(organizationUuid = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(status = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { invitationUserService.getByInviterUserUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { invitationUserService.getAllByInviterUserUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
     
@@ -37,7 +37,7 @@ class InvitationUserGetByEmailAndOrganizationUuidAndStatusServiceUnitTest : Abst
         resetAll()
         expect(invitationUserRepository.findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(email, organization.uuid, InvitationStatus.INVITED)).andReturn(listOf(invitationUser3, invitationUser2, invitationUser1))
         replayAll()
-        invitationUserService.getByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(
+        invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(
                 commonTestHelper.buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
                         email = email,
                         organizationUuid = organization.uuid,

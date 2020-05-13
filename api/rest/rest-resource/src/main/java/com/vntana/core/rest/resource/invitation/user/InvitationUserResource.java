@@ -2,15 +2,16 @@ package com.vntana.core.rest.resource.invitation.user;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
-import com.vntana.core.model.invitation.user.response.CreateInvitationUserResponse;
+import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
+import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
+import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Manuk Gharslyan.
@@ -31,10 +32,26 @@ public class InvitationUserResource {
     }
 
     @PostMapping
-    public ResponseEntity<CreateInvitationUserResponse> create(@RequestBody final CreateInvitationUserRequest request) {
+    public ResponseEntity<CreateInvitationUserResultResponse> create(@RequestBody final CreateInvitationUserRequest request) {
         LOGGER.debug("Processing InvitationUserResource create method for request - {}", request);
-        final CreateInvitationUserResponse resultResponse = invitationUserServiceFacade.create(request);
+        final CreateInvitationUserResultResponse resultResponse = invitationUserServiceFacade.create(request);
         LOGGER.debug("Successfully processed InvitationUserResource create method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "/by-status")
+    public ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource getAllByStatus method for request - {}", request);
+        final GetAllByStatusUserInvitationsResultResponse resultResponse = invitationUserServiceFacade.getAllByStatus(request);
+        LOGGER.debug("Successfully processed InvitationUserResource getAllByStatus method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PutMapping(path = "/status")
+    ResponseEntity<UpdateInvitationUserInvitationStatusResultResponse> updateStatus(@RequestBody final UpdateInvitationUserInvitationStatusRequest request) {
+        LOGGER.debug("Processing InvitationUserResource updateStatus method for request - {}", request);
+        final UpdateInvitationUserInvitationStatusResultResponse resultResponse = invitationUserServiceFacade.updateStatus(request);
+        LOGGER.debug("Successfully processed InvitationUserResource updateStatus method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }

@@ -1,10 +1,15 @@
 package com.vntana.core.rest.client.invitation.user;
 
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
-import com.vntana.core.model.invitation.user.response.CreateInvitationUserResponse;
+import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
+import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
+import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -16,5 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface InvitationUserResourceClient {
 
     @PostMapping
-    ResponseEntity<CreateInvitationUserResponse> create(@RequestBody final CreateInvitationUserRequest request);
+    ResponseEntity<CreateInvitationUserResultResponse> create(@RequestBody final CreateInvitationUserRequest request);
+
+    @PostMapping("/by-status")
+    ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request);
+
+    @PutMapping("/status")
+    ResponseEntity<UpdateInvitationUserInvitationStatusResultResponse> updateStatus(@RequestBody final UpdateInvitationUserInvitationStatusRequest request);
 }

@@ -11,14 +11,14 @@ import org.junit.Test
  * Date: 5/11/2020
  * Time: 2:53 PM
  */
-class InvitationUserGetByInviterUserUuidServiceUnitTest : AbstractInvitationUserServiceUnitTest() {
+class InvitationUserGetAllByInviterUserUuidServiceUnitTest : AbstractInvitationUserServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { invitationUserService.getByInviterUserUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { invitationUserService.getByInviterUserUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { invitationUserService.getAllByInviterUserUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { invitationUserService.getAllByInviterUserUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
     
@@ -31,7 +31,7 @@ class InvitationUserGetByInviterUserUuidServiceUnitTest : AbstractInvitationUser
         resetAll()
         expect(invitationUserRepository.findByInviterUserUuid(inviterUser.uuid)).andReturn(listOf(invitationUser1, invitationUser2, invitationUser3))
         replayAll()
-        invitationUserService.getByInviterUserUuid(inviterUser.uuid).let { list ->
+        invitationUserService.getAllByInviterUserUuid(inviterUser.uuid).let { list ->
             assertThat(list.isEmpty()).isFalse()
             assertThat(list).containsExactlyElementsOf(listOf(invitationUser1, invitationUser2, invitationUser3))
         }
