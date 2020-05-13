@@ -35,6 +35,7 @@ class UserRoleRevokeOrganizationAdminRoleFacadeUnitTest : AbstractUserRoleServic
         )
         expect(preconditionChecker.checkRevokeOrganizationAdminRole(request)).andReturn(SingleErrorWithStatus.empty())
         expect(userRoleService.revokeOrganizationAdminRole(dto))
+        expect(authTokenService.expireAllByUser(request.userUuid))
         replayAll()
         userRoleServiceFacade.revokeOrganizationAdminRole(request).let {
             assertBasicSuccessResultResponse(it)

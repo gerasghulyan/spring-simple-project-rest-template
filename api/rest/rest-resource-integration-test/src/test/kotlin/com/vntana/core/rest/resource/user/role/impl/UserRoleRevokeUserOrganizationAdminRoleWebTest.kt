@@ -77,6 +77,10 @@ class UserRoleRevokeUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest()
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val grantRequest = resourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = userUuid, organizationUuid = organizationUuid)
         val revokeRequest = resourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(userUuid = userUuid, organizationUuid = organizationUuid)
+        val token1 = uuid()
+        val token2 = uuid()
+        authTokenResourceTestHelper.persistToken(userUuid = userUuid, token = token1)
+        authTokenResourceTestHelper.persistToken(userUuid = userUuid, token = token2)
         userRoleResourceClient.grantUserOrganizationAdminRole(grantRequest)
         userRoleResourceClient.revokeUserOrganizationAdminRole(revokeRequest).let {
             assertBasicSuccessResultResponse(it)
@@ -85,8 +89,11 @@ class UserRoleRevokeUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest()
                 userResourceClient.getUsersByOrganization(organizationUuid)?.body?.response()?.run {
                     assertThat(this.totalCount()).isEqualTo(1)
                     assertThat(this.items()[0].userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+
                 }
             }
         }
+        assertThat(authTokenResourceClient.isExpired(token1)?.body?.response()?.expired).isTrue()
+        assertThat(authTokenResourceClient.isExpired(token2)?.body?.response()?.expired).isTrue()
     }
 }
