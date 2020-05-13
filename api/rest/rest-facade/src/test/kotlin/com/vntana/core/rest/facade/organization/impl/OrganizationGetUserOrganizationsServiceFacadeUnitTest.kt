@@ -36,7 +36,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         resetAll()
         val organization = commonTestHelper.buildOrganization()
         val organization2 = commonTestHelper.buildOrganization()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
         val organizations = listOf(organization, organization2)
         // expectations
@@ -70,8 +70,8 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         resetAll()
         val organization = commonTestHelper.buildOrganization()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val user = userHelper.buildUser(
-                clientOrganization = organization
+        val user = userHelper.buildUserWithOrganizationOwnerRole(
+                organization = organization
         )
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
         // expectations
@@ -98,8 +98,8 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         resetAll()
         val organization = commonTestHelper.buildOrganization()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val user = userHelper.buildUser(
-                clientOrganization = organization
+        val user = userHelper.buildUserWithOrganizationOwnerRole(
+                organization = organization
         )
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
         // expectations

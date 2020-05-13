@@ -145,6 +145,10 @@ public class User extends AbstractUuidAwareDomainEntity {
     public List<AbstractUserRole> roles() {
         return immutableRoles();
     }
+
+    public void setRoles(final List<AbstractUserRole> roles) {
+        this.roles = roles;
+    }
     //endregion
 
     //region Utility methods

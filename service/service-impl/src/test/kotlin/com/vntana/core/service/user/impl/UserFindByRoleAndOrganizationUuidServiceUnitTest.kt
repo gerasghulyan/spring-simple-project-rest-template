@@ -27,7 +27,7 @@ class UserFindByRoleAndOrganizationUuidServiceUnitTest : AbstractUserServiceUnit
     @Test
     fun `test find`() {
         val organization = organizationHelper.buildOrganization()
-        val user = helper.buildUser(clientOrganization = organization)
+        val user = helper.buildUserWithOrganizationOwnerRole(organization = organization)
         val userRole = UserRole.ORGANIZATION_OWNER
         resetAll()
         expect(userRepository.findByRoleAndOrganizationUuid(userRole, organization.uuid)).andReturn(listOf(user))

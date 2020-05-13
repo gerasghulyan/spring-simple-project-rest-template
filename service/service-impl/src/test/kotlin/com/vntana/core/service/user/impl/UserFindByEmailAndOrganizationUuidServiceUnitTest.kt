@@ -40,7 +40,7 @@ class UserFindByEmailAndOrganizationUuidServiceUnitTest : AbstractUserServiceUni
     fun test() {
         val email = email()
         val organization = organizationHelper.buildOrganization()
-        val user = helper.buildUser(email = email, clientOrganization = organization)
+        val user = helper.buildUserWithOrganizationOwnerRole(email = email, organization = organization)
         resetAll()
         expect(userRepository.findByEmailAndOrganizationUuid(email, organization.uuid)).andReturn(Optional.of(user))
         replayAll()

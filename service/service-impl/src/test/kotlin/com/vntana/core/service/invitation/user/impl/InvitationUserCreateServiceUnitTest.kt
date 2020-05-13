@@ -44,7 +44,7 @@ class InvitationUserCreateServiceUnitTest : AbstractInvitationUserServiceUnitTes
     @Test
     fun test() {
         resetAll()
-        val inviterUser = userCommonTestHelper.buildUser()
+        val inviterUser = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val organization = organizationCommonTestHelper.buildOrganization()
         val dto = commonTestHelper.buildCreateInvitationUserDto(inviterUserUuid = inviterUser.uuid)
         val invitationUser = commonTestHelper.buildInvitationUser(

@@ -54,7 +54,7 @@ class UserUpdateServiceUnitTest : AbstractUserServiceUnitTest() {
     @Test
     fun `test update`() {
         // test data
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         val dto = helper.buildUpdateUserDto(uuid = user.uuid)
         resetAll()
         // expectations

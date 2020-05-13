@@ -4,6 +4,8 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserOrganizationAdminRole;
+import com.vntana.core.domain.user.UserOrganizationOwnerRole;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
@@ -155,7 +157,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
             if (user.roleOfSuperAdmin().isPresent()) {
                 response = getClientsForSuperAdmin(user, organization);
             } else {
-                response = getClientsForOrganizationOwner(user, organization);
+                response = getClientsForOrganizationOwnerAndAdmin(user, organization);
             }
             mutableResponseModel.setValue(response);
         });
@@ -261,10 +263,9 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 .orElseThrow(() -> new IllegalStateException(format("Super Admin can't find the clients for organization - %s", organization.getUuid())));
     }
 
-    private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationOwner(
-            final User user,
-            final Organization organization) {
-        return user.roleOfOrganizationOwner(organization)
+    private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationOwnerAndAdmin(final User user, final Organization organization) {
+        return user.roles().stream().filter(role -> (role instanceof UserOrganizationAdminRole) || (role instanceof UserOrganizationOwnerRole))
+                .findAny()
                 .map(role -> buildClients(organization, role.getUserRole()))
                 .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"));
     }

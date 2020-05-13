@@ -30,7 +30,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     fun `test when super admin`() {
         resetAll()
         val userUuid = uuid()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
         expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
@@ -52,7 +52,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     fun `test when is not super admin`() {
         resetAll()
         val userUuid = uuid()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
         replayAll()
@@ -73,7 +73,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     fun `test when is organization owner in 2 organizations`() {
         resetAll()
         val userUuid = uuid()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         val organization1 = organizationHelper.buildOrganization()
         val organization2 = organizationHelper.buildOrganization()
         user.grantOrganizationOwnerRole(organization1)

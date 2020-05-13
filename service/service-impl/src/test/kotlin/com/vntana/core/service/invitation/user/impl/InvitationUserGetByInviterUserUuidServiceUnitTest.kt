@@ -24,7 +24,7 @@ class InvitationUserGetByInviterUserUuidServiceUnitTest : AbstractInvitationUser
     
     @Test
     fun test() {
-        val inviterUser = userCommonTestHelper.buildUser()
+        val inviterUser = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val invitationUser1 = commonTestHelper.buildInvitationUser(invitedByUser = inviterUser)
         val invitationUser2 = commonTestHelper.buildInvitationUser(invitedByUser = inviterUser)
         val invitationUser3 = commonTestHelper.buildInvitationUser(invitedByUser = inviterUser)

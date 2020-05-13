@@ -65,7 +65,7 @@ class InvitationOrganizationAcceptAndSignUpFacadeUnitTest : AbstractInvitationOr
         )
         val tokenInvitationOrganization = tokenInvitationOrganizationCommonTestHelper.buildTokenInvitationOrganization()
         val invitationOrganization = tokenInvitationOrganization.invitationOrganization
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val organization = organizationCommonTestHelper.buildOrganization()
         val dto = organizationCommonTestHelper.buildCreateOrganizationFromInvitationDto(request.organizationName, request.organizationSlug, invitationOrganization.uuid)
         resetAll()

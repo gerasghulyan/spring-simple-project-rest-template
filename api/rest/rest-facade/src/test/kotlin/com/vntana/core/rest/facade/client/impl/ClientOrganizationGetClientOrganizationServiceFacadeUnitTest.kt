@@ -22,10 +22,9 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         // test data
         resetAll()
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userHelper.buildUser(clientOrganization = organization)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
         organization.grantClientOrganization(clientOrganization)
-
         // expectations
         expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
                 .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
@@ -49,11 +48,41 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
     }
 
     @Test
+    fun `test getClientOrganizations when organization admin`() {
+        // test data
+        resetAll()
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val user = userHelper.buildUserWithOrganizationAdminRole(organization = organization)
+        val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
+        organization.grantClientOrganization(clientOrganization)
+        // expectations
+        expect(persistenceUtilityService.runInPersistenceSession(EasyMock.isA(Executable::class.java)))
+                .andAnswer { (EasyMock.getCurrentArguments()[0] as Executable).execute() }
+        expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))
+        expect(organizationService.existsByUuid(organization.uuid)).andReturn(true)
+        expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
+        replayAll()
+        // test scenario
+        clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
+            assertThat(it.response())
+            assertThat(it.response().totalCount()).isEqualTo(1)
+            val organizationClientOrganization = it.response().items()[0]
+            assertThat(organizationClientOrganization.name).isEqualTo(clientOrganization.name)
+            assertThat(organizationClientOrganization.slug).isEqualTo(clientOrganization.slug)
+            assertThat(organizationClientOrganization.uuid).isEqualTo(clientOrganization.uuid)
+            assertThat(organizationClientOrganization.imageBlobId).isEqualTo(clientOrganization.imageBlobId)
+            assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(organizationClientOrganization.created).isEqualTo(clientOrganization.created)
+        }
+        verifyAll()
+    }
+
+    @Test
     fun `test getClientOrganizations with illegal arguments`() {
         // test data
         resetAll()
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userHelper.buildUser(clientOrganization = organization)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
         organization.grantClientOrganization(clientOrganization)
         replayAll()
@@ -94,7 +123,7 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         // test data
         resetAll()
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userHelper.buildUser(clientOrganization = organization)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
         organization.grantClientOrganization(clientOrganization)
         // expectations
@@ -120,7 +149,7 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         // test data
         resetAll()
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userHelper.buildUser(clientOrganization = organization)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
         organization.grantClientOrganization(clientOrganization)
         // expectations
@@ -144,7 +173,7 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         // test data
         resetAll()
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userHelper.buildUser(clientOrganization = organization)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         user.grantSuperAdminRole()
         val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
         organization.grantClientOrganization(clientOrganization)

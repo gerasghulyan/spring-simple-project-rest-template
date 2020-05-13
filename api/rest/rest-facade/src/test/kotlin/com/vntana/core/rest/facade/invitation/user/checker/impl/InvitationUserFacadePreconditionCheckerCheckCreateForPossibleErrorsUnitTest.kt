@@ -58,7 +58,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForPossibleErrorsUnitTes
     @Test
     fun `test when invited user already is a part of organization`() {
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userCommonTestHelper.buildUser(clientOrganization = organization)
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserRequest(organizationUuid = organization.uuid, email = user.email)
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)

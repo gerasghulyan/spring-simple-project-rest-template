@@ -30,7 +30,7 @@ class UserRoleExistsByOrganizationAndUserAndRoleServiceUnitTest : AbstractUserRo
     fun `test admin role`() {
         resetAll()
         val organizationUuid = uuid()
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val role = UserRole.ORGANIZATION_ADMIN
         val ownerRole = commonTestHelper.buildUserOrganizationOwnerRole(user = user)
         val adminRole1 = commonTestHelper.buildUserOrganizationAdminRole(user = user)
@@ -46,7 +46,7 @@ class UserRoleExistsByOrganizationAndUserAndRoleServiceUnitTest : AbstractUserRo
     fun `test admin role when different users exists in same organization`() {
         resetAll()
         val organizationUuid = uuid()
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val role = UserRole.ORGANIZATION_ADMIN
         val ownerRole = commonTestHelper.buildUserOrganizationOwnerRole(user = user)
         val adminRole1 = commonTestHelper.buildUserOrganizationAdminRole(user = user)
@@ -63,7 +63,7 @@ class UserRoleExistsByOrganizationAndUserAndRoleServiceUnitTest : AbstractUserRo
     fun `test when more then one role found`() {
         resetAll()
         val organizationUuid = uuid()
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val role = UserRole.ORGANIZATION_ADMIN
         val adminRole1 = commonTestHelper.buildUserOrganizationAdminRole(user = user)
         val adminRole2 = commonTestHelper.buildUserOrganizationAdminRole(user = user)
@@ -78,7 +78,7 @@ class UserRoleExistsByOrganizationAndUserAndRoleServiceUnitTest : AbstractUserRo
     fun `test owner role`() {
         resetAll()
         val organizationUuid = uuid()
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val role = UserRole.ORGANIZATION_OWNER
         val ownerRole = commonTestHelper.buildUserOrganizationOwnerRole(user = user)
         val adminRole1 = commonTestHelper.buildUserOrganizationAdminRole(user = user)

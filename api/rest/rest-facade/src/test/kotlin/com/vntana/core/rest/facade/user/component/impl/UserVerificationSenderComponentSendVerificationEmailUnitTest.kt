@@ -30,7 +30,7 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
 
     @Test
     fun `test when user already verified`() {
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.verified = true
         val request = restHelper.buildSendUserVerificationRequest(email = user.email)
         resetAll()
@@ -44,7 +44,7 @@ class UserVerificationSenderComponentSendVerificationEmailUnitTest : AbstractUse
 
     @Test
     fun `test sendVerificationEmail`() {
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         val templateName = uuid()
         val templateEmail = TemplateEmail(TemplateEmailType.USER_VERIFICATION, templateName)
         val request = restHelper.buildSendUserVerificationRequest(email = user.email)

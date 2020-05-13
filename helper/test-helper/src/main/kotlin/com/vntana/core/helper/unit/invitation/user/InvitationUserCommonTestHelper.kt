@@ -42,7 +42,7 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             userRole: UserRole? = UserRole.ORGANIZATION_ADMIN,
             email: String? = uuid(),
             status: InvitationStatus? = InvitationStatus.INVITED,
-            invitedByUser: User? = userCommonTestHelper.buildUser(),
+            invitedByUser: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             organization: Organization? = organizationCommonTestHelper.buildOrganization()
     ) = InvitationUser(userRole, email, status, invitedByUser, organization)
 

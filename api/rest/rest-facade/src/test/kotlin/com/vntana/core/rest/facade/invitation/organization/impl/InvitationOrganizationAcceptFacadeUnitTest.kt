@@ -49,7 +49,7 @@ class InvitationOrganizationAcceptFacadeUnitTest : AbstractInvitationOrganizatio
         val request = restTestHelper.buildAcceptInvitationOrganizationRequest()
         val tokenInvitationOrganization = tokenInvitationOrganizationCommonTestHelper.buildTokenInvitationOrganization()
         val invitationOrganization = tokenInvitationOrganization.invitationOrganization
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val organization = organizationCommonTestHelper.buildOrganization()
         val ownerRole = userRoleCommonTestHelper.buildUserOrganizationOwnerRole()
         val dto = organizationCommonTestHelper.buildCreateOrganizationFromInvitationDto(request.organizationName, request.organizationSlug, invitationOrganization.uuid)

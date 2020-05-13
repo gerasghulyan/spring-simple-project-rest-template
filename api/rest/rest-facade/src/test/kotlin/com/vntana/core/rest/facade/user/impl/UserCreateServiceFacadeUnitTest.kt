@@ -20,7 +20,7 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
         // test data
         val request = restHelper.buildCreateUserRequest()
         val organization = organizationHelper.buildOrganization()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         resetAll()
         // expectations
         expect(emailValidationComponent.isValid(request.email))
@@ -56,7 +56,7 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
     @Test
     fun `test create user with existing email`() {
         val request = restHelper.buildCreateUserRequest()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         resetAll()
         // expectations
         expect(emailValidationComponent.isValid(request.email))

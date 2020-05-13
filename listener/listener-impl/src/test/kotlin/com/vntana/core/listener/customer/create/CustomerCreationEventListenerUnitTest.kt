@@ -78,7 +78,7 @@ class CustomerCreationEventListenerUnitTest : AbstractListenerUnitTest() {
     fun `test handleEvent`() {
         val email = uuid()
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userCommonTestHelper.buildUser(email = email)
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole(email = email)
         val payload = OrganizationLifecyclePayload(organization, EntityLifecycle.CREATED)
         resetAll()
         expect(organizationService.getOrganizationOwnerEmail(organization.uuid)).andReturn((email))

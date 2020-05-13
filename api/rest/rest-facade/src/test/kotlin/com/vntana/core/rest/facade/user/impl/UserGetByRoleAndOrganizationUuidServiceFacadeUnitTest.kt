@@ -60,8 +60,8 @@ class UserGetByRoleAndOrganizationUuidServiceFacadeUnitTest : AbstractUserServic
         resetAll()
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(true)
         expect(userService.findByRoleAndOrganizationUuid(UserRole.valueOf(userRole.name), organizationUuid)).andReturn(listOf(
-                userHelper.buildUser(),
-                userHelper.buildUser()
+                userHelper.buildUserWithOrganizationOwnerRole(),
+                userHelper.buildUserWithOrganizationOwnerRole()
         ))
         replayAll()
         assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(userRole, organizationUuid), UserErrorResponseModel.ORGANIZATION_ROLE_CONFLICT)
@@ -75,7 +75,7 @@ class UserGetByRoleAndOrganizationUuidServiceFacadeUnitTest : AbstractUserServic
         resetAll()
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(true)
         expect(userService.findByRoleAndOrganizationUuid(UserRole.valueOf(userRole.name), organizationUuid)).andReturn(listOf(
-                userHelper.buildUser()
+                userHelper.buildUserWithOrganizationOwnerRole()
         ))
         replayAll()
         assertBasicSuccessResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(userRole, organizationUuid))

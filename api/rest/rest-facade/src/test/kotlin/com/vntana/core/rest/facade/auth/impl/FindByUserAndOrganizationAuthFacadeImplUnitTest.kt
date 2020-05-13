@@ -32,7 +32,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
     @Test
     fun `test user is super admin`() {
         resetAll()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
         val userUuid = user.uuid
         val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
@@ -51,7 +51,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
     @Test
     fun `test user has no any role`() {
         resetAll()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         val adminRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole()
         val userUuid = user.uuid
         val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())

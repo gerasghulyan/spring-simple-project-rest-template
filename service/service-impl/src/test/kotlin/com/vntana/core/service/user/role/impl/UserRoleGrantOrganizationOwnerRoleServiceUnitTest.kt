@@ -36,7 +36,7 @@ class UserRoleGrantOrganizationOwnerRoleServiceUnitTest : AbstractUserRoleServic
     fun `test grantOrganizationOwnerRole`() {
         resetAll()
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val dto = commonTestHelper.buildUserGrantOrganizationRoleDto(
                 userUuid = user.uuid,
                 organizationUuid = organization.uuid

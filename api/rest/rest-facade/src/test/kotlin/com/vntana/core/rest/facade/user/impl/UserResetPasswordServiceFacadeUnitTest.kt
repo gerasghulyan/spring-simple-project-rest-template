@@ -28,8 +28,8 @@ class UserResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest
     fun test() {
         val newPassword = uuid()
         val email = uuid()
-        val user = userHelper.buildUser(email = email)
-        val updatedUser = userHelper.buildUser(email = email, password = newPassword)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(email = email)
+        val updatedUser = userHelper.buildUserWithOrganizationOwnerRole(email = email, password = newPassword)
         val request = restHelper.buildResetUserPasswordRequest(email = email, password = newPassword)
         resetAll()
         expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
