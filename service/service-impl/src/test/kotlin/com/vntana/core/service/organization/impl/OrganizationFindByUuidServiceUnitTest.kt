@@ -1,6 +1,7 @@
 package com.vntana.core.service.organization.impl
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceUnitTest
+import com.vntana.core.service.organization.exception.OrganizationNotFoundForUuidException
 import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -38,7 +39,7 @@ class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTes
         replayAll()
         // test scenario
         assertThatThrownBy { organizationService.getByUuid(uuid) }
-                .isExactlyInstanceOf(IllegalStateException::class.java)
+                .isExactlyInstanceOf(OrganizationNotFoundForUuidException::class.java)
         verifyAll()
     }
 

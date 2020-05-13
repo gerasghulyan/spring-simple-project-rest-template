@@ -36,5 +36,7 @@ public interface UserService {
 
     List<User> findByRoleAndOrganizationUuid(final UserRole userRole, final String organizationUuid);
 
+    Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid);
+
     User getByEmail(final String email);
 }

@@ -17,7 +17,7 @@ abstract class AbstractInvitationUserServiceIntegrationTest : AbstractServiceInt
     protected lateinit var invitationUserService: InvitationUserService
 
     @Autowired
-    protected lateinit var integrationUserTestHelper: InvitationUserIntegrationTestHelper
+    protected lateinit var integrationInvitationUserTestHelper: InvitationUserIntegrationTestHelper
     
     @Autowired
     protected lateinit var userIntegrationTestHelper: UserIntegrationTestHelper

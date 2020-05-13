@@ -26,6 +26,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUuid(final String uuid);
 
+    // TODO: 5/12/2020 from UserOrganizationOwnerRole very simple case, should be more generic
     @Query("select u from UserOrganizationOwnerRole uro join uro.user u where uro.userRole = :userRole and uro.organization.uuid = :organizationUuid")
     List<User> findByRoleAndOrganizationUuid(@Param("userRole") final UserRole userRole, @Param("organizationUuid") final String organizationUuid);
+
+    // TODO: 5/12/2020 this is very complex query 
+    @Query("select u from User u where u.id in (select uoor.user.id from UserOrganizationOwnerRole uoor where uoor.user.email = :email and uoor.organization.uuid = :organizationUuid)" +
+            " or u.id in (select uoar.user.id from UserOrganizationAdminRole uoar where uoar.user.email = :email and uoar.organization.uuid = :organizationUuid)")
+    Optional<User> findByEmailAndOrganizationUuid(@Param("email") final String email, @Param("organizationUuid") final String organizationUuid);
 }

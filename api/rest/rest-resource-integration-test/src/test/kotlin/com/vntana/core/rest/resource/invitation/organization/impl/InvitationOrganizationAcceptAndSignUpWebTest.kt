@@ -4,7 +4,6 @@ import com.vntana.core.model.invitation.organization.error.InvitationOrganizatio
 import com.vntana.core.model.user.request.FindUserByEmailRequest
 import com.vntana.core.rest.resource.invitation.organization.AbstractInvitationOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Assert
 import org.junit.Test
 import org.springframework.http.HttpStatus
 
@@ -85,8 +84,8 @@ class InvitationOrganizationAcceptAndSignUpWebTest : AbstractInvitationOrganizat
         val userUuid = userResourceClient.findByEmail(FindUserByEmailRequest(email)).response().uuid
         userResourceClient.accountDetails(userUuid).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body.response().uuid).isEqualTo(userUuid)
-            assertThat(it.body.response().isEmailVerified).isTrue()
+            assertThat(it.body?.response()?.uuid).isEqualTo(userUuid)
+            assertThat(it.body?.response()?.isEmailVerified).isTrue()
         }
     }
 }

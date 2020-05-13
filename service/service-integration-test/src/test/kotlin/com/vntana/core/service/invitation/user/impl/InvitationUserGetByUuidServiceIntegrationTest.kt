@@ -12,7 +12,7 @@ import org.junit.Test
 class InvitationUserGetByUuidServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
     @Test
     fun test() {
-        val invitationUser = integrationUserTestHelper.persistInvitationUser(
+        val invitationUser = integrationInvitationUserTestHelper.persistInvitationUser(
                 inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
         )
         flushAndClear()

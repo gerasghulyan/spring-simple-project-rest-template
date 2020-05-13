@@ -29,6 +29,8 @@ abstract class AbstractWebIntegrationTest {
     fun uuid(): String = UUID.randomUUID().toString()
 
     fun emptyString(): String = StringUtils.EMPTY
+    
+    fun email():String = "${uuid()}@mail.com"
 
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {
         Assertions.assertThat(resultResponse).isNotNull

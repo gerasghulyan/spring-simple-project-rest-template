@@ -13,10 +13,10 @@ import org.junit.Test
 class InvitationUserUpdateStatusServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
     @Test
     fun `test update`() {
-        val invitationUser = integrationUserTestHelper.persistInvitationUser(
+        val invitationUser = integrationInvitationUserTestHelper.persistInvitationUser(
                 inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
         )
-        val dto = integrationUserTestHelper.buildUpdateInvitationUserStatusDto(
+        val dto = integrationInvitationUserTestHelper.buildUpdateInvitationUserStatusDto(
                 uuid = invitationUser.uuid,
                 status = InvitationStatus.REJECTED
         )
