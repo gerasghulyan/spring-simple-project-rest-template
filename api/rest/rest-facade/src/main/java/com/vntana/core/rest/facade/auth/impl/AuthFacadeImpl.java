@@ -81,7 +81,6 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public SecureFindUserByUuidAndOrganizationResponse findByUserAndOrganization(final FindUserByUuidAndOrganizationRequest request) {
         LOGGER.debug("Processing auth facade findByUserAndOrganization for request - {}", request);
-        final Mutable<SecureUserOrganizationResponseModel> mutableResponse = new MutableObject<>();
         final Optional<User> userOptional = userService.findByUuid(request.getUuid());
         if (!userOptional.isPresent()) {
             return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE));
@@ -93,12 +92,10 @@ public class AuthFacadeImpl implements AuthFacade {
         responseModel.setOrganizationUuid(request.getOrganizationUuid());
         if (user.roleOfSuperAdmin().isPresent()) {
             responseModel.setUserRole(UserRoleModel.SUPER_ADMIN);
-            mutableResponse.setValue(responseModel);
         } else {
             final Optional<AbstractUserRole> userRoleOptional = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
             if (userRoleOptional.isPresent()) {
                 responseModel.setUserRole(UserRoleModel.valueOf(userRoleOptional.get().getUserRole().name()));
-                mutableResponse.setValue(responseModel);
             } else {
                 return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE));
             }

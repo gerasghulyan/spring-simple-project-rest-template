@@ -55,6 +55,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         return userRoles;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
