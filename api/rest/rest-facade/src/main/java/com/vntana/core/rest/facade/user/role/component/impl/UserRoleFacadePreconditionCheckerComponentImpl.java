@@ -42,11 +42,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     @Override
     public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantOrganizationAdminRole(final UserRoleGrantOrganizationAdminRequest request) {
         LOGGER.debug("Processing checkGrantOrganizationAdminRole for request - {}", request);
-        if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND);
-        }
-        if (!userService.existsByUuid(request.getUserUuid())) {
-            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.USER_NOT_FOUND);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(request.getOrganizationUuid(), request.getUserUuid());
+        if (error.isPresent()) {
+            return error;
         }
         if (userRoleService.existsByOrganizationAndUserAndRole(request.getOrganizationUuid(), request.getUserUuid(), UserRole.ORGANIZATION_ADMIN)) {
             return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
@@ -58,11 +56,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     @Override
     public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeOrganizationAdminRole(final UserRoleRevokeOrganizationAdminRequest request) {
         LOGGER.debug("Processing checkRevokeOrganizationAdminRole for request - {}", request);
-        if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND);
-        }
-        if (!userService.existsByUuid(request.getUserUuid())) {
-            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.USER_NOT_FOUND);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(request.getOrganizationUuid(), request.getUserUuid());
+        if (error.isPresent()) {
+            return error;
         }
         if (!userRoleService.existsByOrganizationAndUserAndRole(request.getOrganizationUuid(), request.getUserUuid(), UserRole.ORGANIZATION_ADMIN)) {
             return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_IS_ABSENT);
@@ -70,4 +66,16 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         LOGGER.debug("Successfully processed checkRevokeOrganizationAdminRole for request - {}", request);
         return SingleErrorWithStatus.empty();
     }
+
+    private SingleErrorWithStatus<UserRoleErrorResponseModel> checkOrganizationAndUserExistence(final String organizationUuid,
+                                                                                                final String userUuid) {
+        if (!organizationService.existsByUuid(organizationUuid)) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND);
+        }
+        if (!userService.existsByUuid(userUuid)) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.USER_NOT_FOUND);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
 }

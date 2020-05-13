@@ -60,6 +60,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole) {
         LOGGER.debug("Checking existence of userRole belonging to organization - {}, user - {}  with role - {}", organizationUuid, userUuid, userRole);
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        Assert.hasText(userUuid, "The userUuid should not be null or empty");
         Assert.notNull(userRole, "The userRole should not be null");
         final List<AbstractUserRole> roles = userRoleRepository.findAllByOrganizationUuid(organizationUuid).stream()
                 .filter(abstractUserRole -> abstractUserRole.getUserRole() == userRole && abstractUserRole.getUser().getUuid().equals(userUuid))
