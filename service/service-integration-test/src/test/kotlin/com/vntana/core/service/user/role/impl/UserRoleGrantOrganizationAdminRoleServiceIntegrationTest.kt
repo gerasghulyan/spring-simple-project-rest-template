@@ -14,7 +14,7 @@ import javax.persistence.PersistenceException
 class UserRoleGrantOrganizationAdminRoleServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
 
     @Test
-    fun `test grantOrganizationOwnerRole`() {
+    fun `test grantOrganizationAdminRole`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val user = userIntegrationTestHelper.persistUser()
         flushAndClear()
@@ -22,7 +22,7 @@ class UserRoleGrantOrganizationAdminRoleServiceIntegrationTest : AbstractUserRol
                 organizationUuid = organization.uuid,
                 userUuid = user.uuid
         )
-        userRoleService.grantOrganizationOwnerRole(dto).let {
+        userRoleService.grantOrganizationAdminRole(dto).let {
             flushAndClear()
             val resultUser = userService.getByUuid(dto.userUuid)
             assertThat(resultUser.roles()).contains(it)
@@ -30,7 +30,7 @@ class UserRoleGrantOrganizationAdminRoleServiceIntegrationTest : AbstractUserRol
     }
 
     @Test
-    fun `test grantOrganizationOwnerRole twice`() {
+    fun `test grantOrganizationAdminRole twice`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val user = userIntegrationTestHelper.persistUser()
         flushAndClear()
@@ -38,9 +38,9 @@ class UserRoleGrantOrganizationAdminRoleServiceIntegrationTest : AbstractUserRol
                 organizationUuid = organization.uuid,
                 userUuid = user.uuid
         )
-        userRoleService.grantOrganizationOwnerRole(dto)
+        userRoleService.grantOrganizationAdminRole(dto)
         flushAndClear()
-        userRoleService.grantOrganizationOwnerRole(dto)
+        userRoleService.grantOrganizationAdminRole(dto)
         assertThatThrownBy { flushAndClear() }.isExactlyInstanceOf(PersistenceException::class.java)
     }
 }
