@@ -1,7 +1,9 @@
 package com.vntana.core.service.invitation.user.impl
 
 import com.vntana.core.domain.invitation.user.InvitationUser
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.invitation.user.AbstractInvitationUserServiceUnitTest
+import com.vntana.core.service.invitation.user.exception.IncorrectUserInvitedRoleOnOrganizationException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock
@@ -27,6 +29,15 @@ class InvitationUserCreateServiceUnitTest : AbstractInvitationUserServiceUnitTes
         assertThatThrownBy { commonTestHelper.buildCreateInvitationUserDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildCreateInvitationUserDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { invitationUserService.create(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        verifyAll()
+    }
+
+    @Test
+    fun `test with incorrect role`() {
+        resetAll()
+        replayAll()
+        assertThatThrownBy { invitationUserService.create(commonTestHelper.buildCreateInvitationUserDto(userRole = UserRole.ORGANIZATION_OWNER)) }
+                .isExactlyInstanceOf(IncorrectUserInvitedRoleOnOrganizationException::class.java)
         verifyAll()
     }
 

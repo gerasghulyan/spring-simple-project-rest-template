@@ -16,6 +16,7 @@ import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Manuk Gharslyan.
@@ -36,6 +37,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
+    @Transactional
     @Override
     public CreateInvitationUserResponse create(final CreateInvitationUserRequest request) {
         LOGGER.debug("Creating invitation user for request- {}", request);

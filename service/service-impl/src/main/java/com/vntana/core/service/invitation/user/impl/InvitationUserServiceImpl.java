@@ -4,12 +4,14 @@ import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationUser;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.persistence.invitation.user.InvitationUserRepository;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
+import com.vntana.core.service.invitation.user.exception.IncorrectUserInvitedRoleOnOrganizationException;
 import com.vntana.core.service.invitation.user.exception.InvitationUserNotFoundForUuidException;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -48,6 +50,9 @@ public class InvitationUserServiceImpl implements InvitationUserService {
     public InvitationUser create(final CreateInvitationUserDto dto) {
         Assert.notNull(dto, "The CreateInvitationUserDto should not be null");
         LOGGER.debug("Creating user invitation for dto - {}", dto);
+        if(UserRole.ORGANIZATION_OWNER == dto.getUserRole()){
+            throw new IncorrectUserInvitedRoleOnOrganizationException(dto.getUserRole());
+        }
         final User inviterUser = userService.getByUuid(dto.getInviterUserUuid());
         final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         final InvitationUser invitationUser = invitationUserRepository.save(new InvitationUser(

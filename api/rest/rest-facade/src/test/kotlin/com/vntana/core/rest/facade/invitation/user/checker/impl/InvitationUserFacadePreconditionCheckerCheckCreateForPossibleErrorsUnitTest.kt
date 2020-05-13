@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.invitation.user.checker.impl
 
+import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.rest.facade.invitation.user.checker.AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
@@ -15,6 +16,18 @@ import java.util.*
  */
 class InvitationUserFacadePreconditionCheckerCheckCreateForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
 
+    @Test
+    fun `test when invited role is owner`() {
+        val request = invitationUserRestTestHelper.buildCreateInvitationUserRequest(userRole = UserRoleModel.ORGANIZATION_OWNER)
+        resetAll()
+        replayAll()
+        preconditionChecker.checkCreateForPossibleErrors(request).let {
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITED_USER_ROLE_COULD_NOT_BE_ORGANIZATION_OWNER)
+        }
+        verifyAll()
+    }
+    
     @Test
     fun `test when inviter user does not exist`() {
         val request = invitationUserRestTestHelper.buildCreateInvitationUserRequest()

@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.invitation.user.impl
 
+import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.rest.resource.invitation.user.AbstractInvitationUserWebTest
 import org.junit.Test
@@ -48,6 +49,15 @@ class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(organizationUuid = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
+        )
+    }
+
+    @Test
+    fun `test when invited role is owner`() {
+        assertBasicErrorResultResponse(
+                HttpStatus.CONFLICT,
+                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(userRole = UserRoleModel.ORGANIZATION_OWNER)),
+                InvitationUserErrorResponseModel.INVITED_USER_ROLE_COULD_NOT_BE_ORGANIZATION_OWNER
         )
     }
 

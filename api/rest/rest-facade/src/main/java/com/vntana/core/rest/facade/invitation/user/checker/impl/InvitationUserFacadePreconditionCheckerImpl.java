@@ -1,6 +1,7 @@
 package com.vntana.core.rest.facade.invitation.user.checker.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
@@ -32,6 +33,10 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     @Override
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateForPossibleErrors(final CreateInvitationUserRequest request) {
         LOGGER.debug("Checking invitation user creation precondition for request - {}", request);
+        if (UserRoleModel.ORGANIZATION_OWNER == request.getUserRole()) {
+            LOGGER.error("Checking invitation user creation precondition for request - {} has been done with error, the invited role could not be organization owner", request);
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INVITED_USER_ROLE_COULD_NOT_BE_ORGANIZATION_OWNER);
+        }
         if (!userService.existsByUuid(request.getInviterUserUuid())) {
             LOGGER.error("Checking invitation user creation precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
