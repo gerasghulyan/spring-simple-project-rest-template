@@ -48,7 +48,7 @@ public class InvitationUserResource {
     }
 
     @PutMapping(path = "/status")
-    ResponseEntity<UpdateInvitationUserInvitationStatusResultResponse> updateStatus(@RequestBody final UpdateInvitationUserInvitationStatusRequest request) {
+    public ResponseEntity<UpdateInvitationUserInvitationStatusResultResponse> updateStatus(@RequestBody final UpdateInvitationUserInvitationStatusRequest request) {
         LOGGER.debug("Processing InvitationUserResource updateStatus method for request - {}", request);
         final UpdateInvitationUserInvitationStatusResultResponse resultResponse = invitationUserServiceFacade.updateStatus(request);
         LOGGER.debug("Successfully processed InvitationUserResource updateStatus method for request - {}", request);

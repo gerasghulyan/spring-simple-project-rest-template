@@ -83,6 +83,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         return new GetAllByStatusUserInvitationsResultResponse(gridResponseModel);
     }
 
+    @Transactional
     @Override
     public UpdateInvitationUserInvitationStatusResultResponse updateStatus(final UpdateInvitationUserInvitationStatusRequest request) {
         LOGGER.debug("Updating invitation user invitation status for request- {}", request);

@@ -25,13 +25,17 @@ class InvitationUserGetAllByStatusWebTest : AbstractInvitationUserWebTest() {
 
     @Test
     fun test() {
-        resourceTestHelper.persistInvitationUser()
-        resourceTestHelper.persistInvitationUser()
+        val invitationUuid1 = resourceTestHelper.persistInvitationUser()
+        val invitationUuid2 = resourceTestHelper.persistInvitationUser()
         val invitationUserUuid = resourceTestHelper.persistInvitationUser()
         resourceTestHelper.updateInvitationStatus(uuid = invitationUserUuid, status = InvitationStatusModel.REJECTED)
         val request = resourceTestHelper.buildGetAllByStatusInvitationUserRequest()
         val responseEntity = invitationUserResourceClient.getAllByStatus(request)
         assertBasicSuccessResultResponse(responseEntity)
-        assertThat(responseEntity.body?.response()?.totalCount()).isEqualTo(2)
+        responseEntity?.body?.response()?.let {
+            val uuids = it.items().map { model -> model.uuid }.toList()
+            assertThat(uuids).contains(invitationUuid1, invitationUuid2)
+            assertThat(uuids).doesNotContain(invitationUserUuid)
+        }
     }
 }
