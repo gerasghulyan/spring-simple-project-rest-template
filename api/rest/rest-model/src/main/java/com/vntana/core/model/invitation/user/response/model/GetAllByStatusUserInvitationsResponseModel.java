@@ -39,7 +39,6 @@ public class GetAllByStatusUserInvitationsResponseModel extends AbstractUuidAwar
         final GetAllByStatusUserInvitationsResponseModel that = (GetAllByStatusUserInvitationsResponseModel) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(role, that.role)
                 .append(email, that.email)
                 .isEquals();
@@ -48,7 +47,6 @@ public class GetAllByStatusUserInvitationsResponseModel extends AbstractUuidAwar
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
                 .append(role)
                 .append(email)
                 .toHashCode();
