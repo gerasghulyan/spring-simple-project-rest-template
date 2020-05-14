@@ -9,7 +9,7 @@ import org.junit.Test
  * Date: 5/11/2020
  * Time: 2:53 PM
  */
-class InvitationUserFindByInviterUserUuidServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
+class InvitationUserGetAllByInviterUserUuidServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
     
     @Test
     fun test() {
@@ -17,7 +17,7 @@ class InvitationUserFindByInviterUserUuidServiceIntegrationTest : AbstractInvita
         val invitation1 = integrationInvitationUserTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid)
         val invitation2 = integrationInvitationUserTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid)
         flushAndClear()
-        invitationUserService.getByInviterUserUuid(inviterUserUuid).let { list ->
+        invitationUserService.getAllByInviterUserUuid(inviterUserUuid).let { list ->
             assertThat(list.isEmpty()).isFalse()
             assertThat(list).containsExactlyInAnyOrder(invitation1, invitation2)
         }

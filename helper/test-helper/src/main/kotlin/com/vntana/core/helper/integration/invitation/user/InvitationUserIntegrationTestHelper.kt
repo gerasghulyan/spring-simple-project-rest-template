@@ -39,5 +39,5 @@ class InvitationUserIntegrationTestHelper : InvitationUserCommonTestHelper() {
             uuid: String? = uuid(),
             status: InvitationStatus? = InvitationStatus.NOT_APPLICABLE,
             dto: UpdateInvitationUserStatusDto? = buildUpdateInvitationUserStatusDto(uuid, status)
-    ) = invitationUserService.updateStatus(dto)
+    ): InvitationUser = invitationUserService.updateStatus(dto)
 }

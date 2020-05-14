@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.rest.facade.invitation.user.checker.impl.InvitationUserFacadePreconditionCheckerImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.service.invitation.user.InvitationUserService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
@@ -24,6 +25,9 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
     @Mock
     protected lateinit var organizationService: OrganizationService
 
+    @Mock
+    protected lateinit var invitationUserService: InvitationUserService
+
     protected val invitationUserRestTestHelper = InvitationUserRestTestHelper()
 
     protected val userCommonTestHelper = UserCommonTestHelper()
@@ -32,6 +36,6 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
 
     @Before
     fun prepare() {
-        preconditionChecker = InvitationUserFacadePreconditionCheckerImpl(userService, organizationService)
+        preconditionChecker = InvitationUserFacadePreconditionCheckerImpl(userService, organizationService, invitationUserService)
     }
 }

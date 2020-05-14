@@ -9,7 +9,7 @@ import com.vntana.core.persistence.invitation.user.InvitationUserRepository;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
-import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersDto;
+import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import com.vntana.core.service.invitation.user.exception.IncorrectUserInvitedRoleOnOrganizationException;
 import com.vntana.core.service.invitation.user.exception.InvitationUserNotFoundForUuidException;
@@ -50,7 +50,7 @@ public class InvitationUserServiceImpl implements InvitationUserService {
     public InvitationUser create(final CreateInvitationUserDto dto) {
         Assert.notNull(dto, "The CreateInvitationUserDto should not be null");
         LOGGER.debug("Creating user invitation for dto - {}", dto);
-        if(UserRole.ORGANIZATION_OWNER == dto.getUserRole()){
+        if (UserRole.ORGANIZATION_OWNER == dto.getUserRole()) {
             throw new IncorrectUserInvitedRoleOnOrganizationException(dto.getUserRole());
         }
         final User inviterUser = userService.getByUuid(dto.getInviterUserUuid());
@@ -88,10 +88,10 @@ public class InvitationUserServiceImpl implements InvitationUserService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<InvitationUser> getAll(final GetAllInvitationUsersDto dto) {
+    public Page<InvitationUser> getAllByStatus(final GetAllByStatusInvitationUsersDto dto) {
         Assert.notNull(dto, "The GetAllInvitationUsersDto should not be null");
         LOGGER.debug("Retrieving user invitations for dto - {}", dto);
-        final Page<InvitationUser> page = invitationUserRepository.findAll(PageRequest.of(dto.getPage(), dto.getSize()));
+        final Page<InvitationUser> page = invitationUserRepository.findAllByStatus(dto.getStatus(), PageRequest.of(dto.getPage(), dto.getSize()));
         LOGGER.debug("Successfully retrieved user invitations for dto - {}", dto);
         return page;
     }
@@ -110,7 +110,7 @@ public class InvitationUserServiceImpl implements InvitationUserService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<InvitationUser> getByInviterUserUuid(final String userUuid) {
+    public List<InvitationUser> getAllByInviterUserUuid(final String userUuid) {
         Assert.hasText(userUuid, "The userUuid should not be null or empty");
         LOGGER.debug("Retrieving all user invitations by inviter user uuid - {}", userUuid);
         final List<InvitationUser> invitations = invitationUserRepository.findByInviterUserUuid(userUuid);
@@ -120,7 +120,7 @@ public class InvitationUserServiceImpl implements InvitationUserService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<InvitationUser> getByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto dto) {
+    public List<InvitationUser> getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto dto) {
         Assert.notNull(dto, "The GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto should not be null");
         LOGGER.debug("Retrieving all user invitations by dto - {}", dto);
         final List<InvitationUser> invitationUsers = invitationUserRepository.findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(

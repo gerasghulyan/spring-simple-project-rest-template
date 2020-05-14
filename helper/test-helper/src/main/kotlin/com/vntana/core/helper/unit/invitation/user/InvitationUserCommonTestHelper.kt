@@ -9,6 +9,7 @@ import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto
+import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto
 import org.springframework.data.domain.Page
@@ -60,4 +61,14 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             organizationUuid,
             status
     )
+
+    fun buildGetAllByStatusInvitationUsersDto(
+            page: Int = 0,
+            size: Int = 5,
+            status: InvitationStatus? = InvitationStatus.INVITED
+    ): GetAllByStatusInvitationUsersDto = GetAllByStatusInvitationUsersDto(page, size, status)
+
+    fun buildGetAllByStatusInvitationUsersPage(totalCount: Long = 0,
+                                               tagGroups: List<InvitationUser> = listOf(buildInvitationUser())
+    ): Page<InvitationUser> = PageImpl(tagGroups, Pageable.unpaged(), totalCount)
 }

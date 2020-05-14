@@ -4,7 +4,9 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
+import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.apache.http.HttpStatus;
@@ -23,10 +25,14 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
 
     private final UserService userService;
     private final OrganizationService organizationService;
+    private final InvitationUserService invitationUserService;
 
-    public InvitationUserFacadePreconditionCheckerImpl(final UserService userService, final OrganizationService organizationService) {
+    public InvitationUserFacadePreconditionCheckerImpl(final UserService userService,
+                                                       final OrganizationService organizationService,
+                                                       final InvitationUserService invitationUserService) {
         this.userService = userService;
         this.organizationService = organizationService;
+        this.invitationUserService = invitationUserService;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
@@ -50,6 +56,17 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_PART_OF_ORGANIZATION);
         }
         LOGGER.debug("Successfully checked invitation user creation precondition for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkUpdateStatusForPossibleErrors(final UpdateInvitationUserInvitationStatusRequest request) {
+        LOGGER.debug("Checking invitation user update status precondition for request - {}", request);
+        if (!invitationUserService.existsByUuid(request.getUuid())) {
+            LOGGER.error("Checking invitation user update status precondition for request - {} has been done with error, no invitation was found by uuid - {}", request, request.getUuid());
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITATION_NOT_FOUND);
+        }
+        LOGGER.debug("Successfully checked invitation user update status precondition for request - {}", request);
         return SingleErrorWithStatus.empty();
     }
 }

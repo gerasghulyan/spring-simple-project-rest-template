@@ -1,9 +1,7 @@
 package com.vntana.core.service.invitation.user.impl
 
 import com.vntana.core.service.invitation.user.AbstractInvitationUserServiceIntegrationTest
-import com.vntana.core.service.organization.exception.OrganizationNotFoundForUuidException
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 
 /**
@@ -11,7 +9,7 @@ import org.junit.Test
  * Date: 5/12/2020
  * Time: 2:31 PM
  */
-class InvitationUserGetByEmailAndOrganizationUuidAndStatusServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
+class InvitationUserGetAllByEmailAndOrganizationUuidAndStatusServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
     
     @Test
     fun test() {
@@ -27,7 +25,7 @@ class InvitationUserGetByEmailAndOrganizationUuidAndStatusServiceIntegrationTest
         integrationInvitationUserTestHelper.updateInvitationUserStatus(invitation3.uuid)
         integrationInvitationUserTestHelper.updateInvitationUserStatus(invitation5.uuid)
         flushAndClear()
-        invitationUserService.getByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(
+        invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(
                 integrationInvitationUserTestHelper.buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
                         email, organizationUuid
                 )
