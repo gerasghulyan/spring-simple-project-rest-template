@@ -1,6 +1,7 @@
 package com.vntana.core.rest.resource.token
 
 import com.vntana.core.helper.invitation.organization.InvitationOrganizationResourceTestHelper
+import com.vntana.core.helper.invitation.user.InvitationUserResourceTestHelper
 import com.vntana.core.helper.token.TokenResourceTestHelper
 import com.vntana.core.helper.token.TokenRestTestHelper
 import com.vntana.core.rest.client.token.TokenResourceClient
@@ -25,4 +26,7 @@ abstract class AbstractTokenWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var invitationOrganizationResourceTestHelper: InvitationOrganizationResourceTestHelper
+
+    @Autowired
+    protected lateinit var invitationUserResourceTestHelper: InvitationUserResourceTestHelper
 }

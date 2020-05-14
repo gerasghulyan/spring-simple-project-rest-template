@@ -1,6 +1,5 @@
 package com.vntana.core.service.token.invitation.organization.impl
 
-import com.vntana.core.service.token.AbstractTokenServiceUnitTest
 import com.vntana.core.service.token.invitation.organization.AbstractTokenInvitationOrganizationServiceUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

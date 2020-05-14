@@ -49,7 +49,7 @@ class InvitationUserUpdateStatusWebTest : AbstractInvitationUserWebTest() {
         val invitationUuid = resourceTestHelper.persistInvitationUser(
                 inviterUserUuid = inviterUserUuid,
                 organizationUuid = organizationUuid
-        ).body?.response()?.uuid
+        )
         val responseEntity = invitationUserResourceClient.updateStatus(resourceTestHelper.buildUpdateInvitationUserInvitationStatusRequest(uuid = invitationUuid, status = InvitationStatusModel.REJECTED))
         assertBasicSuccessResultResponse(responseEntity)
         assertThat(responseEntity.body?.response()?.uuid).isNotBlank()

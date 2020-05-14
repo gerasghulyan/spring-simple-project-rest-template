@@ -1,12 +1,13 @@
-package com.vntana.core.service.token.invitation.organization;
+package com.vntana.core.service.token.invitation.organization.impl;
 
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.domain.token.TokenInvitationOrganization;
 import com.vntana.core.persistence.token.TokenInvitationOrganizationRepository;
 import com.vntana.core.persistence.token.TokenRepository;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
-import com.vntana.core.service.token.dto.CreateTokenInvitationOrganizationDto;
 import com.vntana.core.service.token.exception.TokenNotFoundException;
+import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService;
+import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

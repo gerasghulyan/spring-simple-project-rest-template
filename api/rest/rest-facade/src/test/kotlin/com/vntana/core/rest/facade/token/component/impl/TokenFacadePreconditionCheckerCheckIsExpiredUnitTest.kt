@@ -1,7 +1,7 @@
-package com.vntana.core.rest.facade.token.impl
+package com.vntana.core.rest.facade.token.component.impl
 
 import com.vntana.core.model.token.error.TokenErrorResponseModel
-import com.vntana.core.rest.facade.token.AbstractTokenFacadePreconditionCheckerUnitTest
+import com.vntana.core.rest.facade.token.component.AbstractTokenFacadePreconditionCheckerUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

@@ -2,9 +2,7 @@ package com.vntana.core.service.user.role.impl
 
 import com.vntana.core.service.user.role.AbstractUserRoleServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
-import javax.persistence.PersistenceException
 
 /**
  * Created by Arman Gevorgyan.
@@ -29,18 +27,4 @@ class UserRoleGrantOrganizationAdminRoleServiceIntegrationTest : AbstractUserRol
         }
     }
 
-    @Test
-    fun `test grantOrganizationAdminRole twice`() {
-        val organization = organizationIntegrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser()
-        flushAndClear()
-        val dto = integrationTestHelper.buildUserGrantOrganizationRoleDto(
-                organizationUuid = organization.uuid,
-                userUuid = user.uuid
-        )
-        userRoleService.grantOrganizationAdminRole(dto)
-        flushAndClear()
-        userRoleService.grantOrganizationAdminRole(dto)
-        assertThatThrownBy { flushAndClear() }.isExactlyInstanceOf(PersistenceException::class.java)
-    }
 }
