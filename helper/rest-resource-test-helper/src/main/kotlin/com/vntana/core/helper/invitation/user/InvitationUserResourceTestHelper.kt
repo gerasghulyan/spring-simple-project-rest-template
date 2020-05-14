@@ -4,7 +4,6 @@ import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.InvitationStatusModel
-import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse
 import com.vntana.core.rest.client.invitation.user.InvitationUserResourceClient
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,7 +32,7 @@ class InvitationUserResourceTestHelper : InvitationUserRestTestHelper() {
             email: String? = uuid(),
             inviterUserUuid: String? = userResourceTestHelper.persistUser().response().uuid,
             organizationUuid: String? = organizationResourceTestHelper.persistOrganization().response().uuid
-    ): ResponseEntity<CreateInvitationUserResultResponse> = invitationUserResourceClient.create(buildCreateInvitationUserRequest(userRole, email, inviterUserUuid, organizationUuid))
+    ): String = invitationUserResourceClient.create(buildCreateInvitationUserRequest(userRole, email, inviterUserUuid, organizationUuid))?.body?.response()?.uuid.toString()
 
     fun updateInvitationStatus(
             uuid: String? = uuid(),

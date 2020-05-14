@@ -1,11 +1,13 @@
-package com.vntana.core.rest.facade.token.impl;
+package com.vntana.core.rest.facade.token.component.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.model.token.error.TokenErrorResponseModel;
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
-import com.vntana.core.rest.facade.token.TokenFacadePreconditionChecker;
+import com.vntana.core.model.token.request.CreateTokenInvitationUserRequest;
+import com.vntana.core.rest.facade.token.component.TokenFacadePreconditionChecker;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
+import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.token.TokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,17 +31,29 @@ public class TokenFacadePreconditionCheckerImpl implements TokenFacadePreconditi
 
     private final TokenService tokenService;
     private final InvitationOrganizationService invitationOrganizationService;
+    private final InvitationUserService invitationUserService;
 
-    public TokenFacadePreconditionCheckerImpl(final TokenService tokenService, final InvitationOrganizationService invitationOrganizationService) {
+    public TokenFacadePreconditionCheckerImpl(final TokenService tokenService,
+                                              final InvitationOrganizationService invitationOrganizationService,
+                                              final InvitationUserService invitationUserService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.tokenService = tokenService;
         this.invitationOrganizationService = invitationOrganizationService;
+        this.invitationUserService = invitationUserService;
     }
 
     @Override
     public SingleErrorWithStatus<TokenErrorResponseModel> checkCreateTokenInvitationOrganization(final CreateTokenInvitationOrganizationRequest request) {
         if (!invitationOrganizationService.existsByUuid(request.getInvitationOrganizationUuid())) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, TokenErrorResponseModel.INVITATION_ORGANIZATION_NOT_FOUND);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<TokenErrorResponseModel> checkCreateTokenInvitationUser(final CreateTokenInvitationUserRequest request) {
+        if (!invitationUserService.existsByUuid(request.getInvitationUserUuid())) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, TokenErrorResponseModel.INVITATION_USER_NOT_FOUND);
         }
         return SingleErrorWithStatus.empty();
     }

@@ -3,8 +3,8 @@ package com.vntana.core.helper.integration.invitation.organization
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
-import com.vntana.core.service.token.dto.CreateTokenInvitationOrganizationDto
 import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService
+import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

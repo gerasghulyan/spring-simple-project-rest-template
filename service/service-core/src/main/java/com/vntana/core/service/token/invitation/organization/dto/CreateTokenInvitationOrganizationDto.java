@@ -1,4 +1,4 @@
-package com.vntana.core.service.token.dto;
+package com.vntana.core.service.token.invitation.organization.dto;
 
 import com.vntana.core.service.common.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;

@@ -1,18 +1,17 @@
-package com.vntana.core.rest.facade.token.invitation.organization.impl
+package com.vntana.core.rest.facade.token.impl
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.token.error.TokenErrorResponseModel
 import com.vntana.core.rest.facade.token.AbstractTokenFacadeUnitTest
-import com.vntana.core.rest.facade.token.invitation.organization.AbstractTokenInvitationOrganizationFacadeUnitTest
 import org.easymock.EasyMock.expect
 import org.junit.Test
 
 /**
  * Created by Arman Gevorgyan.
- * Date: 3/27/20
- * Time: 2:16 PM
+ * Date: 5/14/20
+ * Time: 3:12 PM
  */
-class TokenInvitationOrganizationFacadeCreateUnitTest : AbstractTokenInvitationOrganizationFacadeUnitTest() {
+class TokenCreateTokenInvitationOrganizationFacadeUnitTest : AbstractTokenFacadeUnitTest() {
 
     @Test
     fun `test when precondition failed`() {
@@ -21,7 +20,7 @@ class TokenInvitationOrganizationFacadeCreateUnitTest : AbstractTokenInvitationO
         expect(preconditionChecker.checkCreateTokenInvitationOrganization(request))
                 .andReturn(SingleErrorWithStatus.of(404, TokenErrorResponseModel.TOKEN_NOT_FOUND))
         replayAll()
-        assertBasicErrorResultResponse(tokenInvitationOrganizationServiceFacade.create(request), TokenErrorResponseModel.TOKEN_NOT_FOUND)
+        assertBasicErrorResultResponse(tokenServiceFacade.createTokenInvitationOrganization(request), TokenErrorResponseModel.TOKEN_NOT_FOUND)
         verifyAll()
     }
 
@@ -37,7 +36,7 @@ class TokenInvitationOrganizationFacadeCreateUnitTest : AbstractTokenInvitationO
         expect(preconditionChecker.checkCreateTokenInvitationOrganization(request)).andReturn(SingleErrorWithStatus.empty())
         expect(tokenInvitationOrganizationService.create(dto)).andReturn(tokenInvitationOrganization)
         replayAll()
-        assertBasicSuccessResultResponse(tokenInvitationOrganizationServiceFacade.create(request))
+        assertBasicSuccessResultResponse(tokenServiceFacade.createTokenInvitationOrganization(request))
         verifyAll()
     }
 }

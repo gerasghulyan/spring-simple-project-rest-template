@@ -27,7 +27,7 @@ class InvitationUserGetAllByStatusWebTest : AbstractInvitationUserWebTest() {
     fun test() {
         resourceTestHelper.persistInvitationUser()
         resourceTestHelper.persistInvitationUser()
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser().body?.response()?.uuid
+        val invitationUserUuid = resourceTestHelper.persistInvitationUser()
         resourceTestHelper.updateInvitationStatus(uuid = invitationUserUuid, status = InvitationStatusModel.REJECTED)
         val request = resourceTestHelper.buildGetAllByStatusInvitationUserRequest()
         val responseEntity = invitationUserResourceClient.getAllByStatus(request)
