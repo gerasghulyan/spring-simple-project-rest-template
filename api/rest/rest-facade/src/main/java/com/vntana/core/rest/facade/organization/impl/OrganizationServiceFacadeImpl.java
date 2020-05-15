@@ -2,10 +2,7 @@ package com.vntana.core.rest.facade.organization.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserClientOrganizationRole;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
@@ -255,6 +252,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {}", user.getUuid());
         return user.roles()
                 .stream()
+                .filter(userRole -> !userRole.getUserRole().equals(UserRole.SUPER_ADMIN))
                 .map(userRole -> {
                     LOGGER.debug("Retrieving user organizations for not super admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
                     switch (userRole.getUserRole()) {
