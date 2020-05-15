@@ -15,10 +15,12 @@ import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitat
 public interface InvitationUserFacadePreconditionChecker {
 
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateForPossibleErrors(final CreateInvitationUserRequest request);
-    
+
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkUpdateStatusForPossibleErrors(final UpdateInvitationUserInvitationStatusRequest request);
 
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForPossibleErrors(final AcceptInvitationUserRequest request);
 
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForPossibleErrors(final SendInvitationUserRequest request);
+
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetByTokenForPossibleErrors(final String token);
 }

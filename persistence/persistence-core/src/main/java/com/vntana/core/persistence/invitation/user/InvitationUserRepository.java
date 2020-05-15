@@ -5,6 +5,8 @@ import com.vntana.core.domain.invitation.user.InvitationUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,4 +29,7 @@ public interface InvitationUserRepository extends JpaRepository<InvitationUser, 
     List<InvitationUser> findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final String email, final String organizationUuid, final InvitationStatus status);
 
     Page<InvitationUser> findAllByStatus(final InvitationStatus status, final Pageable pageable);
+
+    @Query("select invitationUser from InvitationUser invitationUser where invitationUser.id = (select tis.invitationUser.id from TokenInvitationUser tis where tis.token = :token)")
+    Optional<InvitationUser> findByTokenInvitationUser(@Param("token") final String token);
 }

@@ -8,10 +8,11 @@ import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.persistence.invitation.user.InvitationUserRepository;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
-import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
+import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import com.vntana.core.service.invitation.user.exception.IncorrectUserInvitedRoleOnOrganizationException;
+import com.vntana.core.service.invitation.user.exception.InvitationUserNotFoundForTokenException;
 import com.vntana.core.service.invitation.user.exception.InvitationUserNotFoundForUuidException;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -130,5 +131,24 @@ public class InvitationUserServiceImpl implements InvitationUserService {
         );
         LOGGER.debug("Successfully retrieved all user invitations by dto - {}", dto);
         return invitationUsers;
+    }
+
+    @Override
+    public InvitationUser getByToken(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
+        LOGGER.debug("Retrieving user invitation by user invitation token");
+        final InvitationUser invitationUser = invitationUserRepository.findByTokenInvitationUser(token)
+                .orElseThrow(() -> new InvitationUserNotFoundForTokenException(token));
+        LOGGER.debug("Successfully retrieved user invitations by user invitation token");
+        return invitationUser;
+    }
+
+    @Override
+    public boolean existsByToken(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
+        LOGGER.debug("Checking user invitation existence by user invitation token");
+        final boolean exists = invitationUserRepository.findByTokenInvitationUser(token).isPresent();
+        LOGGER.debug("Successfully checked user invitation existence by user invitation token");
+        return exists;
     }
 }

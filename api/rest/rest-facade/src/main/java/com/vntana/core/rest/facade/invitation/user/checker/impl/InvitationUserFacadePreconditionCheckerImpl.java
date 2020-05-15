@@ -20,6 +20,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -114,6 +115,29 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully checked invitation user send invitation precondition for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetByTokenForPossibleErrors(final String token) {
+        LOGGER.debug("Checking invitation user get by token precondition");
+        if (StringUtils.isEmpty(token)) {
+            LOGGER.error("Checking invitation user get by token precondition has been done with error, user invitation token is missing");
+            return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
+        }
+        if (!tokenInvitationUserService.isExists(token)) {
+            LOGGER.error("Checking invitation user get by token precondition has been done with error, user invitation token is not found");
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
+        }
+        if (tokenInvitationUserService.isExpired(token)) {
+            LOGGER.error("Checking invitation user get by token precondition has been done with error, user invitation token has been expired");
+            return SingleErrorWithStatus.of(HttpStatus.SC_BAD_REQUEST, InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN);
+        }
+        if (!invitationUserService.existsByToken(token)) {
+            LOGGER.error("Checking invitation user get by token precondition has been done with error, no invitation user found by token");
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITATION_NOT_FOUND);
+        }
+        LOGGER.debug("Successfully checked invitation user get by token precondition");
         return SingleErrorWithStatus.empty();
     }
 }

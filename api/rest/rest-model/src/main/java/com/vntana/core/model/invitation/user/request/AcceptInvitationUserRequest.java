@@ -33,7 +33,7 @@ public class AcceptInvitationUserRequest extends AbstractRequestModel implements
     @Override
     public List<InvitationUserErrorResponseModel> validate() {
         if (StringUtils.isEmpty(token)) {
-            return Collections.singletonList(InvitationUserErrorResponseModel.MISSING_TOKEN);
+            return Collections.singletonList(InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
         }
         return Collections.emptyList();
     }

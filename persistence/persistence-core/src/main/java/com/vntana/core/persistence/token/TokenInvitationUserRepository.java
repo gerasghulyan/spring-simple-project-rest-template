@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface TokenInvitationUserRepository extends JpaRepository<TokenInvitationUser, Long> {
 
     Optional<TokenInvitationUser> findByToken(final String token);
+
+    Optional<TokenInvitationUser> findByInvitationUserUuid(final String invitationUserUuid);
 }
