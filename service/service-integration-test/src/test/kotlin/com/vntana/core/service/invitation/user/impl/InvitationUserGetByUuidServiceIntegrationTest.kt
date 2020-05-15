@@ -13,7 +13,7 @@ class InvitationUserGetByUuidServiceIntegrationTest : AbstractInvitationUserServ
     @Test
     fun test() {
         val invitationUser = integrationInvitationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         )
         flushAndClear()
         assertThat(invitationUserService.getByUuid(invitationUser.uuid)).isEqualTo(invitationUser)

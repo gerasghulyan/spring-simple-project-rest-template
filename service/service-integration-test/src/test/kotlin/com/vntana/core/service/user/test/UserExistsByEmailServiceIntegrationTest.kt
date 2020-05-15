@@ -18,7 +18,7 @@ class UserExistsByEmailServiceIntegrationTest : AbstractUserServiceIntegrationTe
     
     @Test
     fun `test exists`() {
-        val user = integrationTestHelper.persistUser()
+        val user = integrationTestHelper.persistUserWithOwnerRole()
         assertThat(userService.existsByEmail(user.email)).isTrue()
     }
 

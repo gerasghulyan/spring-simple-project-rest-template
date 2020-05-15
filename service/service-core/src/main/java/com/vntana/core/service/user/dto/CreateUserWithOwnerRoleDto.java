@@ -7,11 +7,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
 
 /**
- * Created by Arman Gevorgyan.
- * Date: 5/15/20
- * Time: 4:22 PM
+ * Created by Arthur Asatryan.
+ * Date: 10/3/19
+ * Time: 6:38 PM
  */
-public class CreateUserDto implements ServiceDto {
+public class CreateUserWithOwnerRoleDto implements ServiceDto {
 
     private final String fullName;
 
@@ -19,13 +19,17 @@ public class CreateUserDto implements ServiceDto {
 
     private final String password;
 
-    public CreateUserDto(final String fullName, final String email, final String password) {
+    private final String organizationUuid;
+
+    public CreateUserWithOwnerRoleDto(final String fullName, final String email, final String password, final String organizationUuid) {
         Assert.hasText(fullName, "The user full name should not be null or empty");
         Assert.hasText(email, "The email should not be null or empty");
         Assert.hasText(password, "The user password should not be null or empty");
+        Assert.hasText(organizationUuid, "The organization uuid should not be null or empty");
         this.fullName = fullName;
         this.email = email;
         this.password = password;
+        this.organizationUuid = organizationUuid;
     }
 
     @Override
@@ -33,14 +37,15 @@ public class CreateUserDto implements ServiceDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CreateUserDto)) {
+        if (!(o instanceof CreateUserWithOwnerRoleDto)) {
             return false;
         }
-        final CreateUserDto that = (CreateUserDto) o;
+        final CreateUserWithOwnerRoleDto that = (CreateUserWithOwnerRoleDto) o;
         return new EqualsBuilder()
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(password, that.password)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -50,6 +55,7 @@ public class CreateUserDto implements ServiceDto {
                 .append(fullName)
                 .append(email)
                 .append(password)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -58,6 +64,7 @@ public class CreateUserDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .append("fullName", fullName)
                 .append("email", email)
+                .append("organizationUuid", organizationUuid)
                 .append("password", "***")
                 .toString();
     }
@@ -72,5 +79,9 @@ public class CreateUserDto implements ServiceDto {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 }

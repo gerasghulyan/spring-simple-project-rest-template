@@ -6,10 +6,7 @@ import com.vntana.core.domain.token.TokenInvitationUser;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
-import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.organization.OrganizationService;
@@ -98,7 +95,27 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         if (userRoleService.findByOrganizationAndUser(invitationUser.getOrganization().getUuid(), user.getUuid()).isPresent()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
         }
+        if (tokenInvitationUserOptional.get().isExpired()) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
+        }
         LOGGER.debug("Successfully checked invitation user accept precondition for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request) {
+        final Optional<TokenInvitationUser> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
+        if (!tokenInvitationUserOptional.isPresent()) {
+            LOGGER.error("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
+        }
+        final TokenInvitationUser tokenInvitationUser = tokenInvitationUserOptional.get();
+        if (tokenInvitationUser.isExpired()) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
+        }
+        if (userService.existsByEmail(tokenInvitationUser.getInvitationUser().getEmail())) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_EXISTS);
+        }
         return SingleErrorWithStatus.empty();
     }
 

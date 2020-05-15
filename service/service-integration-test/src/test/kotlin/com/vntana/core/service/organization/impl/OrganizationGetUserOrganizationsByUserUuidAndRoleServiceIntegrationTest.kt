@@ -16,7 +16,7 @@ class OrganizationGetUserOrganizationsByUserUuidAndRoleServiceIntegrationTest : 
     @Test
     fun `get organizations by user uuid and role ORGANIZATION_OWNER`() {
         val organization1 = integrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser(organizationUuid = organization1.uuid)
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization1.uuid)
         val organization2 = integrationTestHelper.persistOrganization()
         val organization3 = integrationTestHelper.persistOrganization()
         userIntegrationTestHelper.grantOrganizationOwnerRole(uuid = user.uuid, organizationUuid = organization3.uuid)
@@ -35,7 +35,7 @@ class OrganizationGetUserOrganizationsByUserUuidAndRoleServiceIntegrationTest : 
     @Test
     fun `get organizations by user uuid and role ORGANIZATION_ADMIN`() {
         val organization1 = integrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser(organizationUuid = organization1.uuid)
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization1.uuid)
         val organization2 = integrationTestHelper.persistOrganization()
         val organization3 = integrationTestHelper.persistOrganization()
         userIntegrationTestHelper.grantOrganizationOwnerRole(uuid = user.uuid, organizationUuid = organization3.uuid)

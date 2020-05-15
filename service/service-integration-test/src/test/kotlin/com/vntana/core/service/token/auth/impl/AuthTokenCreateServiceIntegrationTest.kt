@@ -13,7 +13,7 @@ class AuthTokenCreateServiceIntegrationTest : AbstractAuthTokenServiceIntegratio
 
     @Test
     fun test() {
-        val user = userIntegrationTestHelper.persistUser()
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole()
         val dto = integrationTestHelper.buildAuthTokenCreateDto(userUuid = user.uuid)
         authTokenService.create(dto).let {
             flushAndClear()

@@ -35,7 +35,7 @@ import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.user.UserService;
-import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
 import com.vntana.core.service.user.role.UserRoleService;
 import org.apache.commons.lang3.StringUtils;
@@ -114,12 +114,11 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             final Organization organization = organizationService.create(
                     new CreateOrganizationDto(request.getOrganizationName(), request.getOrganizationSlug(), null)
             );
-            final User user = userService.create(new CreateUserDto(
+            final User user = userService.createWithOwnerRole(new CreateUserWithOwnerRoleDto(
                     request.getFullName(),
                     request.getEmail(),
                     request.getPassword(),
-                    organization.getUuid(),
-                    UserRole.ORGANIZATION_OWNER
+                    organization.getUuid()
             ));
             organizationLifecycleMediator.onCreated(organization);
             mutableResponse.setValue(new CreateUserResponseModel(user.getUuid(), organization.getUuid()));

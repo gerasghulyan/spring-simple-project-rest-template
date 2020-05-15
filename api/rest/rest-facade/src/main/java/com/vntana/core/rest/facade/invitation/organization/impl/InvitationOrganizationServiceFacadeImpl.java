@@ -6,7 +6,6 @@ import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.token.TokenInvitationOrganization;
 import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel;
 import com.vntana.core.model.invitation.organization.request.*;
 import com.vntana.core.model.invitation.organization.response.*;
@@ -26,7 +25,7 @@ import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecy
 import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService;
 import com.vntana.core.service.user.UserService;
-import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.role.UserRoleService;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
@@ -208,12 +207,11 @@ public class InvitationOrganizationServiceFacadeImpl implements InvitationOrgani
         final Mutable<String> mutableResponse = new MutableObject<>();
         persistenceUtilityService.runInNewTransaction(() -> {
             final Organization organization = createOrganizationWithInvitation(invitation, request.getOrganizationName(), request.getOrganizationSlug());
-            final User user = userService.create(new CreateUserDto(
+            final User user = userService.createWithOwnerRole(new CreateUserWithOwnerRoleDto(
                     request.getUserFullName(),
                     invitation.getEmail(),
                     request.getUserPassword(),
-                    organization.getUuid(),
-                    UserRole.ORGANIZATION_OWNER
+                    organization.getUuid()
             ));
             userService.makeVerified(user.getEmail());
             afterOrganizationCreatedInTransaction(request.getToken(), invitation, mutableResponse, organization);

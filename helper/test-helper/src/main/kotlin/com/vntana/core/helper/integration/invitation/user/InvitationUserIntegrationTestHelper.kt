@@ -31,7 +31,7 @@ class InvitationUserIntegrationTestHelper : InvitationUserCommonTestHelper() {
     fun persistInvitationUser(
             userRole: UserRole? = UserRole.ORGANIZATION_ADMIN,
             email: String? = uuid(),
-            inviterUserUuid: String? = userIntegrationTestHelper.persistUser().uuid,
+            inviterUserUuid: String? = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
             organizationUuid: String? = organizationIntegrationTestHelper.persistOrganization().uuid
     ): InvitationUser = invitationUserService.create(buildCreateInvitationUserDto(userRole, email, inviterUserUuid, organizationUuid))
 

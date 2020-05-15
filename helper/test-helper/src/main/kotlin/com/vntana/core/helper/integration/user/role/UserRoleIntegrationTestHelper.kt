@@ -28,7 +28,7 @@ class UserRoleIntegrationTestHelper : UserRoleCommonTestHelper() {
     @Autowired
     private lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper
 
-    fun persistUserOrganizationAdminRole(user: User = userIntegrationTestHelper.persistUser(),
+    fun persistUserOrganizationAdminRole(user: User = userIntegrationTestHelper.persistUserWithOwnerRole(),
                                          organization: Organization = organizationIntegrationTestHelper.persistOrganization()
     ): UserOrganizationAdminRole = userRoleService.grantOrganizationAdminRole(UserGrantOrganizationRoleDto(user.uuid, organization.uuid))
 }

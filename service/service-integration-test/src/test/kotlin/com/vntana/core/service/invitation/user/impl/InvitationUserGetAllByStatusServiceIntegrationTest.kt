@@ -23,13 +23,13 @@ class InvitationUserGetAllByStatusServiceIntegrationTest : AbstractInvitationUse
     @Test
     fun test() {
         val invitation1 = integrationInvitationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         )
         val invitation2 = integrationInvitationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         )
         val invitation3 = integrationInvitationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         )
         integrationInvitationUserTestHelper.updateInvitationUserStatus(uuid = invitation3.uuid, status = InvitationStatus.REJECTED)
         flushAndClear()

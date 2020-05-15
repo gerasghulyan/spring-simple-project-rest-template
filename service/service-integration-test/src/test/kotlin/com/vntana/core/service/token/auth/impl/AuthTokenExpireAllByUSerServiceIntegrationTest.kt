@@ -13,8 +13,8 @@ class AuthTokenExpireAllByUSerServiceIntegrationTest : AbstractAuthTokenServiceI
 
     @Test
     fun test() {
-        val user1 = userIntegrationTestHelper.persistUser()
-        val user2 = userIntegrationTestHelper.persistUser()
+        val user1 = userIntegrationTestHelper.persistUserWithOwnerRole()
+        val user2 = userIntegrationTestHelper.persistUserWithOwnerRole()
         integrationTestHelper.persistAuthToken(userUuid = user1.uuid)
         integrationTestHelper.persistAuthToken(userUuid = user1.uuid).expire()
         integrationTestHelper.persistAuthToken(userUuid = user2.uuid).expire()

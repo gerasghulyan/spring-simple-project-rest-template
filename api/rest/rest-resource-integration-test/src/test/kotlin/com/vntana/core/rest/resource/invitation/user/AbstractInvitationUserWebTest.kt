@@ -40,5 +40,8 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 
     @Autowired
+    protected lateinit var invitationUserResourceTestHelper: InvitationUserResourceTestHelper
+
+    @Autowired
     protected lateinit var emailNotificationResourceClient: EmailNotificationResourceClient
 }

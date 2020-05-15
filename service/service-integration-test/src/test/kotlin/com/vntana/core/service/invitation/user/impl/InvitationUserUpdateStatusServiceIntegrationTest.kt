@@ -14,7 +14,7 @@ class InvitationUserUpdateStatusServiceIntegrationTest : AbstractInvitationUserS
     @Test
     fun `test update`() {
         val invitationUser = integrationInvitationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         )
         val dto = integrationInvitationUserTestHelper.buildUpdateInvitationUserStatusDto(
                 uuid = invitationUser.uuid,

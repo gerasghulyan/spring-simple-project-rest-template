@@ -14,7 +14,7 @@ class UserGetByEmailServiceIntegrationTest : AbstractUserServiceIntegrationTest(
     @Test
     fun test() {
         // given
-        integrationTestHelper.persistUser().let { user ->
+        integrationTestHelper.persistUserWithOwnerRole().let { user ->
             flushAndClear()
             // when
             userService.getByEmail(user.email).let {

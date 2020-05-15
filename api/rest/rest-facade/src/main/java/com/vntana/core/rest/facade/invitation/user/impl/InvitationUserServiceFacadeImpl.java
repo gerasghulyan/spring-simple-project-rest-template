@@ -23,6 +23,7 @@ import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailA
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
 import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.role.UserRoleService;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
@@ -137,14 +138,39 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         final InvitationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
         final Organization organization = invitationUser.getOrganization();
         final User user = userService.getByEmail(invitationUser.getEmail());
+        grantUserRoleFromInvitationAndMakeAccepted(invitationUser, user.getUuid());
+        LOGGER.debug("Successfully accepted invitation user for request- {}", request);
+        return new AcceptInvitationUserResultResponse(
+                new AcceptInvitationUserResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(invitationUser.getRole().name()))
+        );
+    }
+
+    @Transactional
+    @Override
+    public AcceptInvitationUserResultResponse acceptAndSignUp(final AcceptInvitationUserAndSignUpRequest request) {
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request);
+        if (error.isPresent()) {
+            return new AcceptInvitationUserResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final InvitationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
+        final User user = userService.create(new CreateUserDto(request.getNewUserFullName(), invitationUser.getEmail(), request.getPassword()));
+        grantUserRoleFromInvitationAndMakeAccepted(invitationUser, user.getUuid());
+        return new AcceptInvitationUserResultResponse(
+                new AcceptInvitationUserResponseModel(invitationUser.getOrganization().getUuid(),
+                        user.getUuid(),
+                        UserRoleModel.valueOf(invitationUser.getRole().name())
+                )
+        );
+    }
+
+    private void grantUserRoleFromInvitationAndMakeAccepted(final InvitationUser invitationUser, final String userUuid) {
         final UserRole role = invitationUser.getRole();
         if (role == UserRole.ORGANIZATION_ADMIN) {
-            userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(user.getUuid(), organization.getUuid()));
+            userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(userUuid, invitationUser.getOrganization().getUuid()));
+            invitationUserService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.ACCEPTED));
         } else {
             throw new UnsupportedOperationException(String.format("Role %s is not supported yet to grant for user", role.name()));
         }
-        LOGGER.debug("Successfully accepted invitation user for request- {}", request);
-        return new AcceptInvitationUserResultResponse(new AcceptInvitationUserResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(role.name())));
     }
 
     private void updatePreviouslyInvitedUserInvitationsStatuses(final String email, final String organizationUuid) {
