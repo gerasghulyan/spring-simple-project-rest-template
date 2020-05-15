@@ -61,7 +61,8 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitT
                 tokenInvitationUserService,
                 userRoleService,
                 userService,
-                mapperFacade
+                mapperFacade,
+                invitationUserSenderComponent
         )
     }
 }

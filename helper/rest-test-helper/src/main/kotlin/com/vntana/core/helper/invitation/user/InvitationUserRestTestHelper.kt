@@ -3,11 +3,7 @@ package com.vntana.core.helper.invitation.user
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.InvitationStatusModel
-import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest
-import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest
-import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest
-import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest
+import com.vntana.core.model.invitation.user.request.*
 
 /**
  * Created by Manuk Gharslyan.
@@ -15,6 +11,7 @@ import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitat
  * Time: 5:55 PM
  */
 open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
+    private fun email() = "${uuid()}@mail.com"
 
     fun buildCreateInvitationUserRequest(
             userRole: UserRoleModel? = UserRoleModel.ORGANIZATION_ADMIN,

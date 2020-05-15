@@ -8,16 +8,8 @@ import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
-import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
-import com.vntana.core.model.invitation.user.response.AcceptInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
-import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
+import com.vntana.core.model.invitation.user.request.*;
+import com.vntana.core.model.invitation.user.response.*;
 import com.vntana.core.model.invitation.user.response.model.AcceptInvitationUserResponseModel;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsGridResponseModel;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsResponseModel;
@@ -65,7 +57,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
                                            final InvitationUserFacadePreconditionChecker preconditionChecker,
                                            final TokenInvitationUserService tokenInvitationUserService,
                                            final UserRoleService userRoleService,
-                                           final UserService userService, final MapperFacade mapperFacade) {
+                                           final UserService userService,
                                            final MapperFacade mapperFacade,
                                            final InvitationUserSenderComponent invitationUserSenderComponent) {
         this.invitationUserService = invitationUserService;
