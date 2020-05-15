@@ -3,8 +3,11 @@ package com.vntana.core.rest.resource.invitation.user
 import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient
 import com.vntana.core.helper.invitation.user.InvitationUserResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
+import com.vntana.core.helper.token.TokenResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.rest.client.invitation.user.InvitationUserResourceClient
+import com.vntana.core.rest.client.user.UserResourceClient
+import com.vntana.core.rest.client.user.role.UserRoleResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -19,7 +22,16 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
     protected lateinit var invitationUserResourceClient: InvitationUserResourceClient
 
     @Autowired
+    protected lateinit var userResourceClient: UserResourceClient
+
+    @Autowired
+    protected lateinit var userRoleResourceClient: UserRoleResourceClient
+
+    @Autowired
     protected lateinit var resourceTestHelper: InvitationUserResourceTestHelper
+
+    @Autowired
+    protected lateinit var tokenResourceTestHelper: TokenResourceTestHelper
 
     @Autowired
     protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper

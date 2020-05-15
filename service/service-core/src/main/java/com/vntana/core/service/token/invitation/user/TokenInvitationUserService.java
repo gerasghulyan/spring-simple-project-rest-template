@@ -15,4 +15,6 @@ public interface TokenInvitationUserService {
     TokenInvitationUser create(final CreateTokenInvitationUserDto dto);
 
     Optional<TokenInvitationUser> findByToken(final String token);
+
+    TokenInvitationUser getByToken(final String token);
 }
