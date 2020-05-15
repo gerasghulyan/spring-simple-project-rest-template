@@ -7,14 +7,17 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
 import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
+import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsGridResponseModel;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsResponseModel;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
+import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
@@ -43,13 +46,16 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
     private final InvitationUserService invitationUserService;
     private final InvitationUserFacadePreconditionChecker preconditionChecker;
     private final MapperFacade mapperFacade;
+    private final InvitationUserSenderComponent invitationUserSenderComponent;
 
     public InvitationUserServiceFacadeImpl(final InvitationUserService invitationUserService,
                                            final InvitationUserFacadePreconditionChecker preconditionChecker,
-                                           final MapperFacade mapperFacade) {
+                                           final MapperFacade mapperFacade,
+                                           final InvitationUserSenderComponent invitationUserSenderComponent) {
         this.invitationUserService = invitationUserService;
         this.preconditionChecker = preconditionChecker;
         this.mapperFacade = mapperFacade;
+        this.invitationUserSenderComponent = invitationUserSenderComponent;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
@@ -94,6 +100,19 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         final InvitationUser invitationUser = invitationUserService.updateStatus(mapperFacade.map(request, UpdateInvitationUserStatusDto.class));
         LOGGER.debug("Successfully invitation user invitation status for request- {}", request);
         return new UpdateInvitationUserInvitationStatusResultResponse(invitationUser.getUuid());
+    }
+
+    @Transactional
+    @Override
+    public SendInvitationUserResultResponse sendInvitation(final SendInvitationUserRequest request) {
+        LOGGER.debug("Processing invitation user facade sendInvitation for request - {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkSendInvitationForPossibleErrors(request);
+        if (singleErrorWithStatus.isPresent()) {
+            return new SendInvitationUserResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
+        }
+        final SendInvitationUserResultResponse resultResponse = invitationUserSenderComponent.sendInvitation(request);
+        LOGGER.debug("Successfully processed invitation user facade sendInvitation for request - {}", request);
+        return resultResponse;
     }
 
     private void updatePreviouslyInvitedUserInvitationsStatuses(final String email, final String organizationUuid) {

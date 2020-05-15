@@ -23,12 +23,12 @@ class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(email = null)),
-                InvitationUserErrorResponseModel.MISSING_USER_EMAIL
+                InvitationUserErrorResponseModel.MISSING_INVITED_USER_EMAIL
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(email = emptyString())),
-                InvitationUserErrorResponseModel.MISSING_USER_EMAIL
+                InvitationUserErrorResponseModel.MISSING_INVITED_USER_EMAIL
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,

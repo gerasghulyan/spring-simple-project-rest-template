@@ -3,9 +3,11 @@ package com.vntana.core.rest.resource.invitation.user;
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
 import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
+import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import org.slf4j.Logger;
@@ -52,6 +54,14 @@ public class InvitationUserResource {
         LOGGER.debug("Processing InvitationUserResource updateStatus method for request - {}", request);
         final UpdateInvitationUserInvitationStatusResultResponse resultResponse = invitationUserServiceFacade.updateStatus(request);
         LOGGER.debug("Successfully processed InvitationUserResource updateStatus method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping("/send-invitation")
+    public ResponseEntity<SendInvitationUserResultResponse> sendInvitation(@RequestBody final SendInvitationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource sendInvitation method for request - {}", request);
+        final SendInvitationUserResultResponse resultResponse = invitationUserServiceFacade.sendInvitation(request);
+        LOGGER.debug("Successfully processed InvitationUserResource sendInvitation method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }
