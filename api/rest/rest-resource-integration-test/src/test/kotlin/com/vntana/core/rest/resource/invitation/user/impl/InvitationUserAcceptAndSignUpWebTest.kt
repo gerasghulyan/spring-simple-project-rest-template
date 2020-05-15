@@ -97,5 +97,6 @@ class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
                 invitationStatus = InvitationStatusModel.ACCEPTED
         ))?.body?.response()?.items()?.map { model -> model.uuid }?.toList()
         assertThat(acceptedInvitations).containsAnyOf(invitationUserUuid)
+        assertThat(tokenResourceClient.isExpire(request.token)?.body?.response()?.expired).isTrue()
     }
 }

@@ -48,6 +48,7 @@ class InvitationUserAcceptAndSignUpFacadeUnitTest : AbstractInvitationUserFacade
         expect(userService.create(dto)).andReturn(user)
         expect(userRoleService.grantOrganizationAdminRole(UserGrantOrganizationRoleDto(user.uuid, invitationUser.organization.uuid))).andReturn(adminRole)
         expect(invitationUserService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
+        expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationUser)
         replayAll()
         invitationUserServiceFacade.acceptAndSignUp(request).let {
             assertBasicSuccessResultResponse(it)

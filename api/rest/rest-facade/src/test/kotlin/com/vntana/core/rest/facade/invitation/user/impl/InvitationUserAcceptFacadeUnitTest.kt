@@ -50,6 +50,7 @@ class InvitationUserAcceptFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
         expect(userService.getByEmail(tokenInvitationUser.invitationUser.email)).andReturn(user)
         expect(userRoleService.grantOrganizationAdminRole(grantOrganizationRoleDto)).andReturn(adminRole)
         expect(invitationUserService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
+        expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationUser)
         replayAll()
         invitationUserServiceFacade.accept(request).let {
             assertBasicSuccessResultResponse(it)
