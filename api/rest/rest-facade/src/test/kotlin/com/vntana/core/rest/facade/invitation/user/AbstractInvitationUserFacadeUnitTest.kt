@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelpe
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker
+import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent
 import com.vntana.core.rest.facade.invitation.user.impl.InvitationUserServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.invitation.user.InvitationUserService
@@ -28,6 +29,9 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitT
 
     @Mock
     protected lateinit var mapperFacade: MapperFacade
+    
+    @Mock
+    protected lateinit var invitationUserSenderComponent: InvitationUserSenderComponent
 
     protected val invitationUserRestTestHelper = InvitationUserRestTestHelper()
 
@@ -39,6 +43,6 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitT
 
     @Before
     fun prepare() {
-        invitationUserServiceFacade = InvitationUserServiceFacadeImpl(invitationUserService, preconditionChecker, mapperFacade)
+        invitationUserServiceFacade = InvitationUserServiceFacadeImpl(invitationUserService, preconditionChecker, mapperFacade, invitationUserSenderComponent)
     }
 }
