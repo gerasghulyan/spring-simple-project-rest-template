@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.invitation.user.component.impl;
 
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.template.email.TemplateEmail;
 import com.vntana.core.domain.template.email.TemplateEmailType;
 import com.vntana.core.domain.user.User;
@@ -9,6 +10,7 @@ import com.vntana.core.model.invitation.user.response.model.SendInvitationUserRe
 import com.vntana.core.notification.EmailSenderService;
 import com.vntana.core.notification.payload.invitation.user.InvitationUserEmailSendPayload;
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent;
+import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.template.email.TemplateEmailService;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -29,6 +31,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
     private final EmailSenderService emailSenderService;
     private final TemplateEmailService templateEmailService;
     private final UserService userService;
+    private final OrganizationService organizationService;
     private final String websiteUrl;
     private final String senderEmail;
     private final String emailSubject;
@@ -37,6 +40,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
             final EmailSenderService emailSenderService,
             final TemplateEmailService templateEmailService,
             final UserService userService,
+            final OrganizationService organizationService,
             @Value("${user.invitation.website.url}") final String websiteUrl,
             @Value("${user.invitation.email.send.from}") final String senderEmail,
             @Value("${user.invitation.email.subject}") final String emailSubject) {
@@ -44,6 +48,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
         this.emailSenderService = emailSenderService;
         this.templateEmailService = templateEmailService;
         this.userService = userService;
+        this.organizationService = organizationService;
         this.websiteUrl = websiteUrl;
         this.senderEmail = senderEmail;
         this.emailSubject = emailSubject;
@@ -54,6 +59,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
         LOGGER.debug("Sending user invitation for request - {}", request);
         final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_INVITATION);
         final User user = userService.getByUuid(request.getInviterUserUuid());
+        final Organization organization = organizationService.getByUuid(request.getOrganizationUuid());
         final InvitationUserEmailSendPayload payload = new InvitationUserEmailSendPayload(
                 templateEmail.getTemplateName(),
                 request.getEmail(),
@@ -61,7 +67,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
                 emailSubject,
                 String.format("%s/%s", websiteUrl, request.getToken()),
                 user.getFullName(),
-                request.getOrganizationName()
+                organization.getName()
         );
         emailSenderService.sendEmail(payload);
         LOGGER.debug("Successfully sent user invitation for request - {}", request);

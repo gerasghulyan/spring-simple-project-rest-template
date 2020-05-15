@@ -109,6 +109,10 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             LOGGER.error("Checking invitation user send invitation precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
         }
+        if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
+            LOGGER.error("Checking invitation user send invitation precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
+        }
         LOGGER.debug("Successfully checked invitation user send invitation precondition for request - {}", request);
         return SingleErrorWithStatus.empty();
     }

@@ -43,12 +43,12 @@ class InvitationUserSendInvitationWebTest : AbstractInvitationUserWebTest() {
                 InvitationUserErrorResponseModel.MISSING_INVITER_USER_UUID
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationUserRequest(organizationName = null)),
-                InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_NAME
+                invitationUserResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationUserRequest(organizationUuid = null)),
+                InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationUserRequest(organizationName = emptyString())),
-                InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_NAME
+                invitationUserResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationUserRequest(organizationUuid = emptyString())),
+                InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
     }
 
@@ -62,19 +62,31 @@ class InvitationUserSendInvitationWebTest : AbstractInvitationUserWebTest() {
     }
 
     @Test
+    fun `test when inviting organization does not exist`() {
+        val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
+        assertBasicErrorResultResponse(
+                HttpStatus.NOT_FOUND,
+                invitationUserResourceClient.sendInvitation(resourceTestHelper.buildSendInvitationUserRequest(inviterUserUuid = inviterUserUuid)),
+                InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND
+        )
+    }
+
+    @Test
     fun test() {
         reset(emailNotificationResourceClient)
         `when`(emailNotificationResourceClient.createEmailNotification(ArgumentMatchers.any())).thenReturn(ResultResponseModel())
         val email = email()
         val inviterUserFullName = uuid()
+        val organizationName = uuid()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(name = organizationName).response().uuid
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
-        val request = resourceTestHelper.buildSendInvitationUserRequest(email = email, inviterUserUuid = inviterUserUuid)
+        val request = resourceTestHelper.buildSendInvitationUserRequest(email = email, inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid)
         assertBasicSuccessResultResponse(invitationUserResourceClient.sendInvitation(request))
         verify(emailNotificationResourceClient, times(1))
                 .createEmailNotification(ArgumentMatchers.argThat { argument ->
                     argument.recipientEmail == request.email &&
                             argument.properties[InvitationUserEmailSendPayload.PROPERTIES_INVITER_USER_FULL_NAME] == inviterUserFullName &&
-                            argument.properties[InvitationUserEmailSendPayload.PROPERTIES_ORGANIZATION_NAME] == request.organizationName &&
+                            argument.properties[InvitationUserEmailSendPayload.PROPERTIES_ORGANIZATION_NAME] == organizationName &&
                             argument.properties[InvitationUserEmailSendPayload.PROPERTIES_LINK]!!.contains(request.token)
                 })
 

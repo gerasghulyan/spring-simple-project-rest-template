@@ -30,18 +30,18 @@ public class SendInvitationUserRequest extends AbstractRequestModel implements V
     @JsonProperty("inviterUserUuid")
     private String inviterUserUuid;
 
-    @JsonProperty("organizationName")
-    private String organizationName;
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
 
     public SendInvitationUserRequest() {
         super();
     }
 
-    public SendInvitationUserRequest(final String email, final String token, final String inviterUserUuid, final String organizationName) {
+    public SendInvitationUserRequest(final String email, final String token, final String inviterUserUuid, final String organizationUuid) {
         this.email = email;
         this.token = token;
         this.inviterUserUuid = inviterUserUuid;
-        this.organizationName = organizationName;
+        this.organizationUuid = organizationUuid;
     }
 
     @Override
@@ -55,8 +55,8 @@ public class SendInvitationUserRequest extends AbstractRequestModel implements V
         if (StringUtils.isEmpty(inviterUserUuid)) {
             return Collections.singletonList(MISSING_INVITER_USER_UUID);
         }
-        if (StringUtils.isEmpty(organizationName)) {
-            return Collections.singletonList(MISSING_INVITING_ORGANIZATION_NAME);
+        if (StringUtils.isEmpty(organizationUuid)) {
+            return Collections.singletonList(MISSING_INVITING_ORGANIZATION_UUID);
         }
         return Collections.emptyList();
     }
@@ -73,7 +73,7 @@ public class SendInvitationUserRequest extends AbstractRequestModel implements V
                 .append(email, that.email)
                 .append(token, that.token)
                 .append(inviterUserUuid, that.inviterUserUuid)
-                .append(organizationName, that.organizationName)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -83,7 +83,7 @@ public class SendInvitationUserRequest extends AbstractRequestModel implements V
                 .append(email)
                 .append(token)
                 .append(inviterUserUuid)
-                .append(organizationName)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -92,7 +92,7 @@ public class SendInvitationUserRequest extends AbstractRequestModel implements V
         return new ToStringBuilder(this)
                 .append("email", email)
                 .append("inviterUserUuid", inviterUserUuid)
-                .append("organizationName", organizationName)
+                .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
@@ -108,7 +108,7 @@ public class SendInvitationUserRequest extends AbstractRequestModel implements V
         return inviterUserUuid;
     }
 
-    public String getOrganizationName() {
-        return organizationName;
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 }
