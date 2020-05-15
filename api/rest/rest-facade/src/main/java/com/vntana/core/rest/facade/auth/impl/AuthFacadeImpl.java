@@ -90,15 +90,12 @@ public class AuthFacadeImpl implements AuthFacade {
         responseModel.setUuid(user.getUuid());
         responseModel.setUsername(user.getEmail());
         responseModel.setOrganizationUuid(request.getOrganizationUuid());
-        if (user.roleOfSuperAdmin().isPresent()) {
-            responseModel.setUserRole(UserRoleModel.SUPER_ADMIN);
+        responseModel.setSuperAdmin(user.roleOfSuperAdmin().isPresent());
+        final Optional<AbstractUserRole> userRoleOptional = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
+        if (userRoleOptional.isPresent()) {
+            responseModel.setUserRole(UserRoleModel.valueOf(userRoleOptional.get().getUserRole().name()));
         } else {
-            final Optional<AbstractUserRole> userRoleOptional = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
-            if (userRoleOptional.isPresent()) {
-                responseModel.setUserRole(UserRoleModel.valueOf(userRoleOptional.get().getUserRole().name()));
-            } else {
-                return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE));
-            }
+            return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE));
         }
         LOGGER.debug("Successfully processed auth facade findByUserAndOrganization for request - {}", request);
         return new SecureFindUserByUuidAndOrganizationResponse(responseModel);
