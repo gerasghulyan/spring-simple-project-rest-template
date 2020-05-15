@@ -6,6 +6,7 @@ import com.vntana.core.persistence.token.TokenInvitationUserRepository;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
 import com.vntana.core.service.token.invitation.user.dto.CreateTokenInvitationUserDto;
+import com.vntana.core.service.token.invitation.user.exception.TokenInvitationUserNotFoundForTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -55,4 +56,9 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
         return result;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public TokenInvitationUser getByToken(final String token) {
+        return findByToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
+    }
 }

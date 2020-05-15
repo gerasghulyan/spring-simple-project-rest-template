@@ -1,8 +1,10 @@
 package com.vntana.core.rest.client.invitation.user;
 
+import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.response.AcceptInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
@@ -28,4 +30,7 @@ public interface InvitationUserResourceClient {
 
     @PutMapping("/status")
     ResponseEntity<UpdateInvitationUserInvitationStatusResultResponse> updateStatus(@RequestBody final UpdateInvitationUserInvitationStatusRequest request);
+
+    @PostMapping(path = "accept")
+    ResponseEntity<AcceptInvitationUserResultResponse> accept(@RequestBody final AcceptInvitationUserRequest request);
 }

@@ -3,6 +3,7 @@ package com.vntana.core.helper.invitation.user
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.InvitationStatusModel
+import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest
@@ -31,4 +32,8 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
             uuid: String? = uuid(),
             status: InvitationStatusModel? = InvitationStatusModel.ACCEPTED
     ): UpdateInvitationUserInvitationStatusRequest = UpdateInvitationUserInvitationStatusRequest(uuid, status)
+
+    fun buildAcceptInvitationUserRequest(
+            token: String? = uuid()
+    ): AcceptInvitationUserRequest = AcceptInvitationUserRequest(token)
 }

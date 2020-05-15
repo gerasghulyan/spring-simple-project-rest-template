@@ -1,8 +1,10 @@
 package com.vntana.core.rest.facade.invitation.user;
 
+import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.response.AcceptInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
@@ -19,4 +21,6 @@ public interface InvitationUserServiceFacade {
     GetAllByStatusUserInvitationsResultResponse getAllByStatus(final GetAllByStatusInvitationUserRequest request);
 
     UpdateInvitationUserInvitationStatusResultResponse updateStatus(final UpdateInvitationUserInvitationStatusRequest request);
+
+    AcceptInvitationUserResultResponse accept(final AcceptInvitationUserRequest request);
 }

@@ -3,14 +3,20 @@ package com.vntana.core.rest.facade.invitation.user.impl;
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationUser;
+import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
+import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.response.AcceptInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
+import com.vntana.core.model.invitation.user.response.model.AcceptInvitationUserResponseModel;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsGridResponseModel;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsResponseModel;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
@@ -20,6 +26,10 @@ import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
+import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
+import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.role.UserRoleService;
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,13 +52,21 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
 
     private final InvitationUserService invitationUserService;
     private final InvitationUserFacadePreconditionChecker preconditionChecker;
+    private final TokenInvitationUserService tokenInvitationUserService;
+    private final UserRoleService userRoleService;
+    private final UserService userService;
     private final MapperFacade mapperFacade;
 
     public InvitationUserServiceFacadeImpl(final InvitationUserService invitationUserService,
                                            final InvitationUserFacadePreconditionChecker preconditionChecker,
-                                           final MapperFacade mapperFacade) {
+                                           final TokenInvitationUserService tokenInvitationUserService,
+                                           final UserRoleService userRoleService,
+                                           final UserService userService, final MapperFacade mapperFacade) {
         this.invitationUserService = invitationUserService;
         this.preconditionChecker = preconditionChecker;
+        this.tokenInvitationUserService = tokenInvitationUserService;
+        this.userRoleService = userRoleService;
+        this.userService = userService;
         this.mapperFacade = mapperFacade;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
@@ -94,6 +112,27 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         final InvitationUser invitationUser = invitationUserService.updateStatus(mapperFacade.map(request, UpdateInvitationUserStatusDto.class));
         LOGGER.debug("Successfully invitation user invitation status for request- {}", request);
         return new UpdateInvitationUserInvitationStatusResultResponse(invitationUser.getUuid());
+    }
+
+    @Transactional
+    @Override
+    public AcceptInvitationUserResultResponse accept(final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Accepting invitation user for request- {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptForPossibleErrors(request);
+        if (error.isPresent()) {
+            return new AcceptInvitationUserResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final InvitationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
+        final Organization organization = invitationUser.getOrganization();
+        final User user = userService.getByEmail(invitationUser.getEmail());
+        final UserRole role = invitationUser.getRole();
+        if (role == UserRole.ORGANIZATION_ADMIN) {
+            userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(user.getUuid(), organization.getUuid()));
+        } else {
+            throw new UnsupportedOperationException(String.format("Role %s is not supported yet to grant for user", role.name()));
+        }
+        LOGGER.debug("Successfully accepted invitation user for request- {}", request);
+        return new AcceptInvitationUserResultResponse(new AcceptInvitationUserResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(role.name())));
     }
 
     private void updatePreviouslyInvitedUserInvitationsStatuses(final String email, final String organizationUuid) {

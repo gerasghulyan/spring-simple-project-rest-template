@@ -1,9 +1,11 @@
 package com.vntana.core.rest.resource.invitation.user;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
+import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.response.AcceptInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
@@ -52,6 +54,14 @@ public class InvitationUserResource {
         LOGGER.debug("Processing InvitationUserResource updateStatus method for request - {}", request);
         final UpdateInvitationUserInvitationStatusResultResponse resultResponse = invitationUserServiceFacade.updateStatus(request);
         LOGGER.debug("Successfully processed InvitationUserResource updateStatus method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "accept")
+    public ResponseEntity<AcceptInvitationUserResultResponse> accept(@RequestBody final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource acceptInvitation method for request - {}", request);
+        final AcceptInvitationUserResultResponse resultResponse = invitationUserServiceFacade.accept(request);
+        LOGGER.debug("Successfully processed InvitationUserResource acceptInvitation method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }
