@@ -34,16 +34,40 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         resetAll()
         val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
+        val role = userRoleCommonTestHelper.buildUserOrganizationSuperAdminRole()
         val userUuid = user.uuid
         val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
         expect(userService.findByUuid(userUuid)).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(role))
         replayAll()
         authFacade.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().uuid).isEqualTo(request.uuid)
             assertThat(it.response().organizationUuid).isEqualTo(request.organizationUuid)
             assertThat(it.response().username).isEqualTo(user.email)
-            assertThat(it.response().userRole).isEqualTo(UserRoleModel.SUPER_ADMIN)
+            assertThat(it.response().superAdmin).isTrue()
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test user is admin and also super admin`() {
+        resetAll()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
+        user.grantSuperAdminRole()
+        val adminRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole()
+        val role = userRoleCommonTestHelper.buildUserOrganizationSuperAdminRole()
+        val userUuid = user.uuid
+        val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
+        expect(userService.findByUuid(userUuid)).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(adminRole))
+        replayAll()
+        authFacade.findByUserAndOrganization(request).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().uuid).isEqualTo(request.uuid)
+            assertThat(it.response().organizationUuid).isEqualTo(request.organizationUuid)
+            assertThat(it.response().username).isEqualTo(user.email)
+            assertThat(it.response().superAdmin).isTrue()
         }
         verifyAll()
     }
@@ -64,6 +88,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
             assertThat(it.response().uuid).isEqualTo(request.uuid)
             assertThat(it.response().organizationUuid).isEqualTo(request.organizationUuid)
             assertThat(it.response().username).isEqualTo(user.email)
+            assertThat(it.response().superAdmin).isFalse()
         }
         verifyAll()
     }

@@ -21,16 +21,23 @@ open class UserRoleCommonTestHelper : AbstractTestHelper() {
     private val organizationCommonTestHelper = OrganizationCommonTestHelper()
     private val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
-    fun buildUserOrganizationOwnerRole(user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
-                                       organization: Organization? = organizationCommonTestHelper.buildOrganization()
+    fun buildUserOrganizationOwnerRole(
+            user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
+            organization: Organization? = organizationCommonTestHelper.buildOrganization()
     ): UserOrganizationOwnerRole = UserOrganizationOwnerRole(user, organization)
 
-    fun buildUserOrganizationAdminRole(user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
-                                       organization: Organization? = organizationCommonTestHelper.buildOrganization()
+    fun buildUserOrganizationAdminRole(
+            user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
+            organization: Organization? = organizationCommonTestHelper.buildOrganization()
     ): UserOrganizationAdminRole = UserOrganizationAdminRole(user, organization)
 
-    fun buildUserClientOrganizationRole(user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
-                                        clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
+    fun buildUserOrganizationSuperAdminRole(
+            user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
+    ): UserSuperAdminRole = UserSuperAdminRole(user)
+
+    fun buildUserClientOrganizationRole(
+            user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
+            clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
     ): UserClientOrganizationRole = UserClientOrganizationRole(user, UserRole.CLIENT_ADMIN, clientOrganization)
 
     fun buildUserGrantOrganizationRoleDto(
