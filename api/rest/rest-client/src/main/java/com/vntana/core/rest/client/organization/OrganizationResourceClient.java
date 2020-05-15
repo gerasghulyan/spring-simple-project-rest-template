@@ -30,6 +30,9 @@ public interface OrganizationResourceClient {
     @GetMapping(path = "/users/{uuid}")
     UserOrganizationResponse getUserOrganizations(@PathVariable("uuid") final String uuid);
 
+    @GetMapping(path = "/super-admin-users/{uuid}")
+    UserOrganizationResponse getSuperAdminUserOrganizations(@PathVariable("uuid") final String uuid);
+
     @GetMapping(path = "/slug/{slug}")
     GetOrganizationBySlugResultResponse getBySlug(@PathVariable("slug") final String slug);
 

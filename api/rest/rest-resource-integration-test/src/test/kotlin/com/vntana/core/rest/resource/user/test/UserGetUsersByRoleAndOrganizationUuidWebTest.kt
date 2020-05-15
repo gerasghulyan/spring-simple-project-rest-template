@@ -16,7 +16,7 @@ class UserGetUsersByRoleAndOrganizationUuidWebTest : AbstractUserWebTest() {
     @Test
     fun `test find`() {
         val slug = uuid()
-        resourceHelper.persistUser(createUserRequest = resourceHelper.buildCreateUserRequest(clientSlug = slug))
+        resourceHelper.persistUser(createUserRequest = resourceHelper.buildCreateUserRequest(organizationSlug = slug))
         val organizationUuid = organizationResourceTestHelper.getOrganizationBySlug(slug = slug).response().uuid
         assertBasicSuccessResultResponse(userResourceClient.getUsersByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_OWNER, organizationUuid))
     }

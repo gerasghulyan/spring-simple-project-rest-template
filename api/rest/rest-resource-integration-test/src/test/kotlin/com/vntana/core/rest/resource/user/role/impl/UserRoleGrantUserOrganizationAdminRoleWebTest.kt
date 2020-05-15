@@ -69,17 +69,23 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
 
     @Test
     fun test() {
-        val userUuid = userResourceTestHelper.persistUser().response().uuid
-        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val request = resourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = userUuid, organizationUuid = organizationUuid)
+        val adminUserUuid = userResourceTestHelper.persistUser().response().uuid
+        val ownerUserUuid = userResourceTestHelper.persistUser().response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = ownerUserUuid).response().uuid
+        val request = resourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = adminUserUuid, organizationUuid = organizationUuid)
         userRoleResourceClient.grantUserOrganizationAdminRole(request).let {
             assertBasicSuccessResultResponse(it)
-            it?.body?.response()?.let { responseModel ->
-                assertThat(responseModel.userUuid).isEqualTo(userUuid)
+            it?.body?.response()?.let { response ->
+                assertThat(response.userUuid).isEqualTo(adminUserUuid)
                 userResourceClient.getUsersByOrganization(organizationUuid)?.body?.response()?.run {
                     assertThat(this.totalCount()).isEqualTo(2)
-                    assertThat(this.items()[0].userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
-                    assertThat(this.items()[0].uuid).isEqualTo(userUuid)
+                    this.items().forEach { responseModel ->
+                        if (responseModel.userRoleModel.equals(UserRoleModel.ORGANIZATION_ADMIN)) {
+                            assertThat(responseModel.uuid).isEqualTo(adminUserUuid)
+                        } else {
+                            assertThat(responseModel.uuid).isEqualTo(ownerUserUuid)
+                        }
+                    }
                 }
             }
         }

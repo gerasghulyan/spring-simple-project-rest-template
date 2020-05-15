@@ -49,7 +49,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -142,31 +141,43 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 });
     }
 
+    @Transactional
     @Override
     public UserOrganizationResponse getUserOrganizations(final String userUuid) {
         if (StringUtils.isBlank(userUuid)) {
-            return new UserOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.MISSING_USER_UUID);
+            return new UserOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY,
+                    OrganizationErrorResponseModel.MISSING_USER_UUID
+            );
         }
         LOGGER.debug("Retrieving user organizations by user uuid - {}", userUuid);
-        final Mutable<List<GetUserOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
-        final Mutable<OrganizationErrorResponseModel> mutableErrorResponse = new MutableObject<>();
-        persistenceUtilityService.runInNewTransaction(() -> {
-            final Optional<User> userOptional = userService.findByUuid(userUuid);
-            if (!userOptional.isPresent()) {
-                mutableErrorResponse.setValue(OrganizationErrorResponseModel.USER_NOT_FOUND);
-                return;
-            }
-            final User user = userOptional.get();
-            final List<GetUserOrganizationsResponseModel> response = user.roleOfSuperAdmin()
-                    .map(userSuperAdminRole -> getOrganizationsWhenSuperAdmin(userUuid))
-                    .orElseGet(() -> getOrganizationsWhenNotSuperAdmin(user));
-            mutableResponse.setValue(response);
-        });
-        if (Objects.nonNull(mutableErrorResponse.getValue())) {
-            return new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, mutableErrorResponse.getValue());
+        return userService.findByUuid(userUuid)
+                .map(user -> {
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenNotSuperAdmin(user);
+                    return new UserOrganizationResponse(
+                            new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
+                    );
+                })
+                .orElseGet(() -> new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.USER_NOT_FOUND));
+    }
+
+    @Transactional
+    @Override
+    public UserOrganizationResponse getSuperAdminUserOrganizations(final String userUuid) {
+        if (StringUtils.isBlank(userUuid)) {
+            return new UserOrganizationResponse(
+                    HttpStatus.SC_UNPROCESSABLE_ENTITY,
+                    OrganizationErrorResponseModel.MISSING_USER_UUID
+            );
         }
-        final List<GetUserOrganizationsResponseModel> response = mutableResponse.getValue();
-        return new UserOrganizationResponse(new GetUserOrganizationsGridResponseModel(response.size(), response));
+        LOGGER.debug("Retrieving super admin user organizations by user uuid - {}", userUuid);
+        return userService.findByUuid(userUuid)
+                .map(user -> {
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenSuperAdmin(user.getUuid());
+                    return new UserOrganizationResponse(
+                            new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
+                    );
+                })
+                .orElseGet(() -> new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.USER_NOT_FOUND));
     }
 
     @Override

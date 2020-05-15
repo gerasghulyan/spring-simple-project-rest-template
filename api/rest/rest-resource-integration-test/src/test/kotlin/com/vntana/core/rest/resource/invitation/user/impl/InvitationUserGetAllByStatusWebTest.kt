@@ -34,7 +34,7 @@ class InvitationUserGetAllByStatusWebTest : AbstractInvitationUserWebTest() {
         assertBasicSuccessResultResponse(responseEntity)
         responseEntity?.body?.response()?.let {
             val uuids = it.items().map { model -> model.uuid }.toList()
-            assertThat(uuids).contains(invitationUuid1, invitationUuid2)
+            assertThat(uuids).containsExactlyInAnyOrder(invitationUuid1, invitationUuid2)
             assertThat(uuids).doesNotContain(invitationUserUuid)
         }
     }

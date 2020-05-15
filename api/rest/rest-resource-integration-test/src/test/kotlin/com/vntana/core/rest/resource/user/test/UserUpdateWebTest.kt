@@ -28,7 +28,7 @@ class UserUpdateWebTest : AbstractUserWebTest() {
         val userFullName = uuid()
         val organizationName = uuid()
         val user = resourceHelper.persistUser(createUserRequest = resourceHelper.buildCreateUserRequest(
-                clientName = organizationName
+                organizationName = organizationName
         ))
         val request = resourceHelper.buildUpdateUserRequest(uuid = user.response().uuid,fullName = userFullName)
         val result = userResourceClient.update(request)

@@ -11,12 +11,12 @@ import com.vntana.core.model.user.request.*
  */
 open class UserRestTestHelper : AbstractRestTestHelper() {
     fun buildCreateUserRequest(
-            clientName: String? = uuid(),
-            clientSlug: String? = uuid(),
+            organizationName: String? = uuid(),
+            organizationSlug: String? = uuid(),
             fullName: String? = uuid(),
             email: String? = email(),
             password: String? = uuid()
-    ): CreateUserRequest = CreateUserRequest(clientName, clientSlug, fullName, email, password)
+    ): CreateUserRequest = CreateUserRequest(organizationName, organizationSlug, fullName, email, password)
 
     fun buildFindUserByEmailRequest(email: String? = "${uuid()}@mail.com"): FindUserByEmailRequest = FindUserByEmailRequest(email)
 

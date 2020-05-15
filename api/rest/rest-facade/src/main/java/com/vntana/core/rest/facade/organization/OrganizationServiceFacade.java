@@ -22,6 +22,8 @@ public interface OrganizationServiceFacade {
     CreateOrganizationResultResponse create(final CreateOrganizationRequest request);
 
     UserOrganizationResponse getUserOrganizations(final String userUuid);
+    
+    UserOrganizationResponse getSuperAdminUserOrganizations(final String userUuid);
 
     GetOrganizationBySlugResultResponse getBySlug(final String slug);
 
