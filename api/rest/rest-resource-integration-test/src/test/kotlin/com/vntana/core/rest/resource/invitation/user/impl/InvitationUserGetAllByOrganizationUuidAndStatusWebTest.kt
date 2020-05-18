@@ -12,10 +12,20 @@ import org.springframework.http.HttpStatus
  * Date: 5/13/2020
  * Time: 4:14 PM
  */
-class InvitationUserGetAllByStatusWebTest : AbstractInvitationUserWebTest() {
+class InvitationUserGetAllByOrganizationUuidAndStatusWebTest : AbstractInvitationUserWebTest() {
 
     @Test
     fun `test with invalid arguments`() {
+        assertBasicErrorResultResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = null)),
+                InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
+        )
+        assertBasicErrorResultResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = emptyString())),
+                InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
+        )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(invitationStatus = null)),
@@ -24,16 +34,27 @@ class InvitationUserGetAllByStatusWebTest : AbstractInvitationUserWebTest() {
     }
 
     @Test
+    fun `test when inviting organization not found`() {
+        assertBasicErrorResultResponse(
+                HttpStatus.NOT_FOUND,
+                invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = uuid())),
+                InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND
+        )
+    }
+
+    @Test
     fun test() {
-        val expectedInvitationUuid1 = resourceTestHelper.persistInvitationUser()
-        val expectedInvitationUuid2 = resourceTestHelper.persistInvitationUser()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
+        val expectedInvitationUuid1 = resourceTestHelper.persistInvitationUser(organizationUuid = organizationUuid)
+        val expectedInvitationUuid2 = resourceTestHelper.persistInvitationUser(organizationUuid = organizationUuid)
         val unexpectedInvitationUserUuid1 = resourceTestHelper.persistInvitationUser()
         val unexpectedInvitationUserUuid2 = resourceTestHelper.persistInvitationUser()
         resourceTestHelper.updateInvitationStatus(uuid = unexpectedInvitationUserUuid1, status = InvitationStatusModel.REJECTED)
         resourceTestHelper.updateInvitationStatus(uuid = expectedInvitationUuid1, status = InvitationStatusModel.ACCEPTED)
         resourceTestHelper.updateInvitationStatus(uuid = expectedInvitationUuid2, status = InvitationStatusModel.ACCEPTED)
         val request = resourceTestHelper.buildGetAllByStatusInvitationUserRequest(
-                invitationStatus = InvitationStatusModel.ACCEPTED
+                invitationStatus = InvitationStatusModel.ACCEPTED,
+                organizationUuid = organizationUuid
         )
         val responseEntity = invitationUserResourceClient.getAllByStatus(request)
         assertBasicSuccessResultResponse(responseEntity)

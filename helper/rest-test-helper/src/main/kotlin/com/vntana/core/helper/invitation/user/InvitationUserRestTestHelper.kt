@@ -23,8 +23,9 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
     fun buildGetAllByStatusInvitationUserRequest(
             page: Int = 0,
             size: Int = 5,
+            organizationUuid: String? = uuid(),
             invitationStatus: InvitationStatusModel? = InvitationStatusModel.INVITED
-    ): GetAllByStatusInvitationUserRequest = GetAllByStatusInvitationUserRequest(page, size, invitationStatus)
+    ): GetAllByStatusInvitationUserRequest = GetAllByStatusInvitationUserRequest(page, size, organizationUuid, invitationStatus)
 
     fun buildUpdateInvitationUserInvitationStatusRequest(
             uuid: String? = uuid(),

@@ -11,29 +11,32 @@ import java.util.stream.Collectors
  * Date: 5/11/2020
  * Time: 1:43 PM
  */
-class InvitationUserGetAllByStatusServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
+class InvitationUserGetAllByOrganizationUuidAndStatusServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
 
     @Test
     fun `test when empty`() {
-        invitationUserService.getAllByStatus(integrationInvitationUserTestHelper.buildGetAllByStatusInvitationUsersDto()).run {
+        invitationUserService.getAllByOrganizationUuidAndStatus(integrationInvitationUserTestHelper.buildGetAllByOrganizationUuidAndStatusInvitationUsersDto()).run {
             assertThat(totalElements).isEqualTo(0)
         }
     }
 
     @Test
     fun test() {
+        val organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid
         val invitation1 = integrationInvitationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
+                organizationUuid = organizationUuid
         )
         val invitation2 = integrationInvitationUserTestHelper.persistInvitationUser(
-                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
+                organizationUuid = organizationUuid
         )
         val invitation3 = integrationInvitationUserTestHelper.persistInvitationUser(
                 inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         )
         integrationInvitationUserTestHelper.updateInvitationUserStatus(uuid = invitation3.uuid, status = InvitationStatus.REJECTED)
         flushAndClear()
-        invitationUserService.getAllByStatus(integrationInvitationUserTestHelper.buildGetAllByStatusInvitationUsersDto()).run {
+        invitationUserService.getAllByOrganizationUuidAndStatus(integrationInvitationUserTestHelper.buildGetAllByOrganizationUuidAndStatusInvitationUsersDto(organizationUuid = organizationUuid)).run {
             assertThat(totalElements).isEqualTo(2)
             val list = get().collect(Collectors.toList())
             assertThat(list).containsExactlyInAnyOrder(invitation1, invitation2)

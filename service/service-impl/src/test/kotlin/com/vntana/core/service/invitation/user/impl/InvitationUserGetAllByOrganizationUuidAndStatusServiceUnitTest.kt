@@ -12,13 +12,13 @@ import org.springframework.data.domain.PageRequest
  * Date: 5/11/2020
  * Time: 1:43 PM
  */
-class InvitationUserGetAllByStatusServiceUnitTest : AbstractInvitationUserServiceUnitTest() {
+class InvitationUserGetAllByOrganizationUuidAndStatusServiceUnitTest : AbstractInvitationUserServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { invitationUserService.getAllByStatus(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { invitationUserService.getAllByOrganizationUuidAndStatus(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -27,11 +27,11 @@ class InvitationUserGetAllByStatusServiceUnitTest : AbstractInvitationUserServic
         resetAll()
         val page = 0
         val size = 2
-        val dto = commonTestHelper.buildGetAllByStatusInvitationUsersDto(page, size)
+        val dto = commonTestHelper.buildGetAllByOrganizationUuidAndStatusInvitationUsersDto(page, size)
         val pageOfInvitations = commonTestHelper.buildInvitationUserPage()
-        expect(invitationUserRepository.findAllByStatus(dto.status, PageRequest.of(page, size))).andReturn(pageOfInvitations)
+        expect(invitationUserRepository.findAllByOrganizationUuidAndStatus(dto.organizationUuid, dto.status, PageRequest.of(page, size))).andReturn(pageOfInvitations)
         replayAll()
-        assertThat(invitationUserService.getAllByStatus(dto)).isEqualTo(pageOfInvitations)
+        assertThat(invitationUserService.getAllByOrganizationUuidAndStatus(dto)).isEqualTo(pageOfInvitations)
         verifyAll()
     }
 }

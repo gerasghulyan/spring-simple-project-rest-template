@@ -38,7 +38,7 @@ public class InvitationUserResource {
     @PostMapping(path = "/by-status")
     public ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request) {
         LOGGER.debug("Processing InvitationUserResource getAllByStatus method for request - {}", request);
-        final GetAllByStatusUserInvitationsResultResponse resultResponse = invitationUserServiceFacade.getAllByStatus(request);
+        final GetAllByStatusUserInvitationsResultResponse resultResponse = invitationUserServiceFacade.getAllByOrganizationUuidAndStatus(request);
         LOGGER.debug("Successfully processed InvitationUserResource getAllByStatus method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }

@@ -157,4 +157,15 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         LOGGER.debug("Successfully checked invitation user get by token precondition");
         return SingleErrorWithStatus.empty();
     }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetAllByOrganizationUuidAndStatusForPossibleErrors(final GetAllByStatusInvitationUserRequest request) {
+        LOGGER.debug("Checking invitation user get all by organization uuid and status precondition for request - {}", request);
+        if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
+            LOGGER.error("Successfully checked invitation user get all by organization uuid and status precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
+        }
+        LOGGER.debug("Successfully checked invitation user get all by organization uuid and status precondition for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
 }

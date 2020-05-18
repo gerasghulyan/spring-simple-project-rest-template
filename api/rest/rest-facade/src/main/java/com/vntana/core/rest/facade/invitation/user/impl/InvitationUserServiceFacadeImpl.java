@@ -21,7 +21,7 @@ import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadeP
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
-import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
+import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import com.vntana.core.service.token.TokenService;
@@ -95,9 +95,13 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
     }
 
     @Override
-    public GetAllByStatusUserInvitationsResultResponse getAllByStatus(final GetAllByStatusInvitationUserRequest request) {
+    public GetAllByStatusUserInvitationsResultResponse getAllByOrganizationUuidAndStatus(final GetAllByStatusInvitationUserRequest request) {
         LOGGER.debug("Retrieving all user invitations by invitation status for request- {}", request);
-        final Page<InvitationUser> all = invitationUserService.getAllByStatus(mapperFacade.map(request, GetAllByStatusInvitationUsersDto.class));
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkGetAllByOrganizationUuidAndStatusForPossibleErrors(request);
+        if (singleErrorWithStatus.isPresent()) {
+            return new GetAllByStatusUserInvitationsResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
+        }
+        final Page<InvitationUser> all = invitationUserService.getAllByOrganizationUuidAndStatus(mapperFacade.map(request, GetAllByOrganizationUuidAndStatusInvitationUsersDto.class));
         final List<GetAllByStatusUserInvitationsResponseModel> responseModels = all.stream()
                 .map(invitationUser -> new GetAllByStatusUserInvitationsResponseModel(
                         invitationUser.getUuid(),

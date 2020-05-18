@@ -28,7 +28,7 @@ public interface InvitationUserRepository extends JpaRepository<InvitationUser, 
 
     List<InvitationUser> findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final String email, final String organizationUuid, final InvitationStatus status);
 
-    Page<InvitationUser> findAllByStatus(final InvitationStatus status, final Pageable pageable);
+    Page<InvitationUser> findAllByOrganizationUuidAndStatus(final String organizationUuid, final InvitationStatus status, final Pageable pageable);
 
     @Query("select invitationUser from InvitationUser invitationUser where invitationUser.id = (select tis.invitationUser.id from TokenInvitationUser tis where tis.token = :token)")
     Optional<InvitationUser> findByTokenInvitationUser(@Param("token") final String token);

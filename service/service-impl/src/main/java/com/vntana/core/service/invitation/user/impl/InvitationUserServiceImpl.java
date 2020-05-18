@@ -8,7 +8,7 @@ import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.persistence.invitation.user.InvitationUserRepository;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
-import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
+import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import com.vntana.core.service.invitation.user.exception.IncorrectUserInvitedRoleOnOrganizationException;
@@ -89,10 +89,14 @@ public class InvitationUserServiceImpl implements InvitationUserService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<InvitationUser> getAllByStatus(final GetAllByStatusInvitationUsersDto dto) {
-        Assert.notNull(dto, "The GetAllInvitationUsersDto should not be null");
+    public Page<InvitationUser> getAllByOrganizationUuidAndStatus(final GetAllByOrganizationUuidAndStatusInvitationUsersDto dto) {
+        Assert.notNull(dto, "The GetAllByOrganizationUuidAndStatusInvitationUsersDto should not be null");
         LOGGER.debug("Retrieving user invitations for dto - {}", dto);
-        final Page<InvitationUser> page = invitationUserRepository.findAllByStatus(dto.getStatus(), PageRequest.of(dto.getPage(), dto.getSize()));
+        final Page<InvitationUser> page = invitationUserRepository.findAllByOrganizationUuidAndStatus(
+                dto.getOrganizationUuid(),
+                dto.getStatus(),
+                PageRequest.of(dto.getPage(), dto.getSize())
+        );
         LOGGER.debug("Successfully retrieved user invitations for dto - {}", dto);
         return page;
     }

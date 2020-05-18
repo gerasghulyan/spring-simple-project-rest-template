@@ -7,7 +7,6 @@ import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
-import com.vntana.core.model.invitation.user.response.*;
 
 /**
  * Created by Manuk Gharslyan.
@@ -18,7 +17,7 @@ public interface InvitationUserServiceFacade {
 
     CreateInvitationUserResultResponse create(final CreateInvitationUserRequest request);
 
-    GetAllByStatusUserInvitationsResultResponse getAllByStatus(final GetAllByStatusInvitationUserRequest request);
+    GetAllByStatusUserInvitationsResultResponse getAllByOrganizationUuidAndStatus(final GetAllByStatusInvitationUserRequest request);
 
     UpdateInvitationUserInvitationStatusResultResponse updateStatus(final UpdateInvitationUserInvitationStatusRequest request);
 

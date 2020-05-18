@@ -35,9 +35,6 @@ class InvitationUserFacadePreconditionCheckerCheckAcceptAndSignUpForPossibleErro
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
         val tokenInvitationUser = tokenCommonTestHelper.buildTokenInvitationUser()
         tokenInvitationUser.expire()
-        val invitationUser = tokenInvitationUser.invitationUser
-        val organization = invitationUser.organization
-        val user = userCommonTestHelper.buildUser()
         expect(tokenInvitationUserService.findByToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
         preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request).let {
@@ -71,8 +68,6 @@ class InvitationUserFacadePreconditionCheckerCheckAcceptAndSignUpForPossibleErro
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
         val tokenInvitationUser = tokenCommonTestHelper.buildTokenInvitationUser()
         val invitationUser = tokenInvitationUser.invitationUser
-        val organization = invitationUser.organization
-        val user = userCommonTestHelper.buildUser()
         expect(tokenInvitationUserService.findByToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
         expect(userService.existsByEmail(invitationUser.email)).andReturn(false)
 

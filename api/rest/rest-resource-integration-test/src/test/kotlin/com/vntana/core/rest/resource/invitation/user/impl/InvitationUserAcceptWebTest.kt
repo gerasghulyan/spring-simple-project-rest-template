@@ -73,6 +73,7 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
         ).contains(userEmail)
         val acceptedInvitations = invitationUserResourceClient.getAllByStatus(invitationUserResourceTestHelper.buildGetAllByStatusInvitationUserRequest(
                 size = Int.MAX_VALUE,
+                organizationUuid = newOrganizationUuid,
                 invitationStatus = InvitationStatusModel.ACCEPTED
         ))?.body?.response()?.items()?.map { model -> model.uuid }?.toList()
         assertThat(acceptedInvitations).containsAnyOf(invitationUserUuid)

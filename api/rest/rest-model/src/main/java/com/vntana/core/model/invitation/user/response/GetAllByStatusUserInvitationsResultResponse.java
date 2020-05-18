@@ -17,6 +17,10 @@ public class GetAllByStatusUserInvitationsResultResponse extends AbstractResultR
         super();
     }
 
+    public GetAllByStatusUserInvitationsResultResponse(final int httpStatusCode, final InvitationUserErrorResponseModel error) {
+        super(httpStatusCode, error);
+    }
+
     public GetAllByStatusUserInvitationsResultResponse(final int httpStatusCode, final List<InvitationUserErrorResponseModel> errors) {
         super(httpStatusCode, errors);
     }

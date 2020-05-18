@@ -5,6 +5,7 @@ import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractPaginationAwareRequestModel;
 import com.vntana.core.model.invitation.InvitationStatusModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.Collections;
 import java.util.List;
 
-import static com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel.MISSING_INVITATION_STATUS;
+import static com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel.*;
 
 /**
  * Created by Manuk Gharslyan.
@@ -21,6 +22,9 @@ import static com.vntana.core.model.invitation.user.error.InvitationUserErrorRes
  */
 public class GetAllByStatusInvitationUserRequest extends AbstractPaginationAwareRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
 
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
+
     @JsonProperty("status")
     private InvitationStatusModel status;
 
@@ -28,13 +32,17 @@ public class GetAllByStatusInvitationUserRequest extends AbstractPaginationAware
         super();
     }
 
-    public GetAllByStatusInvitationUserRequest(final Integer page, final Integer size, final InvitationStatusModel status) {
+    public GetAllByStatusInvitationUserRequest(final Integer page, final Integer size, final String organizationUuid, final InvitationStatusModel status) {
         super(page, size);
+        this.organizationUuid = organizationUuid;
         this.status = status;
     }
 
     @Override
     public List<InvitationUserErrorResponseModel> validate() {
+        if (StringUtils.isEmpty(organizationUuid)) {
+            return Collections.singletonList(MISSING_INVITING_ORGANIZATION_UUID);
+        }
         if (null == status) {
             return Collections.singletonList(MISSING_INVITATION_STATUS);
         }
@@ -51,6 +59,7 @@ public class GetAllByStatusInvitationUserRequest extends AbstractPaginationAware
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
+                .append(organizationUuid, that.organizationUuid)
                 .append(status, that.status)
                 .isEquals();
     }
@@ -59,6 +68,7 @@ public class GetAllByStatusInvitationUserRequest extends AbstractPaginationAware
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
+                .append(organizationUuid)
                 .append(status)
                 .toHashCode();
     }
@@ -67,6 +77,7 @@ public class GetAllByStatusInvitationUserRequest extends AbstractPaginationAware
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
+                .append("organizationUuid", organizationUuid)
                 .append("status", status)
                 .toString();
     }
@@ -77,5 +88,9 @@ public class GetAllByStatusInvitationUserRequest extends AbstractPaginationAware
 
     public void setStatus(final InvitationStatusModel status) {
         this.status = status;
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 }

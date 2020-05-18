@@ -9,7 +9,7 @@ import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto
-import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto
+import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto
 import org.springframework.data.domain.Page
@@ -62,11 +62,12 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             status
     )
 
-    fun buildGetAllByStatusInvitationUsersDto(
+    fun buildGetAllByOrganizationUuidAndStatusInvitationUsersDto(
             page: Int = 0,
             size: Int = 5,
+            organizationUuid: String? = organizationCommonTestHelper.buildOrganization().uuid,
             status: InvitationStatus? = InvitationStatus.INVITED
-    ): GetAllByStatusInvitationUsersDto = GetAllByStatusInvitationUsersDto(page, size, status)
+    ): GetAllByOrganizationUuidAndStatusInvitationUsersDto = GetAllByOrganizationUuidAndStatusInvitationUsersDto(page, size, organizationUuid, status)
 
     fun buildGetAllByStatusInvitationUsersPage(totalCount: Long = 0,
                                                tagGroups: List<InvitationUser> = listOf(buildInvitationUser())

@@ -3,7 +3,7 @@ package com.vntana.core.service.invitation.user;
 import com.vntana.core.domain.invitation.user.InvitationUser;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
-import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
+import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import org.springframework.data.domain.Page;
 
@@ -22,7 +22,7 @@ public interface InvitationUserService {
 
     InvitationUser getByUuid(final String uuid);
 
-    Page<InvitationUser> getAllByStatus(final GetAllByStatusInvitationUsersDto dto);
+    Page<InvitationUser> getAllByOrganizationUuidAndStatus(final GetAllByOrganizationUuidAndStatusInvitationUsersDto dto);
 
     List<InvitationUser> getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto dto);
 

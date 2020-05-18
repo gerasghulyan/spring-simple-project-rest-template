@@ -12,18 +12,23 @@ import org.springframework.util.Assert;
  * Date: 5/11/2020
  * Time: 12:32 PM
  */
-public class GetAllByStatusInvitationUsersDto extends AbstractPaginationAwareDto {
+public class GetAllByOrganizationUuidAndStatusInvitationUsersDto extends AbstractPaginationAwareDto {
+    private final String organizationUuid;
     private final InvitationStatus status;
 
-    public GetAllByStatusInvitationUsersDto(final int size, final InvitationStatus status) {
+    public GetAllByOrganizationUuidAndStatusInvitationUsersDto(final int size, final String organizationUuid, final InvitationStatus status) {
         super(size);
-        Assert.notNull(status, "The invitation status could not be null");
+        Assert.notNull(status, "The invitation status should not be null");
+        Assert.hasText(organizationUuid, "The organizationUuid status should not be null or empty");
+        this.organizationUuid = organizationUuid;
         this.status = status;
     }
 
-    public GetAllByStatusInvitationUsersDto(final int page, final int size, final InvitationStatus status) {
+    public GetAllByOrganizationUuidAndStatusInvitationUsersDto(final int page, final int size, final String organizationUuid, final InvitationStatus status) {
         super(page, size);
         Assert.notNull(status, "The invitation status could not be null");
+        Assert.hasText(organizationUuid, "The organizationUuid status should not be null or empty");
+        this.organizationUuid = organizationUuid;
         this.status = status;
     }
 
@@ -31,12 +36,13 @@ public class GetAllByStatusInvitationUsersDto extends AbstractPaginationAwareDto
     public boolean equals(final Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof GetAllByStatusInvitationUsersDto)) return false;
+        if (!(o instanceof GetAllByOrganizationUuidAndStatusInvitationUsersDto)) return false;
 
-        final GetAllByStatusInvitationUsersDto that = (GetAllByStatusInvitationUsersDto) o;
+        final GetAllByOrganizationUuidAndStatusInvitationUsersDto that = (GetAllByOrganizationUuidAndStatusInvitationUsersDto) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
+                .append(organizationUuid, that.organizationUuid)
                 .append(status, that.status)
                 .isEquals();
     }
@@ -45,6 +51,7 @@ public class GetAllByStatusInvitationUsersDto extends AbstractPaginationAwareDto
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
+                .append(organizationUuid)
                 .append(status)
                 .toHashCode();
     }
@@ -53,8 +60,13 @@ public class GetAllByStatusInvitationUsersDto extends AbstractPaginationAwareDto
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
+                .append("organizationUuid", organizationUuid)
                 .append("status", status)
                 .toString();
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 
     public InvitationStatus getStatus() {
