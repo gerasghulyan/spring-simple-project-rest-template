@@ -61,4 +61,38 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     public TokenInvitationUser getByToken(final String token) {
         return findByToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
     }
+
+    @Override
+    public Optional<TokenInvitationUser> findByInvitationUserUuid(final String invitationUserUuid) {
+        Assert.hasText(invitationUserUuid, "The invitationUserUuid should not be null or empty");
+        LOGGER.debug("Retrieving TokenInvitationUser by invitation user uuid - {}", invitationUserUuid);
+        final Optional<TokenInvitationUser> tokenInvitationUserOptional = tokenRepository.findByInvitationUserUuid(invitationUserUuid);
+        LOGGER.debug("Successfully retrieved TokenInvitationUser by invitation user uuid - {}", invitationUserUuid);
+        return tokenInvitationUserOptional;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isExpired(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
+        LOGGER.debug("Checking the expiration of user invitation token");
+        final Optional<TokenInvitationUser> tokenOptional = findByToken(token);
+        if (!tokenOptional.isPresent()) {
+            LOGGER.error("Checking the expiration of user invitation token has been done with error, token does not exist");
+            throw new TokenInvitationUserNotFoundForTokenException(token);
+        }
+        final boolean expired = tokenOptional.get().isExpired();
+        LOGGER.debug("Successfully checked the expiration of user invitation token");
+        return expired;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isExists(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
+        LOGGER.debug("Checking the existence of user invitation token");
+        final boolean exists = findByToken(token).isPresent();
+        LOGGER.debug("Successfully checked the existence of user invitation token");
+        return exists;
+    }
 }

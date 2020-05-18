@@ -6,11 +6,7 @@ import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
-import com.vntana.core.model.invitation.user.response.AcceptInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
-import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
+import com.vntana.core.model.invitation.user.response.*;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +68,14 @@ public class InvitationUserResource {
         LOGGER.debug("Processing InvitationUserResource sendInvitation method for request - {}", request);
         final SendInvitationUserResultResponse resultResponse = invitationUserServiceFacade.sendInvitation(request);
         LOGGER.debug("Successfully processed InvitationUserResource sendInvitation method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @GetMapping(path = "/by-token")
+    public ResponseEntity<GetByUserInvitationTokenResultResponse> getByToken(@RequestParam("token") final String token) {
+        LOGGER.debug("Processing InvitationUserResource getByToken method");
+        final GetByUserInvitationTokenResultResponse resultResponse = invitationUserServiceFacade.getByToken(token);
+        LOGGER.debug("Successfully processed InvitationUserResource getByToken method");
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 }

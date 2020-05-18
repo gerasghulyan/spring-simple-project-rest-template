@@ -17,4 +17,10 @@ public interface TokenInvitationUserService {
     Optional<TokenInvitationUser> findByToken(final String token);
 
     TokenInvitationUser getByToken(final String token);
+
+    Optional<TokenInvitationUser> findByInvitationUserUuid(final String invitationUserUuid);
+
+    boolean isExpired(final String token);
+
+    boolean isExists(final String token);
 }

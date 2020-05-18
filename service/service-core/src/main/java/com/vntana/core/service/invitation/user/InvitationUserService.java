@@ -29,4 +29,8 @@ public interface InvitationUserService {
     List<InvitationUser> getAllByInviterUserUuid(final String userUuid);
 
     InvitationUser updateStatus(final UpdateInvitationUserStatusDto dto);
+
+    InvitationUser getByToken(final String token);
+
+    boolean existsByToken(final String token);
 }

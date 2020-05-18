@@ -10,11 +10,14 @@ import com.vntana.core.model.invitation.user.response.CreateInvitationUserResult
 import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
 import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
+import com.vntana.core.model.invitation.user.response.GetByUserInvitationTokenResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Created by Manuk Gharslyan.
@@ -38,4 +41,7 @@ public interface InvitationUserResourceClient {
 
     @PostMapping(path = "accept")
     ResponseEntity<AcceptInvitationUserResultResponse> accept(@RequestBody final AcceptInvitationUserRequest request);
+
+    @GetMapping(path = "/by-token")
+    ResponseEntity<GetByUserInvitationTokenResultResponse> getByToken(@RequestParam("token") final String token);
 }

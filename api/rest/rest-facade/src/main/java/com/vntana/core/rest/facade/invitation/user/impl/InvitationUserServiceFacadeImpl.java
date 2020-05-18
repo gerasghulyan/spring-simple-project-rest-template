@@ -4,15 +4,18 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationUser;
 import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
+import com.vntana.core.model.invitation.InvitationStatusModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
 import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.model.invitation.user.response.*;
 import com.vntana.core.model.invitation.user.response.model.AcceptInvitationUserResponseModel;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsGridResponseModel;
 import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsResponseModel;
+import com.vntana.core.model.invitation.user.response.model.GetByUserInvitationTokenResponseModel;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent;
@@ -31,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +82,8 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         if (singleErrorWithStatus.isPresent()) {
             return new CreateInvitationUserResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        updatePreviouslyInvitedUserInvitationsStatuses(request.getEmail(), request.getOrganizationUuid());
+        final List<String> previouslyInvitedUuids = updatePreviouslyInvitedUserInvitationsStatuses(request.getEmail(), request.getOrganizationUuid());
+        expirePreviouslyInvitedUserInvitationsTokens(previouslyInvitedUuids);
         final InvitationUser invitationUser = invitationUserService.create(mapperFacade.map(request, CreateInvitationUserDto.class));
         LOGGER.debug("Successfully created invitation user for request- {}", request);
         return new CreateInvitationUserResultResponse(invitationUser.getUuid());
@@ -147,13 +152,51 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         return new AcceptInvitationUserResultResponse(new AcceptInvitationUserResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(role.name())));
     }
 
-    private void updatePreviouslyInvitedUserInvitationsStatuses(final String email, final String organizationUuid) {
+    @Transactional(readOnly = true)
+    @Override
+    public GetByUserInvitationTokenResultResponse getByToken(final String token) {
+        LOGGER.debug("Retrieving invitation user by token");
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkGetByTokenForPossibleErrors(token);
+        if (error.isPresent()) {
+            return new GetByUserInvitationTokenResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final InvitationUser invitationUser = invitationUserService.getByToken(token);
+        final GetByUserInvitationTokenResultResponse resultResponse = new GetByUserInvitationTokenResultResponse(
+                new GetByUserInvitationTokenResponseModel(
+                        invitationUser.getUuid(),
+                        invitationUser.getEmail(),
+                        userService.existsByEmail(invitationUser.getEmail()),
+                        invitationUser.getOrganization().getName(),
+                        invitationUser.getInviterUser().getFullName(),
+                        InvitationStatusModel.valueOf(invitationUser.getStatus().name())
+                )
+        );
+        LOGGER.debug("Successfully retrieved the invitation user by token");
+        return resultResponse;
+    }
+
+    private List<String> updatePreviouslyInvitedUserInvitationsStatuses(final String email, final String organizationUuid) {
+        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         LOGGER.debug("Updating previously created user invitations for user having email - {} and for organization having uuid -{}", email, organizationUuid);
-        invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(new GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
+        final List<String> previouslyInvitedUuids = invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(new GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
                 email,
                 organizationUuid,
                 InvitationStatus.INVITED)
-        ).parallelStream().forEach(invitationUser -> invitationUserService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.NOT_APPLICABLE)));
+        ).parallelStream()
+                .map(invitationUser -> invitationUserService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.NOT_APPLICABLE)))
+                .map(InvitationUser::getUuid)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         LOGGER.debug("Successfully updated previously created user invitations for user having email - {} and for organization having uuid -{}", email, organizationUuid);
+        return previouslyInvitedUuids;
+    }
+
+    private void expirePreviouslyInvitedUserInvitationsTokens(final List<String> uuids) {
+        Assert.notNull(uuids, "The previously  should not be null or empty");
+        LOGGER.debug("Expiring previously created user invitations tokens for uuids - {}", uuids);
+        uuids.parallelStream()
+                .map(tokenInvitationUserService::findByInvitationUserUuid)
+                .forEach(optional -> optional.ifPresent(AbstractToken::expire));
+        LOGGER.debug("Successfully expired previously created user invitations tokens for uuids - {}", uuids);
     }
 }
