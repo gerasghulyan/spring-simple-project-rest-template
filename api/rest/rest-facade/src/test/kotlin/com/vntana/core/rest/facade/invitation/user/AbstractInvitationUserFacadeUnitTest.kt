@@ -11,6 +11,7 @@ import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSende
 import com.vntana.core.rest.facade.invitation.user.impl.InvitationUserServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.service.invitation.user.InvitationUserService
+import com.vntana.core.service.token.TokenService
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService
 import com.vntana.core.service.user.UserService
 import com.vntana.core.service.user.role.UserRoleService
@@ -45,6 +46,9 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitT
     protected lateinit var mapperFacade: MapperFacade
 
     @Mock
+    protected lateinit var tokenService: TokenService
+
+    @Mock
     protected lateinit var invitationUserSenderComponent: InvitationUserSenderComponent
 
     protected val invitationUserRestTestHelper = InvitationUserRestTestHelper()
@@ -62,6 +66,7 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitT
                 userRoleService,
                 userService,
                 mapperFacade,
+                tokenService,
                 invitationUserSenderComponent
         )
     }

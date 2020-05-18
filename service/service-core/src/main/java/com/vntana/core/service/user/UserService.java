@@ -3,6 +3,7 @@ package com.vntana.core.service.user;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Optional;
  * Time: 6:36 PM
  */
 public interface UserService {
+    User createWithOwnerRole(final CreateUserWithOwnerRoleDto dto);
+
     User create(final CreateUserDto dto);
 
     User update(final UpdateUserDto dto);

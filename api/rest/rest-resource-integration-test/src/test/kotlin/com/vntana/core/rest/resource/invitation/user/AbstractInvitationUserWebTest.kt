@@ -6,6 +6,7 @@ import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.token.TokenResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.rest.client.invitation.user.InvitationUserResourceClient
+import com.vntana.core.rest.client.token.TokenResourceClient
 import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.client.user.role.UserRoleResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
@@ -28,6 +29,9 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userRoleResourceClient: UserRoleResourceClient
 
     @Autowired
+    protected lateinit var tokenResourceClient: TokenResourceClient
+
+    @Autowired
     protected lateinit var resourceTestHelper: InvitationUserResourceTestHelper
 
     @Autowired
@@ -38,6 +42,9 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
     
     @Autowired
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
+
+    @Autowired
+    protected lateinit var invitationUserResourceTestHelper: InvitationUserResourceTestHelper
 
     @Autowired
     protected lateinit var emailNotificationResourceClient: EmailNotificationResourceClient

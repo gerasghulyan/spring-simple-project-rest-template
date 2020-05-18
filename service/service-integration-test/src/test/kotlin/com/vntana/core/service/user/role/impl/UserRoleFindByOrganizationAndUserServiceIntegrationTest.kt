@@ -32,7 +32,7 @@ class UserRoleFindByOrganizationAndUserServiceIntegrationTest : AbstractUserRole
     @Test
     fun `test owner role`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser(organizationUuid = organization.uuid)
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         val organizationOwnerRole = user.roleOfOrganizationOwner(organization).get()
         flushAndClear()
         userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid).let {

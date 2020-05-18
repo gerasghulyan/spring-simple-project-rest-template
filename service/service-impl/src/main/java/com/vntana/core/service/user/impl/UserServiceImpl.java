@@ -7,6 +7,7 @@ import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
 import com.vntana.core.service.user.exception.UserNotFoundForTokenException;
@@ -49,14 +50,26 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User create(final CreateUserDto dto) {
-        assertCreateDto(dto);
-        LOGGER.debug("Creating user for dto - {}", dto);
+    public User createWithOwnerRole(final CreateUserWithOwnerRoleDto dto) {
+        Assert.notNull(dto, "The CreateUserWithOwnerRoleDto should not be null");
+        LOGGER.debug("Creating user with owner role for dto - {}", dto);
         final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         final String password = passwordEncoder.encode(dto.getPassword());
         final User user = new User(dto.getFullName(), dto.getEmail(), password);
         final User savedUser = userRepository.save(user);
         savedUser.grantOrganizationOwnerRole(organization);
+        LOGGER.debug("Successfully created user for dto - {}", dto);
+        return savedUser;
+    }
+
+    @Transactional
+    @Override
+    public User create(final CreateUserDto dto) {
+        Assert.notNull(dto, "The CreateUserDto should not be null");
+        LOGGER.debug("Creating user for dto - {}", dto);
+        final String password = passwordEncoder.encode(dto.getPassword());
+        final User user = new User(dto.getFullName(), dto.getEmail(), password);
+        final User savedUser = userRepository.save(user);
         LOGGER.debug("Successfully created user for dto - {}", dto);
         return savedUser;
     }
@@ -187,15 +200,6 @@ public class UserServiceImpl implements UserService {
         user.setFullName(dto.getFullName());
         user.setImageBlobId(dto.getImageBlobId());
         return user;
-    }
-
-    private void assertCreateDto(final CreateUserDto dto) {
-        Assert.notNull(dto, "The user creation dto should not be null");
-        Assert.hasText(dto.getFullName(), "The user full name should not be null or empty");
-        assertEmail(dto.getEmail());
-        Assert.hasText(dto.getPassword(), "The user password should not be null or empty");
-        Assert.hasText(dto.getOrganizationUuid(), "The organization uuid should not be null or empty");
-        Assert.notNull(dto.getRole(), "The user role should not be null");
     }
 
     private void assertEmail(final String email) {

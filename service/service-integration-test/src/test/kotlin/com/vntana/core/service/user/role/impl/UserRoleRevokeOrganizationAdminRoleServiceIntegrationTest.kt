@@ -24,7 +24,7 @@ class UserRoleRevokeOrganizationAdminRoleServiceIntegrationTest : AbstractUserRo
     @Test
     fun `test revoke admin when user has owner role in same organization`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser(organizationUuid = organization.uuid)
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         val adminRole = integrationTestHelper.persistUserOrganizationAdminRole(user = user, organization = organization)
         val revokeDto = integrationTestHelper.buildUserRevokeOrganizationAdminRoleDto(
                 userUuid = user.uuid,

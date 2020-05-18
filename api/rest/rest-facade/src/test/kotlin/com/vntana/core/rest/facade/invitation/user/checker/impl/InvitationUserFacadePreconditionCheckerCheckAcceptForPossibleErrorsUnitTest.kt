@@ -13,7 +13,7 @@ import java.util.*
  * Date: 5/14/20
  * Time: 6:02 PM
  */
-class InvitationUserFacadePreconditionCheckerCheckAcceptStatusForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
+class InvitationUserFacadePreconditionCheckerCheckAcceptForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
 
     @Test
     fun `test when invitation not found for token`() {
@@ -46,6 +46,27 @@ class InvitationUserFacadePreconditionCheckerCheckAcceptStatusForPossibleErrorsU
             assertThat(it.isPresent).isTrue()
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test when expired`() {
+        resetAll()
+        val request = invitationUserRestTestHelper.buildAcceptInvitationUserRequest()
+        val tokenInvitationUser = tokenCommonTestHelper.buildTokenInvitationUser()
+        tokenInvitationUser.expire()
+        val invitationUser = tokenInvitationUser.invitationUser
+        val organization = invitationUser.organization
+        val user = userCommonTestHelper.buildUser()
+        expect(tokenInvitationUserService.findByToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
+        expect(userService.getByEmail(invitationUser.email)).andReturn(user)
+        expect(userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(Optional.empty())
+        replayAll()
+        preconditionChecker.checkAcceptForPossibleErrors(request).let {
+            assertThat(it.isPresent).isTrue()
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_ACCEPTABLE)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED)
         }
         verifyAll()
     }

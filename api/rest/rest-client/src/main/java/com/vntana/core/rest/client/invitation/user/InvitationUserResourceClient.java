@@ -1,23 +1,10 @@
 package com.vntana.core.rest.client.invitation.user;
 
-import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
-import com.vntana.core.model.invitation.user.response.AcceptInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.CreateInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.GetAllByStatusUserInvitationsResultResponse;
-import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
-import com.vntana.core.model.invitation.user.response.UpdateInvitationUserInvitationStatusResultResponse;
-import com.vntana.core.model.invitation.user.response.GetByUserInvitationTokenResultResponse;
+import com.vntana.core.model.invitation.user.request.*;
+import com.vntana.core.model.invitation.user.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Manuk Gharslyan.
@@ -41,6 +28,9 @@ public interface InvitationUserResourceClient {
 
     @PostMapping(path = "accept")
     ResponseEntity<AcceptInvitationUserResultResponse> accept(@RequestBody final AcceptInvitationUserRequest request);
+
+    @PostMapping(path = "accept-sign-up")
+    ResponseEntity<AcceptInvitationUserResultResponse> acceptAndSignUp(@RequestBody final AcceptInvitationUserAndSignUpRequest request);
 
     @GetMapping(path = "/by-token")
     ResponseEntity<GetByUserInvitationTokenResultResponse> getByToken(@RequestParam("token") final String token);

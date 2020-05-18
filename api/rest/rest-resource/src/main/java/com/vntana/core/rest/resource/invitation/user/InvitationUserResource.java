@@ -1,11 +1,7 @@
 package com.vntana.core.rest.resource.invitation.user;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
-import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.CreateInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
+import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.model.invitation.user.response.*;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import org.slf4j.Logger;
@@ -60,6 +56,14 @@ public class InvitationUserResource {
         LOGGER.debug("Processing InvitationUserResource acceptInvitation method for request - {}", request);
         final AcceptInvitationUserResultResponse resultResponse = invitationUserServiceFacade.accept(request);
         LOGGER.debug("Successfully processed InvitationUserResource acceptInvitation method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "accept-sign-up")
+    public ResponseEntity<AcceptInvitationUserResultResponse> acceptAndSignUp(@RequestBody final AcceptInvitationUserAndSignUpRequest request) {
+        LOGGER.debug("Processing InvitationUserResource acceptAndSignUp method for request - {}", request);
+        final AcceptInvitationUserResultResponse resultResponse = invitationUserServiceFacade.acceptAndSignUp(request);
+        LOGGER.debug("Successfully processed InvitationUserResource acceptAndSignUp method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 

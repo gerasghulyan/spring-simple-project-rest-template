@@ -3,10 +3,8 @@ package com.vntana.core.rest.facade.organization.impl
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
-import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
-import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*

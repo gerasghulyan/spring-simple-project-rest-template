@@ -24,8 +24,10 @@ import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllByStatusInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
+import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
 import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.role.UserRoleService;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
@@ -55,6 +57,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
     private final UserRoleService userRoleService;
     private final UserService userService;
     private final MapperFacade mapperFacade;
+    private final TokenService tokenService;
     private final InvitationUserSenderComponent invitationUserSenderComponent;
 
     public InvitationUserServiceFacadeImpl(final InvitationUserService invitationUserService,
@@ -63,6 +66,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
                                            final UserRoleService userRoleService,
                                            final UserService userService,
                                            final MapperFacade mapperFacade,
+                                           final TokenService tokenService,
                                            final InvitationUserSenderComponent invitationUserSenderComponent) {
         this.invitationUserService = invitationUserService;
         this.preconditionChecker = preconditionChecker;
@@ -70,6 +74,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         this.userRoleService = userRoleService;
         this.userService = userService;
         this.mapperFacade = mapperFacade;
+        this.tokenService = tokenService;
         this.invitationUserSenderComponent = invitationUserSenderComponent;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
@@ -142,14 +147,40 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         final InvitationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
         final Organization organization = invitationUser.getOrganization();
         final User user = userService.getByEmail(invitationUser.getEmail());
+        grantUserRoleFromInvitationAndMakeAccepted(invitationUser, user.getUuid(), request.getToken());
+        LOGGER.debug("Successfully accepted invitation user for request- {}", request);
+        return new AcceptInvitationUserResultResponse(
+                new AcceptInvitationUserResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(invitationUser.getRole().name()))
+        );
+    }
+
+    @Transactional
+    @Override
+    public AcceptInvitationUserResultResponse acceptAndSignUp(final AcceptInvitationUserAndSignUpRequest request) {
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request);
+        if (error.isPresent()) {
+            return new AcceptInvitationUserResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final InvitationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
+        final User user = userService.create(new CreateUserDto(request.getNewUserFullName(), invitationUser.getEmail(), request.getPassword()));
+        grantUserRoleFromInvitationAndMakeAccepted(invitationUser, user.getUuid(), request.getToken());
+        return new AcceptInvitationUserResultResponse(
+                new AcceptInvitationUserResponseModel(invitationUser.getOrganization().getUuid(),
+                        user.getUuid(),
+                        UserRoleModel.valueOf(invitationUser.getRole().name())
+                )
+        );
+    }
+
+    private void grantUserRoleFromInvitationAndMakeAccepted(final InvitationUser invitationUser, final String userUuid, final String token) {
         final UserRole role = invitationUser.getRole();
         if (role == UserRole.ORGANIZATION_ADMIN) {
-            userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(user.getUuid(), organization.getUuid()));
+            userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(userUuid, invitationUser.getOrganization().getUuid()));
+            invitationUserService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.ACCEPTED));
+            tokenService.findByTokenAndExpire(token);
         } else {
             throw new UnsupportedOperationException(String.format("Role %s is not supported yet to grant for user", role.name()));
         }
-        LOGGER.debug("Successfully accepted invitation user for request- {}", request);
-        return new AcceptInvitationUserResultResponse(new AcceptInvitationUserResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(role.name())));
     }
 
     @Transactional(readOnly = true)

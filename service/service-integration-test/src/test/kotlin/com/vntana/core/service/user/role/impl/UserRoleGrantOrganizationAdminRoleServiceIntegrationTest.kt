@@ -14,7 +14,7 @@ class UserRoleGrantOrganizationAdminRoleServiceIntegrationTest : AbstractUserRol
     @Test
     fun `test grantOrganizationAdminRole`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser()
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole()
         flushAndClear()
         val dto = integrationTestHelper.buildUserGrantOrganizationRoleDto(
                 organizationUuid = organization.uuid,

@@ -35,6 +35,12 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
             token: String? = uuid()
     ): AcceptInvitationUserRequest = AcceptInvitationUserRequest(token)
 
+    fun buildAcceptInvitationUserAndSignUpRequest(
+            token: String? = uuid(),
+            newUserFullName: String? = uuid(),
+            password: String? = uuid()
+    ): AcceptInvitationUserAndSignUpRequest = AcceptInvitationUserAndSignUpRequest(token, newUserFullName, password)
+
     fun buildSendInvitationUserRequest(
             email: String? = email(),
             token: String? = uuid(),

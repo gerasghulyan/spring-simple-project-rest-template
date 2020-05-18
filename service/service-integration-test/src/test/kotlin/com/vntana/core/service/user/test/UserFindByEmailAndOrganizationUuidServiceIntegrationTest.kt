@@ -14,7 +14,7 @@ class UserFindByEmailAndOrganizationUuidServiceIntegrationTest : AbstractUserSer
     @Test
     fun test() {
         val organization = organizationIntegrationTest.persistOrganization()
-        val user = integrationTestHelper.persistUser(organizationUuid = organization.uuid)
+        val user = integrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         flushAndClear()
         userService.findByEmailAndOrganizationUuid(user.email, organization.uuid).let { u ->
             assertThat(u.isPresent).isTrue()

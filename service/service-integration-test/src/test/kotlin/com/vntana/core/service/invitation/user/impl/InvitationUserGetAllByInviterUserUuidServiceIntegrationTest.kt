@@ -13,7 +13,7 @@ class InvitationUserGetAllByInviterUserUuidServiceIntegrationTest : AbstractInvi
     
     @Test
     fun test() {
-        val inviterUserUuid = userIntegrationTestHelper.persistUser().uuid
+        val inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         val invitation1 = integrationInvitationUserTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid)
         val invitation2 = integrationInvitationUserTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid)
         flushAndClear()

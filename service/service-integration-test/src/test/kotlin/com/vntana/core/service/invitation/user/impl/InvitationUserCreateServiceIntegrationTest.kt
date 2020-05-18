@@ -15,7 +15,7 @@ class InvitationUserCreateServiceIntegrationTest : AbstractInvitationUserService
     @Test
     fun test() {
         val dto = integrationInvitationUserTestHelper.buildCreateInvitationUserDto(
-                inviterUserUuid = userIntegrationTestHelper.persistUser().uuid,
+                inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
                 organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid
         )
         invitationUserService.create(dto).let {

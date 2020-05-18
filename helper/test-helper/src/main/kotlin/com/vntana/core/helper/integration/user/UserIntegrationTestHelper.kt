@@ -4,7 +4,7 @@ import com.vntana.core.domain.user.User
 import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.user.UserService
-import com.vntana.core.service.user.dto.CreateUserDto
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto
 import com.vntana.core.service.user.role.UserRoleService
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,11 +27,18 @@ class UserIntegrationTestHelper : UserCommonTestHelper() {
     @Autowired
     private lateinit var userRoleService: UserRoleService
 
-    fun persistUser(organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
-                    fullName: String? = uuid(),
+    fun persistUserWithOwnerRole(organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
+                                 fullName: String? = uuid(),
+                                 email: String? = uuid(),
+                                 password: String? = uuid()): User {
+        val withOwnerRoleDto: CreateUserWithOwnerRoleDto = buildCreateUserWithOwnerRoleDto(organizationUuid = organizationUuid, fullName = fullName, email = email, password = password)
+        return userService.createWithOwnerRole(withOwnerRoleDto)
+    }
+
+    fun persistUser(fullName: String? = uuid(),
                     email: String? = uuid(),
                     password: String? = uuid()): User {
-        val dto: CreateUserDto = buildUserCreateDto(organizationUuid = organizationUuid, fullName = fullName, email = email, password = password)
+        val dto = buildCreateUserDto(fullName = fullName, email = email, password = password)
         return userService.create(dto)
     }
 
@@ -45,7 +52,7 @@ class UserIntegrationTestHelper : UserCommonTestHelper() {
     fun persistVerifiedUser(organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid,
                             fullName: String? = uuid(),
                             email: String? = uuid()): User {
-        val user = persistUser(organizationUuid, fullName, email)
+        val user = persistUserWithOwnerRole(organizationUuid, fullName, email)
         return userService.makeVerified(user.email)
     }
 }

@@ -16,7 +16,7 @@ class UserRoleGrantOrganizationOwnerRoleServiceIntegrationTest : AbstractUserRol
     @Test
     fun `test grantOrganizationOwnerRole`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser()
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole()
         flushAndClear()
         val dto = integrationTestHelper.buildUserGrantOrganizationRoleDto(
                 organizationUuid = organization.uuid,
@@ -32,7 +32,7 @@ class UserRoleGrantOrganizationOwnerRoleServiceIntegrationTest : AbstractUserRol
     @Test
     fun `test grantOrganizationOwnerRole twice`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser()
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole()
         flushAndClear()
         val dto = integrationTestHelper.buildUserGrantOrganizationRoleDto(
                 organizationUuid = organization.uuid,

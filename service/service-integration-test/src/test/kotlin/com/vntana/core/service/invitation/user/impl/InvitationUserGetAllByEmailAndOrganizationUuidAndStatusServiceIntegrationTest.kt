@@ -15,8 +15,8 @@ class InvitationUserGetAllByEmailAndOrganizationUuidAndStatusServiceIntegrationT
     fun test() {
         val email = uuid()
         val organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid
-        val persistUserUuid1 = userIntegrationTestHelper.persistUser().uuid
-        val persistUserUuid2 = userIntegrationTestHelper.persistUser().uuid
+        val persistUserUuid1 = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
+        val persistUserUuid2 = userIntegrationTestHelper.persistUserWithOwnerRole().uuid
         val invitation1 = integrationInvitationUserTestHelper.persistInvitationUser(email = email, organizationUuid = organizationUuid, inviterUserUuid = persistUserUuid1)
         val invitation2 = integrationInvitationUserTestHelper.persistInvitationUser(email = email, organizationUuid = organizationUuid, inviterUserUuid = persistUserUuid2)
         val invitation3 = integrationInvitationUserTestHelper.persistInvitationUser(email = email, organizationUuid = organizationUuid, inviterUserUuid = persistUserUuid1)

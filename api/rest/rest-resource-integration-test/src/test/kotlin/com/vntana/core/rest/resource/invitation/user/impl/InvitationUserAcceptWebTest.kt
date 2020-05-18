@@ -1,6 +1,7 @@
 package com.vntana.core.rest.resource.invitation.user.impl
 
 import com.vntana.core.model.auth.response.UserRoleModel
+import com.vntana.core.model.invitation.InvitationStatusModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest
 import com.vntana.core.rest.resource.invitation.user.AbstractInvitationUserWebTest
@@ -70,5 +71,11 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
         assertThat(userResourceClient.getUsersByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_ADMIN, newOrganizationUuid)
                 ?.body?.response()?.items()?.map { model -> model.email }
         ).contains(userEmail)
+        val acceptedInvitations = invitationUserResourceClient.getAllByStatus(invitationUserResourceTestHelper.buildGetAllByStatusInvitationUserRequest(
+                size = Int.MAX_VALUE,
+                invitationStatus = InvitationStatusModel.ACCEPTED
+        ))?.body?.response()?.items()?.map { model -> model.uuid }?.toList()
+        assertThat(acceptedInvitations).containsAnyOf(invitationUserUuid)
+        assertThat(tokenResourceClient.isExpire(request.token)?.body?.response()?.expired).isTrue()
     }
 }
