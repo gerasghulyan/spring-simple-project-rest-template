@@ -14,10 +14,12 @@ class UserChangePasswordServiceIntegrationTest : AbstractUserServiceIntegrationT
     @Test
     fun test() {
         val newPassword = uuid()
-        val user = integrationTestHelper.persistUserWithOwnerRole()
+        val user = integrationTestHelper.persistUser()
+        flushAndClear()
         userService.changePassword(user.uuid, newPassword).let {
+            flushAndClear()
             assertThat(it.uuid).isEqualTo(user.uuid)
-            assertThat(passwordEncoder.matches(newPassword, user.password)).isTrue()
+            assertThat(passwordEncoder.matches(newPassword, it.password)).isTrue()
         }
 
     }

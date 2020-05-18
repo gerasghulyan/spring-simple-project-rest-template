@@ -25,17 +25,22 @@ class InvitationUserGetAllByStatusWebTest : AbstractInvitationUserWebTest() {
 
     @Test
     fun test() {
-        val invitationUuid1 = resourceTestHelper.persistInvitationUser()
-        val invitationUuid2 = resourceTestHelper.persistInvitationUser()
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser()
-        resourceTestHelper.updateInvitationStatus(uuid = invitationUserUuid, status = InvitationStatusModel.REJECTED)
-        val request = resourceTestHelper.buildGetAllByStatusInvitationUserRequest()
+        val expectedInvitationUuid1 = resourceTestHelper.persistInvitationUser()
+        val expectedInvitationUuid2 = resourceTestHelper.persistInvitationUser()
+        val unexpectedInvitationUserUuid1 = resourceTestHelper.persistInvitationUser()
+        val unexpectedInvitationUserUuid2 = resourceTestHelper.persistInvitationUser()
+        resourceTestHelper.updateInvitationStatus(uuid = unexpectedInvitationUserUuid1, status = InvitationStatusModel.REJECTED)
+        resourceTestHelper.updateInvitationStatus(uuid = expectedInvitationUuid1, status = InvitationStatusModel.ACCEPTED)
+        resourceTestHelper.updateInvitationStatus(uuid = expectedInvitationUuid2, status = InvitationStatusModel.ACCEPTED)
+        val request = resourceTestHelper.buildGetAllByStatusInvitationUserRequest(
+                invitationStatus = InvitationStatusModel.ACCEPTED
+        )
         val responseEntity = invitationUserResourceClient.getAllByStatus(request)
         assertBasicSuccessResultResponse(responseEntity)
         responseEntity?.body?.response()?.let {
             val uuids = it.items().map { model -> model.uuid }.toList()
-            assertThat(uuids).containsAll(listOf(invitationUuid1, invitationUuid2))
-            assertThat(uuids).doesNotContain(invitationUserUuid)
+            assertThat(uuids).contains(expectedInvitationUuid1, expectedInvitationUuid2)
+            assertThat(uuids).doesNotContain(unexpectedInvitationUserUuid1)
         }
     }
 }

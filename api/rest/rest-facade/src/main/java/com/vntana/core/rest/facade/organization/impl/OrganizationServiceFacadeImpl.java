@@ -2,10 +2,7 @@ package com.vntana.core.rest.facade.organization.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserClientOrganizationRole;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
@@ -49,7 +46,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -142,31 +138,43 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 });
     }
 
+    @Transactional
     @Override
     public UserOrganizationResponse getUserOrganizations(final String userUuid) {
         if (StringUtils.isBlank(userUuid)) {
-            return new UserOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.MISSING_USER_UUID);
+            return new UserOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY,
+                    OrganizationErrorResponseModel.MISSING_USER_UUID
+            );
         }
         LOGGER.debug("Retrieving user organizations by user uuid - {}", userUuid);
-        final Mutable<List<GetUserOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
-        final Mutable<OrganizationErrorResponseModel> mutableErrorResponse = new MutableObject<>();
-        persistenceUtilityService.runInNewTransaction(() -> {
-            final Optional<User> userOptional = userService.findByUuid(userUuid);
-            if (!userOptional.isPresent()) {
-                mutableErrorResponse.setValue(OrganizationErrorResponseModel.USER_NOT_FOUND);
-                return;
-            }
-            final User user = userOptional.get();
-            final List<GetUserOrganizationsResponseModel> response = user.roleOfSuperAdmin()
-                    .map(userSuperAdminRole -> getOrganizationsWhenSuperAdmin(userUuid))
-                    .orElseGet(() -> getOrganizationsWhenNotSuperAdmin(user));
-            mutableResponse.setValue(response);
-        });
-        if (Objects.nonNull(mutableErrorResponse.getValue())) {
-            return new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, mutableErrorResponse.getValue());
+        return userService.findByUuid(userUuid)
+                .map(user -> {
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenNotSuperAdmin(user);
+                    return new UserOrganizationResponse(
+                            new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
+                    );
+                })
+                .orElseGet(() -> new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.USER_NOT_FOUND));
+    }
+
+    @Transactional
+    @Override
+    public UserOrganizationResponse getSuperAdminUserOrganizations(final String userUuid) {
+        if (StringUtils.isBlank(userUuid)) {
+            return new UserOrganizationResponse(
+                    HttpStatus.SC_UNPROCESSABLE_ENTITY,
+                    OrganizationErrorResponseModel.MISSING_USER_UUID
+            );
         }
-        final List<GetUserOrganizationsResponseModel> response = mutableResponse.getValue();
-        return new UserOrganizationResponse(new GetUserOrganizationsGridResponseModel(response.size(), response));
+        LOGGER.debug("Retrieving super admin user organizations by user uuid - {}", userUuid);
+        return userService.findByUuid(userUuid)
+                .map(user -> {
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenSuperAdmin(user.getUuid());
+                    return new UserOrganizationResponse(
+                            new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
+                    );
+                })
+                .orElseGet(() -> new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.USER_NOT_FOUND));
     }
 
     @Override
@@ -244,6 +252,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {}", user.getUuid());
         return user.roles()
                 .stream()
+                .filter(userRole -> !userRole.getUserRole().equals(UserRole.SUPER_ADMIN))
                 .map(userRole -> {
                     LOGGER.debug("Retrieving user organizations for not super admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
                     switch (userRole.getUserRole()) {
