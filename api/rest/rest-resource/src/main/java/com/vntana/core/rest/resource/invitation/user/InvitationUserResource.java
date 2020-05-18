@@ -74,4 +74,12 @@ public class InvitationUserResource {
         LOGGER.debug("Successfully processed InvitationUserResource sendInvitation method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
+
+    @GetMapping(path = "/by-token")
+    public ResponseEntity<GetByUserInvitationTokenResultResponse> getByToken(@RequestParam("token") final String token) {
+        LOGGER.debug("Processing InvitationUserResource getByToken method");
+        final GetByUserInvitationTokenResultResponse resultResponse = invitationUserServiceFacade.getByToken(token);
+        LOGGER.debug("Successfully processed InvitationUserResource getByToken method");
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
 }

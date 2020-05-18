@@ -40,7 +40,7 @@ class InvitationUserGetAllByStatusWebTest : AbstractInvitationUserWebTest() {
         responseEntity?.body?.response()?.let {
             val uuids = it.items().map { model -> model.uuid }.toList()
             assertThat(uuids).contains(expectedInvitationUuid1, expectedInvitationUuid2)
-            assertThat(uuids).doesNotContain(unexpectedInvitationUserUuid1)
+            assertThat(uuids).doesNotContain(unexpectedInvitationUserUuid1, unexpectedInvitationUserUuid2)
         }
     }
 }

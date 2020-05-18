@@ -14,6 +14,7 @@ import java.util.List;
 public class GetAllByStatusUserInvitationsResultResponse extends AbstractResultResponseModel<GetAllByStatusUserInvitationsGridResponseModel, InvitationUserErrorResponseModel> {
 
     public GetAllByStatusUserInvitationsResultResponse() {
+        super();
     }
 
     public GetAllByStatusUserInvitationsResultResponse(final int httpStatusCode, final List<InvitationUserErrorResponseModel> errors) {
