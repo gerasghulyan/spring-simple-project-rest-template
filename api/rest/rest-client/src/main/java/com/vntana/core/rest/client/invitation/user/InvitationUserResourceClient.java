@@ -4,9 +4,7 @@ import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.model.invitation.user.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Manuk Gharslyan.

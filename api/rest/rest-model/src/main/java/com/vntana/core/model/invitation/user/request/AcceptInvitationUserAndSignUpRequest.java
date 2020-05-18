@@ -41,7 +41,7 @@ public class AcceptInvitationUserAndSignUpRequest extends AbstractRequestModel i
     @Override
     public List<InvitationUserErrorResponseModel> validate() {
         if (StringUtils.isEmpty(token)) {
-            return Collections.singletonList(InvitationUserErrorResponseModel.MISSING_TOKEN);
+            return Collections.singletonList(InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
         }
         if (StringUtils.isEmpty(newUserFullName)) {
             return Collections.singletonList(InvitationUserErrorResponseModel.MISSING_USER_FULL_NAME);

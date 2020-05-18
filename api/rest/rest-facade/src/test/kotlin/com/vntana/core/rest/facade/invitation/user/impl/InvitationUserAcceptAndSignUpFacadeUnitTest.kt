@@ -21,7 +21,7 @@ class InvitationUserAcceptAndSignUpFacadeUnitTest : AbstractInvitationUserFacade
     fun `test when precondition failed`() {
         resetAll()
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
-        val error = SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVALID_TOKEN)
+        val error = SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN)
         expect(preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request)).andReturn(error)
         replayAll()
         invitationUserServiceFacade.acceptAndSignUp(request).let {

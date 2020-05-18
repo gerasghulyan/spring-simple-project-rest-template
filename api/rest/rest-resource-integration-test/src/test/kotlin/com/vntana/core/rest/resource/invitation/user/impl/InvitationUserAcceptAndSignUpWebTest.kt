@@ -20,12 +20,12 @@ class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = null)),
-                InvitationUserErrorResponseModel.MISSING_TOKEN
+                InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = emptyString())),
-                InvitationUserErrorResponseModel.MISSING_TOKEN
+                InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
