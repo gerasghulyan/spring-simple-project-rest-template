@@ -46,6 +46,7 @@ class InvitationUserAcceptAndSignUpFacadeUnitTest : AbstractInvitationUserFacade
         expect(preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(tokenInvitationUserService.getByToken(request.token)).andReturn(tokenInvitationUser)
         expect(userService.create(dto)).andReturn(user)
+        expect(userService.makeVerified(invitationUser.email)).andReturn(user)
         expect(userRoleService.grantOrganizationAdminRole(UserGrantOrganizationRoleDto(user.uuid, invitationUser.organization.uuid))).andReturn(adminRole)
         expect(invitationUserService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationUser)

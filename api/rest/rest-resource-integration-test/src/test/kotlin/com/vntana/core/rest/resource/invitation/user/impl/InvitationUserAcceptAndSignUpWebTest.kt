@@ -84,6 +84,7 @@ class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
                 assertThat(it.organizationUuid).isEqualTo(newOrganizationUuid)
                 assertThat(it.userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
                 assertThat(it.userUuid).isNotEmpty()
+                assertThat(userResourceClient.accountDetails(it.userUuid)?.body?.response()?.isEmailVerified).isTrue()
             }
         }
         userResourceClient.getUsersByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_ADMIN, newOrganizationUuid)

@@ -167,6 +167,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         }
         final InvitationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
         final User user = userService.create(new CreateUserDto(request.getNewUserFullName(), invitationUser.getEmail(), request.getPassword()));
+        userService.makeVerified(invitationUser.getEmail());
         grantUserRoleFromInvitationAndMakeAccepted(invitationUser, user.getUuid(), request.getToken());
         return new AcceptInvitationUserResultResponse(
                 new AcceptInvitationUserResponseModel(invitationUser.getOrganization().getUuid(),
