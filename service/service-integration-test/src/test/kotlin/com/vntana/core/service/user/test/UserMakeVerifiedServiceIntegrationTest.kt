@@ -28,7 +28,7 @@ class UserMakeVerifiedServiceIntegrationTest : AbstractUserServiceIntegrationTes
 
     @Test
     fun `test`() {
-        val user = integrationTestHelper.persistUser()
+        val user = integrationTestHelper.persistUserWithOwnerRole()
         userService.makeVerified(user.email).let {
             assertThat(it.email).isEqualTo(user.email)
             assertThat(it.verified).isTrue()

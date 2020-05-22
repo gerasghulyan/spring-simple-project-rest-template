@@ -20,13 +20,13 @@ import kotlin.random.Random
 @RunWith(EasyMockRunner::class)
 abstract class AbstractServiceFacadeUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
-    
+
     fun randomInt(): Int = Random.nextInt()
 
     fun randomPositiveInt(): Int = ThreadLocalRandom.current().nextInt(1, Int.MAX_VALUE)
 
     fun emptyString(): String = StringUtils.EMPTY
-    
+
     fun statusCode(): Int = RandomUtils.nextInt()
 
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {

@@ -1,6 +1,5 @@
 package com.vntana.core.rest.facade.user.impl
 
-import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
@@ -20,7 +19,7 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
         // test data
         val request = restHelper.buildCreateUserRequest()
         val organization = organizationHelper.buildOrganization()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         resetAll()
         // expectations
         expect(emailValidationComponent.isValid(request.email))
@@ -34,15 +33,14 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
                 slug = request.organizationSlug,
                 imageBlobId = null
         )
-        val createUserDto = userHelper.buildUserCreateDto(
+        val createUserDto = userHelper.buildCreateUserWithOwnerRoleDto(
                 fullName = request.fullName,
                 email = request.email,
                 password = request.password,
-                organizationUuid = organization.uuid,
-                role = UserRole.ORGANIZATION_ADMIN
+                organizationUuid = organization.uuid
         )
         expect(organizationService.create(dto)).andReturn(organization)
-        expect(userService.create(createUserDto)).andReturn(user)
+        expect(userService.createWithOwnerRole(createUserDto)).andReturn(user)
         expect(organizationLifecycleMediator.onCreated(organization))
         replayAll()
         // test scenario
@@ -56,7 +54,7 @@ class UserCreateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
     @Test
     fun `test create user with existing email`() {
         val request = restHelper.buildCreateUserRequest()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         resetAll()
         // expectations
         expect(emailValidationComponent.isValid(request.email))

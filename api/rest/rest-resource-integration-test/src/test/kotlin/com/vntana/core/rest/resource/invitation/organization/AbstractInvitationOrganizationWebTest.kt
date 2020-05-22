@@ -45,9 +45,7 @@ abstract class AbstractInvitationOrganizationWebTest : AbstractWebIntegrationTes
 
     @Autowired
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
-
-    fun email(): String = uuid() + "@gmail.com"
-
+    
     @Before
     fun before() {
         reset(invitationOrganizationUuidAwareActionProducer)

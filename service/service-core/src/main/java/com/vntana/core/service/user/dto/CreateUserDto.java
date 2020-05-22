@@ -1,16 +1,17 @@
 package com.vntana.core.service.user.dto;
 
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.service.common.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.util.Assert;
 
 /**
- * Created by Arthur Asatryan.
- * Date: 10/3/19
- * Time: 6:38 PM
+ * Created by Arman Gevorgyan.
+ * Date: 5/15/20
+ * Time: 4:22 PM
  */
-public class CreateUserDto {
+public class CreateUserDto implements ServiceDto {
 
     private final String fullName;
 
@@ -18,16 +19,13 @@ public class CreateUserDto {
 
     private final String password;
 
-    private final String organizationUuid;
-
-    private final UserRole role;
-
-    public CreateUserDto(final String fullName, final String email, final String password, final String organizationUuid, final UserRole role) {
+    public CreateUserDto(final String fullName, final String email, final String password) {
+        Assert.hasText(fullName, "The user full name should not be null or empty");
+        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(password, "The user password should not be null or empty");
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.organizationUuid = organizationUuid;
-        this.role = role;
     }
 
     @Override
@@ -43,7 +41,6 @@ public class CreateUserDto {
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(password, that.password)
-                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -53,7 +50,6 @@ public class CreateUserDto {
                 .append(fullName)
                 .append(email)
                 .append(password)
-                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -62,7 +58,7 @@ public class CreateUserDto {
         return new ToStringBuilder(this)
                 .append("fullName", fullName)
                 .append("email", email)
-                .append("clientOrganizationUuid", organizationUuid)
+                .append("password", "***")
                 .toString();
     }
 
@@ -76,13 +72,5 @@ public class CreateUserDto {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getOrganizationUuid() {
-        return organizationUuid;
-    }
-
-    public UserRole getRole() {
-        return role;
     }
 }

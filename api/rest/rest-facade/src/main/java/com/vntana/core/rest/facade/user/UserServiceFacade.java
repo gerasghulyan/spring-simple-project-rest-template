@@ -4,6 +4,8 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
+import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -34,4 +36,6 @@ public interface UserServiceFacade {
     ChangeUserPasswordResponse changePassword(final ChangeUserPasswordRequest request);
 
     GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid);
+
+    GetUsersByOrganizationResponse getByOrganizationUuid(final String organizationUuid);
 }

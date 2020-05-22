@@ -16,7 +16,7 @@ class InvitationInviteToPlatformServiceFacadeUnitTest : AbstractInvitationServic
     @Test
     fun `test when user already exists`() {
         val request = restTestHelper.buildInvitationToPlatformRequest()
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         resetAll()
         expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
         replayAll()

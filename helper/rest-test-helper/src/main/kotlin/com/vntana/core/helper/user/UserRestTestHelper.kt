@@ -1,6 +1,7 @@
 package com.vntana.core.helper.user
 
 import com.vntana.commons.helper.AbstractRestTestHelper
+import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest
 import com.vntana.core.model.user.request.*
 
 /**
@@ -10,14 +11,18 @@ import com.vntana.core.model.user.request.*
  */
 open class UserRestTestHelper : AbstractRestTestHelper() {
     fun buildCreateUserRequest(
-            clientName: String? = uuid(),
-            clientSlug: String? = uuid(),
+            organizationName: String? = uuid(),
+            organizationSlug: String? = uuid(),
             fullName: String? = uuid(),
             email: String? = email(),
             password: String? = uuid()
-    ): CreateUserRequest = CreateUserRequest(clientName, clientSlug, fullName, email, password)
+    ): CreateUserRequest = CreateUserRequest(organizationName, organizationSlug, fullName, email, password)
 
     fun buildFindUserByEmailRequest(email: String? = "${uuid()}@mail.com"): FindUserByEmailRequest = FindUserByEmailRequest(email)
+
+    fun buildFindUserByUuidAndOrganizationRequest(uuid: String? = uuid(),
+                                                  organizationUuid: String? = uuid()
+    ): FindUserByUuidAndOrganizationRequest = FindUserByUuidAndOrganizationRequest(uuid, organizationUuid)
 
     fun buildVerifyUserRequest(email: String? = uuid()): VerifyUserRequest = VerifyUserRequest(email)
 

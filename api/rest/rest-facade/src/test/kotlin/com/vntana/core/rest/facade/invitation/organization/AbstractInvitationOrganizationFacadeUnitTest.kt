@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizatio
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.invitation.organization.TokenInvitationOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
+import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.invitation.organization.checker.InvitationOrganizationFacadePreconditionChecker
 import com.vntana.core.rest.facade.invitation.organization.component.InvitationOrganizationSenderComponent
@@ -18,6 +19,7 @@ import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecy
 import com.vntana.core.service.token.TokenService
 import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService
 import com.vntana.core.service.user.UserService
+import com.vntana.core.service.user.role.UserRoleService
 import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
 import org.junit.Before
@@ -59,6 +61,9 @@ abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFac
     protected lateinit var userService: UserService
 
     @Mock
+    protected lateinit var userRoleService: UserRoleService
+
+    @Mock
     protected lateinit var organizationLifecycleMediator: OrganizationLifecycleMediator
 
     @Mock
@@ -71,6 +76,7 @@ abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFac
     protected val commonTestHelper = InvitationOrganizationCommonTestHelper()
     protected val tokenInvitationOrganizationCommonTestHelper = TokenInvitationOrganizationCommonTestHelper()
     protected val userCommonTestHelper = UserCommonTestHelper()
+    protected val userRoleCommonTestHelper = UserRoleCommonTestHelper()
     protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
     @Before
@@ -84,6 +90,7 @@ abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFac
                 organizationService,
                 persistenceUtilityService,
                 userService,
+                userRoleService,
                 organizationLifecycleMediator,
                 organizationUuidAwareLifecycleMediator,
                 tokenInvitationOrganizationService

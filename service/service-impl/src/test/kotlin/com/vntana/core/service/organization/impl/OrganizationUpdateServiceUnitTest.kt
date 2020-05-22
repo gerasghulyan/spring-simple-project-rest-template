@@ -2,6 +2,7 @@ package com.vntana.core.service.organization.impl
 
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.service.organization.AbstractOrganizationServiceUnitTest
+import com.vntana.core.service.organization.exception.OrganizationNotFoundForUuidException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.*
@@ -38,8 +39,8 @@ class OrganizationUpdateServiceUnitTest : AbstractOrganizationServiceUnitTest() 
         resetAll()
         expect(organizationRepository.findByUuid(dto.uuid)).andReturn(Optional.empty())
         replayAll()
-        assertThatThrownBy {organizationService.update(dto)}
-                .isExactlyInstanceOf(IllegalStateException::class.java)
+        assertThatThrownBy { organizationService.update(dto) }
+                .isExactlyInstanceOf(OrganizationNotFoundForUuidException::class.java)
         verifyAll()
     }
 

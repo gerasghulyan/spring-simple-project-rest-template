@@ -14,7 +14,7 @@ class UserFindByUuidServiceIntegrationTest : AbstractUserServiceIntegrationTest(
     @Test
     fun `test findByUuid`() {
         // given
-        integrationTestHelper.persistUser().let { user ->
+        integrationTestHelper.persistUserWithOwnerRole().let { user ->
             flushAndClear()
             // when
             userService.findByUuid(user.uuid).let {

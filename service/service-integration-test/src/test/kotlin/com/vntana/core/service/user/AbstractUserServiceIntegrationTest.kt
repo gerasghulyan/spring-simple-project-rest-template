@@ -15,7 +15,7 @@ abstract class AbstractUserServiceIntegrationTest : AbstractServiceIntegrationTe
 
     @Autowired
     protected lateinit var integrationTestHelper: UserIntegrationTestHelper
-    
+
     @Autowired
     protected lateinit var organizationIntegrationTest: OrganizationIntegrationTestHelper
 

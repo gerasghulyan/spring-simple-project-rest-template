@@ -60,6 +60,14 @@ public class OrganizationResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
+    @GetMapping(path = "/super-admin-users/{uuid}")
+    public ResponseEntity<UserOrganizationResponse> getSuperAdminUserOrganizations(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Processing find organizations by super admin user uuid - {}", uuid);
+        final UserOrganizationResponse resultResponse = organizationServiceFacade.getSuperAdminUserOrganizations(uuid);
+        LOGGER.debug("Successfully proceeded find organizations by super admin user uuid with response - {}", resultResponse);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
     @GetMapping(path = "/slug/{slug}")
     public ResponseEntity<GetOrganizationBySlugResultResponse> getBySlug(@PathVariable("slug") final String slug) {
         LOGGER.debug("Retrieving organization by slug - {}", slug);

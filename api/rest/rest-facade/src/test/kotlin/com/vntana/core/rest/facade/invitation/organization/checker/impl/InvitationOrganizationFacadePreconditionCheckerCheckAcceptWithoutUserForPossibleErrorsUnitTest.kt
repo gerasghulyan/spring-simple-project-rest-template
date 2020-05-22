@@ -1,13 +1,10 @@
 package com.vntana.core.rest.facade.invitation.organization.checker.impl
 
-import com.vntana.core.domain.invitation.InvitationStatus
-import com.vntana.core.domain.user.User
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.rest.facade.invitation.organization.checker.AbstractInvitationOrganizationFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
-import org.easymock.EasyMock.isA
 import org.junit.Test
 import java.util.*
 
@@ -22,7 +19,7 @@ class InvitationOrganizationFacadePreconditionCheckerCheckAcceptWithoutUserForPo
     fun `test check when USER_NOT_FOUND`() {
         val tokenInvitationOrganization = tokenInvitationOrganizationCommonTestHelper.buildTokenInvitationOrganization()
         val invitationOrganization = tokenInvitationOrganization.invitationOrganization
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         resetAll()
         expect(userService.findByEmail(invitationOrganization.email)).andReturn(Optional.of(user))
         replayAll()

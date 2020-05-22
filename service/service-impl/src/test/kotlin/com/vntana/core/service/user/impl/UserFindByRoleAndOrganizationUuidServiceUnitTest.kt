@@ -19,16 +19,16 @@ class UserFindByRoleAndOrganizationUuidServiceUnitTest : AbstractUserServiceUnit
         resetAll()
         replayAll()
         assertThatThrownBy { userService.findByRoleAndOrganizationUuid(null, uuid()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.findByRoleAndOrganizationUuid(UserRole.ORGANIZATION_ADMIN, null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.findByRoleAndOrganizationUuid(UserRole.ORGANIZATION_ADMIN, emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { userService.findByRoleAndOrganizationUuid(UserRole.ORGANIZATION_OWNER, null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { userService.findByRoleAndOrganizationUuid(UserRole.ORGANIZATION_OWNER, emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
     @Test
     fun `test find`() {
         val organization = organizationHelper.buildOrganization()
-        val user = helper.buildUser(clientOrganization = organization)
-        val userRole = UserRole.ORGANIZATION_ADMIN
+        val user = helper.buildUserWithOrganizationOwnerRole(organization = organization)
+        val userRole = UserRole.ORGANIZATION_OWNER
         resetAll()
         expect(userRepository.findByRoleAndOrganizationUuid(userRole, organization.uuid)).andReturn(listOf(user))
         replayAll()
@@ -42,7 +42,7 @@ class UserFindByRoleAndOrganizationUuidServiceUnitTest : AbstractUserServiceUnit
     @Test
     fun `test not found`() {
         val organization = organizationHelper.buildOrganization()
-        val userRole = UserRole.ORGANIZATION_ADMIN
+        val userRole = UserRole.ORGANIZATION_OWNER
         resetAll()
         expect(userRepository.findByRoleAndOrganizationUuid(userRole, organization.uuid)).andReturn(emptyList())
         replayAll()

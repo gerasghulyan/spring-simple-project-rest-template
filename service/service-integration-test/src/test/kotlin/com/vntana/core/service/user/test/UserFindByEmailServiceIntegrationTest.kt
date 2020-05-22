@@ -14,7 +14,7 @@ class UserFindByEmailServiceIntegrationTest : AbstractUserServiceIntegrationTest
     @Test
     fun `test findByEmail`() {
         // given
-        integrationTestHelper.persistUser().let { user ->
+        integrationTestHelper.persistUserWithOwnerRole().let { user ->
             flushAndClear()
             // when
             userService.findByEmail(user.email).let {

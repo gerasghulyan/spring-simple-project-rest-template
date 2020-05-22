@@ -28,7 +28,7 @@ class UserCheckPasswordServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun `test check password`() {
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         val oldPassword = uuid()
         resetAll()
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))
@@ -40,7 +40,7 @@ class UserCheckPasswordServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun `test password mismatch`() {
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         val oldPassword = uuid()
         resetAll()
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))

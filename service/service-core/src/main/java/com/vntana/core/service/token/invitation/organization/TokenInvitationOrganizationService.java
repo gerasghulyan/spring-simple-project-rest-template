@@ -1,8 +1,7 @@
 package com.vntana.core.service.token.invitation.organization;
 
 import com.vntana.core.domain.token.TokenInvitationOrganization;
-import com.vntana.core.service.token.dto.CreateTokenInvitationOrganizationDto;
-import org.springframework.transaction.annotation.Transactional;
+import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto;
 
 import java.util.Optional;
 

@@ -65,11 +65,11 @@ public class User extends AbstractUuidAwareDomainEntity {
         mutableRoles().add(role);
     }
 
-    public void grantOrganizationRole(final Organization organization) {
-        if (roleOfOrganization(organization).isPresent()) {
+    public void grantOrganizationOwnerRole(final Organization organization) {
+        if (roleOfOrganizationOwner(organization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in organization - %s", this, organization));
         }
-        final AbstractUserRole role = new UserOrganizationRole(this, organization);
+        final AbstractUserRole role = new UserOrganizationOwnerRole(this, organization);
         mutableRoles().add(role);
     }
 
@@ -93,8 +93,8 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .findAny();
     }
 
-    public Optional<UserOrganizationRole> roleOfOrganization(final Organization organization) {
-        return immutableOrganizationRoles().stream()
+    public Optional<UserOrganizationOwnerRole> roleOfOrganizationOwner(final Organization organization) {
+        return immutableOrganizationOwnerRoles().stream()
                 .filter(role -> role.getOrganization().equals(organization))
                 .findAny();
     }
@@ -145,14 +145,18 @@ public class User extends AbstractUuidAwareDomainEntity {
     public List<AbstractUserRole> roles() {
         return immutableRoles();
     }
+
+    public void setRoles(final List<AbstractUserRole> roles) {
+        this.roles = roles;
+    }
     //endregion
 
     //region Utility methods
-    public List<UserOrganizationRole> immutableOrganizationRoles() {
+    public List<UserOrganizationOwnerRole> immutableOrganizationOwnerRoles() {
         return Optional.ofNullable(roles)
                 .map(theRoles -> theRoles.stream()
-                        .filter(UserOrganizationRole.class::isInstance)
-                        .map(UserOrganizationRole.class::cast)
+                        .filter(UserOrganizationOwnerRole.class::isInstance)
+                        .map(UserOrganizationOwnerRole.class::cast)
                         .collect(Collectors.toList())
                 )
                 .map(Collections::unmodifiableList)

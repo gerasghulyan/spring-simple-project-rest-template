@@ -13,7 +13,7 @@ class UserUpdateServiceIntegrationTest : AbstractUserServiceIntegrationTest() {
 
     @Test
     fun `test update`() {
-        val user = integrationTestHelper.persistUser()
+        val user = integrationTestHelper.persistUserWithOwnerRole()
         flushAndClear()
         val dto = integrationTestHelper.buildUpdateUserDto(uuid = user.uuid)
         userService.update(dto).let {

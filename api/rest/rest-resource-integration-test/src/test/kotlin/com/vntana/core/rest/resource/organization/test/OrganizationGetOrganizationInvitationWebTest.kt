@@ -23,11 +23,11 @@ class OrganizationGetOrganizationInvitationWebTest : AbstractOrganizationWebTest
                 invitationOrganizationUuid = invitationOrganizationUuid,
                 token = token
         )
-        val organizationUuid = invitationOrganizationResourceClient.accept(request).body.response().uuid
+        val organizationUuid = invitationOrganizationResourceClient.accept(request)?.body?.response()?.uuid
         organizationResourceClient.getOrganizationInvitation(organizationUuid).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body.response().uuid).isEqualTo(organizationUuid)
-            assertThat(it.body.response().customerSubscriptionDefinitionUuid).isNotEmpty()
+            assertThat(it?.body?.response()?.uuid).isEqualTo(organizationUuid)
+            assertThat(it?.body?.response()?.customerSubscriptionDefinitionUuid).isNotEmpty()
         }
     }
 

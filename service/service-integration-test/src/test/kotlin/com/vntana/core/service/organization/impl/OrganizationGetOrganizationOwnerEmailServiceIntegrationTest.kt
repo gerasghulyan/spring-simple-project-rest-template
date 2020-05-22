@@ -15,8 +15,8 @@ class OrganizationGetOrganizationOwnerEmailServiceIntegrationTest : AbstractOrga
     fun `test when found`() {
         val userEmail = uuid()
         val organization = integrationTestHelper.persistOrganization()
-        val user = userIntegrationTestHelper.persistUser(email = userEmail)
-        user.grantOrganizationRole(organization)
+        val user = userIntegrationTestHelper.persistUserWithOwnerRole(email = userEmail)
+        user.grantOrganizationOwnerRole(organization)
         flushAndClear()
         assertThat(organizationService.getOrganizationOwnerEmail(organization.uuid)).isEqualTo(userEmail)
     }

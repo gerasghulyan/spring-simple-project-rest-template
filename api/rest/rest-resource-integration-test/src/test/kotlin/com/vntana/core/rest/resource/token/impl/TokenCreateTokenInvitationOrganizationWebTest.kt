@@ -22,6 +22,14 @@ class TokenCreateTokenInvitationOrganizationWebTest : AbstractTokenWebTest() {
                 tokenResourceClient.createTokenInvitationOrganization(resourceTestHelper.buildCreateTokenInvitationOrganizationRequest(token = emptyString())),
                 TokenErrorResponseModel.MISSING_TOKEN
         )
+        assertBasicErrorResultResponse(
+                tokenResourceClient.createTokenInvitationOrganization(resourceTestHelper.buildCreateTokenInvitationOrganizationRequest(invitationOrganizationUuid = null)),
+                TokenErrorResponseModel.MISSING_INVITATION_ORGANIZATION_UUID
+        )
+        assertBasicErrorResultResponse(
+                tokenResourceClient.createTokenInvitationOrganization(resourceTestHelper.buildCreateTokenInvitationOrganizationRequest(invitationOrganizationUuid = emptyString())),
+                TokenErrorResponseModel.MISSING_INVITATION_ORGANIZATION_UUID
+        )
     }
 
     @Test

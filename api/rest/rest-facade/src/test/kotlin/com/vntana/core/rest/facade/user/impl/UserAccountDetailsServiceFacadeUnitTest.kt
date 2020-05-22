@@ -30,7 +30,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     fun `test when super admin`() {
         resetAll()
         val userUuid = uuid()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
         expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
@@ -41,7 +41,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
             assertThat(it.response().fullName).isEqualTo(user.fullName)
             assertThat(it.response().email).isEqualTo(user.email)
             assertThat(it.response().roles.superAdmin).isTrue()
-            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(1)
+            assertThat(it.response().roles.ownerInOrganization.size).isEqualTo(1)
             assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
             assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
         }
@@ -52,7 +52,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     fun `test when is not super admin`() {
         resetAll()
         val userUuid = uuid()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
         replayAll()
@@ -62,7 +62,7 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
             assertThat(it.response().fullName).isEqualTo(user.fullName)
             assertThat(it.response().email).isEqualTo(user.email)
             assertThat(it.response().roles.superAdmin).isFalse()
-            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(1)
+            assertThat(it.response().roles.ownerInOrganization.size).isEqualTo(1)
             assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
             assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
         }
@@ -70,14 +70,14 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     }
 
     @Test
-    fun `test when is organization admin in 2 organizations`() {
+    fun `test when is organization owner in 2 organizations`() {
         resetAll()
         val userUuid = uuid()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         val organization1 = organizationHelper.buildOrganization()
         val organization2 = organizationHelper.buildOrganization()
-        user.grantOrganizationRole(organization1)
-        user.grantOrganizationRole(organization2)
+        user.grantOrganizationOwnerRole(organization1)
+        user.grantOrganizationOwnerRole(organization2)
         expect(preconditionCheckerComponent.checkAccountDetails(userUuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
         replayAll()
@@ -87,8 +87,8 @@ class UserAccountDetailsServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
             assertThat(it.response().fullName).isEqualTo(user.fullName)
             assertThat(it.response().email).isEqualTo(user.email)
             assertThat(it.response().roles.superAdmin).isFalse()
-            assertThat(it.response().roles.adminInOrganization.size).isEqualTo(3)
-            assertThat(it.response().roles.adminInOrganization).contains(organization1.uuid, organization2.uuid)
+            assertThat(it.response().roles.ownerInOrganization.size).isEqualTo(3)
+            assertThat(it.response().roles.ownerInOrganization).contains(organization1.uuid, organization2.uuid)
             assertThat(it.response().isEmailVerified).isEqualTo(user.verified)
             assertThat(it.response().imageBlobId).isEqualTo(user.imageBlobId)
         }

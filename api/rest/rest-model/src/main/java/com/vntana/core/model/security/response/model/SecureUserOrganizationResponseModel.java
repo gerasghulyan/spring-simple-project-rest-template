@@ -26,14 +26,19 @@ public class SecureUserOrganizationResponseModel implements ResponseModel {
     @JsonProperty("organizationUuid")
     private String organizationUuid;
 
+    @JsonProperty("isSuperAdmin")
+    private Boolean isSuperAdmin;
+
     public SecureUserOrganizationResponseModel() {
+        super();
     }
 
-    public SecureUserOrganizationResponseModel(final String uuid, final String username, final UserRoleModel userRole, final String organizationUuid) {
+    public SecureUserOrganizationResponseModel(final String uuid, final String username, final UserRoleModel userRole, final String organizationUuid, final Boolean isSuperAdmin) {
         this.uuid = uuid;
         this.username = username;
         this.userRole = userRole;
         this.organizationUuid = organizationUuid;
+        this.isSuperAdmin = isSuperAdmin;
     }
 
     @Override
@@ -50,6 +55,7 @@ public class SecureUserOrganizationResponseModel implements ResponseModel {
                 .append(username, that.username)
                 .append(userRole, that.userRole)
                 .append(organizationUuid, that.organizationUuid)
+                .append(isSuperAdmin, that.isSuperAdmin)
                 .isEquals();
     }
 
@@ -60,6 +66,7 @@ public class SecureUserOrganizationResponseModel implements ResponseModel {
                 .append(username)
                 .append(userRole)
                 .append(organizationUuid)
+                .append(isSuperAdmin)
                 .toHashCode();
     }
 
@@ -70,6 +77,7 @@ public class SecureUserOrganizationResponseModel implements ResponseModel {
                 .append("username", username)
                 .append("userRole", userRole)
                 .append("organizationUuid", organizationUuid)
+                .append("isSuperAdmin", isSuperAdmin)
                 .toString();
     }
 
@@ -103,5 +111,13 @@ public class SecureUserOrganizationResponseModel implements ResponseModel {
 
     public void setOrganizationUuid(final String organizationUuid) {
         this.organizationUuid = organizationUuid;
+    }
+
+    public Boolean getSuperAdmin() {
+        return isSuperAdmin;
+    }
+
+    public void setSuperAdmin(final Boolean superAdmin) {
+        isSuperAdmin = superAdmin;
     }
 }

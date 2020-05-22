@@ -54,7 +54,7 @@ open class OrganizationCommonTestHelper : AbstractCommonTestHelper() {
 
     fun buildGetUserOrganizationsByUserUuidAndRoleDto(
             userUuid: String? = uuid(),
-            userRole: UserRole? = UserRole.ORGANIZATION_ADMIN
+            userRole: UserRole? = UserRole.ORGANIZATION_OWNER
     ) = GetUserOrganizationsByUserUuidAndRoleDto(userUuid, userRole)
 
     fun buildGetAllOrganizationDto(

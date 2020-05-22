@@ -2,12 +2,11 @@ package com.vntana.core.service.token.invitation.organization
 
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
-import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.token.TokenInvitationOrganizationRepository
 import com.vntana.core.persistence.token.TokenRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
-import com.vntana.core.service.token.impl.TokenServiceImpl
+import com.vntana.core.service.token.invitation.organization.impl.TokenInvitationOrganizationServiceImpl
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before

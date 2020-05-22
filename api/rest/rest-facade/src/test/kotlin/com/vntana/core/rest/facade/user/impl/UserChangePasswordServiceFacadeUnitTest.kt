@@ -56,7 +56,7 @@ class UserChangePasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTes
     fun `test update`() {
         // test data
         val request = restHelper.buildChangeUserPasswordRequest()
-        val user = userHelper.buildUser(request.uuid)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(request.uuid)
         resetAll()
         // expectations
         expect(userService.existsByUuid(request.uuid)).andReturn(true)

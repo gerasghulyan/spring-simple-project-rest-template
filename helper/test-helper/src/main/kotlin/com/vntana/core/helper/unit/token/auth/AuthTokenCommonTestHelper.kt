@@ -18,6 +18,6 @@ open class AuthTokenCommonTestHelper : AbstractCommonTestHelper() {
     fun buildAuthTokenCreateDto(userUuid: String? = uuid(), token: String? = uuid()
     ): AuthTokenCreateDto = AuthTokenCreateDto(userUuid, token)
 
-    fun buildAuthToken(token: String = uuid(), user: User = userCommonTestHelper.buildUser()
+    fun buildAuthToken(token: String = uuid(), user: User = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
     ): AuthToken = AuthToken(token, user)
 }

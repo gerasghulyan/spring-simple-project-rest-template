@@ -8,6 +8,7 @@ import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.*;
+import com.vntana.core.service.organization.exception.OrganizationNotFoundForUuidException;
 import com.vntana.core.service.organization.exception.OrganizationOwnerNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +93,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization getByUuid(final String uuid) {
         return findByUuid(uuid).orElseThrow(() -> {
             LOGGER.error("Can not find organization for uuid - {}", uuid);
-            return new IllegalStateException(format("Can not find organization for uuid - %s", uuid));
+            return new OrganizationNotFoundForUuidException(uuid);
         });
     }
 
@@ -133,7 +134,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<Organization> getUserOrganizationsByUserUuidAndRole(final GetUserOrganizationsByUserUuidAndRoleDto dto) {
         Assert.notNull(dto, "The 'GetUserOrganizationsByUserUuidAndRoleDto' should not be null");
         LOGGER.debug("Retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
-        final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole().name());
+        final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole());
         LOGGER.debug("Successfully processed retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
         return organizations;
     }

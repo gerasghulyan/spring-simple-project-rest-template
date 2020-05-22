@@ -3,8 +3,8 @@ package com.vntana.core.service.user;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +15,8 @@ import java.util.Optional;
  * Time: 6:36 PM
  */
 public interface UserService {
+    User createWithOwnerRole(final CreateUserWithOwnerRoleDto dto);
+
     User create(final CreateUserDto dto);
 
     User update(final UpdateUserDto dto);
@@ -29,8 +31,6 @@ public interface UserService {
 
     User changePassword(final String uuid, final String password);
 
-    void grantOrganizationRole(final UserGrantOrganizationRoleDto dto);
-
     boolean existsByUuid(final String uuid);
 
     boolean existsByEmail(final String email);
@@ -38,6 +38,8 @@ public interface UserService {
     boolean checkPassword(final String uuid, final String rawPassword);
 
     List<User> findByRoleAndOrganizationUuid(final UserRole userRole, final String organizationUuid);
+
+    Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid);
 
     User getByEmail(final String email);
 }

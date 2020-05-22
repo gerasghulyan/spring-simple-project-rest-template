@@ -15,6 +15,7 @@ class UserCheckPasswordServiceIntegrationTest : AbstractUserServiceIntegrationTe
     fun `test check password`() {
         val oldPassword = uuid()
         val user = integrationTestHelper.persistUser(password = oldPassword)
+        flushAndClear()
         assertThat(userService.checkPassword(user.uuid, oldPassword)).isTrue()
     }
 }

@@ -37,9 +37,7 @@ abstract class AbstractUserWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
-
-    fun email(): String = uuid() + "@gmail.com"
-
+    
     @Before
     fun prepare() {
         reset(emailNotificationResourceClient)

@@ -2,12 +2,11 @@ package com.vntana.core.rest.facade.invitation.organization.impl
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.domain.invitation.InvitationStatus
-import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.invitation.organization.error.InvitationOrganizationErrorResponseModel
 import com.vntana.core.persistence.utils.Executable
 import com.vntana.core.rest.facade.invitation.organization.AbstractInvitationOrganizationFacadeUnitTest
 import com.vntana.core.service.invitation.organization.dto.UpdateInvitationOrganizationStatusDto
-import com.vntana.core.service.user.dto.CreateUserDto
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto
 import org.easymock.EasyMock
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -65,7 +64,7 @@ class InvitationOrganizationAcceptAndSignUpFacadeUnitTest : AbstractInvitationOr
         )
         val tokenInvitationOrganization = tokenInvitationOrganizationCommonTestHelper.buildTokenInvitationOrganization()
         val invitationOrganization = tokenInvitationOrganization.invitationOrganization
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val organization = organizationCommonTestHelper.buildOrganization()
         val dto = organizationCommonTestHelper.buildCreateOrganizationFromInvitationDto(request.organizationName, request.organizationSlug, invitationOrganization.uuid)
         resetAll()
@@ -77,12 +76,11 @@ class InvitationOrganizationAcceptAndSignUpFacadeUnitTest : AbstractInvitationOr
         expect(organizationService.createWithInvitation(dto)).andReturn(organization)
         expect(organizationLifecycleMediator.onCreated(organization))
         expect(organizationUuidAwareLifecycleMediator.onCreated(organization.uuid)).andVoid()
-        expect(userService.create(CreateUserDto(
+        expect(userService.createWithOwnerRole(CreateUserWithOwnerRoleDto(
                 request.userFullName,
                 invitationOrganization.email,
                 request.userPassword,
-                organization.uuid,
-                UserRole.ORGANIZATION_ADMIN)
+                organization.uuid)
         )).andReturn(user)
         expect(userService.makeVerified(user.email)).andReturn(user)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationOrganization)

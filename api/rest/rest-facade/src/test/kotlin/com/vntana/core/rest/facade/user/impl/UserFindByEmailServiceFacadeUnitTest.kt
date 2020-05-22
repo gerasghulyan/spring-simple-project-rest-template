@@ -33,7 +33,7 @@ class UserFindByEmailServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest()
         // test data
         resetAll()
         val request = restHelper.buildFindUserByEmailRequest()
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         // expectations
         expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
         replayAll()

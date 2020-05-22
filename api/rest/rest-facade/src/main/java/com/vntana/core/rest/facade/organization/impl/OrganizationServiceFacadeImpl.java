@@ -2,10 +2,7 @@ package com.vntana.core.rest.facade.organization.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserClientOrganizationRole;
-import com.vntana.core.domain.user.UserOrganizationRole;
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
@@ -22,8 +19,8 @@ import com.vntana.core.model.organization.response.invitation.GetOrganizationInv
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest;
 import com.vntana.core.model.organization.response.update.response.UpdateOrganizationResultResponse;
 import com.vntana.core.model.user.response.UserOrganizationResponse;
-import com.vntana.core.model.user.response.model.GetUserOrganizationsGridResponseModel;
-import com.vntana.core.model.user.response.model.GetUserOrganizationsResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserOrganizationsGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserOrganizationsResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.organization.OrganizationServiceFacade;
 import com.vntana.core.rest.facade.organization.component.precondition.OrganizationServiceFacadePreconditionCheckerComponent;
@@ -35,7 +32,8 @@ import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecycleMediator;
 import com.vntana.core.service.user.UserService;
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
+import com.vntana.core.service.user.role.UserRoleService;
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
@@ -48,7 +46,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,6 +64,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     private final MapperFacade mapperFacade;
     private final OrganizationService organizationService;
     private final UserService userService;
+    private final UserRoleService userRoleService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
     private final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator;
@@ -77,6 +75,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             final MapperFacade mapperFacade,
             final OrganizationService organizationService,
             final UserService userService,
+            final UserRoleService userRoleService,
             final PersistenceUtilityService persistenceUtilityService,
             final OrganizationLifecycleMediator organizationLifecycleMediator,
             final OrganizationUuidAwareLifecycleMediator organizationUuidAwareLifecycleMediator,
@@ -86,6 +85,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         this.userService = userService;
         this.mapperFacade = mapperFacade;
         this.organizationService = organizationService;
+        this.userRoleService = userRoleService;
         this.persistenceUtilityService = persistenceUtilityService;
         this.organizationLifecycleMediator = organizationLifecycleMediator;
         this.organizationUuidAwareLifecycleMediator = organizationUuidAwareLifecycleMediator;
@@ -126,10 +126,9 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                     final Mutable<String> mutableResponse = new MutableObject<>();
                     persistenceUtilityService.runInNewTransaction(() -> {
                         final Organization organization = organizationService.create(dto);
-                        userService.grantOrganizationRole(new UserGrantOrganizationRoleDto(
+                        userRoleService.grantOrganizationOwnerRole(new UserGrantOrganizationRoleDto(
                                 request.getUserUuid(),
-                                organization.getUuid(),
-                                UserRole.ORGANIZATION_ADMIN)
+                                organization.getUuid())
                         );
                         organizationLifecycleMediator.onCreated(organization);
                         organizationUuidAwareLifecycleMediator.onCreated(organization.getUuid());
@@ -139,31 +138,43 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 });
     }
 
+    @Transactional
     @Override
     public UserOrganizationResponse getUserOrganizations(final String userUuid) {
         if (StringUtils.isBlank(userUuid)) {
-            return new UserOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.MISSING_USER_UUID);
+            return new UserOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY,
+                    OrganizationErrorResponseModel.MISSING_USER_UUID
+            );
         }
         LOGGER.debug("Retrieving user organizations by user uuid - {}", userUuid);
-        final Mutable<List<GetUserOrganizationsResponseModel>> mutableResponse = new MutableObject<>();
-        final Mutable<OrganizationErrorResponseModel> mutableErrorResponse = new MutableObject<>();
-        persistenceUtilityService.runInNewTransaction(() -> {
-            final Optional<User> userOptional = userService.findByUuid(userUuid);
-            if (!userOptional.isPresent()) {
-                mutableErrorResponse.setValue(OrganizationErrorResponseModel.USER_NOT_FOUND);
-                return;
-            }
-            final User user = userOptional.get();
-            final List<GetUserOrganizationsResponseModel> response = user.roleOfSuperAdmin()
-                    .map(userSuperAdminRole -> getOrganizationsWhenAdmin(userUuid))
-                    .orElseGet(() -> getOrganizationsWhenNotAdmin(user));
-            mutableResponse.setValue(response);
-        });
-        if (Objects.nonNull(mutableErrorResponse.getValue())) {
-            return new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, mutableErrorResponse.getValue());
+        return userService.findByUuid(userUuid)
+                .map(user -> {
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenNotSuperAdmin(user);
+                    return new UserOrganizationResponse(
+                            new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
+                    );
+                })
+                .orElseGet(() -> new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.USER_NOT_FOUND));
+    }
+
+    @Transactional
+    @Override
+    public UserOrganizationResponse getSuperAdminUserOrganizations(final String userUuid) {
+        if (StringUtils.isBlank(userUuid)) {
+            return new UserOrganizationResponse(
+                    HttpStatus.SC_UNPROCESSABLE_ENTITY,
+                    OrganizationErrorResponseModel.MISSING_USER_UUID
+            );
         }
-        final List<GetUserOrganizationsResponseModel> response = mutableResponse.getValue();
-        return new UserOrganizationResponse(new GetUserOrganizationsGridResponseModel(response.size(), response));
+        LOGGER.debug("Retrieving super admin user organizations by user uuid - {}", userUuid);
+        return userService.findByUuid(userUuid)
+                .map(user -> {
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenSuperAdmin(user.getUuid());
+                    return new UserOrganizationResponse(
+                            new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
+                    );
+                })
+                .orElseGet(() -> new UserOrganizationResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.USER_NOT_FOUND));
     }
 
     @Override
@@ -237,22 +248,33 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         );
     }
 
-    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotAdmin(final User user) {
+    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotSuperAdmin(final User user) {
         LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {}", user.getUuid());
         return user.roles()
                 .stream()
+                .filter(userRole -> !userRole.getUserRole().equals(UserRole.SUPER_ADMIN))
                 .map(userRole -> {
-                    LOGGER.debug("Retrieving user organizations for not system admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
+                    LOGGER.debug("Retrieving user organizations for not super admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
                     switch (userRole.getUserRole()) {
-                        case ORGANIZATION_ADMIN:
-                            final UserOrganizationRole userOrganizationRole = (UserOrganizationRole) userRole;
+                        case ORGANIZATION_OWNER:
+                            final UserOrganizationOwnerRole userOrganizationOwnerRole = (UserOrganizationOwnerRole) userRole;
                             return new GetUserOrganizationsResponseModel(
-                                    userOrganizationRole.getOrganization().getUuid(),
-                                    userOrganizationRole.getOrganization().getSlug(),
-                                    userOrganizationRole.getOrganization().getName(),
-                                    UserRoleModel.valueOf(userOrganizationRole.getUserRole().name()),
-                                    userOrganizationRole.getOrganization().getImageBlobId(),
-                                    userOrganizationRole.getOrganization().getCreated()
+                                    userOrganizationOwnerRole.getOrganization().getUuid(),
+                                    userOrganizationOwnerRole.getOrganization().getSlug(),
+                                    userOrganizationOwnerRole.getOrganization().getName(),
+                                    UserRoleModel.valueOf(userOrganizationOwnerRole.getUserRole().name()),
+                                    userOrganizationOwnerRole.getOrganization().getImageBlobId(),
+                                    userOrganizationOwnerRole.getOrganization().getCreated()
+                            );
+                        case ORGANIZATION_ADMIN:
+                            final UserOrganizationAdminRole userOrganizationAdminRole = (UserOrganizationAdminRole) userRole;
+                            return new GetUserOrganizationsResponseModel(
+                                    userOrganizationAdminRole.getOrganization().getUuid(),
+                                    userOrganizationAdminRole.getOrganization().getSlug(),
+                                    userOrganizationAdminRole.getOrganization().getName(),
+                                    UserRoleModel.valueOf(userOrganizationAdminRole.getUserRole().name()),
+                                    userOrganizationAdminRole.getOrganization().getImageBlobId(),
+                                    userOrganizationAdminRole.getOrganization().getCreated()
                             );
                         case CLIENT_ADMIN:
                             final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
@@ -271,7 +293,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .collect(Collectors.toList());
     }
 
-    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenAdmin(final String userUuid) {
+    private List<GetUserOrganizationsResponseModel> getOrganizationsWhenSuperAdmin(final String userUuid) {
         LOGGER.debug("Retrieving user organizations for system admin user with uuid - {}", userUuid);
         return organizationService.getAll(
                 new GetAllOrganizationDto(organizationService.count().intValue())

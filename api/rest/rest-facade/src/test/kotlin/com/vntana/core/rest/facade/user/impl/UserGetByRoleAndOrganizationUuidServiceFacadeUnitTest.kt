@@ -26,8 +26,8 @@ class UserGetByRoleAndOrganizationUuidServiceFacadeUnitTest : AbstractUserServic
     fun `test missing organization uuid`() {
         resetAll()
         replayAll()
-        assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_ADMIN, null), UserErrorResponseModel.MISSING_ORGANIZATION)
-        assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_ADMIN, emptyString()), UserErrorResponseModel.MISSING_ORGANIZATION)
+        assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_OWNER, null), UserErrorResponseModel.MISSING_ORGANIZATION)
+        assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_OWNER, emptyString()), UserErrorResponseModel.MISSING_ORGANIZATION)
         verifyAll()
     }
 
@@ -37,14 +37,14 @@ class UserGetByRoleAndOrganizationUuidServiceFacadeUnitTest : AbstractUserServic
         resetAll()
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(false)
         replayAll()
-        assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_ADMIN, organizationUuid), UserErrorResponseModel.ORGANIZATION_NOT_FOUND)
+        assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_OWNER, organizationUuid), UserErrorResponseModel.ORGANIZATION_NOT_FOUND)
         verifyAll()
     }
 
     @Test
     fun `test not found by organization uuid and user role`() {
         val organizationUuid = uuid()
-        val userRole = UserRoleModel.ORGANIZATION_ADMIN
+        val userRole = UserRoleModel.ORGANIZATION_OWNER
         resetAll()
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(true)
         expect(userService.findByRoleAndOrganizationUuid(UserRole.valueOf(userRole.name), organizationUuid)).andReturn(emptyList())
@@ -54,14 +54,14 @@ class UserGetByRoleAndOrganizationUuidServiceFacadeUnitTest : AbstractUserServic
     }
 
     @Test
-    fun `test conflict when organization has more then one Organization Admin`() {
+    fun `test conflict when organization has more then one Organization Owner`() {
         val organizationUuid = uuid()
-        val userRole = UserRoleModel.ORGANIZATION_ADMIN
+        val userRole = UserRoleModel.ORGANIZATION_OWNER
         resetAll()
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(true)
         expect(userService.findByRoleAndOrganizationUuid(UserRole.valueOf(userRole.name), organizationUuid)).andReturn(listOf(
-                userHelper.buildUser(),
-                userHelper.buildUser()
+                userHelper.buildUserWithOrganizationOwnerRole(),
+                userHelper.buildUserWithOrganizationOwnerRole()
         ))
         replayAll()
         assertBasicErrorResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(userRole, organizationUuid), UserErrorResponseModel.ORGANIZATION_ROLE_CONFLICT)
@@ -71,11 +71,11 @@ class UserGetByRoleAndOrganizationUuidServiceFacadeUnitTest : AbstractUserServic
     @Test
     fun `test find`() {
         val organizationUuid = uuid()
-        val userRole = UserRoleModel.ORGANIZATION_ADMIN
+        val userRole = UserRoleModel.ORGANIZATION_OWNER
         resetAll()
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(true)
         expect(userService.findByRoleAndOrganizationUuid(UserRole.valueOf(userRole.name), organizationUuid)).andReturn(listOf(
-                userHelper.buildUser()
+                userHelper.buildUserWithOrganizationOwnerRole()
         ))
         replayAll()
         assertBasicSuccessResultResponse(userServiceFacade.getByRoleAndOrganizationUuid(userRole, organizationUuid))

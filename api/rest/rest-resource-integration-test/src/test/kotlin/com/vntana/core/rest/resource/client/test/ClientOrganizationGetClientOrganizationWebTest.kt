@@ -38,7 +38,7 @@ class ClientOrganizationGetClientOrganizationWebTest : AbstractClientOrganizatio
     }
 
     @Test
-    fun `test get user client organizations when role is organization admin`() {
+    fun `test get user client organizations when role is organization owner`() {
         val createUserResponseModel = userResourceTestHelper.persistUser().response()
         val organizationUuid = createUserResponseModel.organizationUuid
         val clientOrganizationName = uuid()
@@ -55,10 +55,10 @@ class ClientOrganizationGetClientOrganizationWebTest : AbstractClientOrganizatio
             assertThat(it.response()).isNotNull
             assertThat(it.response().totalCount()).isEqualTo(2)
             assertThat(it.response().items()[0].uuid).isEqualTo(clientOrganization.response().uuid)
-            assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             assertThat(it.response().items()[0].name).isEqualTo(clientOrganizationName)
             assertThat(it.response().items()[1].uuid).isEqualTo(clientOrganization2.response().uuid)
-            assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             assertThat(it.response().items()[1].name).isEqualTo(clientOrganizationName2)
         }
     }

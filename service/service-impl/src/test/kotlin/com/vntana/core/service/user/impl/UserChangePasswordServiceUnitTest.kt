@@ -40,7 +40,7 @@ class UserChangePasswordServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun test() {
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         val newPassword = uuid()
         val encodedPassword = uuid()
         resetAll()

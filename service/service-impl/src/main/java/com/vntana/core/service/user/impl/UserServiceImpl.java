@@ -7,8 +7,8 @@ import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
+import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
-import com.vntana.core.service.user.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
 import com.vntana.core.service.user.exception.UserNotFoundForTokenException;
 import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
@@ -50,14 +50,26 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User create(final CreateUserDto dto) {
-        assertCreateDto(dto);
-        LOGGER.debug("Creating user for dto - {}", dto);
+    public User createWithOwnerRole(final CreateUserWithOwnerRoleDto dto) {
+        Assert.notNull(dto, "The CreateUserWithOwnerRoleDto should not be null");
+        LOGGER.debug("Creating user with owner role for dto - {}", dto);
         final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
         final String password = passwordEncoder.encode(dto.getPassword());
         final User user = new User(dto.getFullName(), dto.getEmail(), password);
         final User savedUser = userRepository.save(user);
-        savedUser.grantOrganizationRole(organization);
+        savedUser.grantOrganizationOwnerRole(organization);
+        LOGGER.debug("Successfully created user for dto - {}", dto);
+        return savedUser;
+    }
+
+    @Transactional
+    @Override
+    public User create(final CreateUserDto dto) {
+        Assert.notNull(dto, "The CreateUserDto should not be null");
+        LOGGER.debug("Creating user for dto - {}", dto);
+        final String password = passwordEncoder.encode(dto.getPassword());
+        final User user = new User(dto.getFullName(), dto.getEmail(), password);
+        final User savedUser = userRepository.save(user);
         LOGGER.debug("Successfully created user for dto - {}", dto);
         return savedUser;
     }
@@ -144,17 +156,6 @@ public class UserServiceImpl implements UserService {
         return exists;
     }
 
-    @Transactional
-    @Override
-    public void grantOrganizationRole(final UserGrantOrganizationRoleDto dto) {
-        LOGGER.debug("Setting user role for dto - {}", dto);
-        Assert.notNull(dto, "The UserGrantOrganizationRoleDto should not be null");
-        final User user = getByUuid(dto.getUuid());
-        final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
-        user.grantOrganizationRole(organization);
-        LOGGER.debug("Successfully created user role for dto - {}", dto);
-    }
-
     @Transactional(readOnly = true)
     @Override
     public boolean checkPassword(final String uuid, final String rawPassword) {
@@ -178,10 +179,21 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid) {
+        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        LOGGER.debug("Retrieving the user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
+        final Optional<User> userOptional = userRepository.findByEmailAndOrganizationUuid(email, organizationUuid);
+        LOGGER.debug("Successfully retrieved user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
+        return userOptional;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public User getByEmail(final String email) {
         Assert.notNull(email, "The user email should not be null");
         LOGGER.debug("Getting user for email - {}", email);
-        return findByEmail(email).orElseThrow(() -> new UserNotFoundForTokenException(String.format("User not found for email %s", email)) );
+        return findByEmail(email).orElseThrow(() -> new UserNotFoundForTokenException(String.format("User not found for email %s", email)));
     }
 
     private User updateUser(final User user, final UpdateUserDto dto) {
@@ -190,15 +202,6 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private void assertCreateDto(final CreateUserDto dto) {
-        Assert.notNull(dto, "The user creation dto should not be null");
-        Assert.hasText(dto.getFullName(), "The user full name should not be null or empty");
-        assertEmail(dto.getEmail());
-        Assert.hasText(dto.getPassword(), "The user password should not be null or empty");
-        Assert.hasText(dto.getOrganizationUuid(), "The organization uuid should not be null or empty");
-        Assert.notNull(dto.getRole(), "The user role should not be null");
-    }
-    
     private void assertEmail(final String email) {
         Assert.hasText(email, "The email should not be null or empty");
     }

@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.user.component.precondition
 
 import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.precondition.impl.UserFacadePreconditionCheckerComponentImpl
+import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before
@@ -18,8 +19,11 @@ abstract class AbstractUserFacadePreconditionCheckerComponentUnitTest : Abstract
     @Mock
     protected lateinit var userService: UserService
 
+    @Mock
+    protected lateinit var organizationService: OrganizationService
+
     @Before
     fun prepare() {
-        preconditionChecker = UserFacadePreconditionCheckerComponentImpl(userService)
+        preconditionChecker = UserFacadePreconditionCheckerComponentImpl(userService, organizationService)
     }
 }

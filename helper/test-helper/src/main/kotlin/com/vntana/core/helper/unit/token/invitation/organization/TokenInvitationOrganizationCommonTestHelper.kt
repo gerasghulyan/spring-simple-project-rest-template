@@ -1,14 +1,10 @@
 package com.vntana.core.helper.unit.token.invitation.organization
 
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
-import com.vntana.core.domain.token.AuthToken
 import com.vntana.core.domain.token.TokenInvitationOrganization
-import com.vntana.core.domain.user.User
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
-import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.service.token.auth.dto.AuthTokenCreateDto
-import com.vntana.core.service.token.dto.CreateTokenInvitationOrganizationDto
+import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto
 
 /**
  * Created by Geras Ghulyan
