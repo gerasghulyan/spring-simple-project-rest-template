@@ -53,19 +53,19 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateForPossibleErrors(final CreateInvitationUserRequest request) {
         LOGGER.debug("Checking invitation user creation precondition for request - {}", request);
         if (UserRoleModel.ORGANIZATION_OWNER == request.getUserRole()) {
-            LOGGER.error("Checking invitation user creation precondition for request - {} has been done with error, the invited role could not be organization owner", request);
+            LOGGER.debug("Checking invitation user creation precondition for request - {} has been done with error, the invited role could not be organization owner", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INVITED_USER_ROLE_COULD_NOT_BE_ORGANIZATION_OWNER);
         }
         if (!userService.existsByUuid(request.getInviterUserUuid())) {
-            LOGGER.error("Checking invitation user creation precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
+            LOGGER.debug("Checking invitation user creation precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
         }
         if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            LOGGER.error("Checking invitation user creation precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
+            LOGGER.debug("Checking invitation user creation precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         if (userService.findByEmailAndOrganizationUuid(request.getEmail(), request.getOrganizationUuid()).isPresent()) {
-            LOGGER.error("Checking invitation user creation precondition for request - {} has been done with error, the invited user already is part of the organization", request);
+            LOGGER.debug("Checking invitation user creation precondition for request - {} has been done with error, the invited user already is part of the organization", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_PART_OF_ORGANIZATION);
         }
         LOGGER.debug("Successfully checked invitation user creation precondition for request - {}", request);
@@ -76,7 +76,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkUpdateStatusForPossibleErrors(final UpdateInvitationUserInvitationStatusRequest request) {
         LOGGER.debug("Checking invitation user update status precondition for request - {}", request);
         if (!invitationUserService.existsByUuid(request.getUuid())) {
-            LOGGER.error("Checking invitation user update status precondition for request - {} has been done with error, no invitation was found by uuid - {}", request, request.getUuid());
+            LOGGER.debug("Checking invitation user update status precondition for request - {} has been done with error, no invitation was found by uuid - {}", request, request.getUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully checked invitation user update status precondition for request - {}", request);
@@ -88,7 +88,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         LOGGER.debug("Checking invitation user accept precondition for request - {}", request);
         final Optional<TokenInvitationUser> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
         if (!tokenInvitationUserOptional.isPresent()) {
-            LOGGER.error("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
+            LOGGER.debug("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }
         final InvitationUser invitationUser = tokenInvitationUserOptional.get().getInvitationUser();
@@ -107,7 +107,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request) {
         final Optional<TokenInvitationUser> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
         if (!tokenInvitationUserOptional.isPresent()) {
-            LOGGER.error("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
+            LOGGER.debug("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }
         final TokenInvitationUser tokenInvitationUser = tokenInvitationUserOptional.get();
@@ -124,11 +124,11 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForPossibleErrors(final SendInvitationUserRequest request) {
         LOGGER.debug("Checking invitation user send invitation precondition for request - {}", request);
         if (!userService.existsByUuid(request.getInviterUserUuid())) {
-            LOGGER.error("Checking invitation user send invitation precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
+            LOGGER.debug("Checking invitation user send invitation precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
         }
         if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            LOGGER.error("Checking invitation user send invitation precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
+            LOGGER.debug("Checking invitation user send invitation precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully checked invitation user send invitation precondition for request - {}", request);
@@ -139,19 +139,19 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetByTokenForPossibleErrors(final String token) {
         LOGGER.debug("Checking invitation user get by token precondition");
         if (StringUtils.isEmpty(token)) {
-            LOGGER.error("Checking invitation user get by token precondition has been done with error, user invitation token is missing");
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is missing");
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
         }
         if (!tokenInvitationUserService.isExists(token)) {
-            LOGGER.error("Checking invitation user get by token precondition has been done with error, user invitation token is not found");
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is not found");
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }
         if (tokenInvitationUserService.isExpired(token)) {
-            LOGGER.error("Checking invitation user get by token precondition has been done with error, user invitation token has been expired");
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token has been expired");
             return SingleErrorWithStatus.of(HttpStatus.SC_BAD_REQUEST, InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN);
         }
         if (!invitationUserService.existsByToken(token)) {
-            LOGGER.error("Checking invitation user get by token precondition has been done with error, no invitation user found by token");
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, no invitation user found by token");
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully checked invitation user get by token precondition");
@@ -162,7 +162,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetAllByOrganizationUuidAndStatusForPossibleErrors(final GetAllByStatusInvitationUserRequest request) {
         LOGGER.debug("Checking invitation user get all by organization uuid and status precondition for request - {}", request);
         if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            LOGGER.error("Successfully checked invitation user get all by organization uuid and status precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
+            LOGGER.debug("Successfully checked invitation user get all by organization uuid and status precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully checked invitation user get all by organization uuid and status precondition for request - {}", request);
