@@ -1,5 +1,6 @@
 package com.vntana.core.service.whitelist.impl
 
+import com.vntana.core.service.organization.exception.OrganizationNotFoundForUuidException
 import com.vntana.core.service.whitelist.AbstractWhitelistIpServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -16,11 +17,11 @@ class WhitelistIpCreateServiceIntegrationTest : AbstractWhitelistIpServiceIntegr
     fun `test when organization not found`() {
         val createWhitelistIpDto = testHelper.buildCreateWhitelistIpDto()
         assertThatThrownBy { whitelistIpService.create(createWhitelistIpDto) }
-                .isExactlyInstanceOf(IllegalStateException::class.java)
+                .isExactlyInstanceOf(OrganizationNotFoundForUuidException::class.java)
     }
 
     @Test
-    fun `test`() {
+    fun test() {
         val organization = organizationTestHelper.persistOrganization()
         val createWhitelistIpDto = testHelper.buildCreateWhitelistIpDto(organizationUuid = organization.uuid)
         whitelistIpService.create(createWhitelistIpDto).let {

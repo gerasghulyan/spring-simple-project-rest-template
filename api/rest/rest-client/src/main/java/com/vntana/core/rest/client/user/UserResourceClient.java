@@ -1,8 +1,13 @@
 package com.vntana.core.rest.client.user;
 
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
+import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -15,17 +20,25 @@ public interface UserResourceClient {
     @PostMapping(path = "/create")
     CreateUserResponse createUser(@RequestBody final CreateUserRequest request);
 
+    @GetMapping(path = "existence/{email}")
+    ResponseEntity<ExistsUserByEmailResponse> existsByEmail(@PathVariable("email") final String email);
+
     @PostMapping(path = "/by-email")
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
     @GetMapping(path = "/{uuid}")
     FindUserByUuidResponse findByUuid(@PathVariable("uuid") final String uuid);
 
-    @GetMapping(path = "/{uuid}/account-details/organizations/{organizationUuid}")
-    AccountUserResponse accountDetails(
-            @PathVariable("uuid") final String uuid,
-            @PathVariable("organizationUuid") final String organizationUuid
-    );
+    @GetMapping(path = "/{uuid}/account-details")
+    ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid);
+
+    @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
+    ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(
+            @PathVariable("role") final UserRoleModel role,
+            @PathVariable("organizationUuid") final String organizationUuid);
+
+    @GetMapping(path = "/organizations/{organizationUuid}")
+    ResponseEntity<GetUsersByOrganizationResponse> getUsersByOrganization(@PathVariable("organizationUuid") final String organizationUuid);
 
     @PutMapping(path = "/verify")
     VerifyUserResponse verify(@RequestBody final VerifyUserRequest request);

@@ -3,6 +3,7 @@ package com.vntana.core.helper.organization
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest
 import com.vntana.core.model.organization.request.CreateOrganizationRequest
+import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel
 import com.vntana.core.model.organization.response.update.request.UpdateOrganizationRequest
 
 /**
@@ -25,6 +26,7 @@ open class OrganizationRestTestHelper : AbstractRestTestHelper() {
     fun buildUpdateOrganizationRequest(
             uuid: String? = uuid(),
             name: String? = uuid(),
-            imageBlobId: String? = uuid()
-    ): UpdateOrganizationRequest = UpdateOrganizationRequest(uuid, name, imageBlobId)
+            imageBlobId: String? = uuid(),
+            status: OrganizationStatusModel? = OrganizationStatusModel.DISABLED
+    ): UpdateOrganizationRequest = UpdateOrganizationRequest(uuid, name, imageBlobId, status)
 }

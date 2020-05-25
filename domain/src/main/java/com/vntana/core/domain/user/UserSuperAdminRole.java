@@ -15,6 +15,7 @@ import javax.persistence.Table;
 public class UserSuperAdminRole extends AbstractUserRole {
 
     UserSuperAdminRole() {
+        super();
     }
 
     public UserSuperAdminRole(final User user) {

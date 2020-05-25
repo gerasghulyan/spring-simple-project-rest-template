@@ -22,15 +22,17 @@ class OrganizationResourceTestHelper : OrganizationRestTestHelper() {
 
     fun persistOrganization(name: String? = uuid(),
                             slug: String? = uuid(),
-                            imageBlobId: String? = uuid()
+                            imageBlobId: String? = uuid(),
+                            userUuid: String? = userResourceTestHelper.persistUser().response().uuid
     ): CreateOrganizationResultResponse {
         val request = buildCreateOrganizationRequest(
                 name = name,
                 slug = slug,
-                imageBlobId = imageBlobId
+                imageBlobId = imageBlobId,
+                userUuid = userUuid
         )
-        val userResponse = userResourceTestHelper.persistUser()
-        request.userUuid = userResponse.response().uuid
         return organizationResourceClient.create(request)
     }
+
+    fun getOrganizationBySlug(slug: String = uuid()) = organizationResourceClient.getBySlug(slug)
 }

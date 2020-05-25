@@ -1,10 +1,7 @@
 package com.vntana.core.service.organization;
 
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.service.organization.dto.CreateOrganizationDto;
-import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
-import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
-import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
+import com.vntana.core.service.organization.dto.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -17,6 +14,8 @@ import java.util.Optional;
  */
 public interface OrganizationService {
     Organization create(final CreateOrganizationDto dto);
+
+    Organization createWithInvitation(final CreateOrganizationFromInvitationDto dto);
 
     Optional<Organization> findBySlug(final String slug);
 

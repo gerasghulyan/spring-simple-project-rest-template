@@ -2,7 +2,7 @@ package com.vntana.core.model.user.response;
 
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
-import com.vntana.core.model.user.response.model.GetUserOrganizationsGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserOrganizationsGridResponseModel;
 
 /**
  * Created by Geras Ghulyan
@@ -12,6 +12,7 @@ import com.vntana.core.model.user.response.model.GetUserOrganizationsGridRespons
 public class UserOrganizationResponse extends AbstractResultResponseModel<GetUserOrganizationsGridResponseModel, OrganizationErrorResponseModel> {
 
     public UserOrganizationResponse() {
+        super();
     }
 
     public UserOrganizationResponse(final GetUserOrganizationsGridResponseModel response) {

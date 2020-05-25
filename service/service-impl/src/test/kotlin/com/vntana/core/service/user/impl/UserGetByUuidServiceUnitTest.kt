@@ -44,7 +44,7 @@ class UserGetByUuidServiceUnitTest : AbstractUserServiceUnitTest() {
         resetAll()
         val uuid = uuid()
         // expectations
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         expect(userRepository.findByUuid(uuid)).andReturn(Optional.of(user))
         replayAll()
         // test scenario

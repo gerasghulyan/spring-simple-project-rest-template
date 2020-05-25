@@ -15,4 +15,5 @@ import java.util.*
 abstract class AbstractServiceUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
     fun emptyString(): String = StringUtils.EMPTY
+    fun email(): String = "${uuid()}@mail.com"
 }

@@ -2,7 +2,7 @@ package com.vntana.core.model.user.response;
 
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
-import com.vntana.core.model.user.response.model.GetUserClientOrganizationsGridResponseModel;
+import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsGridResponseModel;
 
 /**
  * Created by Manuk Gharslyan.

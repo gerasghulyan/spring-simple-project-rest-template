@@ -1,7 +1,12 @@
 package com.vntana.core.rest.resource.user;
 
+import com.vntana.commons.web.utils.ResponseEntityUtils;
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
+import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +41,14 @@ public class UserResource {
         return ResponseEntity.ok(resultResponse);
     }
 
+    @GetMapping(path = "existence/{email}")
+    public ResponseEntity<ExistsUserByEmailResponse> existsByEmail(@PathVariable("email") final String email) {
+        LOGGER.debug("Processing resource existsByEmail for email- {}", email);
+        final ExistsUserByEmailResponse response = userServiceFacade.existsByEmail(email);
+        LOGGER.debug("Successfully processed resource existsByEmail for email - {}", email);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
     @PostMapping(path = "/by-email")
     public ResponseEntity<FindUserByEmailResponse> findByEmail(@RequestBody final FindUserByEmailRequest request) {
         LOGGER.debug("Processing find user by email request - {}", request);
@@ -52,14 +65,30 @@ public class UserResource {
         return ResponseEntity.ok(resultResponse);
     }
 
-    @GetMapping(path = "/{uuid}/account-details/organizations/{organizationUuid}")
-    public ResponseEntity<AccountUserResponse> accountDetails(
-            @PathVariable("uuid") final String uuid,
+    @GetMapping(path = "/{uuid}/account-details")
+    public ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid) {
+        LOGGER.debug("Processing user facade accountDetails method by uuid - {}", uuid);
+        final AccountUserResponse response = userServiceFacade.accountDetails(uuid);
+        LOGGER.debug("Successfully processed user facade accountDetails method by uuid - {}", uuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
+    public ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(
+            @PathVariable("role") final UserRoleModel role,
             @PathVariable("organizationUuid") final String organizationUuid) {
-        LOGGER.debug("Processing find user account by uuid - {} and organizationUuid - {}", uuid, organizationUuid);
-        final AccountUserResponse response = userServiceFacade.accountDetails(uuid, organizationUuid);
-        LOGGER.debug("Successfully proceeded find user account with response - {}", response);
-        return ResponseEntity.ok(response);
+        LOGGER.debug("Processing retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
+        final GetUsersByRoleAndOrganizationUuidResponse response = userServiceFacade.getByRoleAndOrganizationUuid(role, organizationUuid);
+        LOGGER.debug("Successfully proceeded retrieve users by userRole - {} and organizationUuid - {}", role, organizationUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "/organizations/{organizationUuid}")
+    public ResponseEntity<GetUsersByOrganizationResponse> getUsersByOrganization(@PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing retrieve users by organizationUuid - {}", organizationUuid);
+        final GetUsersByOrganizationResponse response = userServiceFacade.getByOrganizationUuid(organizationUuid);
+        LOGGER.debug("Successfully proceeded retrieve users by organizationUuid - {}", organizationUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
     @PutMapping(path = "/verify")

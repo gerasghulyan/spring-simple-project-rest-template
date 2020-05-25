@@ -2,12 +2,15 @@ package com.vntana.core.rest.facade.test
 
 import com.vntana.commons.api.model.response.ErrorResponseModel
 import com.vntana.commons.api.model.response.ResultResponseModel
+import org.apache.commons.lang3.RandomUtils
 import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions
 import org.easymock.EasyMockRunner
 import org.easymock.EasyMockSupport
 import org.junit.runner.RunWith
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.random.Random
 
 /**
  * Created by Arthur Asatryan.
@@ -18,7 +21,13 @@ import java.util.*
 abstract class AbstractServiceFacadeUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
 
+    fun randomInt(): Int = Random.nextInt()
+
+    fun randomPositiveInt(): Int = ThreadLocalRandom.current().nextInt(1, Int.MAX_VALUE)
+
     fun emptyString(): String = StringUtils.EMPTY
+
+    fun statusCode(): Int = RandomUtils.nextInt()
 
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {
         Assertions.assertThat(resultResponse).isNotNull

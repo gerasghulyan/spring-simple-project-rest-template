@@ -29,7 +29,7 @@ class TokenExpireServiceUnitTest : AbstractTokenServiceUnitTest() {
     @Test
     fun `test when not found`() {
         resetAll()
-        val authToken = helper.buildResetPasswordToken()
+        val authToken = helper.buildTokenInvitationOrganization()
         val authTokenUuid = authToken.uuid
         expect(tokenRepository.findByUuid(authTokenUuid)).andReturn(Optional.empty())
         replayAll()
@@ -41,7 +41,7 @@ class TokenExpireServiceUnitTest : AbstractTokenServiceUnitTest() {
     @Test
     fun test() {
         resetAll()
-        val authToken = helper.buildResetPasswordToken()
+        val authToken = helper.buildTokenInvitationOrganization()
         val authTokenUuid = authToken.uuid
         expect(tokenRepository.findByUuid(authTokenUuid)).andReturn(Optional.of(authToken))
         replayAll()

@@ -41,7 +41,7 @@ class UserFindByEmailServiceUnitTest : AbstractUserServiceUnitTest() {
     fun `test when found`() {
         // test data
         val email = uuid()
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         resetAll()
         // expectations
         expect(userRepository.findByEmail(email)).andReturn(Optional.of(user))

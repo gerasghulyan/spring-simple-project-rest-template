@@ -14,6 +14,7 @@ class UserExistsByUuidServiceIntegrationTest : AbstractUserServiceIntegrationTes
     @Test
     fun `test exists`() {
         val user = integrationTestHelper.persistUser()
+        flushAndClear()
         assertThat(userService.existsByUuid(user.uuid)).isTrue()
     }
 

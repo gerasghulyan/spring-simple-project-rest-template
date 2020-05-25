@@ -3,6 +3,8 @@ package com.vntana.core.helper.integration.invitation.organization
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
+import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService
+import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -17,17 +19,24 @@ class InvitationOrganizationIntegrationTestHelper : InvitationOrganizationCommon
     @Autowired
     private lateinit var invitationOrganizationService: InvitationOrganizationService
 
-    fun persistInvitationOrganization(ownerFullName: String? = uuid(),
-                                      email: String? = uuid(),
-                                      organizationName: String? = uuid(),
-                                      slug: String? = uuid(),
-                                      customerSubscriptionDefinitionUuid: String? = uuid()): InvitationOrganization {
+    @Autowired
+    private lateinit var tokenInvitationOrganizationService: TokenInvitationOrganizationService
+
+    fun persistInvitationOrganization(
+            ownerFullName: String? = uuid(),
+            email: String? = uuid(),
+            organizationName: String? = uuid(),
+            slug: String? = uuid(),
+            customerSubscriptionDefinitionUuid: String? = uuid(),
+            token: String? = uuid()): InvitationOrganization {
         val dto = buildCreateInvitationOrganizationDto(ownerFullName = ownerFullName,
                 email = email,
                 organizationName = organizationName,
                 slug = slug,
                 customerSubscriptionDefinitionUuid = customerSubscriptionDefinitionUuid
         )
-        return invitationOrganizationService.create(dto)
+        val invitationOrganization = invitationOrganizationService.create(dto)
+        tokenInvitationOrganizationService.create(CreateTokenInvitationOrganizationDto(token, invitationOrganization.uuid))
+        return invitationOrganization;
     }
 }

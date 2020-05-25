@@ -17,9 +17,9 @@ class UserCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test create with invalid arguments`() {
-        val response1 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(clientName = null))
+        val response1 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(organizationName = null))
         resourceHelper.assertBasicErrorResultResponse(response1, UserErrorResponseModel.MISSING_CLIENT_NAME)
-        val response2 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(clientSlug = null))
+        val response2 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(organizationSlug = null))
         resourceHelper.assertBasicErrorResultResponse(response2, UserErrorResponseModel.MISSING_CLIENT_SLUG)
         val response3 = userResourceClient.createUser(resourceHelper.buildCreateUserRequest(fullName = null))
         resourceHelper.assertBasicErrorResultResponse(response3, UserErrorResponseModel.MISSING_FULL_NAME)

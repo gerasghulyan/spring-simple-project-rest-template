@@ -1,11 +1,8 @@
 package com.vntana.core.notification.payload.invitation.organization;
 
 import com.vntana.core.notification.payload.AbstractTemplateEmailSendPayload;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,50 +12,26 @@ import java.util.Map;
  */
 public class InvitationOrganizationEmailSendPayload extends AbstractTemplateEmailSendPayload {
 
-    private final String verificationLinkAddress;
+    public static final String PROPERTIES_LINK = "link";
+    public static final String PROPERTIES_ORGANIZATION_NAME = "organizationName";
+
+    private final Map<String, String> propertiesMap;
 
     public InvitationOrganizationEmailSendPayload(final String templateName,
                                                   final String recipientEmail,
                                                   final String senderEmail,
                                                   final String subject,
-                                                  final String verificationLinkAddress) {
+                                                  final String verificationLinkAddress,
+                                                  final String organizationName) {
 
         super(templateName, recipientEmail, senderEmail, subject);
-        this.verificationLinkAddress = verificationLinkAddress;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof InvitationOrganizationEmailSendPayload)) {
-            return false;
-        }
-        final InvitationOrganizationEmailSendPayload that = (InvitationOrganizationEmailSendPayload) o;
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(verificationLinkAddress, that.verificationLinkAddress)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
-                .append(verificationLinkAddress)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("verificationLinkAddress", verificationLinkAddress)
-                .toString();
+        propertiesMap = new HashMap<>();
+        propertiesMap.put(PROPERTIES_LINK, verificationLinkAddress);
+        propertiesMap.put(PROPERTIES_ORGANIZATION_NAME, organizationName);
     }
 
     @Override
     public Map<String, String> properties() {
-        return Collections.singletonMap("link", verificationLinkAddress);
+        return propertiesMap;
     }
 }

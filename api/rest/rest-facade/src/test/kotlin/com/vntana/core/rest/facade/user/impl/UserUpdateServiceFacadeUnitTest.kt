@@ -43,7 +43,7 @@ class UserUpdateServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
     fun `test update`() {
         // test data
         val organization = organizationHelper.buildOrganization()
-        val user = userHelper.buildUser(clientOrganization = organization)
+        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val request = restHelper.buildUpdateUserRequest(uuid = user.uuid)
         val dto = userHelper.buildUpdateUserDto(
                 request.uuid,

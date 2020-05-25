@@ -479,9 +479,9 @@ project(":api:rest:rest-resource") {
     sonarqube.skipProject = true
 
     dependencies {
-        implementation "com.vntana.commons:web-utils"
         api project(":api:rest:rest-facade")
         api project(":api:rest:rest-model")
+        api "com.vntana.commons:web-utils"
         api "com.vntana.commons:queue-commons"
         api "org.springframework.boot:spring-boot-starter-web"
         api "org.aspectj:aspectjrt"
@@ -537,6 +537,7 @@ project(":api:rest:rest-resource-integration-test") {
         testImplementation project(":indexation:indexation-producer")
         testImplementation project(":migration:migration-library")
         testImplementation project(":helper:rest-resource-test-helper")
+        testImplementation project(":notification")
         testImplementation 'com.vntana.payment:rest-client-payment'
         testImplementation "com.vntana.cache:vntana-cache"
         testImplementation "com.vntana.commons:queue-core-indexation-consumer-message"

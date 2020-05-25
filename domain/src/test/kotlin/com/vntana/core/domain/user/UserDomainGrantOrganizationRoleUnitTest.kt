@@ -16,8 +16,8 @@ class UserDomainGrantOrganizationRoleUnitTest : AbstractDomainUnitTest() {
     fun `test grant when user already has role in given client organization`() {
         val organization = Organization()
         val user = User(uuid(), uuid(), uuid())
-        user.grantOrganizationRole(organization)
-        assertThatThrownBy { user.grantOrganizationRole(organization) }
+        user.grantOrganizationOwnerRole(organization)
+        assertThatThrownBy { user.grantOrganizationOwnerRole(organization) }
                 .isExactlyInstanceOf(IllegalStateException::class.java)
     }
 
@@ -25,10 +25,10 @@ class UserDomainGrantOrganizationRoleUnitTest : AbstractDomainUnitTest() {
     fun `test grant`() {
         val organization = Organization()
         val user = User(uuid(), uuid(), uuid())
-        user.grantOrganizationRole(organization)
-        val role = user.roleOfOrganization(organization).get()
+        user.grantOrganizationOwnerRole(organization)
+        val role = user.roleOfOrganizationOwner(organization).get()
         assertThat(role.user).isEqualTo(user)
         assertThat(role.organization).isEqualTo(organization)
-        assertThat(role.userRole).isEqualTo(UserRole.ORGANIZATION_ADMIN)
+        assertThat(role.userRole).isEqualTo(UserRole.ORGANIZATION_OWNER)
     }
 }

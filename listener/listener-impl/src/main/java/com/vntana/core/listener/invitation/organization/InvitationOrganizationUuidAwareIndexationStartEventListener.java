@@ -1,5 +1,6 @@
 package com.vntana.core.listener.invitation.organization;
 
+import com.vntana.cache.service.organization.CombinedOrganizationLockService;
 import com.vntana.commons.indexation.listener.EntityUuidAwareLifecycleListener;
 import com.vntana.commons.indexation.payload.EntityLifecycle;
 import com.vntana.commons.queue.model.MessageActionType;
@@ -28,12 +29,15 @@ public class InvitationOrganizationUuidAwareIndexationStartEventListener impleme
     private static final Logger LOGGER = LoggerFactory.getLogger(InvitationOrganizationUuidAwareIndexationStartEventListener.class);
 
     private final InvitationOrganizationService invitationOrganizationService;
+    private final CombinedOrganizationLockService combinedOrganizationLockService;
     private final InvitationOrganizationUuidAwareActionProducer invitationOrganizationUuidAwareActionProducer;
 
     public InvitationOrganizationUuidAwareIndexationStartEventListener(final InvitationOrganizationService invitationOrganizationService,
+                                                                       final CombinedOrganizationLockService combinedOrganizationLockService,
                                                                        final InvitationOrganizationUuidAwareActionProducer invitationOrganizationUuidAwareActionProducer) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.invitationOrganizationService = invitationOrganizationService;
+        this.combinedOrganizationLockService = combinedOrganizationLockService;
         this.invitationOrganizationUuidAwareActionProducer = invitationOrganizationUuidAwareActionProducer;
     }
 
@@ -41,15 +45,16 @@ public class InvitationOrganizationUuidAwareIndexationStartEventListener impleme
     @Override
     public void handleEvent(final InvitationOrganizationUuidAwareLifecyclePayload payload) {
         Assert.notNull(payload, "The InvitationOrganizationUuidAwareLifecyclePayload should not be null");
-        LOGGER.debug("Trying to produce InvitationOrganizationUuidAwareActionQueueMessage to organization pre-indexation topic for uuid - {}", payload.entityUuid());
+        LOGGER.debug("Trying to produce InvitationOrganizationUuidAwareActionQueueMessage to invitation organization pre-indexation topic for uuid - {}", payload.entityUuid());
         if (isUpdateEventWhenEntityRemoved(payload)) {
             LOGGER.debug("Exiting from indexation. Organization with uuid - {} is deleted. Update is not supported", payload.entityUuid());
             return;
         }
+        combinedOrganizationLockService.lock(payload.entityUuid());
         invitationOrganizationUuidAwareActionProducer.produce(
                 new InvitationOrganizationUuidAwareActionQueueMessage(MessageActionType.valueOf(payload.lifecycle().name()), payload.entityUuid())
         );
-        LOGGER.debug("Successfully produced OrganizationUuidAwareActionQueueMessage to organization pre-indexation topic for uuid - {}", payload.entityUuid());
+        LOGGER.debug("Successfully produced InvitationOrganizationUuidAwareActionQueueMessage to invitation organization pre-indexation topic for uuid - {}", payload.entityUuid());
 
     }
 

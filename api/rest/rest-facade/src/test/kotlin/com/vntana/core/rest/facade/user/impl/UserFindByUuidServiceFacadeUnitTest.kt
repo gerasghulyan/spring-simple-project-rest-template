@@ -37,7 +37,7 @@ class UserFindByUuidServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() 
     
     @Test
     fun test() {
-        val user = userHelper.buildUser()
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
         val userUuid = user.uuid
         user.uuid = userUuid
         resetAll()

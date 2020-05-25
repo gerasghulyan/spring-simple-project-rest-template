@@ -29,7 +29,7 @@ public class InvitationOrganizationUuidAwareActionProducerImpl implements Invita
     private final KafkaTemplate<String, InvitationOrganizationUuidAwareActionQueueMessage> kafkaTemplate;
 
     public InvitationOrganizationUuidAwareActionProducerImpl(
-            @Value("${pre.indexation.organization.topic}") final String preIndexationInvitationOrganizationTopic,
+            @Value("${pre.indexation.invitation.organization.topic}") final String preIndexationInvitationOrganizationTopic,
             final KafkaTemplate<String, InvitationOrganizationUuidAwareActionQueueMessage> kafkaTemplate) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.preIndexationInvitationOrganizationTopic = preIndexationInvitationOrganizationTopic;

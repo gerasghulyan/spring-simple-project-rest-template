@@ -34,7 +34,7 @@ class AuthTokenCreateServiceUnitTest : AbstractAuthTokenServiceUnitTest() {
     @Test
     fun test() {
         resetAll()
-        val user = userCommonTestHelper.buildUser()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val dto = commonTestHelper.buildAuthTokenCreateDto(userUuid = user.uuid)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
         expect(authTokenRepository.save(isA(AuthToken::class.java))).andAnswer { getCurrentArguments()[0] as AuthToken }

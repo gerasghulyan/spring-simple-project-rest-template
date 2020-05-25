@@ -1,14 +1,14 @@
 package com.vntana.core.service.organization.impl;
 
+import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.organization.status.OrganizationStatus;
 import com.vntana.core.persistence.organization.OrganizationRepository;
 import com.vntana.core.service.common.component.SlugValidationComponent;
+import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
-import com.vntana.core.service.organization.dto.CreateOrganizationDto;
-import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
-import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
-import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
+import com.vntana.core.service.organization.dto.*;
+import com.vntana.core.service.organization.exception.OrganizationNotFoundForUuidException;
 import com.vntana.core.service.organization.exception.OrganizationOwnerNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +35,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
     private final SlugValidationComponent slugValidationComponent;
+    private final InvitationOrganizationService invitationOrganizationService;
 
     public OrganizationServiceImpl(
             final OrganizationRepository organizationRepository,
-            final SlugValidationComponent slugValidationComponent) {
+            final SlugValidationComponent slugValidationComponent,
+            final InvitationOrganizationService invitationOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.slugValidationComponent = slugValidationComponent;
         this.organizationRepository = organizationRepository;
+        this.invitationOrganizationService = invitationOrganizationService;
     }
 
     @Transactional
@@ -54,6 +57,19 @@ public class OrganizationServiceImpl implements OrganizationService {
                 dto.getSlug(),
                 dto.getImageBlobId(),
                 OrganizationStatus.ACTIVE
+        ));
+    }
+
+    @Transactional
+    @Override
+    public Organization createWithInvitation(final CreateOrganizationFromInvitationDto dto) {
+        Assert.notNull(dto, "The CreateOrganizationFromInvitationDto should not be null");
+        assertSlug(dto.getSlug());
+        final InvitationOrganization invitationOrganization = invitationOrganizationService.getByUuid(dto.getOrganizationInvitationUuid());
+        return organizationRepository.save(new Organization(
+                dto.getName(),
+                dto.getSlug(),
+                invitationOrganization
         ));
     }
 
@@ -77,7 +93,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization getByUuid(final String uuid) {
         return findByUuid(uuid).orElseThrow(() -> {
             LOGGER.error("Can not find organization for uuid - {}", uuid);
-            return new IllegalStateException(format("Can not find organization for uuid - %s", uuid));
+            return new OrganizationNotFoundForUuidException(uuid);
         });
     }
 
@@ -89,6 +105,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationRepository.existsByUuid(uuid);
     }
 
+    @Transactional
     @Override
     public Organization update(final UpdateOrganizationDto dto) {
         Assert.notNull(dto, "The UpdateOrganizationDto should not be null");
@@ -96,11 +113,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         final Organization organization = getByUuid(dto.getUuid());
         organization.setImageBlobId(dto.getImageBlobId());
         organization.setName(dto.getName());
+        dto.getStatus().ifPresent(organization::setStatus);
         organizationRepository.save(organization);
         LOGGER.debug("Successfully updating organization for dto - {}", dto);
         return organization;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public String getOrganizationOwnerEmail(final String organizationUuid) {
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
@@ -115,7 +134,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<Organization> getUserOrganizationsByUserUuidAndRole(final GetUserOrganizationsByUserUuidAndRoleDto dto) {
         Assert.notNull(dto, "The 'GetUserOrganizationsByUserUuidAndRoleDto' should not be null");
         LOGGER.debug("Retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
-        final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole().name());
+        final List<Organization> organizations = organizationRepository.findUserOrganizationsByUserUuidAndRole(dto.getUserUuid(), dto.getUserRole());
         LOGGER.debug("Successfully processed retrieving organizations of user having uuid - {} and role - {}", dto.getUserUuid(), dto.getUserRole());
         return organizations;
     }

@@ -40,7 +40,7 @@ class UserMakeVerifiedServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun `test when user is already verified`() {
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         user.verified = true
         val email = user.email
         resetAll()
@@ -53,7 +53,7 @@ class UserMakeVerifiedServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun `test`() {
-        val user = helper.buildUser()
+        val user = helper.buildUserWithOrganizationOwnerRole()
         val email = user.email
         resetAll()
         expect(userRepository.findByEmail(email)).andReturn(Optional.of(user))

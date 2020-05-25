@@ -1,6 +1,8 @@
 package com.vntana.core.rest.resource.indexation
 
+import com.vntana.core.helper.invitation.organization.InvitationOrganizationResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
+import com.vntana.core.indexation.producer.invitation.organization.InvitationOrganizationUuidAwareActionProducer
 import com.vntana.core.indexation.producer.organization.OrganizationUuidAwareActionProducer
 import com.vntana.core.rest.client.indexation.IndexationResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
@@ -22,11 +24,19 @@ abstract class AbstractIndexationWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 
     @Autowired
+    protected lateinit var invitationOrganizationResourceTestHelper: InvitationOrganizationResourceTestHelper
+
+    @Autowired
     protected lateinit var organizationUuidAwareActionProducer: OrganizationUuidAwareActionProducer
+
+    @Autowired
+    protected lateinit var invitationOrganizationUuidAwareActionProducer: InvitationOrganizationUuidAwareActionProducer
 
     @Before
     fun before() {
         Mockito.reset(organizationUuidAwareActionProducer)
+        Mockito.reset(invitationOrganizationUuidAwareActionProducer)
         Mockito.doNothing().`when`(organizationUuidAwareActionProducer).produce(ArgumentMatchers.any())
+        Mockito.doNothing().`when`(invitationOrganizationUuidAwareActionProducer).produce(ArgumentMatchers.any())
     }
 }

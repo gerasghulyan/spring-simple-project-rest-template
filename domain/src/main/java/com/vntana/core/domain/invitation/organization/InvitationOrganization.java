@@ -123,4 +123,8 @@ public class InvitationOrganization extends AbstractUuidAwareDomainEntity {
     public InvitationStatus getStatus() {
         return status;
     }
+
+    public void setStatus(final InvitationStatus status) {
+        this.status = status;
+    }
 }

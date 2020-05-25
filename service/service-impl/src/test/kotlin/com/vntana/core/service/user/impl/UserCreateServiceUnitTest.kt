@@ -8,59 +8,46 @@ import org.easymock.EasyMock.*
 import org.junit.Test
 
 /**
- * Created by Arthur Asatryan.
- * Date: 10/4/19
- * Time: 11:22 AM
+ * Created by Arman Gevorgyan.
+ * Date: 5/15/20
+ * Time: 4:26 PM
  */
 class UserCreateServiceUnitTest : AbstractUserServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
-        replayAll()
         assertThatThrownBy { userService.create(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.create(helper.buildUserCreateDto(fullName = null)) }
+        assertThatThrownBy { userService.create(helper.buildCreateUserDto(fullName = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.create(helper.buildUserCreateDto(email = null)) }
+        assertThatThrownBy { userService.create(helper.buildCreateUserDto(fullName = emptyString())) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.create(helper.buildUserCreateDto(password = null)) }
+        assertThatThrownBy { userService.create(helper.buildCreateUserDto(email = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.create(helper.buildUserCreateDto(organizationUuid = null)) }
+        assertThatThrownBy { userService.create(helper.buildCreateUserDto(email = emptyString())) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userService.create(helper.buildUserCreateDto(role = null)) }
+        assertThatThrownBy { userService.create(helper.buildCreateUserDto(password = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        verifyAll()
-    }
-
-    @Test
-    fun `test create when client organization not exists`() {
-        val createDto = helper.buildUserCreateDto()
-        resetAll()
-        expect(organizationService.getByUuid(createDto.organizationUuid)).andThrow(IllegalStateException())
+        assertThatThrownBy { userService.create(helper.buildCreateUserDto(password = emptyString())) }
+                .isExactlyInstanceOf(IllegalArgumentException::class.java)
         replayAll()
-        assertThatThrownBy { userService.create(createDto) }.isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
     }
 
     @Test
-    fun `test create`() {
-        val createDto = helper.buildUserCreateDto()
-        val organization = organizationHelper.buildOrganization()
+    fun test() {
+        resetAll()
         val encodedPassword = uuid()
-        resetAll()
-        expect(organizationService.getByUuid(createDto.organizationUuid)).andReturn(organization)
-        expect(passwordEncoder.encode(createDto.password)).andReturn(encodedPassword)
+        val dto = helper.buildCreateUserDto()
         expect(userRepository.save(isA(User::class.java))).andAnswer { getCurrentArguments()[0] as User }
+        expect(passwordEncoder.encode(dto.password)).andReturn(encodedPassword)
         replayAll()
-        userService.create(createDto).let {
+        userService.create(dto).let {
             assertThat(it).isNotNull
-            assertThat(it.fullName).isEqualTo(createDto.fullName)
-            assertThat(it.email).isEqualTo(createDto.email)
+            assertThat(it.fullName).isEqualTo(dto.fullName)
+            assertThat(it.email).isEqualTo(dto.email)
             assertThat(it.password).isEqualTo(encodedPassword)
-            val role = it.roleOfOrganization(organization).get()
-            assertThat(role.organization).isEqualTo(organization)
-            assertThat(role.user).isEqualTo(it)
         }
         verifyAll()
     }

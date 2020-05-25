@@ -22,6 +22,7 @@ class ClientOrganizationIntegrationTestHelper : ClientOrganizationCommonTestHelp
     @Autowired
     private lateinit var organizationService: OrganizationService
 
+    @Autowired
     private val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
     fun persistClientOrganization(

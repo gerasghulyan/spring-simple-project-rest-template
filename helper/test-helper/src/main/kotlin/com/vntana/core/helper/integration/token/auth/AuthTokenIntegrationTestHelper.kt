@@ -21,7 +21,7 @@ class AuthTokenIntegrationTestHelper : AuthTokenCommonTestHelper() {
     @Autowired
     private lateinit var userIntegrationTestHelper: UserIntegrationTestHelper
 
-    fun persistAuthToken(token: String = uuid(), userUuid: String = userIntegrationTestHelper.persistUser().uuid): AuthToken {
+    fun persistAuthToken(token: String = uuid(), userUuid: String = userIntegrationTestHelper.persistUserWithOwnerRole().uuid): AuthToken {
         val dto = buildAuthTokenCreateDto(userUuid, token)
         return authTokenService.create(dto)
     }

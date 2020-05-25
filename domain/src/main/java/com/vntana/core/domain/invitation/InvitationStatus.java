@@ -8,5 +8,6 @@ package com.vntana.core.domain.invitation;
 public enum InvitationStatus {
     INVITED,
     REJECTED,
-    ACCEPTED
+    ACCEPTED,
+    NOT_APPLICABLE
 }

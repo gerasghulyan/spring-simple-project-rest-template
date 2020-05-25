@@ -3,8 +3,11 @@ package com.vntana.core.rest.resource.invitation.organization
 import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient
 import com.vntana.core.helper.invitation.organization.InvitationOrganizationResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
+import com.vntana.core.helper.token.TokenResourceTestHelper
+import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.indexation.producer.invitation.organization.InvitationOrganizationUuidAwareActionProducer
 import com.vntana.core.rest.client.invitation.organization.InvitationOrganizationResourceClient
+import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import org.junit.Before
 import org.mockito.ArgumentMatchers
@@ -24,6 +27,9 @@ abstract class AbstractInvitationOrganizationWebTest : AbstractWebIntegrationTes
 
     @Autowired
     protected lateinit var resourceTestHelper: InvitationOrganizationResourceTestHelper
+    
+    @Autowired
+    protected lateinit var tokenResourceTestHelper: TokenResourceTestHelper
 
     @Autowired
     protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
@@ -34,8 +40,12 @@ abstract class AbstractInvitationOrganizationWebTest : AbstractWebIntegrationTes
     @Autowired
     protected lateinit var emailNotificationResourceClient: EmailNotificationResourceClient
 
-    fun email(): String = uuid() + "@gmail.com"
+    @Autowired
+    protected lateinit var userResourceClient: UserResourceClient
 
+    @Autowired
+    protected lateinit var userResourceTestHelper: UserResourceTestHelper
+    
     @Before
     fun before() {
         reset(invitationOrganizationUuidAwareActionProducer)

@@ -1,7 +1,11 @@
 package com.vntana.core.rest.facade.user;
 
+import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
+import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -11,11 +15,13 @@ import com.vntana.core.model.user.response.*;
 public interface UserServiceFacade {
     CreateUserResponse create(final CreateUserRequest request);
 
+    ExistsUserByEmailResponse existsByEmail(final String email);
+
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
     FindUserByUuidResponse findByUuid(final String uuid);
 
-    AccountUserResponse accountDetails(final String uuid, final String organizationUuid);
+    AccountUserResponse accountDetails(final String uuid);
 
     VerifyUserResponse verify(final String uuid);
 
@@ -28,4 +34,8 @@ public interface UserServiceFacade {
     UpdateUserResponse update(final UpdateUserRequest request);
 
     ChangeUserPasswordResponse changePassword(final ChangeUserPasswordRequest request);
+
+    GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid);
+
+    GetUsersByOrganizationResponse getByOrganizationUuid(final String organizationUuid);
 }

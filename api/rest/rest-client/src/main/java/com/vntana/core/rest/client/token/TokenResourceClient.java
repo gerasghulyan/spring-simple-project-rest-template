@@ -1,11 +1,13 @@
 package com.vntana.core.rest.client.token;
 
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
+import com.vntana.core.model.token.request.CreateTokenInvitationUserRequest;
 import com.vntana.core.model.token.response.TokenCreateResultResponse;
+import com.vntana.core.model.token.response.TokenExpireResultResponse;
+import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arman Gevorgyan.
@@ -17,4 +19,13 @@ public interface TokenResourceClient {
 
     @PostMapping(path = "organization-invitations")
     ResponseEntity<TokenCreateResultResponse> createTokenInvitationOrganization(@RequestBody final CreateTokenInvitationOrganizationRequest request);
+
+    @PostMapping(path = "user-invitations")
+    ResponseEntity<TokenCreateResultResponse> createTokenInvitationUser(@RequestBody final CreateTokenInvitationUserRequest request);
+
+    @GetMapping(path = "check-expiration")
+    ResponseEntity<TokenIsExpiredResultResponse> isExpire(@RequestParam("token") final String token);
+    
+    @PutMapping(path = "expire")
+    ResponseEntity<TokenExpireResultResponse> expire(@RequestBody final String token);
 }

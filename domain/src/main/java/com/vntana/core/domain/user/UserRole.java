@@ -7,6 +7,7 @@ package com.vntana.core.domain.user;
  */
 public enum UserRole {
     SUPER_ADMIN,
+    ORGANIZATION_OWNER,
     ORGANIZATION_ADMIN,
     CLIENT_ADMIN,
     ASSET_MANAGER

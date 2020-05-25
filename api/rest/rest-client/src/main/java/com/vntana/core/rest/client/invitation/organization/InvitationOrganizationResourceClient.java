@@ -1,16 +1,10 @@
 package com.vntana.core.rest.client.invitation.organization;
 
-import com.vntana.core.model.invitation.organization.request.CreateInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.request.SendInvitationOrganizationRequest;
-import com.vntana.core.model.invitation.organization.response.CreateInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.GetInvitationOrganizationResponse;
-import com.vntana.core.model.invitation.organization.response.SendInvitationOrganizationResponse;
+import com.vntana.core.model.invitation.organization.request.*;
+import com.vntana.core.model.invitation.organization.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Arman Gevorgyan.
@@ -28,4 +22,16 @@ public interface InvitationOrganizationResourceClient {
 
     @PostMapping("/send-invitation")
     ResponseEntity<SendInvitationOrganizationResponse> sendInvitation(@RequestBody SendInvitationOrganizationRequest request);
+
+    @PutMapping(path = "/status")
+    ResponseEntity<UpdateInvitationOrganizationStatusResponse> updateStatus(@RequestBody final UpdateInvitationOrganizationStatusRequest request);
+
+    @PutMapping(path = "/reject")
+    ResponseEntity<RejectInvitationOrganizationResponse> reject(@RequestBody final RejectInvitationOrganizationRequest request);
+
+    @PostMapping(path = "/accept")
+    ResponseEntity<AcceptInvitationOrganizationResponse> accept(@RequestBody final AcceptInvitationOrganizationRequest request);
+
+    @PostMapping(path = "/accept-sign-up")
+    ResponseEntity<AcceptInvitationOrganizationResponse> acceptAndSignUp(@RequestBody final AcceptAndSignUpInvitationOrganizationRequest request);
 }
