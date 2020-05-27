@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.auth.test
 
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.user.error.UserErrorResponseModel
+import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest
 import com.vntana.core.rest.resource.auth.AbstractAuthWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -42,6 +43,25 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
     }
 
     @Test
+    fun `test when is also super admin`() {
+        val response = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response()
+        val organizationUuid = response.organizationUuid
+        val userUuid = response.uuid
+        val request = userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(
+                uuid = userUuid,
+                organizationUuid = organizationUuid
+        )
+        userRoleResourceClient.grantSuperAdmin(UserRoleGrantSuperAdminRequest(userUuid))
+        authResourceClient.findByEmailAndOrganization(request).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+            assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
+            assertThat(it.response().uuid).isEqualTo(userUuid)
+            assertThat(it.response().superAdmin).isTrue()
+        }
+    }
+
+    @Test
     fun test() {
         val response = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response()
         val organizationUuid = response.organizationUuid
@@ -55,6 +75,7 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
             assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
             assertThat(it.response().uuid).isEqualTo(userUuid)
+            assertThat(it.response().superAdmin).isFalse()
         }
     }
 }

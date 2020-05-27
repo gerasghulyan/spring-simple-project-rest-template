@@ -4,8 +4,10 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.user.UserOrganizationAdminRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
+import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
 import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
 import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminResponse;
+import com.vntana.core.model.user.role.response.UserRoleGrantSuperAdminResponse;
 import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse;
 import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
@@ -39,6 +41,19 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         this.preconditionChecker = preconditionChecker;
         this.authTokenService = authTokenService;
         this.userRoleService = userRoleService;
+    }
+
+    @Transactional
+    @Override
+    public UserRoleGrantSuperAdminResponse grantSuperAdmin(final UserRoleGrantSuperAdminRequest request) {
+        LOGGER.debug("Granting user super admin role for request - {}", request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkGrantSuperAdmin(request);
+        if (error.isPresent()) {
+            return new UserRoleGrantSuperAdminResponse(error.getHttpStatus(), error.getError());
+        }
+        userRoleService.grantSuperAdminRole(request.getUserUuid());
+        LOGGER.debug("Successfully granted user super admin role for request - {}", request);
+        return new UserRoleGrantSuperAdminResponse(request.getUserUuid());
     }
 
     @Transactional
