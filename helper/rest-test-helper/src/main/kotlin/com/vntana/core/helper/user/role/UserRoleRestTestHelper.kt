@@ -2,6 +2,7 @@ package com.vntana.core.helper.user.role
 
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest
+import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest
 import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest
 
 /**
@@ -10,6 +11,8 @@ import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRe
  * Time: 11:58 AM
  */
 open class UserRoleRestTestHelper : AbstractRestTestHelper() {
+
+    fun buildUserRoleGrantSuperAdminRequest(userUuid: String? = uuid()): UserRoleGrantSuperAdminRequest = UserRoleGrantSuperAdminRequest(userUuid)
 
     fun buildUserRoleRevokeOrganizationAdminRequest(
             organizationUuid: String? = uuid(),

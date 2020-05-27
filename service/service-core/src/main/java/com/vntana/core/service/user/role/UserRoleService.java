@@ -1,9 +1,6 @@
 package com.vntana.core.service.user.role;
 
-import com.vntana.core.domain.user.AbstractUserRole;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
 
@@ -27,6 +24,8 @@ public interface UserRoleService {
     UserOrganizationOwnerRole grantOrganizationOwnerRole(final UserGrantOrganizationRoleDto dto);
 
     UserOrganizationAdminRole grantOrganizationAdminRole(final UserGrantOrganizationRoleDto dto);
+
+    UserSuperAdminRole grantSuperAdminRole(final String userUuid);
 
     void revokeOrganizationAdminRole(final UserRevokeOrganizationAdminRoleDto dto);
 }

@@ -2,8 +2,10 @@ package com.vntana.core.rest.resource.user.role;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
+import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
 import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
 import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminResponse;
+import com.vntana.core.model.user.role.response.UserRoleGrantSuperAdminResponse;
 import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse;
 import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import org.slf4j.Logger;
@@ -29,6 +31,14 @@ public class UserRoleResource {
     public UserRoleResource(final UserRoleServiceFacade userRoleServiceFacade) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userRoleServiceFacade = userRoleServiceFacade;
+    }
+
+    @PostMapping("super-admin")
+    public ResponseEntity<UserRoleGrantSuperAdminResponse> grantSuperAdmin(@RequestBody final UserRoleGrantSuperAdminRequest request) {
+        LOGGER.debug("Processing user-roles resource grantSuperAdmin for request - {}", request);
+        final UserRoleGrantSuperAdminResponse response = userRoleServiceFacade.grantSuperAdmin(request);
+        LOGGER.debug("Successfully processing user-roles resource grantSuperAdmin for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
     @PostMapping("organization-admin")

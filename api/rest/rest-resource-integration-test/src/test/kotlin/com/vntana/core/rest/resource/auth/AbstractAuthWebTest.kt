@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.auth
 
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.rest.client.auth.AuthResourceClient
+import com.vntana.core.rest.client.user.role.UserRoleResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -18,4 +19,6 @@ abstract class AbstractAuthWebTest : AbstractWebIntegrationTest() {
     @Autowired
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 
+    @Autowired
+    protected lateinit var userRoleResourceClient: UserRoleResourceClient
 }

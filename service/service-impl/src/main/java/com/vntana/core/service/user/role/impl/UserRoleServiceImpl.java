@@ -109,6 +109,18 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional
     @Override
+    public UserSuperAdminRole grantSuperAdminRole(final String userUuid) {
+        Assert.hasText(userUuid, "The userUuid should not be null or empty");
+        LOGGER.debug("Processing grantSuperAdminRole for user - {}", userUuid);
+        final User user = userService.getByUuid(userUuid);
+        UserSuperAdminRole userSuperAdminRole = new UserSuperAdminRole(user);
+        final UserSuperAdminRole saveSuperAdminRole = userRoleRepository.save(userSuperAdminRole);
+        LOGGER.debug("Successfully processed grantSuperAdminRole for user - {}", userUuid);
+        return saveSuperAdminRole;
+    }
+
+    @Transactional
+    @Override
     public void revokeOrganizationAdminRole(final UserRevokeOrganizationAdminRoleDto dto) {
         LOGGER.debug("Revoking admin role using dto - {}", dto);
         Assert.notNull(dto, "The UserRevokeOrganizationAdminRoleDto should not be null");
