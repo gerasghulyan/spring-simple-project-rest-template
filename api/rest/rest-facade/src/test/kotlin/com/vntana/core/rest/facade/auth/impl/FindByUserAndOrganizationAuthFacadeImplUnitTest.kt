@@ -38,7 +38,6 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         val userUuid = user.uuid
         val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
         expect(userService.findByUuid(userUuid)).andReturn(Optional.of(user))
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(role))
         replayAll()
         authFacade.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
@@ -59,7 +58,6 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         val userUuid = user.uuid
         val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
         expect(userService.findByUuid(userUuid)).andReturn(Optional.of(user))
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(adminRole))
         replayAll()
         authFacade.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
