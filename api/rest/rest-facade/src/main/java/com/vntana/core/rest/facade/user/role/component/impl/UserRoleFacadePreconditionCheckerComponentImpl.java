@@ -1,9 +1,11 @@
 package com.vntana.core.rest.facade.user.role.component.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
+import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
 import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
 import com.vntana.core.service.organization.OrganizationService;
@@ -12,6 +14,8 @@ import com.vntana.core.service.user.role.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
@@ -37,6 +41,20 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         this.organizationService = organizationService;
         this.userService = userService;
         this.userRoleService = userRoleService;
+    }
+
+    @Override
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantSuperAdmin(final UserRoleGrantSuperAdminRequest request) {
+        LOGGER.debug("Processing checkGrantSuperAdmin for request - {}", request);
+        final Optional<User> userOptional = userService.findByUuid(request.getUserUuid());
+        if (!userOptional.isPresent()) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.USER_NOT_FOUND);
+        }
+        if (userOptional.get().roleOfSuperAdmin().isPresent()) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
+        }
+        LOGGER.debug("Successfully processed checkGrantSuperAdmin for request - {}", request);
+        return SingleErrorWithStatus.empty();
     }
 
     @Override
