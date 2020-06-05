@@ -11,18 +11,23 @@ import org.junit.Test
  * Date: 10/9/19
  * Time: 12:16 PM
  */
-class OrganizationFindByUuidServiceIntegrationTest : AbstractOrganizationServiceIntegrationTest() {
+class OrganizationGetByUuidServiceIntegrationTest : AbstractOrganizationServiceIntegrationTest() {
     @Test
-    fun `test findByUuid`() {
+    fun `test getByUuid`() {
         // given
         integrationTestHelper.persistOrganization().let { organization ->
             // when
             flushAndClear()
-            organizationService.findByUuid(organization.uuid).let {
+            organizationService.getByUuid(organization.uuid).let {
                 // then
-                assertThat(it.isPresent).isTrue()
-                assertThat(it.get()).isEqualTo(organization)
+                assertThat(it).isEqualTo(organization)
             }
         }
+    }
+
+    @Test
+    fun `test getByUuid with invalid organization uuid`() {
+        assertThatThrownBy { organizationService.getByUuid(uuid()) }
+                .isExactlyInstanceOf(OrganizationNotFoundForUuidException::class.java)
     }
 }

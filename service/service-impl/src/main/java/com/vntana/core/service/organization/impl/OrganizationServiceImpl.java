@@ -145,7 +145,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationRepository.count();
     }
 
-    private Optional<Organization> findByUuid(final String uuid) {
+    @Override
+    public Optional<Organization> findByUuid(final String uuid) {
         Assert.hasText(uuid, "The organization uuid should not be null");
         LOGGER.debug("Trying to find organization with uuid - {}", uuid);
         return organizationRepository.findByUuid(uuid);
