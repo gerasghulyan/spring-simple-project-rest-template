@@ -1,6 +1,5 @@
 package com.vntana.core.rest.resource.user.test
 
-import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.rest.resource.user.AbstractUserWebTest
 import org.junit.Test
 
@@ -15,7 +14,7 @@ class UserSendResetPasswordEmailWebTest : AbstractUserWebTest() {
     fun `test when email not found`() {
         val request = resourceHelper.buildSendUserResetPasswordRequest()
         userResourceClient.sendResetPassword(request).let {
-            assertBasicErrorResultResponse(it, UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)
+            assertBasicSuccessResultResponse(it)
         }
     }
 

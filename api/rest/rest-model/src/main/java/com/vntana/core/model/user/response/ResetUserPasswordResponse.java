@@ -1,8 +1,7 @@
 package com.vntana.core.model.user.response;
 
-import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
+import com.vntana.commons.api.model.response.impl.EmptyResultResponseModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
-import com.vntana.core.model.user.response.model.ResetUserPasswordResponseModel;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * Date: 12/12/19
  * Time: 5:29 PM
  */
-public class ResetUserPasswordResponse extends AbstractResultResponseModel<ResetUserPasswordResponseModel, UserErrorResponseModel> {
+public class ResetUserPasswordResponse extends EmptyResultResponseModel<UserErrorResponseModel> {
 
     public ResetUserPasswordResponse() {
         super();
@@ -19,9 +18,5 @@ public class ResetUserPasswordResponse extends AbstractResultResponseModel<Reset
 
     public ResetUserPasswordResponse(final List<UserErrorResponseModel> errors) {
         super(errors);
-    }
-
-    public ResetUserPasswordResponse(final ResetUserPasswordResponseModel response) {
-        super(response);
     }
 }

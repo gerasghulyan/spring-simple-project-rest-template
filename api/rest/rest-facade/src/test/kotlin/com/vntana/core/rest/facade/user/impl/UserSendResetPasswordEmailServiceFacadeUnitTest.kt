@@ -1,10 +1,13 @@
 package com.vntana.core.rest.facade.user.impl
 
-import com.vntana.core.model.user.error.UserErrorResponseModel
+import com.vntana.core.domain.token.TokenResetPassword
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
+import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto
 import org.easymock.EasyMock.expect
+import org.easymock.EasyMock.isA
 import org.junit.Test
 import java.util.*
+
 
 /**
  * Created by Arman Gevorgyan.
@@ -20,20 +23,19 @@ class UserSendResetPasswordEmailServiceFacadeUnitTest : AbstractUserServiceFacad
         expect(userService.findByEmail(request.email)).andReturn(Optional.empty())
         replayAll()
         userServiceFacade.sendResetPasswordEmail(request).let {
-            assertBasicErrorResultResponse(it, UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)
+            assertBasicSuccessResultResponse(it)
         }
         verifyAll()
     }
 
     @Test
     fun `test when  not found`() {
-        val email = uuid()
-        val token = uuid()
-        val user = userHelper.buildUserWithOrganizationOwnerRole(email = email)
-        val request = restHelper.buildSendUserResetPasswordRequest(email= email, token = token)
+        val user = userHelper.buildUserWithOrganizationOwnerRole()
+        val request = restHelper.buildSendUserResetPasswordRequest(email = user.email)
         resetAll()
-        expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
-        expect(resetPasswordEmailSenderComponent.sendResetPasswordEmail(email, token))
+        expect(userService.findByEmail(user.email)).andReturn(Optional.of(user))
+        expect(tokenResetPasswordService.create(isA(CreateTokenResetPasswordDto::class.java))).andReturn(TokenResetPassword(request.token, user))
+        expect(resetPasswordEmailSenderComponent.sendResetPasswordEmail(request.email, request.token))
         replayAll()
         assertBasicSuccessResultResponse(userServiceFacade.sendResetPasswordEmail(request))
         verifyAll()

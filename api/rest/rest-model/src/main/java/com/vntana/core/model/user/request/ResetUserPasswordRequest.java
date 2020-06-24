@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class ResetUserPasswordRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
-    @JsonProperty("email")
-    private String email;
+    @JsonProperty("token")
+    private String token;
 
     @JsonProperty("password")
     private String password;
@@ -29,15 +29,15 @@ public class ResetUserPasswordRequest extends AbstractRequestModel implements Va
         super();
     }
 
-    public ResetUserPasswordRequest(final String email, final String password) {
-        this.email = email;
+    public ResetUserPasswordRequest(final String token, final String password) {
+        this.token = token;
         this.password = password;
     }
 
     @Override
     public List<UserErrorResponseModel> validate() {
-        if (StringUtils.isEmpty(email)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_EMAIL);
+        if (StringUtils.isEmpty(token)) {
+            return Collections.singletonList(UserErrorResponseModel.MISSING_TOKEN);
         }
         if (StringUtils.isEmpty(password)) {
             return Collections.singletonList(UserErrorResponseModel.MISSING_PASSWORD);
@@ -45,8 +45,8 @@ public class ResetUserPasswordRequest extends AbstractRequestModel implements Va
         return Collections.emptyList();
     }
 
-    public String getEmail() {
-        return email;
+    public String getToken() {
+        return token;
     }
 
     public String getPassword() {
@@ -63,7 +63,7 @@ public class ResetUserPasswordRequest extends AbstractRequestModel implements Va
         }
         final ResetUserPasswordRequest that = (ResetUserPasswordRequest) o;
         return new EqualsBuilder()
-                .append(email, that.email)
+                .append(token, that.token)
                 .append(password, that.password)
                 .isEquals();
     }
@@ -71,7 +71,7 @@ public class ResetUserPasswordRequest extends AbstractRequestModel implements Va
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(email)
+                .append(token)
                 .append(password)
                 .toHashCode();
     }
@@ -79,8 +79,6 @@ public class ResetUserPasswordRequest extends AbstractRequestModel implements Va
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("email", email)
-                .append("password", password)
                 .toString();
     }
 }

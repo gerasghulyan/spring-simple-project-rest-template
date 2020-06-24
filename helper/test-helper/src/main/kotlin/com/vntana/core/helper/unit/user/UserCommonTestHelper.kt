@@ -5,9 +5,11 @@ import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserOrganizationAdminRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
+import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto
 import com.vntana.core.service.user.dto.CreateUserDto
 import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto
 import com.vntana.core.service.user.dto.UpdateUserDto
+import java.time.LocalDateTime
 
 /**
  * Created by Arthur Asatryan.
@@ -61,11 +63,20 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
     ): User = User(fullName, email, password)
 
     fun buildUserInvalidEmail(): String = uuid()
+
     fun buildUpdateUserDto(
             uuid: String? = uuid(),
             imageBlobId: String? = uuid(),
             fullName: String? = uuid()
     ): UpdateUserDto {
         return UpdateUserDto(uuid, imageBlobId, fullName)
+    }
+
+    fun buildCreateTokenResetPasswordDto(
+            token: String? = uuid(),
+            userUuid: String? = uuid(),
+            expirationDate: LocalDateTime? = LocalDateTime.now().plusHours(1)
+    ): CreateTokenResetPasswordDto {
+        return CreateTokenResetPasswordDto(token, userUuid, expirationDate)
     }
 }

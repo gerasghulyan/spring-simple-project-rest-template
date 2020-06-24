@@ -117,9 +117,9 @@ public class UserResource {
 
     @PutMapping(path = "/reset-password")
     public ResponseEntity<ResetUserPasswordResponse> resetPassword(@RequestBody final ResetUserPasswordRequest request) {
-        LOGGER.debug("Processing user resource resetPassword method for email - {}", request.getEmail());
+        LOGGER.debug("Processing user resource resetPassword method for email - {}", request.getToken());
         final ResetUserPasswordResponse resultResponse = userServiceFacade.resetPassword(request);
-        LOGGER.debug("Successfully processed user resource resetPassword method for email - {}", request.getEmail());
+        LOGGER.debug("Successfully processed user resource resetPassword method for email - {}", request.getToken());
         return ResponseEntity.ok(resultResponse);
     }
 

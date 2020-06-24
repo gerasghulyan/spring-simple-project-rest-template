@@ -15,29 +15,45 @@ import java.util.*
 class UserResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
 
     @Test
-    fun `test when user not found`() {
+    fun `test when token not found`() {
         val request = restHelper.buildResetUserPasswordRequest()
         resetAll()
-        expect(userService.findByEmail(request.email)).andReturn(Optional.empty())
+        expect(tokenService.findByToken(request.token)).andReturn(Optional.empty())
         replayAll()
-        assertBasicErrorResultResponse(userServiceFacade.resetPassword(request), UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)
+        assertBasicErrorResultResponse(userServiceFacade.resetPassword(request), UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
+        verifyAll()
+    }
+
+    @Test
+    fun `test when token is not type of reset password token`() {
+        val request = restHelper.buildResetUserPasswordRequest()
+        val abstractToken = tokenCommonTestHelper.buildTokenInvitationOrganization()
+        resetAll()
+        expect(tokenService.findByToken(request.token)).andReturn(Optional.of(abstractToken))
+        replayAll()
+        assertBasicErrorResultResponse(userServiceFacade.resetPassword(request), UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
         verifyAll()
     }
 
     @Test
     fun test() {
         val newPassword = uuid()
-        val email = uuid()
-        val user = userHelper.buildUserWithOrganizationOwnerRole(email = email)
-        val updatedUser = userHelper.buildUserWithOrganizationOwnerRole(email = email, password = newPassword)
-        val request = restHelper.buildResetUserPasswordRequest(email = email, password = newPassword)
+        val token = uuid()
+        val user = userHelper.buildUserWithOrganizationOwnerRole(password = newPassword)
+        val request = restHelper.buildResetUserPasswordRequest(token = token, password = newPassword)
+        val resetPasswordToken = tokenCommonTestHelper.buildTokenResetPassword(token = request.token)
         resetAll()
-        expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
-        expect(userService.changePassword(user.uuid, newPassword)).andReturn(updatedUser)
+        expect(tokenService.findByToken(request.token)).andReturn(Optional.of(resetPasswordToken))
+        expect(userService.changePassword(
+                resetPasswordToken.user.uuid,
+                request.password
+        )).andReturn(user)
+        expect(authTokenService.expireAllByUser(resetPasswordToken.user.uuid))
+        expect(tokenService.expire(resetPasswordToken.uuid)).andReturn(resetPasswordToken)
         replayAll()
         userServiceFacade.resetPassword(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().email).isEqualTo(email)
+            assertThat(it.success()).isTrue()
         }
         verifyAll()
     }
