@@ -32,9 +32,10 @@ class UserSendResetPasswordEmailServiceFacadeUnitTest : AbstractUserServiceFacad
     fun `test when  not found`() {
         val user = userHelper.buildUserWithOrganizationOwnerRole()
         val request = restHelper.buildSendUserResetPasswordRequest(email = user.email)
+        val token = tokenCommonTestHelper.buildTokenResetPassword(token = request.token, user = user)
         resetAll()
         expect(userService.findByEmail(user.email)).andReturn(Optional.of(user))
-        expect(tokenResetPasswordService.create(isA(CreateTokenResetPasswordDto::class.java))).andReturn(TokenResetPassword(request.token, user))
+        expect(tokenResetPasswordService.create(isA(CreateTokenResetPasswordDto::class.java))).andReturn(token)
         expect(resetPasswordEmailSenderComponent.sendResetPasswordEmail(request.email, request.token))
         replayAll()
         assertBasicSuccessResultResponse(userServiceFacade.sendResetPasswordEmail(request))

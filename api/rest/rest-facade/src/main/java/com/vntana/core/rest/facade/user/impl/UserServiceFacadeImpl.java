@@ -54,10 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.vntana.core.model.user.error.UserErrorResponseModel.*;
@@ -249,8 +246,9 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     public ResetUserPasswordResponse resetPassword(final ResetUserPasswordRequest request) {
         LOGGER.debug("Processing facade resetPassword");
         return tokenService.findByToken(request.getToken())
-                .filter(abstractToken -> !abstractToken.isExpired())
                 .filter(abstractToken -> abstractToken instanceof TokenResetPassword)
+                .filter(abstractToken -> Objects.nonNull(abstractToken.getExpiration()))
+                .filter(abstractToken -> !LocalDateTime.now().isAfter(abstractToken.getExpiration()))
                 .map(TokenResetPassword.class::cast)
                 .map(resetPasswordToken -> {
                     LOGGER.debug("Processing user password change from reset password for user with email-{}", resetPasswordToken.getUser().getEmail());

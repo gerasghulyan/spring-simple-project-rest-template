@@ -27,11 +27,6 @@ public class TokenResetPassword extends AbstractToken {
     public TokenResetPassword() {
     }
 
-    public TokenResetPassword(final String token, final User user) {
-        super(token);
-        this.user = user;
-    }
-
     public TokenResetPassword(final String token, final LocalDateTime expiration, final User user) {
         super(token, expiration);
         this.user = user;

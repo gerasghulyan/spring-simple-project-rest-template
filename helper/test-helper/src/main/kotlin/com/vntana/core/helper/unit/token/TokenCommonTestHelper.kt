@@ -54,6 +54,7 @@ open class TokenCommonTestHelper : AbstractCommonTestHelper() {
 
     fun buildTokenResetPassword(
             token: String? = uuid(),
+            expiration: LocalDateTime? = LocalDateTime.now().plusHours(1),
             user: User? = userCommonTestHelper.buildUser()
-    ): TokenResetPassword = TokenResetPassword(token, user)
+    ): TokenResetPassword = TokenResetPassword(token, expiration, user)
 }

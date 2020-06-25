@@ -36,7 +36,7 @@ public class TokenResetPasswordServiceImpl implements TokenResetPasswordService 
         Assert.notNull(dto, "The AuthTokenCreateDto should not be null");
         LOGGER.debug("Creating ResetPasswordToken for user - {}", dto.getUserUuid());
         final User user = userService.getByUuid(dto.getUserUuid());
-        final TokenResetPassword token = new TokenResetPassword(dto.getToken(), user);
+        final TokenResetPassword token = new TokenResetPassword(dto.getToken(), dto.getExpirationDate(), user);
         final TokenResetPassword saveToken = tokenResetPasswordRepository.save(token);
         LOGGER.debug("Successfully creating auth token for user - {}", dto.getUserUuid());
         return saveToken;
