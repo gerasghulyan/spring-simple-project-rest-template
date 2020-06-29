@@ -245,11 +245,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     @Override
     public ResetUserPasswordResponse resetPassword(final ResetUserPasswordRequest request) {
         LOGGER.debug("Processing facade resetPassword");
-        return tokenService.findByToken(request.getToken())
-                .filter(abstractToken -> abstractToken instanceof TokenResetPassword)
-                .filter(abstractToken -> Objects.nonNull(abstractToken.getExpiration()))
-                .filter(abstractToken -> !LocalDateTime.now().isAfter(abstractToken.getExpiration()))
-                .map(TokenResetPassword.class::cast)
+        return tokenResetPasswordOptional(request.getToken())
                 .map(resetPasswordToken -> {
                     LOGGER.debug("Processing user password change from reset password for user with email-{}", resetPasswordToken.getUser().getEmail());
                     userService.changePassword(
@@ -347,6 +343,17 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return new GetUsersByOrganizationResponse(responseModel);
     }
 
+    @Override
+    public ResetUserPasswordResponse checkResetPasswordToken(final String token) {
+        LOGGER.debug("Processing facade checkResetPasswordToken");
+        if (StringUtils.isBlank(token)) {
+            return new ResetUserPasswordResponse(Collections.singletonList(INVALID_RESET_PASSWORD_TOKEN));
+        }
+        return tokenResetPasswordOptional(token)
+                .map(resetPasswordToken -> new ResetUserPasswordResponse())
+                .orElseGet(() -> new ResetUserPasswordResponse(Collections.singletonList(INVALID_RESET_PASSWORD_TOKEN)));
+    }
+
     private SingleErrorWithStatus<UserErrorResponseModel> checkGetByRoleAndOrganizationUuidPossibleErrors(final UserRoleModel userRole, final String organizationUuid) {
         if (userRole == null) {
             return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_USER_ROLE);
@@ -380,5 +387,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                         UserRole.ORGANIZATION_OWNER
                 )
         ).forEach(organizationLifecycleMediator::onUpdated);
+    }
+
+    private Optional<TokenResetPassword> tokenResetPasswordOptional(final String token) {
+        return tokenService.findByToken(token)
+                .filter(abstractToken -> abstractToken instanceof TokenResetPassword)
+                .filter(abstractToken -> Objects.nonNull(abstractToken.getExpiration()))
+                .filter(abstractToken -> !LocalDateTime.now().isAfter(abstractToken.getExpiration()))
+                .map(TokenResetPassword.class::cast);
     }
 }

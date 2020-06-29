@@ -38,4 +38,6 @@ public interface UserServiceFacade {
     GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid);
 
     GetUsersByOrganizationResponse getByOrganizationUuid(final String organizationUuid);
+
+    ResetUserPasswordResponse checkResetPasswordToken(final String token);
 }

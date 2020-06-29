@@ -123,6 +123,14 @@ public class UserResource {
         return ResponseEntity.ok(resultResponse);
     }
 
+    @GetMapping(path = "/check-reset-password-token/{token}")
+    public ResponseEntity<ResetUserPasswordResponse> checkResetPasswordToken(@PathVariable("token") final String token) {
+        LOGGER.debug("Processing user resource checkResetPassword method for email - {}", token);
+        final ResetUserPasswordResponse resultResponse = userServiceFacade.checkResetPasswordToken(token);
+        LOGGER.debug("Successfully processed user resource checkResetPassword method for email - {}", token);
+        return ResponseEntity.ok(resultResponse);
+    }
+
     @PutMapping(path = "/change-password")
     public ResponseEntity<ChangeUserPasswordResponse> changePassword(@RequestBody final ChangeUserPasswordRequest request) {
         LOGGER.debug("Processing user resource changePassword method for request - {}", request);

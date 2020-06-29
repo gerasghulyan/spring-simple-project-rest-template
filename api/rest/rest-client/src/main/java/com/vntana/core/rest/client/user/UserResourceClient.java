@@ -52,6 +52,9 @@ public interface UserResourceClient {
     @PutMapping(path = "/reset-password")
     ResetUserPasswordResponse resetPassword(@RequestBody final ResetUserPasswordRequest request);
 
+    @GetMapping(path = "/check-reset-password-token/{token}")
+    ResetUserPasswordResponse checkResetPasswordToken(@PathVariable("token") final String token);
+
     @PutMapping(path = "/change-password")
     ChangeUserPasswordResponse changePassword(@RequestBody final ChangeUserPasswordRequest request);
 
