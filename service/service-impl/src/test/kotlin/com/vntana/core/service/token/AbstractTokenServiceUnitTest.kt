@@ -30,12 +30,10 @@ abstract class AbstractTokenServiceUnitTest : AbstractServiceUnitTest() {
     protected lateinit var tokenRepository: TokenRepository
     
     protected val helper = TokenCommonTestHelper()
-
-    protected val invitationOrganizationCommonTestHelper = InvitationOrganizationCommonTestHelper()
-
+    
     @Before
     fun before() {
-        tokenService = TokenServiceImpl(invitationOrganizationService, tokenRepository)
+        tokenService = TokenServiceImpl(tokenRepository)
     }
 
 }

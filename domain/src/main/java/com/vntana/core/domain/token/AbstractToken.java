@@ -38,14 +38,9 @@ public abstract class AbstractToken extends AbstractUuidAwareDomainEntity {
         this.token = token;
     }
 
-    public abstract TokenType getType();
-
-    public String getToken() {
-        return token;
-    }
-
-    public LocalDateTime getExpiration() {
-        return expiration;
+    public AbstractToken(final String token, final LocalDateTime expiration) {
+        this.token = token;
+        this.expiration = expiration;
     }
 
     @Override
@@ -77,12 +72,24 @@ public abstract class AbstractToken extends AbstractUuidAwareDomainEntity {
     }
 
     public void expire() {
-        if (expiration == null) {
-            this.expiration = LocalDateTime.now();
-        }
+        this.expiration = LocalDateTime.now();
     }
 
     public boolean isExpired() {
         return expiration != null;
+    }
+
+    public abstract TokenType getType();
+
+    public String getToken() {
+        return token;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(final LocalDateTime expiration) {
+        this.expiration = expiration;
     }
 }

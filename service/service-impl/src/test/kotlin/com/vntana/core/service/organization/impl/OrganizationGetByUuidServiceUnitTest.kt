@@ -14,7 +14,7 @@ import java.util.*
  * Date: 10/9/19
  * Time: 12:07 PM
  */
-class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTest() {
+class OrganizationGetByUuidServiceUnitTest : AbstractOrganizationServiceUnitTest() {
     @Test
     fun `test findByUuid with invalid arguments`() {
         // test data
@@ -22,9 +22,9 @@ class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTes
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { organizationService.findByUuid(null) }
+        assertThatThrownBy { organizationService.getByUuid(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationService.findByUuid(StringUtils.EMPTY) }
+        assertThatThrownBy { organizationService.getByUuid(StringUtils.EMPTY) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -38,9 +38,8 @@ class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTes
         expect(organizationRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
-        organizationService.findByUuid(uuid).let { 
-            assertThat(it.isPresent).isFalse()
-        }
+        assertThatThrownBy { organizationService.getByUuid(uuid) }
+                .isExactlyInstanceOf(OrganizationNotFoundForUuidException::class.java)
         verifyAll()
     }
 
@@ -54,9 +53,8 @@ class OrganizationFindByUuidServiceUnitTest : AbstractOrganizationServiceUnitTes
         expect(organizationRepository.findByUuid(uuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
-        organizationService.findByUuid(uuid).let {
-            assertThat(it.isPresent).isTrue()
-            assertThat(it.get()).isEqualTo(clientOrganization)
+        organizationService.getByUuid(uuid).let {
+            assertThat(it).isEqualTo(clientOrganization)
         }
         verifyAll()
     }

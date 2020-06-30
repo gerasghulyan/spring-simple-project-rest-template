@@ -32,4 +32,6 @@ public interface OrganizationService {
     List<Organization> getUserOrganizationsByUserUuidAndRole(final GetUserOrganizationsByUserUuidAndRoleDto dto);
 
     Long count();
+
+    Optional<Organization> findByUuid(final String uuid);
 }

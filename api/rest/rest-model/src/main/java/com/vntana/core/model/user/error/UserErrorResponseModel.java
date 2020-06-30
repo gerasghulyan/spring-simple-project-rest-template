@@ -31,5 +31,6 @@ public enum UserErrorResponseModel implements ErrorResponseModel {
     PASSWORD_MISMATCH,
     INVALID_VERIFICATION_TOKEN,
     ORGANIZATION_ROLE_CONFLICT,
-    NOT_A_SUPER_ADMIN
+    NOT_A_SUPER_ADMIN,
+    MISSING_TOKEN
 }

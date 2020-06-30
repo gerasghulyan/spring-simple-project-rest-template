@@ -1,9 +1,11 @@
 package com.vntana.core.rest.client.indexation;
 
 import com.vntana.commons.api.model.response.indexation.IndexationResultResponse;
+import com.vntana.core.model.indexation.OrganizationIndexationByUuidResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * Created by Manuk Gharslyan.
@@ -18,4 +20,7 @@ public interface IndexationResourceClient {
 
     @GetMapping("/organization-invitations")
     ResponseEntity<IndexationResultResponse> indexAllOrganizationInvitations();
+
+    @GetMapping("/organizations/{uuid}")
+    ResponseEntity<OrganizationIndexationByUuidResultResponse> reindexByUuid(@PathVariable("uuid") final String uuid);
 }

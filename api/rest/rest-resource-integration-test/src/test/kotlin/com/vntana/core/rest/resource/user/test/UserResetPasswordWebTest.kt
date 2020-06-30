@@ -2,7 +2,6 @@ package com.vntana.core.rest.resource.user.test
 
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.rest.resource.user.AbstractUserWebTest
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 /**
@@ -15,12 +14,12 @@ class UserResetPasswordWebTest : AbstractUserWebTest() {
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
-                userResourceClient.resetPassword(resourceHelper.buildResetUserPasswordRequest(email = null)),
-                UserErrorResponseModel.MISSING_EMAIL
+                userResourceClient.resetPassword(resourceHelper.buildResetUserPasswordRequest(token = null)),
+                UserErrorResponseModel.MISSING_TOKEN
         )
         assertBasicErrorResultResponse(
-                userResourceClient.resetPassword(resourceHelper.buildResetUserPasswordRequest(email = "")),
-                UserErrorResponseModel.MISSING_EMAIL
+                userResourceClient.resetPassword(resourceHelper.buildResetUserPasswordRequest(token = "")),
+                UserErrorResponseModel.MISSING_TOKEN
         )
         assertBasicErrorResultResponse(
                 userResourceClient.resetPassword(resourceHelper.buildResetUserPasswordRequest(password = null)),
@@ -35,19 +34,24 @@ class UserResetPasswordWebTest : AbstractUserWebTest() {
     @Test
     fun `test when user not found`() {
         val request = resourceHelper.buildResetUserPasswordRequest()
-        assertBasicErrorResultResponse(userResourceClient.resetPassword(request), UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)
+        assertBasicErrorResultResponse(userResourceClient.resetPassword(request), UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
     }
 
     @Test
     fun test() {
-        val email = resourceHelper.email()
+        val token = uuid()
         val newPassword = uuid()
-        val createRequest = resourceHelper.buildCreateUserRequest(email = email)
+        val createRequest = resourceHelper.buildCreateUserRequest()
         resourceHelper.persistUser(createRequest)
-        val request = resourceHelper.buildResetUserPasswordRequest(email = email, password = newPassword)
+        resourceHelper.persistTokenResetPassword(createRequest.email, token)
+        val request = resourceHelper.buildResetUserPasswordRequest(token = token, password = newPassword)
+        //first time the request needs to success
         userResourceClient.resetPassword(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().email).isEqualTo(email)
+        }
+        //second time the request needs to fail
+        userResourceClient.resetPassword(request).let {
+            assertBasicErrorResultResponse(it, UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
         }
     }
 }

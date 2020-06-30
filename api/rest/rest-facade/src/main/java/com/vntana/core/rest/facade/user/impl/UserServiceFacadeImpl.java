@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user.impl;
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.token.TokenResetPassword;
 import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserOrganizationOwnerRole;
@@ -23,7 +24,6 @@ import com.vntana.core.model.user.response.get.model.GetUsersByRoleAndOrganizati
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByUuidResponseModel;
-import com.vntana.core.model.user.response.model.ResetUserPasswordResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent;
@@ -34,6 +34,10 @@ import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
+import com.vntana.core.service.token.TokenService;
+import com.vntana.core.service.token.auth.AuthTokenService;
+import com.vntana.core.service.token.reset_password.TokenResetPasswordService;
+import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
@@ -44,14 +48,13 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.vntana.core.model.user.error.UserErrorResponseModel.*;
@@ -76,6 +79,10 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final UserVerificationSenderComponent verificationSenderComponent;
     private final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent;
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
+    private final TokenService tokenService;
+    private final TokenResetPasswordService tokenResetPasswordService;
+    private final AuthTokenService authTokenService;
+    private final Long resetPasswordTokenExpirationInMinutes;
 
     public UserServiceFacadeImpl(final UserService userService,
                                  final UserRoleService userRoleService,
@@ -85,8 +92,11 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                                  final EmailValidationComponent emailValidationComponent,
                                  final UserVerificationSenderComponent verificationSenderComponent,
                                  final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent,
-                                 final OrganizationLifecycleMediator organizationLifecycleMediator) {
-        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+                                 final OrganizationLifecycleMediator organizationLifecycleMediator,
+                                 final TokenService tokenService,
+                                 final TokenResetPasswordService tokenResetPasswordService,
+                                 final AuthTokenService authTokenService,
+                                 @Value("${reset.password.token.expiration.minutes}") final Long resetPasswordTokenExpirationInMinutes) {
         this.userService = userService;
         this.userRoleService = userRoleService;
         this.organizationService = organizationService;
@@ -96,6 +106,11 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         this.verificationSenderComponent = verificationSenderComponent;
         this.resetPasswordEmailSenderComponent = resetPasswordEmailSenderComponent;
         this.organizationLifecycleMediator = organizationLifecycleMediator;
+        this.tokenService = tokenService;
+        this.tokenResetPasswordService = tokenResetPasswordService;
+        this.authTokenService = authTokenService;
+        this.resetPasswordTokenExpirationInMinutes = resetPasswordTokenExpirationInMinutes;
+        LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
     @Override
@@ -212,27 +227,37 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return sendUserVerificationResponse;
     }
 
+    @Transactional
     @Override
     public SendUserResetPasswordResponse sendResetPasswordEmail(final SendUserResetPasswordRequest request) {
         LOGGER.debug("Processing facade sendResetPasswordEmail for request - {}", request);
-        final Optional<User> userOptional = userService.findByEmail(request.getEmail());
-        if (!userOptional.isPresent()) {
-            return new SendUserResetPasswordResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL));
-        }
-        resetPasswordEmailSenderComponent.sendResetPasswordEmail(request.getEmail(), request.getToken());
-        LOGGER.debug("Successfully processed facade sendResetPasswordEmail for request - {}", request);
+        userService.findByEmail(request.getEmail()).ifPresent(user -> {
+            final LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(resetPasswordTokenExpirationInMinutes);
+            final CreateTokenResetPasswordDto dto = new CreateTokenResetPasswordDto(request.getToken(), user.getUuid(), expirationDate);
+            tokenResetPasswordService.create(dto);
+            resetPasswordEmailSenderComponent.sendResetPasswordEmail(request.getEmail(), request.getToken());
+            LOGGER.debug("Successfully processed facade sendResetPasswordEmail for request - {}", request);
+        });
         return new SendUserResetPasswordResponse();
     }
 
+    @Transactional
     @Override
     public ResetUserPasswordResponse resetPassword(final ResetUserPasswordRequest request) {
-        LOGGER.debug("Processing facade resetPassword for email - {}", request.getEmail());
-        final ResetUserPasswordResponse response = userService.findByEmail(request.getEmail())
-                .map(user -> userService.changePassword(user.getUuid(), request.getPassword()).getEmail())
-                .map(email -> new ResetUserPasswordResponse(new ResetUserPasswordResponseModel(email)))
-                .orElse(new ResetUserPasswordResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_EMAIL)));
-        LOGGER.debug("Successfully processed facade resetPassword for email - {}", request.getEmail());
-        return response;
+        LOGGER.debug("Processing facade resetPassword");
+        return tokenResetPasswordOptional(request.getToken())
+                .map(resetPasswordToken -> {
+                    LOGGER.debug("Processing user password change from reset password for user with email-{}", resetPasswordToken.getUser().getEmail());
+                    userService.changePassword(
+                            resetPasswordToken.getUser().getUuid(),
+                            request.getPassword()
+                    );
+                    authTokenService.expireAllByUser(resetPasswordToken.getUser().getUuid());
+                    tokenService.expire(resetPasswordToken.getUuid());
+                    LOGGER.debug("Successfully processed facade resetPassword for email - {}", resetPasswordToken.getUser().getEmail());
+                    return new ResetUserPasswordResponse();
+                })
+                .orElseGet(() -> new ResetUserPasswordResponse(Collections.singletonList(INVALID_RESET_PASSWORD_TOKEN)));
     }
 
     @Transactional
@@ -318,6 +343,17 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return new GetUsersByOrganizationResponse(responseModel);
     }
 
+    @Override
+    public ResetUserPasswordResponse checkResetPasswordToken(final String token) {
+        LOGGER.debug("Processing facade checkResetPasswordToken");
+        if (StringUtils.isBlank(token)) {
+            return new ResetUserPasswordResponse(Collections.singletonList(INVALID_RESET_PASSWORD_TOKEN));
+        }
+        return tokenResetPasswordOptional(token)
+                .map(resetPasswordToken -> new ResetUserPasswordResponse())
+                .orElseGet(() -> new ResetUserPasswordResponse(Collections.singletonList(INVALID_RESET_PASSWORD_TOKEN)));
+    }
+
     private SingleErrorWithStatus<UserErrorResponseModel> checkGetByRoleAndOrganizationUuidPossibleErrors(final UserRoleModel userRole, final String organizationUuid) {
         if (userRole == null) {
             return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.MISSING_USER_ROLE);
@@ -351,5 +387,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                         UserRole.ORGANIZATION_OWNER
                 )
         ).forEach(organizationLifecycleMediator::onUpdated);
+    }
+
+    private Optional<TokenResetPassword> tokenResetPasswordOptional(final String token) {
+        return tokenService.findByToken(token)
+                .filter(abstractToken -> abstractToken instanceof TokenResetPassword)
+                .filter(abstractToken -> Objects.nonNull(abstractToken.getExpiration()))
+                .filter(abstractToken -> !LocalDateTime.now().isAfter(abstractToken.getExpiration()))
+                .map(TokenResetPassword.class::cast);
     }
 }

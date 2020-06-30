@@ -27,4 +27,13 @@ class UserResourceTestHelper : UserRestTestHelper() {
     }
 
     fun buildUserInvalidEmail(): String = uuid()
+
+    fun persistTokenResetPassword(
+            email: String? = uuid(),
+            token: String? = uuid()
+    ): String? {
+        val request = buildSendUserResetPasswordRequest(email, token)
+        userResourceClient.sendResetPassword(request)
+        return token
+    }
 }
