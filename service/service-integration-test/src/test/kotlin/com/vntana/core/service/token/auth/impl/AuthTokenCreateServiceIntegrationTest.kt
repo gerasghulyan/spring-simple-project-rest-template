@@ -15,11 +15,10 @@ class AuthTokenCreateServiceIntegrationTest : AbstractAuthTokenServiceIntegratio
     fun test() {
         val user = userIntegrationTestHelper.persistUserWithOwnerRole()
         val dto = integrationTestHelper.buildAuthTokenCreateDto(userUuid = user.uuid)
-        authTokenService.create(dto).let {
-            flushAndClear()
-            assertThat(it.isExpired).isFalse()
-            assertThat(it.user).isEqualTo(user)
-            assertThat(it.token).isEqualTo(dto.token)
-        }
+        val token = authTokenService.create(dto)
+        flushAndClear()
+        assertThat(token.isExpired).isFalse()
+        assertThat(token.user).isEqualTo(user)
+        assertThat(token.token).isEqualTo(dto.token)
     }
 }

@@ -54,7 +54,7 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
         userRoleResourceClient.grantSuperAdmin(UserRoleGrantSuperAdminRequest(userUuid))
         authResourceClient.findByEmailAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+            assertThat(it.response().userRole).isEqualTo(UserRoleModel.SUPER_ADMIN)
             assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
             assertThat(it.response().uuid).isEqualTo(userUuid)
             assertThat(it.response().superAdmin).isTrue()

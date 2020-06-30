@@ -2,7 +2,6 @@ package com.vntana.core.service.token.impl;
 
 import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.persistence.token.TokenRepository;
-import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.exception.TokenNotFoundException;
 import com.vntana.core.service.token.exception.TokenNotFoundForUuidException;
@@ -24,12 +23,10 @@ public class TokenServiceImpl implements TokenService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenServiceImpl.class);
 
-    private final InvitationOrganizationService invitationOrganizationService;
     private final TokenRepository tokenRepository;
 
-    public TokenServiceImpl(final InvitationOrganizationService invitationOrganizationService, final TokenRepository tokenRepository) {
+    public TokenServiceImpl(final TokenRepository tokenRepository) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
-        this.invitationOrganizationService = invitationOrganizationService;
         this.tokenRepository = tokenRepository;
     }
 

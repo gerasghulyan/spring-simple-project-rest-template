@@ -8,11 +8,11 @@ import org.junit.Test
 import java.util.*
 
 /**
- * Created by Arman Gevorgyan.
+ * Created by Geras Ghulyan.
  * Date: 12/12/19
  * Time: 6:59 PM
  */
-class UserResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
+class UserCheckResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
 
     @Test
     fun `test when token not found`() {
@@ -20,7 +20,7 @@ class UserResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest
         resetAll()
         expect(tokenService.findByToken(request.token)).andReturn(Optional.empty())
         replayAll()
-        assertBasicErrorResultResponse(userServiceFacade.resetPassword(request), UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
+        assertBasicErrorResultResponse(userServiceFacade.checkResetPasswordToken(request.token), UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
         verifyAll()
     }
 
@@ -31,7 +31,7 @@ class UserResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest
         resetAll()
         expect(tokenService.findByToken(request.token)).andReturn(Optional.of(abstractToken))
         replayAll()
-        assertBasicErrorResultResponse(userServiceFacade.resetPassword(request), UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
+        assertBasicErrorResultResponse(userServiceFacade.checkResetPasswordToken(request.token), UserErrorResponseModel.INVALID_RESET_PASSWORD_TOKEN)
         verifyAll()
     }
 
@@ -44,14 +44,8 @@ class UserResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest
         val resetPasswordToken = tokenCommonTestHelper.buildTokenResetPassword(token = request.token)
         resetAll()
         expect(tokenService.findByToken(request.token)).andReturn(Optional.of(resetPasswordToken))
-        expect(userService.changePassword(
-                resetPasswordToken.user.uuid,
-                request.password
-        )).andReturn(user)
-        expect(authTokenService.expireAllByUser(resetPasswordToken.user.uuid))
-        expect(tokenService.expire(resetPasswordToken.uuid)).andReturn(resetPasswordToken)
         replayAll()
-        userServiceFacade.resetPassword(request).let {
+        userServiceFacade.checkResetPasswordToken(request.token).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.success()).isTrue()
         }

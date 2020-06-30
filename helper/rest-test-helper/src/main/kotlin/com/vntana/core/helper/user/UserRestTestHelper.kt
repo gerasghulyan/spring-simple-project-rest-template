@@ -32,8 +32,8 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
     fun buildSendUserResetPasswordRequest(email: String? = uuid(), token: String? = uuid()
     ): SendUserResetPasswordRequest = SendUserResetPasswordRequest(email, token)
 
-    fun buildResetUserPasswordRequest(email: String? = uuid(), password: String? = uuid()
-    ): ResetUserPasswordRequest = ResetUserPasswordRequest(email, password)
+    fun buildResetUserPasswordRequest(token: String? = uuid(), password: String? = uuid()
+    ): ResetUserPasswordRequest = ResetUserPasswordRequest(token, password)
 
     fun email(): String = uuid() + "@gmail.com"
 
