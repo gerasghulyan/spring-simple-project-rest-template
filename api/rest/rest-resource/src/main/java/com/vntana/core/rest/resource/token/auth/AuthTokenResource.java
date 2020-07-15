@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.token.auth;
 
 import com.vntana.core.model.token.auth.request.AuthTokenPersistRequest;
 import com.vntana.core.model.token.auth.request.AuthTokenPersistWithOrganizationRequest;
+import com.vntana.core.model.token.auth.request.AuthTokenRequest;
 import com.vntana.core.model.token.auth.response.*;
 import com.vntana.core.rest.facade.token.auth.AuthTokenServiceFacade;
 import org.slf4j.Logger;
@@ -63,10 +64,10 @@ public class AuthTokenResource {
         return ResponseEntity.ok(resultResponse);
     }
 
-    @GetMapping("tokens/{token}")
-    public ResponseEntity<AuthTokenFindByTokenResponse> findByToken(@PathVariable("token") final String token) {
+    @PostMapping("tokens")
+    public ResponseEntity<AuthTokenFindByTokenResponse> findByToken(@RequestBody final AuthTokenRequest request) {
         LOGGER.debug("Retrieving auth-token by token");
-        final AuthTokenFindByTokenResponse resultResponse = authTokenServiceFacade.findByToken(token);
+        final AuthTokenFindByTokenResponse resultResponse = authTokenServiceFacade.findByToken(request.getToken());
         LOGGER.debug("Successfully retrieved auth-token by token");
         return ResponseEntity.ok(resultResponse);
     }

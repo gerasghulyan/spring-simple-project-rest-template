@@ -2,6 +2,7 @@ package com.vntana.core.rest.client.token.auth;
 
 import com.vntana.core.model.token.auth.request.AuthTokenPersistRequest;
 import com.vntana.core.model.token.auth.request.AuthTokenPersistWithOrganizationRequest;
+import com.vntana.core.model.token.auth.request.AuthTokenRequest;
 import com.vntana.core.model.token.auth.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,6 @@ public interface AuthTokenResourceClient {
     @DeleteMapping("expiration/{token}")
     ResponseEntity<AuthTokenExpireResultResponse> expire(@PathVariable("token") final String token);
 
-    @GetMapping("tokens/{token}")
-    ResponseEntity<AuthTokenFindByTokenResponse> findByToken(@PathVariable("token") final String token);
+    @PostMapping("tokens")
+    ResponseEntity<AuthTokenFindByTokenResponse> findByToken(@RequestBody final AuthTokenRequest request);
 }

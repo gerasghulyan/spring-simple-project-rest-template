@@ -3,6 +3,7 @@ package com.vntana.core.helper.token.auth
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.token.auth.request.AuthTokenPersistRequest
 import com.vntana.core.model.token.auth.request.AuthTokenPersistWithOrganizationRequest
+import com.vntana.core.model.token.auth.request.AuthTokenRequest
 import java.time.LocalDateTime
 
 /**
@@ -24,4 +25,8 @@ open class AuthTokenRestTestHelper : AbstractRestTestHelper() {
             organizationUuid: String? = uuid(),
             expiration: LocalDateTime? = LocalDateTime.now().plusDays(10)
     ): AuthTokenPersistWithOrganizationRequest = AuthTokenPersistWithOrganizationRequest(userUuid, token, organizationUuid, expiration)
+
+    fun buildAuthTokenRequest(
+            token: String? = uuid()
+    ): AuthTokenRequest = AuthTokenRequest(token)
 }
