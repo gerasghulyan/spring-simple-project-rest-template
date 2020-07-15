@@ -19,7 +19,7 @@ import java.util.Objects;
  * Date: 3/23/20
  * Time: 10:35 AM
  */
-public class AuthTokenPersistRequest extends AbstractRequestModel implements ValidatableRequest<AuthTokenErrorResponseModel> {
+public class AuthTokenPersistWithOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<AuthTokenErrorResponseModel> {
 
     @JsonProperty("userUuid")
     private String userUuid;
@@ -27,17 +27,21 @@ public class AuthTokenPersistRequest extends AbstractRequestModel implements Val
     @JsonProperty("token")
     private String token;
 
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
+
     @JsonProperty("expiration")
     private LocalDateTime expiration;
 
-    public AuthTokenPersistRequest() {
+    public AuthTokenPersistWithOrganizationRequest() {
         super();
     }
 
-    public AuthTokenPersistRequest(final String userUuid, final String token, final LocalDateTime expiration) {
+    public AuthTokenPersistWithOrganizationRequest(final String userUuid, final String token, final String organizationUuid, final LocalDateTime expiration) {
         super();
         this.userUuid = userUuid;
         this.token = token;
+        this.organizationUuid = organizationUuid;
         this.expiration = expiration;
     }
 
@@ -50,6 +54,9 @@ public class AuthTokenPersistRequest extends AbstractRequestModel implements Val
         if (StringUtils.isEmpty(token)) {
             errors.add(AuthTokenErrorResponseModel.MISSING_TOKEN);
         }
+        if (StringUtils.isEmpty(organizationUuid)) {
+            errors.add(AuthTokenErrorResponseModel.MISSING_ORGANIZATION);
+        }
         if (Objects.isNull(expiration)) {
             errors.add(AuthTokenErrorResponseModel.MISSING_EXPIRATION);
         }
@@ -61,13 +68,14 @@ public class AuthTokenPersistRequest extends AbstractRequestModel implements Val
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AuthTokenPersistRequest)) {
+        if (!(o instanceof AuthTokenPersistWithOrganizationRequest)) {
             return false;
         }
-        final AuthTokenPersistRequest that = (AuthTokenPersistRequest) o;
+        final AuthTokenPersistWithOrganizationRequest that = (AuthTokenPersistWithOrganizationRequest) o;
         return new EqualsBuilder()
                 .append(userUuid, that.userUuid)
                 .append(token, that.token)
+                .append(organizationUuid, that.organizationUuid)
                 .append(expiration, that.expiration)
                 .isEquals();
     }
@@ -77,6 +85,7 @@ public class AuthTokenPersistRequest extends AbstractRequestModel implements Val
         return new HashCodeBuilder()
                 .append(userUuid)
                 .append(token)
+                .append(organizationUuid)
                 .append(expiration)
                 .toHashCode();
     }
@@ -85,6 +94,7 @@ public class AuthTokenPersistRequest extends AbstractRequestModel implements Val
     public String toString() {
         return new ToStringBuilder(this)
                 .append("userUuid", userUuid)
+                .append("organizationUuid", organizationUuid)
                 .append("expiration", expiration)
                 .toString();
     }
@@ -95,6 +105,10 @@ public class AuthTokenPersistRequest extends AbstractRequestModel implements Val
 
     public String getToken() {
         return token;
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 
     public LocalDateTime getExpiration() {

@@ -45,7 +45,10 @@ class AuthTokenExpireServiceUnitTest : AbstractAuthTokenServiceUnitTest() {
         val authTokenUuid = authToken.uuid
         expect(authTokenRepository.findByUuid(authTokenUuid)).andReturn(Optional.of(authToken))
         replayAll()
-        assertThat(authTokenService.expire(authTokenUuid).isExpired).isTrue()
+        authTokenService.expire(authTokenUuid).let {
+            assertThat(it.isExpired).isTrue()
+        }
+
         verifyAll()
     }
 }

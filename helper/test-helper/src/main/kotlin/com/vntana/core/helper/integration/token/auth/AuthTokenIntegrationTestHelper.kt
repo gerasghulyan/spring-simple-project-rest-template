@@ -1,6 +1,7 @@
 package com.vntana.core.helper.integration.token.auth
 
 import com.vntana.core.domain.token.AuthToken
+import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.token.auth.AuthTokenCommonTestHelper
 import com.vntana.core.service.token.auth.AuthTokenService
@@ -21,8 +22,20 @@ class AuthTokenIntegrationTestHelper : AuthTokenCommonTestHelper() {
     @Autowired
     private lateinit var userIntegrationTestHelper: UserIntegrationTestHelper
 
+    @Autowired
+    private lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper
+    
     fun persistAuthToken(token: String = uuid(), userUuid: String = userIntegrationTestHelper.persistUserWithOwnerRole().uuid): AuthToken {
         val dto = buildAuthTokenCreateDto(userUuid, token)
         return authTokenService.create(dto)
+    }
+
+    fun persistAuthTokenWithOrganization(
+            token: String = uuid(),
+            userUuid: String = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
+            organizationUuid: String = organizationIntegrationTestHelper.persistOrganization().uuid
+    ): AuthToken {
+        val dto = buildAuthTokenCreateWithOrganizationDto(userUuid, token, organizationUuid)
+        return authTokenService.createWithOrganization(dto)
     }
 }

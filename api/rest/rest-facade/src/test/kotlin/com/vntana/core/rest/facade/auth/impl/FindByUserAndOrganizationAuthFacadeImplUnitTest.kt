@@ -34,7 +34,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         resetAll()
         val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
-        val role = userRoleCommonTestHelper.buildUserOrganizationSuperAdminRole()
+        userRoleCommonTestHelper.buildUserOrganizationSuperAdminRole()
         val userUuid = user.uuid
         val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
         expect(userService.findByUuid(userUuid)).andReturn(Optional.of(user))
@@ -54,7 +54,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         resetAll()
         val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
-        val adminRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole()
+        userRoleCommonTestHelper.buildUserOrganizationAdminRole()
         val userUuid = user.uuid
         val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
         expect(userService.findByUuid(userUuid)).andReturn(Optional.of(user))

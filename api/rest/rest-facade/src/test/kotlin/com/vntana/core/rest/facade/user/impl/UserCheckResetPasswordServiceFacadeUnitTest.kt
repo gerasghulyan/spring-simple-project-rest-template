@@ -39,7 +39,7 @@ class UserCheckResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUni
     fun test() {
         val newPassword = uuid()
         val token = uuid()
-        val user = userHelper.buildUserWithOrganizationOwnerRole(password = newPassword)
+        userHelper.buildUserWithOrganizationOwnerRole(password = newPassword)
         val request = restHelper.buildResetUserPasswordRequest(token = token, password = newPassword)
         val resetPasswordToken = tokenCommonTestHelper.buildTokenResetPassword(token = request.token)
         resetAll()

@@ -32,4 +32,21 @@ class AuthTokenExpireByUserWebTest : AbstractAuthTokenWebTest() {
             assertThat(authTokenResourceClient.isExpired(token3)?.body?.response()?.expired).isFalse()
         }
     }
+
+    @Test
+    fun `test when token is with organization`() {
+        val userUuid = userResourceTestHelper.persistUser().response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
+        val token1 = uuid()
+        val token2 = uuid()
+        val token3 = uuid()
+        resourceTestHelper.persistTokenWithOrganization(userUuid = userUuid, token = token1, organizationUuid = organizationUuid)
+        resourceTestHelper.persistTokenWithOrganization(userUuid = userUuid, token = token2, organizationUuid = organizationUuid)
+        resourceTestHelper.persistTokenWithOrganization(token = token3)
+        authTokenResourceClient.expireByUser(userUuid).let {
+            assertThat(authTokenResourceClient.isExpired(token1)?.body?.response()?.expired).isTrue()
+            assertThat(authTokenResourceClient.isExpired(token2)?.body?.response()?.expired).isTrue()
+            assertThat(authTokenResourceClient.isExpired(token3)?.body?.response()?.expired).isFalse()
+        }
+    }
 }

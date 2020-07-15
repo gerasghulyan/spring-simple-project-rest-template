@@ -1,9 +1,11 @@
 package com.vntana.core.service.token.auth
 
+import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.auth.AuthTokenCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.token.auth.AuthTokenRepository
 import com.vntana.core.service.AbstractServiceUnitTest
+import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.token.auth.impl.AuthTokenServiceImpl
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
@@ -24,11 +26,15 @@ abstract class AbstractAuthTokenServiceUnitTest : AbstractServiceUnitTest() {
     @Mock
     protected lateinit var authTokenRepository: AuthTokenRepository
 
+    @Mock
+    protected lateinit var organizationService: OrganizationService
+
     protected val commonTestHelper = AuthTokenCommonTestHelper()
     protected val userCommonTestHelper = UserCommonTestHelper()
+    protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
     @Before
     fun prepare() {
-        authTokenService = AuthTokenServiceImpl(userService, authTokenRepository)
+        authTokenService = AuthTokenServiceImpl(userService, authTokenRepository, organizationService)
     }
 }

@@ -1,10 +1,13 @@
 package com.vntana.core.service.token.auth.impl;
 
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.token.AuthToken;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.persistence.token.auth.AuthTokenRepository;
+import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.token.auth.AuthTokenService;
 import com.vntana.core.service.token.auth.dto.AuthTokenCreateDto;
+import com.vntana.core.service.token.auth.dto.AuthTokenCreateWithOrganizationDto;
 import com.vntana.core.service.token.auth.exception.AuthTokenNotFoundForUuidException;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -29,11 +32,16 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
     private final UserService userService;
     private final AuthTokenRepository authTokenRepository;
+    private final OrganizationService organizationService;
 
-    public AuthTokenServiceImpl(final UserService userService, final AuthTokenRepository authTokenRepository) {
+    public AuthTokenServiceImpl(
+            final UserService userService,
+            final AuthTokenRepository authTokenRepository,
+            final OrganizationService organizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.authTokenRepository = authTokenRepository;
+        this.organizationService = organizationService;
     }
 
     @Transactional
@@ -42,17 +50,31 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         Assert.notNull(dto, "The AuthTokenCreateDto should not be null");
         LOGGER.debug("Creating auth token for user - {}", dto.getUserUuid());
         final User user = userService.getByUuid(dto.getUserUuid());
-        final AuthToken authToken = new AuthToken(dto.getToken(), user);
+        final AuthToken authToken = new AuthToken(dto.getToken(), user, dto.getExpiration());
         final AuthToken savedAuthToken = authTokenRepository.save(authToken);
         LOGGER.debug("Successfully creating auth token for user - {}", dto.getUserUuid());
         return savedAuthToken;
     }
 
+    @Transactional
+    @Override
+    public AuthToken createWithOrganization(final AuthTokenCreateWithOrganizationDto dto) {
+        Assert.notNull(dto, "The AuthTokenCreateDto should not be null");
+        LOGGER.debug("Creating auth token for user - {}", dto.getUserUuid());
+        final User user = userService.getByUuid(dto.getUserUuid());
+        final Organization organization = organizationService.getByUuid(dto.getOrganizationUuid());
+        final AuthToken authToken = new AuthToken(dto.getToken(), user, organization, dto.getExpiration());
+        final AuthToken savedAuthToken = authTokenRepository.save(authToken);
+        LOGGER.debug("Successfully creating auth token for user - {}", dto.getUserUuid());
+        return savedAuthToken;
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public List<AuthToken> findActiveTokensByUser(final String userUuid) {
         Assert.hasText(userUuid, "The user uuid should not be null or empty");
         LOGGER.debug("Retrieving auth tokens by userUuid - {}", userUuid);
-        final List<AuthToken> authTokens = authTokenRepository.findByUserUuidAndExpirationIsNull(userUuid);
+        final List<AuthToken> authTokens = authTokenRepository.findByUserUuidAndExpirationIsAfter(userUuid, LocalDateTime.now());
         LOGGER.debug("Retrieving auth tokens by userUuid - {}", userUuid);
         return authTokens;
     }
@@ -67,12 +89,14 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         return authToken;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<AuthToken> findByToken(final String token) {
         Assert.hasText(token, "The AuthToken uuid should not be null or empty");
         return authTokenRepository.findByToken(token);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public AuthToken getByUuid(final String uuid) {
         Assert.hasText(uuid, "The AuthToken uuid should not be null or empty");
