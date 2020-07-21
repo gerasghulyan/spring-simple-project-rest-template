@@ -2,6 +2,7 @@ package com.vntana.core.service.token.auth;
 
 import com.vntana.core.domain.token.AuthToken;
 import com.vntana.core.service.token.auth.dto.AuthTokenCreateDto;
+import com.vntana.core.service.token.auth.dto.AuthTokenCreateWithOrganizationDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public interface AuthTokenService {
 
     AuthToken create(final AuthTokenCreateDto dto);
+
+    AuthToken createWithOrganization(final AuthTokenCreateWithOrganizationDto dto);
 
     List<AuthToken> findActiveTokensByUser(final String userUuid);
 

@@ -23,7 +23,7 @@ public interface AuthTokenRepository extends JpaRepository<AuthToken, Long> {
 
     Optional<AuthToken> findByToken(final String token);
 
-    List<AuthToken> findByUserUuidAndExpirationIsNull(final String userUuid);
+    List<AuthToken> findByUserUuidAndExpirationIsAfter(final String userUuid, final LocalDateTime now);
 
     @Modifying
     @Query("update AuthToken a set a.expiration=:expiration where a.user.id in (select u.id from User u where u.uuid=:userUuid)")

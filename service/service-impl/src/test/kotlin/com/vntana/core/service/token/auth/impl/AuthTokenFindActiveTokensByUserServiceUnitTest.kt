@@ -3,8 +3,9 @@ package com.vntana.core.service.token.auth.impl
 import com.vntana.core.service.token.auth.AbstractAuthTokenServiceUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.easymock.EasyMock.expect
+import org.easymock.EasyMock.*
 import org.junit.Test
+import java.time.LocalDateTime
 
 /**
  * Created by Arman Gevorgyan.
@@ -29,7 +30,7 @@ class AuthTokenFindActiveTokensByUserServiceUnitTest : AbstractAuthTokenServiceU
         resetAll()
         val userUuid = uuid()
         val authToken = commonTestHelper.buildAuthToken()
-        expect(authTokenRepository.findByUserUuidAndExpirationIsNull(userUuid)).andReturn(listOf(authToken))
+        expect(authTokenRepository.findByUserUuidAndExpirationIsAfter(eq(userUuid), isA(LocalDateTime::class.java))).andReturn(listOf(authToken))
         replayAll()
         assertThat(authTokenService.findActiveTokensByUser(userUuid)).containsOnly(authToken)
         verifyAll()

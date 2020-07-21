@@ -26,7 +26,7 @@ class AuthTokenPersistFacadeUnitTest : AbstractAuthTokenServiceFacadeUnitTest() 
     fun test() {
         resetAll()
         val request = restTestHelper.buildAuthTokenPersistRequest()
-        val createDto = commonTestHelper.buildAuthTokenCreateDto(userUuid = request.userUuid, token = request.token)
+        val createDto = commonTestHelper.buildAuthTokenCreateDto(userUuid = request.userUuid, token = request.token, expiration = request.expiration)
         val authToken = commonTestHelper.buildAuthToken()
         expect(userService.existsByUuid(request.userUuid)).andReturn(true)
         expect(authTokenService.create(createDto)).andReturn(authToken)

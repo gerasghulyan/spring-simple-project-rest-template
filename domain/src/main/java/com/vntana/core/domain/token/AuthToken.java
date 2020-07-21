@@ -1,6 +1,7 @@
 package com.vntana.core.domain.token;
 
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -32,14 +33,27 @@ public class AuthToken extends AbstractUuidAwareDomainEntity {
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_auth_token_user_id"))
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "organization_id", updatable = false, foreignKey = @ForeignKey(name = "fk_auth_token_organization_id"))
+    private Organization organization;
+
     AuthToken() {
         super();
     }
 
-    public AuthToken(final String token, final User user) {
+    public AuthToken(final String token, final User user, final LocalDateTime expiration) {
         super();
         this.token = token;
         this.user = user;
+        this.expiration = expiration;
+    }
+
+    public AuthToken(final String token, final User user, final Organization organization, final LocalDateTime expiration) {
+        super();
+        this.token = token;
+        this.user = user;
+        this.organization = organization;
+        this.expiration = expiration;
     }
 
     public LocalDateTime getExpiration() {
@@ -52,6 +66,10 @@ public class AuthToken extends AbstractUuidAwareDomainEntity {
 
     public User getUser() {
         return user;
+    }
+
+    public Organization getOrganization() {
+        return organization;
     }
 
     @Override
@@ -68,6 +86,7 @@ public class AuthToken extends AbstractUuidAwareDomainEntity {
                 .append(expiration, authToken.expiration)
                 .append(token, authToken.token)
                 .append(getIdOrNull(user), getIdOrNull(authToken.user))
+                .append(getIdOrNull(organization), getIdOrNull(authToken.organization))
                 .isEquals();
     }
 
@@ -78,6 +97,7 @@ public class AuthToken extends AbstractUuidAwareDomainEntity {
                 .append(expiration)
                 .append(token)
                 .append(getIdOrNull(user))
+                .append(getIdOrNull(organization))
                 .toHashCode();
     }
 
@@ -87,16 +107,15 @@ public class AuthToken extends AbstractUuidAwareDomainEntity {
                 .append("expiration", expiration)
                 .append("token", token)
                 .append("userId", getIdOrNull(user))
+                .append("organizationId", getIdOrNull(organization))
                 .toString();
     }
 
     public void expire() {
-        if (this.expiration == null) {
-            this.expiration = LocalDateTime.now();
-        }
+        this.expiration = LocalDateTime.now();
     }
 
     public boolean isExpired() {
-        return expiration != null;
+        return !LocalDateTime.now().isBefore(expiration);
     }
 }

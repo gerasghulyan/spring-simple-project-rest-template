@@ -11,5 +11,7 @@ public enum AuthTokenErrorResponseModel implements ErrorResponseModel {
     MISSING_TOKEN,
     MISSING_USER_UUID,
     TOKEN_NOT_FOUND,
-    USER_NOT_FOUND
+    USER_NOT_FOUND,
+    MISSING_ORGANIZATION,
+    MISSING_EXPIRATION
 }

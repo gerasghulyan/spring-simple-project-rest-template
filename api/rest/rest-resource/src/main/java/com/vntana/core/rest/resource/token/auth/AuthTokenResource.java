@@ -1,10 +1,9 @@
 package com.vntana.core.rest.resource.token.auth;
 
 import com.vntana.core.model.token.auth.request.AuthTokenPersistRequest;
-import com.vntana.core.model.token.auth.response.AuthTokenExpireByUserResultResponse;
-import com.vntana.core.model.token.auth.response.AuthTokenExpireResultResponse;
-import com.vntana.core.model.token.auth.response.AuthTokenIsExpiredResultResponse;
-import com.vntana.core.model.token.auth.response.AuthTokenPersistResultResponse;
+import com.vntana.core.model.token.auth.request.AuthTokenPersistWithOrganizationRequest;
+import com.vntana.core.model.token.auth.request.AuthTokenRequest;
+import com.vntana.core.model.token.auth.response.*;
 import com.vntana.core.rest.facade.token.auth.AuthTokenServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,14 @@ public class AuthTokenResource {
         return ResponseEntity.ok(resultResponse);
     }
 
+    @PostMapping("persist-with-organization")
+    public ResponseEntity<AuthTokenPersistResultResponse> persistWithOrganization(@RequestBody final AuthTokenPersistWithOrganizationRequest request) {
+        LOGGER.debug("Processing auth-token resource persist for user having uuid - {}", request.getUserUuid());
+        final AuthTokenPersistResultResponse resultResponse = authTokenServiceFacade.persistWithOrganization(request);
+        LOGGER.debug("Successfully processed auth-token resource persist for user having uuid - {}", request.getUserUuid());
+        return ResponseEntity.ok(resultResponse);
+    }
+
     @GetMapping("expiration/{token}")
     public ResponseEntity<AuthTokenIsExpiredResultResponse> isExpired(@PathVariable("token") final String token) {
         final AuthTokenIsExpiredResultResponse resultResponse = authTokenServiceFacade.isExpired(token);
@@ -54,6 +61,14 @@ public class AuthTokenResource {
     @DeleteMapping("expiration/{token}")
     public ResponseEntity<AuthTokenExpireResultResponse> expire(@PathVariable("token") final String token) {
         final AuthTokenExpireResultResponse resultResponse = authTokenServiceFacade.expire(token);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @PostMapping("tokens")
+    public ResponseEntity<AuthTokenFindByTokenResponse> findByToken(@RequestBody final AuthTokenRequest request) {
+        LOGGER.debug("Retrieving auth-token by token");
+        final AuthTokenFindByTokenResponse resultResponse = authTokenServiceFacade.findByToken(request.getToken());
+        LOGGER.debug("Successfully retrieved auth-token by token");
         return ResponseEntity.ok(resultResponse);
     }
 }
