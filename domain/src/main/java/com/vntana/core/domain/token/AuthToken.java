@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
                 @UniqueConstraint(name = "uk_auth_token_token", columnNames = {"token"})
         }
 )
+//TODO refactor to extend from abstract token
 public class AuthToken extends AbstractUuidAwareDomainEntity {
 
     @Column(name = "expiration")
