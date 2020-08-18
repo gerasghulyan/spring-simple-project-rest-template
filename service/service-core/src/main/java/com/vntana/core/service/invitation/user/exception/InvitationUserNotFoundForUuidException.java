@@ -1,7 +1,7 @@
 package com.vntana.core.service.invitation.user.exception;
 
 import com.vntana.core.domain.invitation.user.InvitationUser;
-import com.vntana.core.service.common.exception.EntityNotFoundForUuidException;
+import com.vntana.commons.service.exception.EntityNotFoundForUuidException;
 
 /**
  * Created by Manuk Gharslyan.
