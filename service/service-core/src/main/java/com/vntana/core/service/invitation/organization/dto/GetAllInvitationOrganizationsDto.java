@@ -1,6 +1,6 @@
 package com.vntana.core.service.invitation.organization.dto;
 
-import com.vntana.core.service.common.dto.AbstractPaginationAwareDto;
+import com.vntana.commons.service.dto.AbstractPaginationAwareDto;
 
 /**
  * Created by Arman Gevorgyan.
