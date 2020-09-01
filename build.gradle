@@ -166,6 +166,7 @@ allprojects {
             dependency("com.vntana.commons:rest-test-helper:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:web-utils:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:queue-core-indexation-consumer-message:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:service:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
             dependency("com.vntana.payment:rest-client-payment:$vntanaPaymentVersion${versionPostfix()}")
         }
@@ -342,6 +343,7 @@ project(":service:service-core") {
     dependencies {
         api("com.vntana.commons:indexation")
         implementation project(":domain")
+        api("com.vntana.commons:service")
     }
 }
 

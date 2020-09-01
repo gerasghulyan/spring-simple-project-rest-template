@@ -1,7 +1,7 @@
 package com.vntana.core.service.token.exception;
 
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
-import com.vntana.core.service.common.exception.EntityNotFoundForUuidException;
+import com.vntana.commons.service.exception.EntityNotFoundForUuidException;
 
 /**
  * Created by Arman Gevorgyan.
