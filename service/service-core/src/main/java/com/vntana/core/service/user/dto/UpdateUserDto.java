@@ -1,6 +1,7 @@
 package com.vntana.core.service.user.dto;
 
-import com.vntana.core.service.common.dto.ServiceDto;
+
+import com.vntana.commons.service.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.Assert;

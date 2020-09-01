@@ -1,7 +1,7 @@
 package com.vntana.core.service.organization.exception;
 
+import com.vntana.commons.service.exception.EntityNotFoundForUuidException;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.service.common.exception.EntityNotFoundForUuidException;
 
 /**
  * Created by Arman Gevorgyan.

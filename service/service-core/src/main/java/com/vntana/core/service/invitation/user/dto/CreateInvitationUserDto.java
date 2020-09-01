@@ -1,7 +1,7 @@
 package com.vntana.core.service.invitation.user.dto;
 
+import com.vntana.commons.service.dto.ServiceDto;
 import com.vntana.core.domain.user.UserRole;
-import com.vntana.core.service.common.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
