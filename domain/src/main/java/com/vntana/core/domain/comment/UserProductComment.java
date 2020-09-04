@@ -28,11 +28,11 @@ public class UserProductComment extends AbstractUserComment {
     public UserProductComment() {
     }
 
-    public UserProductComment(final User user, final String productUuid) {
-        super(user);
+    public UserProductComment(final User user, final String message, final String productUuid) {
+        super(user, message);
         this.productUuid = productUuid;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
