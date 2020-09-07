@@ -27,13 +27,12 @@ class ProductCommentDeleteServiceUnitTest : AbstractProductCommentServiceUnitTes
 
     @Test
     fun `test delete when found`() {
-        val uuid = uuid()
-        val productComment = commonTestHelper.buildProductCommentWithUuid(uuid)
+        val productComment = commonTestHelper.buildProductComment()
         resetAll()
-        EasyMock.expect(productCommentRepository.findByUuid(uuid)).andReturn(Optional.of(productComment))
+        EasyMock.expect(commentRepository.findByUuid(productComment.uuid)).andReturn(Optional.of(productComment))
         EasyMock.expect(productCommentRepository.save(EasyMock.isA(ProductComment::class.java))).andAnswer { EasyMock.getCurrentArguments()[0] as ProductComment }
         replayAll()
-        productCommentService.delete(uuid).let {
+        productCommentService.delete(productComment.uuid).let {
             assertThat(it.removed).isNotNull()
         }
         verifyAll()

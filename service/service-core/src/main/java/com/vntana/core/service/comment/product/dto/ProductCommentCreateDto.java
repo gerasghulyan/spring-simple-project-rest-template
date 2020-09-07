@@ -17,9 +17,9 @@ public class ProductCommentCreateDto implements ServiceDto {
     private final String message;
 
     public ProductCommentCreateDto(final String userUuid, final String productUuid, final String message) {
-        Assert.hasText(message, "The comment should not be null or empty");
         Assert.hasText(userUuid, "The user uuid should not be null or empty");
         Assert.hasText(productUuid, "The product uuid should not be null or empty");
+        Assert.hasText(message, "The comment should not be null or empty");
         this.message = message;
         this.userUuid = userUuid;
         this.productUuid = productUuid;

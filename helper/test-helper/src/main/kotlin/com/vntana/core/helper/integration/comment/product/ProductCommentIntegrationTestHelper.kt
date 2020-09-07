@@ -1,8 +1,8 @@
-package com.vntana.core.helper.integration.comment.user.product
+package com.vntana.core.helper.integration.comment.product
 
 import com.vntana.core.domain.comment.ProductComment
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
-import com.vntana.core.helper.unit.comment.user.CommentCommonTestHelper
+import com.vntana.core.helper.unit.comment.product.ProductCommentCommonTestHelper
 import com.vntana.core.service.comment.product.ProductCommentService
 import com.vntana.core.service.comment.product.dto.ProductCommentCreateDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
  * Time: 14:17
  */
 @Component
-class ProductCommentIntegrationTestHelper : CommentCommonTestHelper() {
+class ProductCommentIntegrationTestHelper : ProductCommentCommonTestHelper() {
 
     @Autowired
     private lateinit var productCommentService: ProductCommentService

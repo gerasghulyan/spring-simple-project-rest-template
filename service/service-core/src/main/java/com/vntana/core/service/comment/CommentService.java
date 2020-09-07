@@ -9,6 +9,10 @@ import com.vntana.core.service.comment.dto.CommentCreateDto;
  * Time: 16:52
  */
 public interface CommentService {
-    
+
     AbstractComment create(final CommentCreateDto dto);
+
+    AbstractComment findByUuid(final String uuid);
+
+    boolean existsByUuid(final String uuid);
 }

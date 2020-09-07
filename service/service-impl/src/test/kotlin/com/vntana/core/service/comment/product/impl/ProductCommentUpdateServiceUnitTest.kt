@@ -13,7 +13,7 @@ import java.util.*
  * Date: 04.09.2020
  * Time: 12:52
  */
-class ProductCommentUpdateServiceUnitTest  : AbstractProductCommentServiceUnitTest() {
+class ProductCommentUpdateServiceUnitTest : AbstractProductCommentServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
@@ -35,10 +35,9 @@ class ProductCommentUpdateServiceUnitTest  : AbstractProductCommentServiceUnitTe
     @Test
     fun test() {
         resetAll()
-        val uuid = uuid()
-        val dto = commonTestHelper.buildProductCommentUpdateDto(uuid = uuid)
-        val productComment = commonTestHelper.buildProductCommentWithUuid(uuid = uuid)
-        EasyMock.expect(productCommentRepository.findByUuid(dto.uuid)).andReturn(Optional.of(productComment))
+        val productComment = commonTestHelper.buildProductComment()
+        val dto = commonTestHelper.buildProductCommentUpdateDto(productComment.uuid)
+        EasyMock.expect(commentRepository.findByUuid(dto.uuid)).andReturn(Optional.of(productComment))
         EasyMock.expect(productCommentRepository.save(EasyMock.isA(ProductComment::class.java))).andAnswer { EasyMock.getCurrentArguments()[0] as ProductComment }
         replayAll()
         productCommentService.update(dto).let {
@@ -46,5 +45,4 @@ class ProductCommentUpdateServiceUnitTest  : AbstractProductCommentServiceUnitTe
         }
         verifyAll()
     }
-    
 }

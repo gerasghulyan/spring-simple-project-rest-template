@@ -1,6 +1,6 @@
 package com.vntana.core.service.comment.product.impl
 
-import com.vntana.core.helper.integration.comment.user.product.ProductCommentIntegrationTestHelper
+import com.vntana.core.helper.integration.comment.product.ProductCommentIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
 import com.vntana.core.service.comment.product.ProductCommentService

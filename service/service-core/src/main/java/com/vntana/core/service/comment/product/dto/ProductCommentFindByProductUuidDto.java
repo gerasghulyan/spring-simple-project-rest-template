@@ -1,6 +1,6 @@
 package com.vntana.core.service.comment.product.dto;
 
-import com.vntana.commons.service.dto.ServiceDto;
+import com.vntana.commons.service.dto.AbstractPaginationAwareDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,11 +11,17 @@ import org.springframework.util.Assert;
  * Date: 04.09.2020
  * Time: 12:19
  */
-public class ProductCommentFindByProductUuidDto implements ServiceDto {
+public class ProductCommentFindByProductUuidDto extends AbstractPaginationAwareDto {
 
     private final String productUuid;
 
-    public ProductCommentFindByProductUuidDto(final String productUuid) {
+    public ProductCommentFindByProductUuidDto(int size, String productUuid) {
+        super(size);
+        this.productUuid = productUuid;
+    }
+
+    public ProductCommentFindByProductUuidDto(int page, int size, String productUuid) {
+        super(page, size);
         Assert.hasText(productUuid, "The product uuid should not be null or empty");
         this.productUuid = productUuid;
     }

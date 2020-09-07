@@ -29,16 +29,11 @@ public class ProductComment extends AbstractComment {
         super();
     }
 
-    public ProductComment(final String uuid, final User user, final String message, final String productUuid) {
-        super(uuid, user, message);
-        this.productUuid = productUuid;
-    }
-
     public ProductComment(final User user, final String message, final String productUuid) {
         super(user, message);
         this.productUuid = productUuid;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

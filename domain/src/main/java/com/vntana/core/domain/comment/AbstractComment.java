@@ -31,12 +31,7 @@ public class AbstractComment extends AbstractUuidAwareDomainEntity {
     private String message;
 
     public AbstractComment() {
-    }
-
-    public AbstractComment(final String uuid, final User user, final String message) {
-        super(uuid);
-        this.user = user;
-        this.message = message;
+        super();
     }
 
     public AbstractComment(final User user, final String message) {
@@ -55,7 +50,7 @@ public class AbstractComment extends AbstractUuidAwareDomainEntity {
         final AbstractComment that = (AbstractComment) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(user, that.user)
+                .append(getIdOrNull(user), getIdOrNull(that.user))
                 .append(message, that.message)
                 .isEquals();
     }
@@ -64,7 +59,7 @@ public class AbstractComment extends AbstractUuidAwareDomainEntity {
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(user)
+                .append(getIdOrNull(user))
                 .append(message)
                 .toHashCode();
     }
@@ -73,7 +68,7 @@ public class AbstractComment extends AbstractUuidAwareDomainEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("user", user)
+                .append("user_id", getIdOrNull(user))
                 .append("message", message)
                 .toString();
     }

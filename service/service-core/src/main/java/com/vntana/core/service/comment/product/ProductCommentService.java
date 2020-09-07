@@ -4,8 +4,7 @@ import com.vntana.core.domain.comment.ProductComment;
 import com.vntana.core.service.comment.product.dto.ProductCommentCreateDto;
 import com.vntana.core.service.comment.product.dto.ProductCommentFindByProductUuidDto;
 import com.vntana.core.service.comment.product.dto.ProductCommentUpdateDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * Created by Vardan Aivazian
@@ -19,10 +18,6 @@ public interface ProductCommentService {
     ProductComment update(final ProductCommentUpdateDto dto);
 
     ProductComment delete(final String uuid);
-    
-    ProductComment findByUuid(final String uuid);
-    
-    boolean existsByUuid(final String uuid);
-    
-    List<ProductComment> findByProductUuid(final ProductCommentFindByProductUuidDto dto);
+
+    Page<ProductComment> findByProductUuid(final ProductCommentFindByProductUuidDto dto);
 }

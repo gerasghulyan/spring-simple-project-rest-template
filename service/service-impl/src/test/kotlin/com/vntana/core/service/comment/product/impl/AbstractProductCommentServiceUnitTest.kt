@@ -1,9 +1,11 @@
 package com.vntana.core.service.comment.product.impl
 
-import com.vntana.core.helper.unit.comment.user.CommentCommonTestHelper
+import com.vntana.core.helper.unit.comment.product.ProductCommentCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.persistence.comment.user.product.ProductCommentRepository
+import com.vntana.core.persistence.comment.CommentRepository
+import com.vntana.core.persistence.comment.product.ProductCommentRepository
 import com.vntana.core.service.AbstractServiceUnitTest
+import com.vntana.core.service.comment.impl.CommentServiceImpl
 import com.vntana.core.service.comment.product.ProductCommentService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
@@ -17,8 +19,8 @@ import org.junit.Before
 abstract class AbstractProductCommentServiceUnitTest : AbstractServiceUnitTest() {
 
     protected lateinit var productCommentService: ProductCommentService
-    
-    protected val commonTestHelper = CommentCommonTestHelper()
+
+    protected val commonTestHelper = ProductCommentCommonTestHelper()
     protected val userCommonTestHelper = UserCommonTestHelper()
 
     @Mock
@@ -27,10 +29,13 @@ abstract class AbstractProductCommentServiceUnitTest : AbstractServiceUnitTest()
     @Mock
     protected lateinit var productCommentRepository: ProductCommentRepository
 
+    @Mock
+    protected lateinit var commentRepository: CommentRepository
 
     @Before
     fun prepare() {
-        productCommentService = ProductCommentServiceImpl(productCommentRepository, userService)
+        val commentService = CommentServiceImpl(commentRepository, userService)
+        productCommentService = ProductCommentServiceImpl(productCommentRepository, userService, commentService)
     }
     
 }
