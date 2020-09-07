@@ -17,31 +17,37 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(
-        name = "user_comment_product"
+        name = "comment_product"
 )
 @DiscriminatorValue("COMMENT_PRODUCT")
-public class UserProductComment extends AbstractUserComment {
+public class ProductComment extends AbstractComment {
 
     @Column(name = "product_uuid", nullable = false, updatable = false)
     private String productUuid;
 
-    public UserProductComment() {
+    public ProductComment() {
+        super();
     }
 
-    public UserProductComment(final User user, final String message, final String productUuid) {
-        super(user, message);
+    public ProductComment(final String uuid, final User user, final String message, final String productUuid) {
+        super(uuid, user, message);
         this.productUuid = productUuid;
     }
 
+    public ProductComment(final User user, final String message, final String productUuid) {
+        super(user, message);
+        this.productUuid = productUuid;
+    }
+    
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserProductComment)) {
+        if (!(o instanceof ProductComment)) {
             return false;
         }
-        final UserProductComment that = (UserProductComment) o;
+        final ProductComment that = (ProductComment) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(productUuid, that.productUuid)

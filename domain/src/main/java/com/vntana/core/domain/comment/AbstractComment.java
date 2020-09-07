@@ -16,12 +16,12 @@ import static com.vntana.commons.persistence.domain.DBConstants.BIG_TEXT_LENGTH;
  * Time: 4:33 PM
  */
 @Entity
-@Table(name = "user_comment")
+@Table(name = "comment")
 @Inheritance(
         strategy = InheritanceType.JOINED
 )
 @DiscriminatorColumn(name = "type")
-public class AbstractUserComment extends AbstractUuidAwareDomainEntity {
+public class AbstractComment extends AbstractUuidAwareDomainEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_id"), updatable = false)
@@ -30,16 +30,16 @@ public class AbstractUserComment extends AbstractUuidAwareDomainEntity {
     @Column(name = "message", nullable = false, length = BIG_TEXT_LENGTH)
     private String message;
 
-    public AbstractUserComment() {
+    public AbstractComment() {
     }
 
-    public AbstractUserComment(final User user, final String message) {
+    public AbstractComment(final String uuid, final User user, final String message) {
+        super(uuid);
         this.user = user;
         this.message = message;
     }
 
-    public AbstractUserComment(final String uuid, final User user, final String message) {
-        super(uuid);
+    public AbstractComment(final User user, final String message) {
         this.user = user;
         this.message = message;
     }
@@ -49,10 +49,10 @@ public class AbstractUserComment extends AbstractUuidAwareDomainEntity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AbstractUserComment)) {
+        if (!(o instanceof AbstractComment)) {
             return false;
         }
-        final AbstractUserComment that = (AbstractUserComment) o;
+        final AbstractComment that = (AbstractComment) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(user, that.user)
