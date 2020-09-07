@@ -1,7 +1,6 @@
 package com.vntana.core.service.comment;
 
 import com.vntana.core.domain.comment.AbstractComment;
-import com.vntana.core.service.comment.dto.CommentCreateDto;
 
 /**
  * Created by Vardan Aivazian
@@ -10,9 +9,9 @@ import com.vntana.core.service.comment.dto.CommentCreateDto;
  */
 public interface CommentService {
 
-    AbstractComment create(final CommentCreateDto dto);
-
     AbstractComment findByUuid(final String uuid);
 
     boolean existsByUuid(final String uuid);
+
+    AbstractComment delete(final String uuid);
 }

@@ -2,6 +2,7 @@ package com.vntana.core.service.comment.impl
 
 import com.vntana.core.helper.integration.comment.CommentIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
+import com.vntana.core.service.comment.CommentService
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
@@ -13,4 +14,7 @@ abstract class AbstractCommentServiceIntegrationTest : AbstractServiceIntegratio
 
     @Autowired
     protected lateinit var integrationTestHelper: CommentIntegrationTestHelper
+
+    @Autowired
+    protected lateinit var commentService: CommentService
 }

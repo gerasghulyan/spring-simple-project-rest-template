@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.time.LocalDateTime;
-
 /**
  * Created by Vardan Aivazian
  * Date: 03.09.2020
@@ -40,49 +38,36 @@ class ProductCommentServiceImpl implements ProductCommentService {
         this.commentService = commentService;
     }
 
+    @Transactional
     @Override
     public ProductComment create(final ProductCommentCreateDto dto) {
         Assert.notNull(dto, "The ProductCommentCreateDto should not be null");
-        LOGGER.debug("Creating user {} comment for product - {}", dto.getUserUuid(), dto.getProductUuid());
+        LOGGER.debug("Creating product comment for the provided dto - {}", dto);
         final User user = userService.getByUuid(dto.getUserUuid());
         final ProductComment productComment = new ProductComment(user, dto.getMessage(), dto.getProductUuid());
         final ProductComment savedProductComment = productCommentRepository.save(productComment);
-        LOGGER.debug("Successfully creating user {} comment for product - {}", dto.getUserUuid(), dto.getProductUuid());
-        return savedProductComment;
-    }
-
-    @Override
-    public ProductComment update(final ProductCommentUpdateDto dto) {
-        Assert.notNull(dto, "The ProductCommentUpdateDto should not be null");
-        Assert.hasText(dto.getUuid(), "The ProductCommentUpdateDto uuid should not be null or empty");
-        Assert.notNull(dto.getMessage(), "The ProductCommentUpdateDto message should not be null");
-        LOGGER.debug("Updating product comment having uuid - {}", dto.getUuid());
-        ProductComment productComment = (ProductComment) commentService.findByUuid(dto.getUuid());
-
-        final ProductComment savedProductComment = productCommentRepository.save(productComment);
-        LOGGER.debug("Successfully updated product comment having uuid - {}", dto.getUuid());
+        LOGGER.debug("Successfully creating product comment for the provided dto - {}", dto);
         return savedProductComment;
     }
 
     @Transactional
     @Override
-    public ProductComment delete(final String uuid) {
-        LOGGER.debug("Deleting product comment having uuid - {}", uuid);
-        Assert.hasText(uuid, "The product comment uuid should not be null");
-        ProductComment productComment = (ProductComment) commentService.findByUuid(uuid);
-        productComment.setRemoved(LocalDateTime.now());
-
-        final ProductComment deletedProductComment = productCommentRepository.save(productComment);
-        LOGGER.debug("Successfully deleted product comment having uuid - {}", uuid);
-        return deletedProductComment;
+    public ProductComment update(final ProductCommentUpdateDto dto) {
+        Assert.notNull(dto, "The ProductCommentUpdateDto should not be null");
+        LOGGER.debug("Updating product comment for the provided dto - {}", dto);
+        ProductComment productComment = (ProductComment) commentService.findByUuid(dto.getUuid());
+        final ProductComment savedProductComment = productCommentRepository.save(productComment);
+        LOGGER.debug("Successfully updated product comment for the provided dto - {}", dto);
+        return savedProductComment;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<ProductComment> findByProductUuid(final ProductCommentFindByProductUuidDto dto) {
         Assert.notNull(dto, "The ProductCommentFindByProductUuidDto should not be null");
-        LOGGER.debug("Retrieving product comments by productUuid - {}", dto.getProductUuid());
+        LOGGER.debug("Retrieving product comment by the provided dto - {}", dto);
         Page<ProductComment> productComments = productCommentRepository.findByProductUuidAndRemovedIsNull(dto.getProductUuid(), PageRequest.of(dto.getPage(), dto.getSize()));
-        LOGGER.debug("Successfully retrieved product comments by productUuid - {}", dto.getProductUuid());
+        LOGGER.debug("Successfully product comment by the provided dto - {}", dto);
         return productComments;
     }
 }

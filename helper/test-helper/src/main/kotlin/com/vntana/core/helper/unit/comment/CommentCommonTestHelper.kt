@@ -1,10 +1,10 @@
 package com.vntana.core.helper.unit.comment
 
-import com.vntana.core.domain.comment.AbstractComment
+import com.vntana.core.domain.comment.ProductComment
 import com.vntana.core.domain.user.User
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.service.comment.dto.CommentCreateDto
+import com.vntana.core.service.comment.product.dto.ProductCommentCreateDto
 
 /**
  * Created by Vardan Aivazian
@@ -15,13 +15,15 @@ open class CommentCommonTestHelper : AbstractCommonTestHelper() {
 
     private val userCommonTestHelper = UserCommonTestHelper()
 
-    fun buildCommentCreateDto(
+    fun buildProductCommentCreateDto(
             userUuid: String? = uuid(),
-            message: String? = uuid()
-    ): CommentCreateDto = CommentCreateDto(userUuid, message)
+            message: String? = uuid(),
+            productUuid: String? = uuid()
+    ): ProductCommentCreateDto = ProductCommentCreateDto(userUuid, productUuid, message)
 
-    fun buildComment(
+    fun buildProductComment(
             user: User = userCommonTestHelper.buildUser(),
-            message: String? = uuid()
-    ): AbstractComment = AbstractComment(user, message)
+            message: String? = uuid(),
+            productUuid: String? = uuid()
+    ): ProductComment = ProductComment(user, message, productUuid)
 }

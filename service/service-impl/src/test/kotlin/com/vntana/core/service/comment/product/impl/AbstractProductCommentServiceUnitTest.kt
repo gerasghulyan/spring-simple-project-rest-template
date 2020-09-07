@@ -5,7 +5,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.comment.CommentRepository
 import com.vntana.core.persistence.comment.product.ProductCommentRepository
 import com.vntana.core.service.AbstractServiceUnitTest
-import com.vntana.core.service.comment.impl.CommentServiceImpl
+import com.vntana.core.service.comment.CommentService
 import com.vntana.core.service.comment.product.ProductCommentService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
@@ -32,10 +32,11 @@ abstract class AbstractProductCommentServiceUnitTest : AbstractServiceUnitTest()
     @Mock
     protected lateinit var commentRepository: CommentRepository
 
+    @Mock
+    protected lateinit var commentService: CommentService
+
     @Before
     fun prepare() {
-        val commentService = CommentServiceImpl(commentRepository, userService)
         productCommentService = ProductCommentServiceImpl(productCommentRepository, userService, commentService)
     }
-    
 }

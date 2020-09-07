@@ -1,8 +1,9 @@
 package com.vntana.core.service.comment.impl
 
 import com.vntana.commons.service.exception.EntityNotFoundForUuidException
-import org.assertj.core.api.Assertions
-import org.easymock.EasyMock
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*
 
@@ -17,8 +18,8 @@ class CommentFindByUuidServiceUnitTest : AbstractCommentServiceUnitTest() {
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        Assertions.assertThatThrownBy { commentService.findByUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        Assertions.assertThatThrownBy { commentService.findByUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commentService.findByUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commentService.findByUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -26,22 +27,21 @@ class CommentFindByUuidServiceUnitTest : AbstractCommentServiceUnitTest() {
     fun `test when comment not found`() {
         val uuid = uuid()
         resetAll()
-        EasyMock.expect(commentRepository.findByUuid(uuid)).andReturn(Optional.empty())
+        expect(commentRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
-
-        Assertions.assertThatThrownBy { commentService.findByUuid(uuid) }
+        assertThatThrownBy { commentService.findByUuid(uuid) }
                 .isExactlyInstanceOf(EntityNotFoundForUuidException::class.java)
         verifyAll()
     }
 
     @Test
     fun `test when found`() {
-        val comment = commonTestHelper.buildComment()
+        val comment = commonTestHelper.buildProductComment()
         resetAll()
-        EasyMock.expect(commentRepository.findByUuid(comment.uuid)).andReturn(Optional.of(comment))
+        expect(commentRepository.findByUuid(comment.uuid)).andReturn(Optional.of(comment))
         replayAll()
         commentService.findByUuid(comment.uuid).let {
-            Assertions.assertThat(it.uuid).isEqualTo(comment.uuid)
+            assertThat(it).isEqualTo(comment)
         }
         verifyAll()
     }

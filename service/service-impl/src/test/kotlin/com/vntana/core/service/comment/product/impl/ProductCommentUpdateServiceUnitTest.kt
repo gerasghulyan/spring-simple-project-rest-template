@@ -4,7 +4,7 @@ import com.vntana.core.domain.comment.ProductComment
 import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.easymock.EasyMock
+import org.easymock.EasyMock.*
 import org.junit.Test
 import java.util.*
 
@@ -37,11 +37,12 @@ class ProductCommentUpdateServiceUnitTest : AbstractProductCommentServiceUnitTes
         resetAll()
         val productComment = commonTestHelper.buildProductComment()
         val dto = commonTestHelper.buildProductCommentUpdateDto(productComment.uuid)
-        EasyMock.expect(commentRepository.findByUuid(dto.uuid)).andReturn(Optional.of(productComment))
-        EasyMock.expect(productCommentRepository.save(EasyMock.isA(ProductComment::class.java))).andAnswer { EasyMock.getCurrentArguments()[0] as ProductComment }
+        expect(commentRepository.findByUuid(dto.uuid)).andReturn(Optional.of(productComment))
+        expect(productCommentRepository.save(isA(ProductComment::class.java))).andAnswer { getCurrentArguments()[0] as ProductComment }
         replayAll()
         productCommentService.update(dto).let {
             assertThat(it.uuid).isEqualTo(dto.uuid)
+            assertThat(it.message).isNotEqualTo(dto.message)
         }
         verifyAll()
     }

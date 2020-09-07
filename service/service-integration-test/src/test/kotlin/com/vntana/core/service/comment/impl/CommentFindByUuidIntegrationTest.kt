@@ -1,6 +1,6 @@
 package com.vntana.core.service.comment.impl
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 /**
@@ -12,13 +12,10 @@ class CommentFindByUuidIntegrationTest : AbstractCommentServiceIntegrationTest()
 
     @Test
     fun `test findByUuid`() {
-
-        integrationTestHelper.persistComment().let { comment ->
-
-            integrationTestHelper.commentService.findByUuid(comment.uuid).let {
-                Assertions.assertThat(it.uuid).isEqualTo(comment.uuid)
-            }
+        val persistComment = integrationTestHelper.persistComment()
+        flushAndClear()
+        commentService.findByUuid(persistComment.uuid).let {
+            assertThat(it).isEqualTo(persistComment)
         }
     }
-
 }

@@ -12,12 +12,13 @@ class CommentExistByUuidServiceIntegrationTest : AbstractCommentServiceIntegrati
 
     @Test
     fun `test when is not found`() {
-        assertThat(integrationTestHelper.commentService.existsByUuid(uuid())).isFalse()
+        assertThat(commentService.existsByUuid(uuid())).isFalse()
     }
 
     @Test
     fun `test when found`() {
         val comment = integrationTestHelper.persistComment()
-        assertThat(integrationTestHelper.commentService.existsByUuid(comment.uuid)).isTrue()
+        flushAndClear()
+        assertThat(commentService.existsByUuid(comment.uuid)).isTrue()
     }
 }

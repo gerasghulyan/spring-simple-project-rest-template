@@ -3,8 +3,8 @@ package com.vntana.core.helper.integration.comment
 import com.vntana.core.domain.comment.AbstractComment
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.comment.CommentCommonTestHelper
-import com.vntana.core.service.comment.CommentService
-import com.vntana.core.service.comment.dto.CommentCreateDto
+import com.vntana.core.service.comment.product.ProductCommentService
+import com.vntana.core.service.comment.product.dto.ProductCommentCreateDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -20,13 +20,13 @@ class CommentIntegrationTestHelper : CommentCommonTestHelper() {
     private lateinit var userIntegrationTestHelper: UserIntegrationTestHelper
 
     @Autowired
-    lateinit var commentService: CommentService
+    private lateinit var productCommentService: ProductCommentService
 
     fun persistComment(
             userUuid: String? = userIntegrationTestHelper.persistUser().uuid,
             message: String? = uuid()
     ): AbstractComment {
-        val dto: CommentCreateDto = buildCommentCreateDto(userUuid = userUuid, message = message)
-        return commentService.create(dto)
+        val dto: ProductCommentCreateDto = buildProductCommentCreateDto(userUuid = userUuid, message = message)
+        return productCommentService.create(dto)
     }
 }

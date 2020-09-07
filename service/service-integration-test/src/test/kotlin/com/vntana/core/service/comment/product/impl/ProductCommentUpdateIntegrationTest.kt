@@ -17,6 +17,7 @@ class ProductCommentUpdateIntegrationTest : AbstractProductCommentServiceIntegra
         productCommentService.update(dto).let {
             flushAndClear()
             assertThat(it.uuid).isEqualTo(productComment.uuid)
+            assertThat(it.message).isNotEqualTo(productComment.message)
         }
     }
 }

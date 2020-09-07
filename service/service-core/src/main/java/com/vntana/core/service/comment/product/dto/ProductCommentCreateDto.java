@@ -26,28 +26,36 @@ public class ProductCommentCreateDto implements ServiceDto {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ProductCommentCreateDto)) {
-            return false;
-        }
-        final ProductCommentCreateDto that = (ProductCommentCreateDto) o;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProductCommentCreateDto that = (ProductCommentCreateDto) o;
+
         return new EqualsBuilder()
-                .append(message, that.message)
                 .append(userUuid, that.userUuid)
                 .append(productUuid, that.productUuid)
+                .append(message, that.message)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
-                .append(message)
+        return new HashCodeBuilder(17, 37)
                 .append(userUuid)
                 .append(productUuid)
+                .append(message)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "ProductCommentCreateDto{" +
+                "userUuid='" + userUuid + '\'' +
+                ", productUuid='" + productUuid + '\'' +
+                ", message='" + message + '\'' +
+                '}';
     }
 
     public String getMessage() {

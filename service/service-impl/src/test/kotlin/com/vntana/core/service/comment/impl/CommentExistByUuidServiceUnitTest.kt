@@ -1,7 +1,8 @@
 package com.vntana.core.service.comment.impl
 
-import org.assertj.core.api.Assertions
-import org.easymock.EasyMock
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.easymock.EasyMock.expect
 import org.junit.Test
 
 /**
@@ -15,8 +16,8 @@ class CommentExistByUuidServiceUnitTest : AbstractCommentServiceUnitTest() {
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        Assertions.assertThatThrownBy { commentService.existsByUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        Assertions.assertThatThrownBy { commentService.existsByUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commentService.existsByUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commentService.existsByUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -24,9 +25,9 @@ class CommentExistByUuidServiceUnitTest : AbstractCommentServiceUnitTest() {
     fun `test when does not exist`() {
         val uuid = uuid()
         resetAll()
-        EasyMock.expect(commentService.existsByUuid(uuid)).andReturn(false)
+        expect(commentService.existsByUuid(uuid)).andReturn(false)
         replayAll()
-        Assertions.assertThat(commentService.existsByUuid(uuid)).isFalse()
+        assertThat(commentService.existsByUuid(uuid)).isFalse()
         verifyAll()
     }
 
@@ -34,9 +35,9 @@ class CommentExistByUuidServiceUnitTest : AbstractCommentServiceUnitTest() {
     fun `test when found`() {
         val uuid = uuid()
         resetAll()
-        EasyMock.expect(commentService.existsByUuid(uuid)).andReturn(true)
+        expect(commentService.existsByUuid(uuid)).andReturn(true)
         replayAll()
-        Assertions.assertThat(commentService.existsByUuid(uuid)).isTrue()
+        assertThat(commentService.existsByUuid(uuid)).isTrue()
         verifyAll()
     }
 }

@@ -17,7 +17,5 @@ public interface ProductCommentService {
     
     ProductComment update(final ProductCommentUpdateDto dto);
 
-    ProductComment delete(final String uuid);
-
     Page<ProductComment> findByProductUuid(final ProductCommentFindByProductUuidDto dto);
 }

@@ -3,7 +3,7 @@ package com.vntana.core.service.comment.product.impl
 import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.easymock.EasyMock
+import org.easymock.EasyMock.expect
 import org.junit.Test
 import org.springframework.data.domain.PageRequest
 
@@ -22,6 +22,8 @@ class ProductCommentFindByProductUuidUnitTest : AbstractProductCommentServiceUni
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { commonTestHelper.buildProductCommentCreateDto(productUuid = StringUtils.EMPTY) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { productCommentService.findByProductUuid(null) }
+                .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -33,7 +35,7 @@ class ProductCommentFindByProductUuidUnitTest : AbstractProductCommentServiceUni
         val productUuid = uuid()
         val productCommentPage = commonTestHelper.buildProductCommentPage(productUuid = productUuid)
         val dto = commonTestHelper.buildProductCommentFindByProductUuidDto(page = page, size = size, productUuid = productUuid)
-        EasyMock.expect(productCommentRepository.findByProductUuidAndRemovedIsNull(productUuid, PageRequest.of(page, size))).andReturn(productCommentPage)
+        expect(productCommentRepository.findByProductUuidAndRemovedIsNull(productUuid, PageRequest.of(page, size))).andReturn(productCommentPage)
         replayAll()
         assertThat(productCommentService.findByProductUuid(dto)).isEqualTo(productCommentPage)
         verifyAll()
