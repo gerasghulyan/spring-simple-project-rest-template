@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.token.component
 
 import com.vntana.core.helper.token.TokenRestTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.token.component.impl.TokenFacadePreconditionCheckerImpl
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
 import com.vntana.core.service.invitation.user.InvitationUserService
@@ -15,7 +15,7 @@ import org.junit.Before
  * Date: 3/27/20
  * Time: 12:17 PM
  */
-abstract class AbstractTokenFacadePreconditionCheckerUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractTokenFacadePreconditionCheckerUnitTest : AbstractFacadeUnitTest() {
 
     protected lateinit var preconditionChecker: TokenFacadePreconditionChecker
 

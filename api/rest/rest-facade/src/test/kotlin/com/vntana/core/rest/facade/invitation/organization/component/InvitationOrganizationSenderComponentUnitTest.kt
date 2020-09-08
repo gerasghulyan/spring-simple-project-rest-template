@@ -6,7 +6,7 @@ import com.vntana.core.helper.invitation.organization.InvitationOrganizationRest
 import com.vntana.core.notification.EmailSenderService
 import com.vntana.core.notification.payload.invitation.organization.InvitationOrganizationEmailSendPayload
 import com.vntana.core.rest.facade.invitation.organization.component.impl.InvitationOrganizationSenderComponentImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.template.email.TemplateEmailService
 import org.easymock.EasyMock
 import org.easymock.Mock
@@ -18,7 +18,7 @@ import org.junit.Test
  * Date: 3/27/20
  * Time: 5:45 PM
  */
-class InvitationOrganizationSenderComponentUnitTest : AbstractServiceFacadeUnitTest() {
+class InvitationOrganizationSenderComponentUnitTest : AbstractFacadeUnitTest() {
 
     private lateinit var senderComponent: InvitationOrganizationSenderComponent
 

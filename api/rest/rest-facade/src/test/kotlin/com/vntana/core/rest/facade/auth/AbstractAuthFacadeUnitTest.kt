@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.auth.impl.AuthFacadeImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import com.vntana.core.service.user.role.UserRoleService
@@ -18,7 +18,7 @@ import org.junit.Before
  * Date: 10/9/19
  * Time: 3:58 PM
  */
-abstract class AbstractAuthFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractAuthFacadeUnitTest : AbstractFacadeUnitTest() {
 
     protected lateinit var authFacade: AuthFacade
 

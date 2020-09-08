@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.indexation.organization.component.impl
 
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.rest.facade.indexation.organization.component.OrganizationIndexationComponent
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecycleMediator
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
  * Date: 3/25/2020
  * Time: 2:26 PM
  */
-class OrganizationIndexationComponentUnitTest : AbstractServiceFacadeUnitTest() {
+class OrganizationIndexationComponentUnitTest : AbstractFacadeUnitTest() {
     private lateinit var organizationIndexationComponent: OrganizationIndexationComponent
 
     private val organizationCommonTestHelper = OrganizationCommonTestHelper()

@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.client.impl.ClientOrganizationServiceFacadeImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator
 import com.vntana.core.service.common.component.SlugValidationComponent
@@ -21,7 +21,7 @@ import org.junit.Before
  * Date: 10/9/19
  * Time: 3:58 PM
  */
-abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeUnitTest() {
     protected lateinit var clientOrganizationServiceFacade: ClientOrganizationServiceFacade
 
     @Mock

@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent
 import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent
 import com.vntana.core.rest.facade.user.component.precondition.UserFacadePreconditionCheckerComponent
@@ -27,7 +27,7 @@ import org.junit.Before
  * Date: 10/11/19
  * Time: 4:38 PM
  */
-abstract class AbstractUserServiceFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractUserServiceFacadeUnitTest : AbstractFacadeUnitTest() {
 
     protected val resetPasswordTokenExpirationInMinutes = 100L
 

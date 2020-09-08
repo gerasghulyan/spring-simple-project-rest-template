@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.*
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by Vardan Aivazian
@@ -37,12 +36,12 @@ class ProductCommentUpdateServiceUnitTest : AbstractProductCommentServiceUnitTes
         resetAll()
         val productComment = commonTestHelper.buildProductComment()
         val dto = commonTestHelper.buildProductCommentUpdateDto(productComment.uuid)
-        expect(commentRepository.findByUuid(dto.uuid)).andReturn(Optional.of(productComment))
+        expect(commentService.findByUuid(dto.uuid)).andReturn(productComment)
         expect(productCommentRepository.save(isA(ProductComment::class.java))).andAnswer { getCurrentArguments()[0] as ProductComment }
         replayAll()
         productCommentService.update(dto).let {
             assertThat(it.uuid).isEqualTo(dto.uuid)
-            assertThat(it.message).isNotEqualTo(dto.message)
+            assertThat(it.message).isEqualTo(dto.message)
         }
         verifyAll()
     }

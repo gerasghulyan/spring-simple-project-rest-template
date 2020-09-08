@@ -56,6 +56,7 @@ class ProductCommentServiceImpl implements ProductCommentService {
         Assert.notNull(dto, "The ProductCommentUpdateDto should not be null");
         LOGGER.debug("Updating product comment for the provided dto - {}", dto);
         ProductComment productComment = (ProductComment) commentService.findByUuid(dto.getUuid());
+        productComment.setMessage(dto.getMessage());
         final ProductComment savedProductComment = productCommentRepository.save(productComment);
         LOGGER.debug("Successfully updated product comment for the provided dto - {}", dto);
         return savedProductComment;

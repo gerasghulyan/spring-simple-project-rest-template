@@ -2,7 +2,6 @@ package com.vntana.core.service.comment.product.impl
 
 import com.vntana.core.helper.unit.comment.product.ProductCommentCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.persistence.comment.CommentRepository
 import com.vntana.core.persistence.comment.product.ProductCommentRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.comment.CommentService
@@ -28,9 +27,6 @@ abstract class AbstractProductCommentServiceUnitTest : AbstractServiceUnitTest()
 
     @Mock
     protected lateinit var productCommentRepository: ProductCommentRepository
-
-    @Mock
-    protected lateinit var commentRepository: CommentRepository
 
     @Mock
     protected lateinit var commentService: CommentService

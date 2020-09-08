@@ -10,7 +10,7 @@ import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.invitation.organization.checker.InvitationOrganizationFacadePreconditionChecker
 import com.vntana.core.rest.facade.invitation.organization.component.InvitationOrganizationSenderComponent
 import com.vntana.core.rest.facade.invitation.organization.impl.InvitationOrganizationServiceFacadeImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
 import com.vntana.core.service.invitation.organization.mediator.InvitationOrganizationUuidAwareLifecycleMediator
 import com.vntana.core.service.organization.OrganizationService
@@ -29,7 +29,7 @@ import org.junit.Before
  * Date: 3/26/20
  * Time: 3:35 PM
  */
-abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractInvitationOrganizationFacadeUnitTest : AbstractFacadeUnitTest() {
 
     protected lateinit var invitationOrganizationServiceFacade: InvitationOrganizationServiceFacade
 

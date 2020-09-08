@@ -3,6 +3,7 @@ package com.vntana.core.helper.user
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest
 import com.vntana.core.model.user.request.*
+import com.vntana.core.model.user.response.get.model.UserViewResponseModel
 
 /**
  * Created by Arthur Asatryan.
@@ -52,4 +53,8 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
     ): ChangeUserPasswordRequest {
         return ChangeUserPasswordRequest(uuid, oldPassword, newPassword)
     }
+
+    fun buildUserViewResponseModel(uuid: String? = uuid(),
+                                   fullName: String? = uuid()
+    ) = UserViewResponseModel(uuid, fullName)
 }
