@@ -9,7 +9,6 @@ buildscript {
         testContainersVersion = '1.11.3'
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
-        javamelodyVersion = '1.85.0'
         sflNotifierVersion = '1.9.0-SNAPSHOT'
         vntanaCommonsVersion = platformVersion
         vntanaCacheVersion = platformVersion
@@ -170,7 +169,6 @@ allprojects {
             dependency("com.vntana.commons:service:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")
             dependency("com.vntana.payment:rest-client-payment:$vntanaPaymentVersion${versionPostfix()}")
-            dependency("net.bull.javamelody:javamelody-spring-boot-starter:${javamelodyVersion}")
         }
     }
 
@@ -525,7 +523,6 @@ project(":api:rest:rest-resource-executable") {
         implementation "com.sflpro.notifier:api-client-library"
         implementation "com.vntana.cache:vntana-cache"
         implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
-        compile "net.bull.javamelody:javamelody-spring-boot-starter"
     }
 }
 
