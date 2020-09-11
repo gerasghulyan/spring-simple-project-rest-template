@@ -15,7 +15,8 @@ class CommentFindByUuidIntegrationTest : AbstractCommentServiceIntegrationTest()
         val persistComment = integrationTestHelper.persistComment()
         flushAndClear()
         commentService.findByUuid(persistComment.uuid).let {
-            assertThat(it).isEqualTo(persistComment)
+            assertThat(it.isPresent).isTrue()
+            assertThat(it.get()).isEqualTo(persistComment)
         }
     }
 }

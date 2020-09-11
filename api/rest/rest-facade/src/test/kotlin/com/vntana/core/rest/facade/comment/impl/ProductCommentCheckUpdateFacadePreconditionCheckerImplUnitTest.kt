@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
+import java.util.*
 
 /**
  * Created by Vardan Aivazian
@@ -18,7 +19,7 @@ class ProductCommentCheckUpdateFacadePreconditionCheckerImplUnitTest : AbstractP
     fun `test when comment does not exist`() {
         val request = restTestHelper.buildUpdateProductCommentRequestModel()
         resetAll()
-        expect(commentService.existsByUuid(request.uuid)).andReturn(false)
+        expect(commentService.findByUuid(request.uuid)).andReturn(Optional.empty())
         replayAll()
         preconditionChecker.checkUpdateProductComment(request).let {
             assertThat(it.isPresent).isTrue()
@@ -33,8 +34,7 @@ class ProductCommentCheckUpdateFacadePreconditionCheckerImplUnitTest : AbstractP
         val request = restTestHelper.buildUpdateProductCommentRequestModel()
         val comment = commonTestHelper.buildProductComment()
         resetAll()
-        expect(commentService.existsByUuid(request.uuid)).andReturn(true)
-        expect(commentService.findByUuid(request.uuid)).andReturn(comment)
+        expect(commentService.findByUuid(request.uuid)).andReturn(Optional.of(comment))
         replayAll()
         preconditionChecker.checkUpdateProductComment(request).let {
             assertThat(it.isPresent).isTrue()
@@ -49,8 +49,7 @@ class ProductCommentCheckUpdateFacadePreconditionCheckerImplUnitTest : AbstractP
         val comment = commonTestHelper.buildProductComment()
         val request = restTestHelper.buildUpdateProductCommentRequestModel(userUuid = comment.user.uuid)
         resetAll()
-        expect(commentService.existsByUuid(request.uuid)).andReturn(true)
-        expect(commentService.findByUuid(request.uuid)).andReturn(comment)
+        expect(commentService.findByUuid(request.uuid)).andReturn(Optional.of(comment))
         replayAll()
         preconditionChecker.checkUpdateProductComment(request).let {
             assertThat(it).isEqualTo(SingleErrorWithStatus.empty<CommentErrorResponseModel>())

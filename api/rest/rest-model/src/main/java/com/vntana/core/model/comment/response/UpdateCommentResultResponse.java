@@ -16,15 +16,15 @@ public class UpdateCommentResultResponse extends AbstractResultResponseModel<Upd
         super();
     }
 
-    public UpdateCommentResultResponse(int httpStatusCode, CommentErrorResponseModel error) {
+    public UpdateCommentResultResponse(final int httpStatusCode, final CommentErrorResponseModel error) {
         super(httpStatusCode, error);
     }
 
-    public UpdateCommentResultResponse(int httpStatusCode, List<CommentErrorResponseModel> errors) {
+    public UpdateCommentResultResponse(final int httpStatusCode, final List<CommentErrorResponseModel> errors) {
         super(httpStatusCode, errors);
     }
 
-    public UpdateCommentResultResponse(UpdateCommentResponseModel updateCommentResponseModel) {
+    public UpdateCommentResultResponse(final UpdateCommentResponseModel updateCommentResponseModel) {
         super(updateCommentResponseModel);
     }
 }

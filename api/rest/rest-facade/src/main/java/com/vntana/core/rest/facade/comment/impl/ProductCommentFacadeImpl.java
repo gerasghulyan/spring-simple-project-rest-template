@@ -70,15 +70,15 @@ class ProductCommentFacadeImpl implements ProductCommentFacade {
     @Override
     public UpdateCommentResultResponse update(final UpdateProductCommentRequestModel request) {
         LOGGER.debug("Updating product comment for the provided request - {}", request);
-        SingleErrorWithStatus<CommentErrorResponseModel> error = preconditionChecker.checkUpdateProductComment(request);
+        final SingleErrorWithStatus<CommentErrorResponseModel> error = preconditionChecker.checkUpdateProductComment(request);
         if (error.isPresent()) {
             return new UpdateCommentResultResponse(error.getHttpStatus(), error.getError());
         }
-        ProductComment comment = productCommentService.update(
+        final ProductComment comment = productCommentService.update(
                 new ProductCommentUpdateDto(request.getUuid(), request.getMessage())
         );
         LOGGER.debug("Successfully updated product comment for the provided request - {}", request);
-        UpdateCommentResponseModel responseModel = new UpdateCommentResponseModel(comment.getUuid(), comment.getMessage());
+        final UpdateCommentResponseModel responseModel = new UpdateCommentResponseModel(comment.getUuid(), comment.getMessage());
         return new UpdateCommentResultResponse(responseModel);
     }
 
@@ -86,11 +86,11 @@ class ProductCommentFacadeImpl implements ProductCommentFacade {
     @Override
     public DeleteCommentResultResponse delete(final DeleteProductCommentRequestModel request) {
         LOGGER.debug("Deleting product comment for the provided request - {}", request);
-        SingleErrorWithStatus<CommentErrorResponseModel> error = preconditionChecker.checkDeleteProductComment(request);
+        final SingleErrorWithStatus<CommentErrorResponseModel> error = preconditionChecker.checkDeleteProductComment(request);
         if (error.isPresent()) {
             return new DeleteCommentResultResponse(error.getHttpStatus(), error.getError());
         }
-        AbstractComment comment = commentService.delete(request.getUuid());
+        final AbstractComment comment = commentService.delete(request.getUuid());
         LOGGER.debug("Successfully deleted product comment for the provided request - {}", request);
         return new DeleteCommentResultResponse(comment.getUuid());
     }

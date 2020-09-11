@@ -48,7 +48,7 @@ public class ProductCommentResource {
     @PutMapping
     public ResponseEntity<UpdateCommentResultResponse> update(@RequestBody final UpdateProductCommentRequestModel request) {
         LOGGER.debug("Processing product comment resource update methods for the provided request - {}", request);
-        UpdateCommentResultResponse resultResponse = productCommentFacade.update(request);
+        final UpdateCommentResultResponse resultResponse = productCommentFacade.update(request);
         LOGGER.debug(
                 "Successfully processed product comment resource update methods for the provided request - {}, result - {}",
                 request,
@@ -60,7 +60,7 @@ public class ProductCommentResource {
     @DeleteMapping
     public ResponseEntity<DeleteCommentResultResponse> delete(@RequestBody final DeleteProductCommentRequestModel request) {
         LOGGER.debug("Processing product comment resource delete methods for the provided request - {}", request);
-        DeleteCommentResultResponse resultResponse = productCommentFacade.delete(request);
+        final DeleteCommentResultResponse resultResponse = productCommentFacade.delete(request);
         LOGGER.debug(
                 "Successfully processed product comment resource delete methods for the provided request - {}, result - {}",
                 request,

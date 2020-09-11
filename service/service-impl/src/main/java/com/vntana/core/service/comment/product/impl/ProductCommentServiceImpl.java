@@ -1,5 +1,6 @@
 package com.vntana.core.service.comment.product.impl;
 
+import com.vntana.commons.service.exception.EntityNotFoundForUuidException;
 import com.vntana.core.domain.comment.ProductComment;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.persistence.comment.product.ProductCommentRepository;
@@ -55,7 +56,8 @@ class ProductCommentServiceImpl implements ProductCommentService {
     public ProductComment update(final ProductCommentUpdateDto dto) {
         Assert.notNull(dto, "The ProductCommentUpdateDto should not be null");
         LOGGER.debug("Updating product comment for the provided dto - {}", dto);
-        ProductComment productComment = (ProductComment) commentService.findByUuid(dto.getUuid());
+        ProductComment productComment = (ProductComment) commentService.findByUuid(dto.getUuid())
+                        .orElseThrow(() -> new EntityNotFoundForUuidException(dto.getUuid(), ProductComment.class));
         productComment.setMessage(dto.getMessage());
         final ProductComment savedProductComment = productCommentRepository.save(productComment);
         LOGGER.debug("Successfully updated product comment for the provided dto - {}", dto);

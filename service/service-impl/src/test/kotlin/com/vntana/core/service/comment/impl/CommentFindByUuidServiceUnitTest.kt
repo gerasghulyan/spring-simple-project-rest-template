@@ -1,6 +1,5 @@
 package com.vntana.core.service.comment.impl
 
-import com.vntana.commons.service.exception.EntityNotFoundForUuidException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
@@ -29,8 +28,9 @@ class CommentFindByUuidServiceUnitTest : AbstractCommentServiceUnitTest() {
         resetAll()
         expect(commentRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
-        assertThatThrownBy { commentService.findByUuid(uuid) }
-                .isExactlyInstanceOf(EntityNotFoundForUuidException::class.java)
+        commentService.findByUuid(uuid).let {
+            assertThat(it.isPresent).isFalse()
+        }
         verifyAll()
     }
 
@@ -41,7 +41,8 @@ class CommentFindByUuidServiceUnitTest : AbstractCommentServiceUnitTest() {
         expect(commentRepository.findByUuid(comment.uuid)).andReturn(Optional.of(comment))
         replayAll()
         commentService.findByUuid(comment.uuid).let {
-            assertThat(it).isEqualTo(comment)
+            assertThat(it.isPresent).isTrue()
+            assertThat(it.get()).isEqualTo(comment)
         }
         verifyAll()
     }

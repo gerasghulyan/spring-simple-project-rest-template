@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Created by Vardan Aivazian
@@ -16,21 +17,23 @@ public class UpdateCommentResponseModel extends AbstractUuidAwareResponseModel {
     private String message;
 
     public UpdateCommentResponseModel() {
+        super();
     }
 
-    public UpdateCommentResponseModel(String uuid, String message) {
+    public UpdateCommentResponseModel(final String uuid, final String message) {
         super(uuid);
         this.message = message;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UpdateCommentResponseModel that = (UpdateCommentResponseModel) o;
-
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof UpdateCommentResponseModel)) {
+            return false;
+        }
+        final UpdateCommentResponseModel that = (UpdateCommentResponseModel) o;
         return new EqualsBuilder()
                 .append(message, that.message)
                 .isEquals();
@@ -38,23 +41,24 @@ public class UpdateCommentResponseModel extends AbstractUuidAwareResponseModel {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
+        return new HashCodeBuilder()
                 .append(message)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "UpdateCommentResponseModel{" +
-                "message='" + message + '\'' +
-                '}';
+        return new ToStringBuilder(this)
+                .appendSuper(super.toString())
+                .append("message", message)
+                .toString();
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(final String message) {
         this.message = message;
     }
 }

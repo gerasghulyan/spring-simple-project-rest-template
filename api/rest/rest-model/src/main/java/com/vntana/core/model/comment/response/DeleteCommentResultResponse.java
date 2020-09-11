@@ -16,15 +16,15 @@ public class DeleteCommentResultResponse extends AbstractResultResponseModel<Del
         super();
     }
 
-    public DeleteCommentResultResponse(int httpStatusCode, CommentErrorResponseModel error) {
+    public DeleteCommentResultResponse(final int httpStatusCode, final CommentErrorResponseModel error) {
         super(httpStatusCode, error);
     }
 
-    public DeleteCommentResultResponse(int httpStatusCode, List<CommentErrorResponseModel> errors) {
+    public DeleteCommentResultResponse(final int httpStatusCode, final List<CommentErrorResponseModel> errors) {
         super(httpStatusCode, errors);
     }
 
-    public DeleteCommentResultResponse(String uuid) {
+    public DeleteCommentResultResponse(final String uuid) {
         super(new DeleteCommentResponseModel(uuid));
     }
 }

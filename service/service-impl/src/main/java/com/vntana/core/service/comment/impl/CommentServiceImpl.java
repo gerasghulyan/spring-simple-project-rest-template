@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Created by Vardan Aivazian
@@ -31,13 +32,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public AbstractComment findByUuid(final String uuid) {
+    public Optional<AbstractComment> findByUuid(final String uuid) {
         Assert.hasText(uuid, "The comment uuid should not be null or empty");
         LOGGER.debug("Retrieving user comments by uuid - {}", uuid);
-        final AbstractComment comment = commentRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundForUuidException(uuid, AbstractComment.class));
+        final Optional<AbstractComment> optionalComment = commentRepository.findByUuid(uuid);
         LOGGER.debug("Successfully retrieved user comments by uuid - {}", uuid);
-        return comment;
+        return optionalComment;
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +55,8 @@ public class CommentServiceImpl implements CommentService {
     public AbstractComment delete(final String uuid) {
         Assert.hasText(uuid, "The comment uuid should not be null or empty");
         LOGGER.debug("Deleting comment having uuid - {}", uuid);
-        AbstractComment abstractComment = findByUuid(uuid);
+        AbstractComment abstractComment = findByUuid(uuid)
+                        .orElseThrow(() -> new EntityNotFoundForUuidException(uuid, AbstractComment.class));
         abstractComment.setRemoved(LocalDateTime.now());
         AbstractComment deletedComment = commentRepository.save(abstractComment);
         LOGGER.debug("Successfully deleted comment having uuid - {}", uuid);

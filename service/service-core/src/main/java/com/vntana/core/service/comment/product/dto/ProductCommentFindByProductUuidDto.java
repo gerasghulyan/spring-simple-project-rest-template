@@ -36,6 +36,7 @@ public class ProductCommentFindByProductUuidDto extends AbstractPaginationAwareD
         }
         final ProductCommentFindByProductUuidDto that = (ProductCommentFindByProductUuidDto) o;
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(productUuid, that.productUuid)
                 .isEquals();
     }
@@ -43,6 +44,7 @@ public class ProductCommentFindByProductUuidDto extends AbstractPaginationAwareD
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .appendSuper(super.hashCode())
                 .append(productUuid)
                 .toHashCode();
     }

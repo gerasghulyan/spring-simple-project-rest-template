@@ -40,7 +40,7 @@ public class UpdateProductCommentRequestModel extends AbstractRequestModel imple
 
     @Override
     public List<CommentErrorResponseModel> validate() {
-        List<CommentErrorResponseModel> errors = new ArrayList<>();
+        final List<CommentErrorResponseModel> errors = new ArrayList<>();
         if (StringUtils.isBlank(uuid)) {
             errors.add(CommentErrorResponseModel.MISSING_UUID);
         }
@@ -55,12 +55,13 @@ public class UpdateProductCommentRequestModel extends AbstractRequestModel imple
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof UpdateProductCommentRequestModel)) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof UpdateProductCommentRequestModel)) {
+            return false;
+        }
         final UpdateProductCommentRequestModel that = (UpdateProductCommentRequestModel) o;
-
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
                 .append(userUuid, that.userUuid)
@@ -70,7 +71,7 @@ public class UpdateProductCommentRequestModel extends AbstractRequestModel imple
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
+        return new HashCodeBuilder()
                 .append(uuid)
                 .append(userUuid)
                 .append(message)
@@ -80,6 +81,7 @@ public class UpdateProductCommentRequestModel extends AbstractRequestModel imple
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .appendSuper(super.toString())
                 .append("uuid", uuid)
                 .append("userUuid", userUuid)
                 .append("message", message)

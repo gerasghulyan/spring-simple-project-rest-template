@@ -8,12 +8,14 @@ import com.vntana.core.model.comment.request.DeleteProductCommentRequestModel;
 import com.vntana.core.model.comment.request.UpdateProductCommentRequestModel;
 import com.vntana.core.service.comment.CommentService;
 import com.vntana.core.service.user.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import static org.apache.http.HttpStatus.*;
+import java.util.Optional;
+
+import static org.apache.http.HttpStatus.SC_FORBIDDEN;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
 /**
  * Created by Arman Gevorgyan.
@@ -47,10 +49,11 @@ class ProductCommentFacadePreconditionCheckerImpl implements ProductCommentFacad
     @Override
     public SingleErrorWithStatus<CommentErrorResponseModel> checkUpdateProductComment(final UpdateProductCommentRequestModel request) {
         LOGGER.debug("Checking product comment update for possible errors for the provided request - {}", request);
-        if (!commentService.existsByUuid(request.getUuid())) {
+        final Optional<AbstractComment> optionalComment = commentService.findByUuid(request.getUuid());
+        if (!optionalComment.isPresent()) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, CommentErrorResponseModel.COMMENT_NOT_FOUND);
         }
-        final AbstractComment comment = commentService.findByUuid(request.getUuid());
+        final AbstractComment comment = optionalComment.get();
         if (!comment.getUser().getUuid().equals(request.getUserUuid())) {
             return SingleErrorWithStatus.of(SC_FORBIDDEN, CommentErrorResponseModel.USER_ACCESS_DENIED);
         }
@@ -61,13 +64,11 @@ class ProductCommentFacadePreconditionCheckerImpl implements ProductCommentFacad
     @Override
     public SingleErrorWithStatus<CommentErrorResponseModel> checkDeleteProductComment(final DeleteProductCommentRequestModel request) {
         LOGGER.debug("Checking product comment delete for possible errors for the provided request - {}", request);
-        if (StringUtils.isBlank(request.getUuid())) {
-            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, CommentErrorResponseModel.MISSING_UUID);
-        }
-        if (!commentService.existsByUuid(request.getUuid())) {
+        final Optional<AbstractComment> optionalComment = commentService.findByUuid(request.getUuid());
+        if (!optionalComment.isPresent()) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, CommentErrorResponseModel.COMMENT_NOT_FOUND);
         }
-        final AbstractComment comment = commentService.findByUuid(request.getUuid());
+        final AbstractComment comment = optionalComment.get();
         if (!comment.getUser().getUuid().equals(request.getUserUuid())) {
             return SingleErrorWithStatus.of(SC_FORBIDDEN, CommentErrorResponseModel.USER_ACCESS_DENIED);
         }

@@ -3,6 +3,7 @@ package com.vntana.core.service.comment.product.dto;
 import com.vntana.commons.service.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
 
 /**
@@ -26,13 +27,14 @@ public class ProductCommentCreateDto implements ServiceDto {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProductCommentCreateDto that = (ProductCommentCreateDto) o;
-
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ProductCommentCreateDto)) {
+            return false;
+        }
+        final ProductCommentCreateDto that = (ProductCommentCreateDto) o;
         return new EqualsBuilder()
                 .append(userUuid, that.userUuid)
                 .append(productUuid, that.productUuid)
@@ -42,7 +44,7 @@ public class ProductCommentCreateDto implements ServiceDto {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
+        return new HashCodeBuilder()
                 .append(userUuid)
                 .append(productUuid)
                 .append(message)
@@ -51,11 +53,12 @@ public class ProductCommentCreateDto implements ServiceDto {
 
     @Override
     public String toString() {
-        return "ProductCommentCreateDto{" +
-                "userUuid='" + userUuid + '\'' +
-                ", productUuid='" + productUuid + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+        return new ToStringBuilder(this)
+                .appendSuper(super.toString())
+                .append("userUuid", userUuid)
+                .append("productUuid", productUuid)
+                .append("message", message)
+                .toString();
     }
 
     public String getMessage() {

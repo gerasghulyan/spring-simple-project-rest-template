@@ -13,7 +13,7 @@ public class DeleteCommentResponseModel extends AbstractUuidAwareResponseModel {
         super();
     }
 
-    public DeleteCommentResponseModel(String uuid) {
+    public DeleteCommentResponseModel(final String uuid) {
         super(uuid);
     }
 }
