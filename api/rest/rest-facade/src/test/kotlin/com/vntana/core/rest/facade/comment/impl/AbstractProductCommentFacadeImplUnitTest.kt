@@ -5,6 +5,7 @@ import com.vntana.core.helper.unit.comment.product.ProductCommentCommonTestHelpe
 import com.vntana.core.rest.facade.comment.ProductCommentFacade
 import com.vntana.core.rest.facade.comment.builder.ProductCommentViewModelBuilder
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
+import com.vntana.core.service.comment.CommentService
 import com.vntana.core.service.comment.product.ProductCommentService
 import org.easymock.Mock
 import org.junit.Before
@@ -22,6 +23,9 @@ abstract class AbstractProductCommentFacadeImplUnitTest : AbstractFacadeUnitTest
     internal lateinit var preconditionChecker: ProductCommentFacadePreconditionChecker
 
     @Mock
+    protected lateinit var commentService: CommentService
+
+    @Mock
     protected lateinit var productCommentService: ProductCommentService
 
     @Mock
@@ -34,6 +38,7 @@ abstract class AbstractProductCommentFacadeImplUnitTest : AbstractFacadeUnitTest
     fun prepare() {
         productCommentFacade = ProductCommentFacadeImpl(
                 preconditionChecker,
+                commentService,
                 productCommentService,
                 productCommentViewModelBuilder
         )

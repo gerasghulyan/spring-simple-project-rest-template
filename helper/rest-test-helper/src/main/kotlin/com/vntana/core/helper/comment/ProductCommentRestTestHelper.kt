@@ -3,7 +3,9 @@ package com.vntana.core.helper.comment
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.model.comment.request.CreateProductCommentRequestModel
+import com.vntana.core.model.comment.request.DeleteProductCommentRequestModel
 import com.vntana.core.model.comment.request.FindProductCommentByFilterRequestModel
+import com.vntana.core.model.comment.request.UpdateProductCommentRequestModel
 import com.vntana.core.model.comment.response.ProductCommentViewResponseModel
 import com.vntana.core.model.user.response.get.model.UserViewResponseModel
 import org.springframework.stereotype.Component
@@ -23,6 +25,17 @@ class ProductCommentRestTestHelper : AbstractRestTestHelper() {
             productUuid: String? = uuid(),
             message: String? = uuid()
     ) = CreateProductCommentRequestModel(userUuid, productUuid, message)
+
+    fun buildUpdateProductCommentRequestModel(
+            uuid: String? = uuid(),
+            userUuid: String? = uuid(),
+            message: String? = uuid()
+    ) = UpdateProductCommentRequestModel(uuid, userUuid, message)
+
+    fun buildDeleteProductCommentRequestModel(
+            uuid: String? = uuid(),
+            userUuid: String? = uuid()
+    ) = DeleteProductCommentRequestModel(uuid, userUuid)
 
     fun buildFindProductCommentByFilterRequestModel(
             page: Int = 0,

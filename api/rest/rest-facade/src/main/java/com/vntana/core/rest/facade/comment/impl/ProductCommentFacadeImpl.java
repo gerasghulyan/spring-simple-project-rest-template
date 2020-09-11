@@ -1,19 +1,21 @@
 package com.vntana.core.rest.facade.comment.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.comment.AbstractComment;
 import com.vntana.core.domain.comment.ProductComment;
 import com.vntana.core.model.comment.CommentErrorResponseModel;
 import com.vntana.core.model.comment.request.CreateProductCommentRequestModel;
+import com.vntana.core.model.comment.request.DeleteProductCommentRequestModel;
 import com.vntana.core.model.comment.request.FindProductCommentByFilterRequestModel;
-import com.vntana.core.model.comment.response.CreateCommentResultResponse;
-import com.vntana.core.model.comment.response.ProductCommentGridResponseModel;
-import com.vntana.core.model.comment.response.ProductCommentViewResponseModel;
-import com.vntana.core.model.comment.response.ProductCommentViewResultResponse;
+import com.vntana.core.model.comment.request.UpdateProductCommentRequestModel;
+import com.vntana.core.model.comment.response.*;
 import com.vntana.core.rest.facade.comment.ProductCommentFacade;
 import com.vntana.core.rest.facade.comment.builder.ProductCommentViewModelBuilder;
+import com.vntana.core.service.comment.CommentService;
 import com.vntana.core.service.comment.product.ProductCommentService;
 import com.vntana.core.service.comment.product.dto.ProductCommentCreateDto;
 import com.vntana.core.service.comment.product.dto.ProductCommentFindByProductUuidDto;
+import com.vntana.core.service.comment.product.dto.ProductCommentUpdateDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -35,17 +37,21 @@ class ProductCommentFacadeImpl implements ProductCommentFacade {
 
     private final ProductCommentFacadePreconditionChecker preconditionChecker;
     private final ProductCommentService productCommentService;
+    private final CommentService commentService;
     private final ProductCommentViewModelBuilder productCommentViewModelBuilder;
 
     public ProductCommentFacadeImpl(final ProductCommentFacadePreconditionChecker preconditionChecker,
+                                    final CommentService commentService,
                                     final ProductCommentService productCommentService,
                                     final ProductCommentViewModelBuilder productCommentViewModelBuilder) {
         this.preconditionChecker = preconditionChecker;
+        this.commentService = commentService;
         this.productCommentService = productCommentService;
         this.productCommentViewModelBuilder = productCommentViewModelBuilder;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
+    @Transactional
     @Override
     public CreateCommentResultResponse create(final CreateProductCommentRequestModel request) {
         LOGGER.debug("Creating product comment for the provided request - {}", request);
@@ -58,6 +64,35 @@ class ProductCommentFacadeImpl implements ProductCommentFacade {
         );
         LOGGER.debug("Successfully created product comment for the provided request - {}", request);
         return new CreateCommentResultResponse(comment.getUuid());
+    }
+
+    @Transactional
+    @Override
+    public UpdateCommentResultResponse update(final UpdateProductCommentRequestModel request) {
+        LOGGER.debug("Updating product comment for the provided request - {}", request);
+        SingleErrorWithStatus<CommentErrorResponseModel> error = preconditionChecker.checkUpdateProductComment(request);
+        if (error.isPresent()) {
+            return new UpdateCommentResultResponse(error.getHttpStatus(), error.getError());
+        }
+        ProductComment comment = productCommentService.update(
+                new ProductCommentUpdateDto(request.getUuid(), request.getMessage())
+        );
+        LOGGER.debug("Successfully updated product comment for the provided request - {}", request);
+        UpdateCommentResponseModel responseModel = new UpdateCommentResponseModel(comment.getUuid(), comment.getMessage());
+        return new UpdateCommentResultResponse(responseModel);
+    }
+
+    @Transactional
+    @Override
+    public DeleteCommentResultResponse delete(final DeleteProductCommentRequestModel request) {
+        LOGGER.debug("Deleting product comment for the provided request - {}", request);
+        SingleErrorWithStatus<CommentErrorResponseModel> error = preconditionChecker.checkDeleteProductComment(request);
+        if (error.isPresent()) {
+            return new DeleteCommentResultResponse(error.getHttpStatus(), error.getError());
+        }
+        AbstractComment comment = commentService.delete(request.getUuid());
+        LOGGER.debug("Successfully deleted product comment for the provided request - {}", request);
+        return new DeleteCommentResultResponse(comment.getUuid());
     }
 
     @Transactional(readOnly = true)

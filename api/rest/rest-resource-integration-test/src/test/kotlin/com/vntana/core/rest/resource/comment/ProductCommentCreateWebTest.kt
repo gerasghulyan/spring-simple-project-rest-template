@@ -57,7 +57,6 @@ class ProductCommentCreateWebTest : AbstractProductCommentWebTest() {
                             CommentErrorResponseModel.USER_NOT_FOUND
                     )
                 }
-
     }
 
     @Test
