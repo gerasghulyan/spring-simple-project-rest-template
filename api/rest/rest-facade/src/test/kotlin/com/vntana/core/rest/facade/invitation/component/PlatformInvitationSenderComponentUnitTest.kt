@@ -5,7 +5,7 @@ import com.vntana.core.domain.template.email.TemplateEmailType
 import com.vntana.core.notification.EmailSenderService
 import com.vntana.core.notification.payload.invitation.PlatformInvitationEmailSendPayload
 import com.vntana.core.rest.facade.invitation.component.impl.PlatformInvitationSenderComponentImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.template.email.TemplateEmailService
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
@@ -19,7 +19,7 @@ import org.junit.Test
  * Date: 12/26/19
  * Time: 11:32 AM
  */
-class PlatformInvitationSenderComponentUnitTest : AbstractServiceFacadeUnitTest() {
+class PlatformInvitationSenderComponentUnitTest : AbstractFacadeUnitTest() {
 
     private lateinit var senderComponent: PlatformInvitationSenderComponent
 

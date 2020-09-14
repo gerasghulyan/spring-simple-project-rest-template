@@ -1,6 +1,6 @@
 package com.vntana.core.rest.facade.user.component.precondition
 
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.precondition.impl.UserFacadePreconditionCheckerComponentImpl
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
@@ -12,7 +12,7 @@ import org.junit.Before
  * Date: 4/8/20
  * Time: 10:14 AM
  */
-abstract class AbstractUserFacadePreconditionCheckerComponentUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractUserFacadePreconditionCheckerComponentUnitTest : AbstractFacadeUnitTest() {
 
     protected lateinit var preconditionChecker: UserFacadePreconditionCheckerComponent
 

@@ -3,7 +3,7 @@ package com.vntana.core.rest.facade.user.component
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.notification.EmailSenderService
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.impl.UserResetPasswordEmailSenderComponentImpl
 import com.vntana.core.service.template.email.TemplateEmailService
 import org.easymock.Mock
@@ -14,7 +14,7 @@ import org.junit.Before
  * Date: 12/12/19
  * Time: 3:07 PM
  */
-abstract class AbstractUserResetPasswordEmailSenderComponentUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractUserResetPasswordEmailSenderComponentUnitTest : AbstractFacadeUnitTest() {
 
     protected lateinit var resetPasswordEmailSenderComponent: UserResetPasswordEmailSenderComponent
 

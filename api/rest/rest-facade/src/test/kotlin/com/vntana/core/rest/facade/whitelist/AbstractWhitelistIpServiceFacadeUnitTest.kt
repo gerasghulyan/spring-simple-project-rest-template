@@ -3,7 +3,7 @@ package com.vntana.core.rest.facade.whitelist
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.whitelist.WhitelistIpCommonTestHelper
 import com.vntana.core.helper.whitelist.WhitelistIpRestTestHelper
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.whitelist.impl.WhitelistIpServiceFacadeImpl
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.whitelist.WhitelistIpService
@@ -17,7 +17,7 @@ import org.junit.Before
  * Date: 11/29/19
  * Time: 4:50 PM
  */
-abstract class AbstractWhitelistIpServiceFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractWhitelistIpServiceFacadeUnitTest : AbstractFacadeUnitTest() {
 
     @Mock
     protected lateinit var mapperFacade: MapperFacade

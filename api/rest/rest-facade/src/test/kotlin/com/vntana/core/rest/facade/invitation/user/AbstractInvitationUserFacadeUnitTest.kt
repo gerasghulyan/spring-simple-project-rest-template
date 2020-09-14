@@ -9,7 +9,7 @@ import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent
 import com.vntana.core.rest.facade.invitation.user.impl.InvitationUserServiceFacadeImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.invitation.user.InvitationUserService
 import com.vntana.core.service.token.TokenService
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService
@@ -24,7 +24,7 @@ import org.junit.Before
  * Date: 3/26/20
  * Time: 3:35 PM
  */
-abstract class AbstractInvitationUserFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractInvitationUserFacadeUnitTest : AbstractFacadeUnitTest() {
     protected lateinit var invitationUserServiceFacade: InvitationUserServiceFacade
 
     @Mock

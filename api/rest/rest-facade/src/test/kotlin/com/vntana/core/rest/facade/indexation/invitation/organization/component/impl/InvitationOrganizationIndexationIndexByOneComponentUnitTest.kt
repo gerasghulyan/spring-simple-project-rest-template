@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.indexation.invitation.organization.component
 
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.rest.facade.indexation.invitation.organization.component.InvitationOrganizationIndexationComponent
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
 import com.vntana.core.service.invitation.organization.mediator.InvitationOrganizationUuidAwareLifecycleMediator
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
  * Date: 4/2/20
  * Time: 2:41 PM
  */
-class InvitationOrganizationIndexationIndexByOneComponentUnitTest : AbstractServiceFacadeUnitTest() {
+class InvitationOrganizationIndexationIndexByOneComponentUnitTest : AbstractFacadeUnitTest() {
 
     private lateinit var indexationComponent: InvitationOrganizationIndexationComponent
 

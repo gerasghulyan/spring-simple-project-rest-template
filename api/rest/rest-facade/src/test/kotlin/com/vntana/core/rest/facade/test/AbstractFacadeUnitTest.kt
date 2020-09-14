@@ -18,7 +18,7 @@ import kotlin.random.Random
  * Time: 3:55 PM
  */
 @RunWith(EasyMockRunner::class)
-abstract class AbstractServiceFacadeUnitTest : EasyMockSupport() {
+abstract class AbstractFacadeUnitTest : EasyMockSupport() {
     fun uuid(): String = UUID.randomUUID().toString()
 
     fun randomInt(): Int = Random.nextInt()
@@ -40,4 +40,10 @@ abstract class AbstractServiceFacadeUnitTest : EasyMockSupport() {
         Assertions.assertThat(resultResponse.success()).isFalse()
         Assertions.assertThat(resultResponse.errors()).isNotEmpty.containsExactlyInAnyOrder(*errors)
     }
+
+    fun assertIllegalArgumentException(action: Action) {
+        Assertions.assertThatThrownBy { action.invoke() }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+    }
 }
+
+typealias Action = () -> Any

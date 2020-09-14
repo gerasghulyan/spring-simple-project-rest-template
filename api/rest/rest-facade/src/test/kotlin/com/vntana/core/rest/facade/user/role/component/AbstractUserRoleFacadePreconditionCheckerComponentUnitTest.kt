@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.user.role.component
 
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.helper.user.role.UserRoleRestTestHelper
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.role.component.impl.UserRoleFacadePreconditionCheckerComponentImpl
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
@@ -15,7 +15,7 @@ import org.junit.Before
  * Date: 5/12/20
  * Time: 11:49 AM
  */
-abstract class AbstractUserRoleFacadePreconditionCheckerComponentUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractUserRoleFacadePreconditionCheckerComponentUnitTest : AbstractFacadeUnitTest() {
 
     protected lateinit var preconditionChecker: UserRoleFacadePreconditionCheckerComponent
 

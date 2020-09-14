@@ -4,7 +4,7 @@ import com.vntana.commons.api.model.response.indexation.error.IndexationErrorRes
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.rest.facade.indexation.invitation.organization.InvitationOrganizationIndexationServiceFacade
 import com.vntana.core.rest.facade.indexation.invitation.organization.component.InvitationOrganizationIndexationComponent
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
 import com.vntana.core.service.invitation.organization.dto.GetAllInvitationOrganizationsDto
 import org.easymock.EasyMock.anyObject
@@ -18,7 +18,7 @@ import org.junit.Test
  * Date: 4/2/20
  * Time: 2:10 PM
  */
-class InvitationOrganizationIndexationReIndexAllFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+class InvitationOrganizationIndexationReIndexAllFacadeUnitTest : AbstractFacadeUnitTest() {
 
     private lateinit var indexationFacade: InvitationOrganizationIndexationServiceFacade
 

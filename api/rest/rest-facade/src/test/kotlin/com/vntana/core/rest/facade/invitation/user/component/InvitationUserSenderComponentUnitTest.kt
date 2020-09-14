@@ -8,7 +8,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.notification.EmailSenderService
 import com.vntana.core.notification.payload.invitation.user.InvitationUserEmailSendPayload
 import com.vntana.core.rest.facade.invitation.user.component.impl.InvitationUserSenderComponentImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.template.email.TemplateEmailService
 import com.vntana.core.service.user.UserService
@@ -23,7 +23,7 @@ import org.junit.Test
  * Date: 5/15/2020
  * Time: 11:26 AM
  */
-class InvitationUserSenderComponentUnitTest : AbstractServiceFacadeUnitTest() {
+class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
 
     private lateinit var senderComponent: InvitationUserSenderComponent
 

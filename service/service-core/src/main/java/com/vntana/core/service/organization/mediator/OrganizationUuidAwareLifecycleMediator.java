@@ -1,5 +1,6 @@
 package com.vntana.core.service.organization.mediator;
 
+
 import com.vntana.commons.indexation.mediator.EntityUuidAwareLifecycleMediator;
 
 /**

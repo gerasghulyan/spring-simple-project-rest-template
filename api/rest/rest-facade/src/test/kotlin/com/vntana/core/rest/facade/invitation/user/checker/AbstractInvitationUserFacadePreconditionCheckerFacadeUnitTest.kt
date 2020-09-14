@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.rest.facade.invitation.user.checker.impl.InvitationUserFacadePreconditionCheckerImpl
-import com.vntana.core.rest.facade.test.AbstractServiceFacadeUnitTest
+import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.invitation.user.InvitationUserService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService
@@ -20,7 +20,7 @@ import org.junit.Before
  * Date: 5/12/2020
  * Time: 5:52 PM
  */
-abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : AbstractServiceFacadeUnitTest() {
+abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : AbstractFacadeUnitTest() {
     protected lateinit var preconditionChecker: InvitationUserFacadePreconditionChecker
 
     @Mock
