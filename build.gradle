@@ -9,7 +9,7 @@ buildscript {
         testContainersVersion = '1.11.3'
         orikaSpringBootVersion = "1.8.0"
         springFoxSwaggerVersion = '2.9.2'
-        sflNotifierVersion = '1.9.0-SNAPSHOT'
+        sflNotifierVersion = '1.9.0'
         vntanaCommonsVersion = platformVersion
         vntanaCacheVersion = platformVersion
         vntanaPaymentVersion = platformVersion
