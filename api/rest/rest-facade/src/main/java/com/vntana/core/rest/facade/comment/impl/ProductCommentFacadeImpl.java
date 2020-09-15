@@ -63,7 +63,8 @@ class ProductCommentFacadeImpl implements ProductCommentFacade {
                 new ProductCommentCreateDto(request.getUserUuid(), request.getProductUuid(), request.getMessage())
         );
         LOGGER.debug("Successfully created product comment for the provided request - {}", request);
-        return new CreateCommentResultResponse(comment.getUuid());
+        final CreateCommentResponseModel responseModel = new CreateCommentResponseModel(comment.getUuid(), comment.getCreated());
+        return new CreateCommentResultResponse(responseModel);
     }
 
     @Transactional
@@ -78,7 +79,7 @@ class ProductCommentFacadeImpl implements ProductCommentFacade {
                 new ProductCommentUpdateDto(request.getUuid(), request.getMessage())
         );
         LOGGER.debug("Successfully updated product comment for the provided request - {}", request);
-        final UpdateCommentResponseModel responseModel = new UpdateCommentResponseModel(comment.getUuid(), comment.getMessage());
+        final UpdateCommentResponseModel responseModel = new UpdateCommentResponseModel(comment.getUuid(), comment.getMessage(), comment.getCreated(), comment.getUpdated());
         return new UpdateCommentResultResponse(responseModel);
     }
 

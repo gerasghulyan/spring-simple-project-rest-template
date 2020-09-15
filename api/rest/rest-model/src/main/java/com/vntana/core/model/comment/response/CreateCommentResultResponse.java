@@ -24,7 +24,7 @@ public class CreateCommentResultResponse extends AbstractResultResponseModel<Cre
         super(httpStatusCode, errors);
     }
 
-    public CreateCommentResultResponse(final String uuid) {
-        super(new CreateCommentResponseModel(uuid));
+    public CreateCommentResultResponse(final CreateCommentResponseModel responseModel) {
+        super(responseModel);
     }
 }
