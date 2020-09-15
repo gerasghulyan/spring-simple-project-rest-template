@@ -20,7 +20,7 @@ class ProductCommentFindByProductUuidUnitTest : AbstractProductCommentServiceUni
         replayAll()
         assertThatThrownBy { commonTestHelper.buildProductCommentFindByProductUuidDto(productUuid = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { commonTestHelper.buildProductCommentCreateDto(productUuid = StringUtils.EMPTY) }
+        assertThatThrownBy { commonTestHelper.buildProductCommentFindByProductUuidDto(productUuid = StringUtils.EMPTY) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { productCommentService.findByProductUuid(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
