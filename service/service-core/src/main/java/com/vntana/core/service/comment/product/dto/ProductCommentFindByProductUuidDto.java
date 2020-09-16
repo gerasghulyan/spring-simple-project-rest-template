@@ -15,12 +15,7 @@ public class ProductCommentFindByProductUuidDto extends AbstractPaginationAwareD
 
     private final String productUuid;
 
-    public ProductCommentFindByProductUuidDto(int size, String productUuid) {
-        super(size);
-        this.productUuid = productUuid;
-    }
-
-    public ProductCommentFindByProductUuidDto(int page, int size, String productUuid) {
+    public ProductCommentFindByProductUuidDto(int page, int size, final String productUuid) {
         super(page, size);
         Assert.hasText(productUuid, "The product uuid should not be null or empty");
         this.productUuid = productUuid;
