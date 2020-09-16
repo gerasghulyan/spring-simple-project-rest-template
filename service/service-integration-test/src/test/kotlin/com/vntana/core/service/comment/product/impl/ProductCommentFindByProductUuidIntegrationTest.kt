@@ -14,12 +14,13 @@ class ProductCommentFindByProductUuidIntegrationTest : AbstractProductCommentSer
     fun `test findByProductUuid`() {
         val persistProductComment1 = integrationTestHelper.persistProductComment()
         val persistProductComment2 = integrationTestHelper.persistProductComment(productUuid = persistProductComment1.productUuid)
+        val persistProductComment3 = integrationTestHelper.persistProductComment(productUuid = persistProductComment1.productUuid)
         flushAndClear()
         integrationTestHelper.buildProductCommentFindByProductUuidDto(productUuid = persistProductComment1.productUuid).let {
             productCommentService.findByProductUuid(it)
         }.let {
-            assertThat(it.totalElements).isEqualTo(2)
-            assertThat(it).containsExactlyInAnyOrder(persistProductComment1, persistProductComment2)
+            assertThat(it.totalElements).isEqualTo(3)
+            assertThat(it).containsExactly(persistProductComment1, persistProductComment2, persistProductComment3)
         }
     }
 }
