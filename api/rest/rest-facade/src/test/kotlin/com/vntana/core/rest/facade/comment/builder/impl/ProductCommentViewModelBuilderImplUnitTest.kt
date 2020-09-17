@@ -45,15 +45,17 @@ class ProductCommentViewModelBuilderImplUnitTest : AbstractFacadeUnitTest() {
     @Test
     fun test() {
         val comment = commonTestHelper.buildProductComment()
-        val taggedUserUuids = listOf(uuid(), uuid())
+        val taggedUserUuids = setOf(uuid(), uuid())
         val ownerViewModel = userRestTestHelper.buildUserViewResponseModel()
         val taggedUser1ViewModel = userRestTestHelper.buildUserViewResponseModel()
         val taggedUser2ViewModel = userRestTestHelper.buildUserViewResponseModel()
         resetAll()
         expect(commentTaggedUsersFinderService.find(comment)).andReturn(taggedUserUuids)
         expect(userModelBuilder.build(comment.user)).andReturn(ownerViewModel)
-        expect(userModelBuilder.build(taggedUserUuids[0])).andReturn(taggedUser1ViewModel)
-        expect(userModelBuilder.build(taggedUserUuids[1])).andReturn(taggedUser2ViewModel)
+        taggedUserUuids.iterator().apply {
+            expect(userModelBuilder.build(this.next())).andReturn(taggedUser1ViewModel)
+            expect(userModelBuilder.build(this.next())).andReturn(taggedUser2ViewModel)
+        }
         replayAll()
         builder.build(comment)
                 .apply { assertThat(this.uuid).isEqualTo(comment.uuid) }

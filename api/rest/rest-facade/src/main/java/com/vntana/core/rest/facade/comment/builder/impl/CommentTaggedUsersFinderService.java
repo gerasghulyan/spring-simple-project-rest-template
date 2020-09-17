@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.comment.builder.impl;
 
 import com.vntana.core.domain.comment.AbstractComment;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Arman Gevorgyan.
@@ -11,5 +11,5 @@ import java.util.List;
  */
 interface CommentTaggedUsersFinderService {
 
-    List<String> find(final AbstractComment comment);
+    Set<String> find(final AbstractComment comment);
 }

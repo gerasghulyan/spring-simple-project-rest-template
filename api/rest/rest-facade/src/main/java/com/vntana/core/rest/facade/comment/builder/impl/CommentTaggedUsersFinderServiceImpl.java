@@ -4,9 +4,12 @@ import com.vntana.core.domain.comment.AbstractComment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Arman Gevorgyan.
@@ -23,7 +26,17 @@ class CommentTaggedUsersFinderServiceImpl implements CommentTaggedUsersFinderSer
     }
 
     @Override
-    public List<String> find(final AbstractComment comment) {
-        return Collections.emptyList();
+    public Set<String> find(final AbstractComment comment) {
+        LOGGER.debug("Finding mentioned users uuids for the provided comment - {}", comment);
+        Assert.notNull(comment, "The comment should not be null");
+        final String message = comment.getMessage();
+        final Pattern pattern = Pattern.compile("\\[~accountUuid:((.{8}-.{4}-.{4}-.{4}-.{12}))\\]");
+        final Matcher matcher = pattern.matcher(message);
+        final Set<String> mentionedUsersUuids = new HashSet<>();
+        while (matcher.find()) {
+            mentionedUsersUuids.add(matcher.group(1));
+        }
+        LOGGER.debug("Successfully found mentioned users uuids for the provided comment - {}, result - {}", comment, mentionedUsersUuids);
+        return mentionedUsersUuids;
     }
 }
