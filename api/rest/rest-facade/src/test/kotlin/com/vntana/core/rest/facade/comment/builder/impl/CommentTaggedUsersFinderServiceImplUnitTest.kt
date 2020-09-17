@@ -62,7 +62,7 @@ class CommentTaggedUsersFinderServiceImplUnitTest : AbstractFacadeUnitTest() {
         resetAll()
         replayAll()
         commentTaggedUsersFinderService.find(comment)
-                .apply { assertThat(this).containsExactly(uuid1, uuid2) }
+                .apply { assertThat(this).containsExactlyInAnyOrder(uuid1, uuid2) }
         verifyAll()
     }
 }
