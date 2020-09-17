@@ -9,6 +9,7 @@ import com.vntana.core.model.comment.request.UpdateProductCommentRequestModel
 import com.vntana.core.model.comment.response.ProductCommentViewResponseModel
 import com.vntana.core.model.user.response.get.model.UserViewResponseModel
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 /**
  * Created by Arman Gevorgyan.
@@ -47,6 +48,8 @@ class ProductCommentRestTestHelper : AbstractRestTestHelper() {
                                              productUuid: String? = uuid(),
                                              message: String? = uuid(),
                                              owner: UserViewResponseModel = userRestTestHelper.buildUserViewResponseModel(),
-                                             taggedUsers: List<UserViewResponseModel> = listOf(userRestTestHelper.buildUserViewResponseModel())
-    ) = ProductCommentViewResponseModel(uuid, productUuid, message, owner, taggedUsers)
+                                             taggedUsers: List<UserViewResponseModel> = listOf(userRestTestHelper.buildUserViewResponseModel()),
+                                             created: LocalDateTime? = LocalDateTime.now(),
+                                             updated: LocalDateTime? = LocalDateTime.now()
+    ) = ProductCommentViewResponseModel(uuid, productUuid, message, owner, taggedUsers, created, updated)
 }

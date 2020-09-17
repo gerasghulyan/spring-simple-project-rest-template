@@ -8,7 +8,7 @@ import com.vntana.commons.api.model.response.impl.AbstractUuidAwareResponseModel
  * Time: 3:08 PM
  */
 public class CreateCommentResponseModel extends AbstractUuidAwareResponseModel {
-
+    
     public CreateCommentResponseModel() {
         super();
     }

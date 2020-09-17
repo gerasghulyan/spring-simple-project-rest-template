@@ -69,7 +69,7 @@ class ProductCommentServiceImpl implements ProductCommentService {
     public Page<ProductComment> findByProductUuid(final ProductCommentFindByProductUuidDto dto) {
         Assert.notNull(dto, "The ProductCommentFindByProductUuidDto should not be null");
         LOGGER.debug("Retrieving product comment by the provided dto - {}", dto);
-        Page<ProductComment> productComments = productCommentRepository.findByProductUuidAndRemovedIsNull(dto.getProductUuid(), PageRequest.of(dto.getPage(), dto.getSize()));
+        Page<ProductComment> productComments = productCommentRepository.findByProductUuidAndRemovedIsNullOrderByCreated(dto.getProductUuid(), PageRequest.of(dto.getPage(), dto.getSize()));
         LOGGER.debug("Successfully product comment by the provided dto - {}", dto);
         return productComments;
     }

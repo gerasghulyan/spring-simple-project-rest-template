@@ -42,7 +42,9 @@ class ProductCommentViewModelBuilderImpl implements ProductCommentViewModelBuild
                 comment.getProductUuid(),
                 comment.getMessage(),
                 userModelBuilder.build(comment.getUser()),
-                buildTaggedUsersViewModels(comment)
+                buildTaggedUsersViewModels(comment),
+                comment.getCreated(),
+                comment.getUpdated()
         );
         LOGGER.debug(
                 "Successfully built product comment view model for the provided product comment - {}, result - {}",
