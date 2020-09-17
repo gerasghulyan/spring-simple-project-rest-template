@@ -27,9 +27,13 @@ class ProductCommentFindByFilterWebTest : AbstractProductCommentWebTest() {
                 userResourceTestHelper.buildCreateUserRequest(fullName = userFullName)
         ).response().uuid
         val productUuid = uuid()
-        val message = uuid()
-        resourceTestHelper.persistProductComment(message = resourceTestHelper.buildCommentWithTaggedUser(userUuid = userUuid))
-        resourceTestHelper.persistProductComment(userUuid = userUuid, productUuid = productUuid, message = message)
+        val message = resourceTestHelper.buildCommentWithTaggedUser(userUuid = userUuid)
+        resourceTestHelper.persistProductComment()
+        resourceTestHelper.persistProductComment(
+                userUuid = userUuid,
+                productUuid = productUuid,
+                message = message
+        )
         resourceTestHelper.buildFindProductCommentByFilterRequestModel(productUuid = productUuid)
                 .let { productCommentResourceClient.search(it) }
                 .apply { assertBasicSuccessResultResponse(this) }
