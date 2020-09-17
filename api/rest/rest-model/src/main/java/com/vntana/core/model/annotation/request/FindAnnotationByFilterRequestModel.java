@@ -1,23 +1,27 @@
-package com.vntana.core.service.annotation.dto;
+package com.vntana.core.model.annotation.request;
 
-import com.vntana.commons.service.dto.AbstractPaginationAwareDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vntana.commons.api.model.request.impl.AbstractPaginationAwareRequestModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.util.Assert;
 
 /**
  * Created by Vardan Aivazian
- * Date: 15.09.2020
- * Time: 10:12
+ * Date: 16.09.2020
+ * Time: 11:57
  */
-public class AnnotationFindByProductUuidDto extends AbstractPaginationAwareDto {
+public class FindAnnotationByFilterRequestModel extends AbstractPaginationAwareRequestModel {
 
-    private final String productUuid;
+    @JsonProperty("productUuid")
+    private String productUuid;
 
-    public AnnotationFindByProductUuidDto(final int page, final int size, final String productUuid) {
+    public FindAnnotationByFilterRequestModel() {
+        super();
+    }
+
+    public FindAnnotationByFilterRequestModel(final Integer page, final Integer size, final String productUuid) {
         super(page, size);
-        Assert.hasText(productUuid, "The product uuid should not be null or empty");
         this.productUuid = productUuid;
     }
 
@@ -26,10 +30,10 @@ public class AnnotationFindByProductUuidDto extends AbstractPaginationAwareDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AnnotationFindByProductUuidDto)) {
+        if (!(o instanceof FindAnnotationByFilterRequestModel)) {
             return false;
         }
-        final AnnotationFindByProductUuidDto that = (AnnotationFindByProductUuidDto) o;
+        final FindAnnotationByFilterRequestModel that = (FindAnnotationByFilterRequestModel) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(productUuid, that.productUuid)
@@ -54,5 +58,9 @@ public class AnnotationFindByProductUuidDto extends AbstractPaginationAwareDto {
 
     public String getProductUuid() {
         return productUuid;
+    }
+
+    public void setProductUuid(final String productUuid) {
+        this.productUuid = productUuid;
     }
 }
