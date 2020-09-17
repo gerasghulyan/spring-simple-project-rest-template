@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 class CommentTaggedUsersFinderServiceImpl implements CommentTaggedUsersFinderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentTaggedUsersFinderServiceImpl.class);
+    private static final String MENTIONED_USER_REGEX_PATTERN = "\\[~accountUuid:((.{8}-.{4}-.{4}-.{4}-.{12}))\\]";
 
     public CommentTaggedUsersFinderServiceImpl() {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
@@ -30,7 +31,7 @@ class CommentTaggedUsersFinderServiceImpl implements CommentTaggedUsersFinderSer
         LOGGER.debug("Finding mentioned users uuids for the provided comment - {}", comment);
         Assert.notNull(comment, "The comment should not be null");
         final String message = comment.getMessage();
-        final Pattern pattern = Pattern.compile("\\[~accountUuid:((.{8}-.{4}-.{4}-.{4}-.{12}))\\]");
+        final Pattern pattern = Pattern.compile(MENTIONED_USER_REGEX_PATTERN);
         final Matcher matcher = pattern.matcher(message);
         final Set<String> mentionedUsersUuids = new HashSet<>();
         while (matcher.find()) {
