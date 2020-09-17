@@ -25,7 +25,7 @@ public class Annotation extends AbstractUuidAwareDomainEntity {
     private String productUuid;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_id"), updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_annotation_user_id"), updatable = false)
     private User user;
     
     @Column(name = "text", nullable = false, length = BIG_TEXT_LENGTH)
@@ -33,6 +33,9 @@ public class Annotation extends AbstractUuidAwareDomainEntity {
     
     @Column(name = "number", nullable = false)
     private Integer number;
+
+    @Column(name = "resolved", nullable = false)
+    private Boolean resolved;
 
     @Column(name = "d1", nullable = false)
     private Double d1;
@@ -47,11 +50,12 @@ public class Annotation extends AbstractUuidAwareDomainEntity {
         super();
     }
 
-    public Annotation(final String productUuid, final User user, final String text, final Integer number, final Double d1, final Double d2, final Double d3) {
+    public Annotation(final String productUuid, final User user, final String text, final Integer number, final Boolean resolved, final Double d1, final Double d2, final Double d3) {
         this.productUuid = productUuid;
         this.user = user;
         this.text = text;
         this.number = number;
+        this.resolved = resolved;
         this.d1 = d1;
         this.d2 = d2;
         this.d3 = d3;
@@ -68,13 +72,14 @@ public class Annotation extends AbstractUuidAwareDomainEntity {
         final Annotation that = (Annotation) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
+                .append(productUuid, that.productUuid)
+                .append(getIdOrNull(user), getIdOrNull(that.user))
+                .append(text, that.text)
                 .append(number, that.number)
+                .append(resolved, that.resolved)
                 .append(d1, that.d1)
                 .append(d2, that.d2)
                 .append(d3, that.d3)
-                .append(productUuid, that.productUuid)
-                .append(getIdOrNull(user), getIdOrNull(user))
-                .append(text, that.text)
                 .isEquals();
     }
 
@@ -86,6 +91,7 @@ public class Annotation extends AbstractUuidAwareDomainEntity {
                 .append(getIdOrNull(user))
                 .append(text)
                 .append(number)
+                .append(resolved)
                 .append(d1)
                 .append(d2)
                 .append(d3)
@@ -100,6 +106,7 @@ public class Annotation extends AbstractUuidAwareDomainEntity {
                 .append("user", getIdOrNull(user))
                 .append("text", text)
                 .append("number", number)
+                .append("resolved", resolved)
                 .append("d1", d1)
                 .append("d2", d2)
                 .append("d3", d3)
@@ -136,6 +143,14 @@ public class Annotation extends AbstractUuidAwareDomainEntity {
 
     public void setNumber(final Integer number) {
         this.number = number;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(final Boolean resolved) {
+        this.resolved = resolved;
     }
 
     public Double getD1() {

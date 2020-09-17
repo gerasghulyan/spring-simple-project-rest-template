@@ -12,6 +12,7 @@ import java.util.List;
 public class AnnotationGridResponseModel extends AbstractGridResponseModel<AnnotationViewResponseModel> {
 
     public AnnotationGridResponseModel() {
+        super();
     }
 
     public AnnotationGridResponseModel(final int totalCount, final List<AnnotationViewResponseModel> items) {

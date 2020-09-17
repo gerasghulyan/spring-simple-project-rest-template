@@ -14,7 +14,7 @@ import org.junit.Before
  * Date: 15.09.2020
  * Time: 11:52
  */
-abstract class AbstractAnnotationServiceUnitTest : AbstractServiceUnitTest() {
+abstract class AbstractAnnotationServiceImplUnitTest : AbstractServiceUnitTest() {
     
     protected lateinit var annotationService: AnnotationService
     

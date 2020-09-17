@@ -7,6 +7,7 @@ import org.apache.http.HttpStatus.SC_NOT_FOUND
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -25,6 +26,22 @@ class AnnotationCheckDeleteFacadePreconditionCheckerImplUnitTest : AbstractAnnot
         preconditionChecker.checkDeleteAnnotation(request).let { 
             assertThat(it.isPresent).isTrue()
             assertThat(it.error).isEqualTo(AnnotationErrorResponseModel.ANNOTATION_NOT_FOUND)
+            assertThat(it.httpStatus).isEqualTo(SC_NOT_FOUND)
+        }
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when already deleted`() {
+        val annotation = commonTestHelper.buildAnnotation()
+        val request = restTestHelper.buildDeleteAnnotationRequestModel(userUuid = annotation.user.uuid)
+        annotation.removed = LocalDateTime.now()
+        resetAll()
+        expect(annotationService.findByUuid(request.uuid)).andReturn(Optional.of(annotation))
+        replayAll()
+        preconditionChecker.checkDeleteAnnotation(request).let { 
+            assertThat(it.isPresent).isTrue()
+            assertThat(it.error).isEqualTo(AnnotationErrorResponseModel.ALREADY_DELETED)
             assertThat(it.httpStatus).isEqualTo(SC_NOT_FOUND)
         }
         verifyAll()

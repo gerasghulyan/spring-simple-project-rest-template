@@ -10,6 +10,7 @@ import com.vntana.core.service.annotation.dto.AnnotationUpdateDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import kotlin.random.Random
 
 /**
  * Created by Vardan Aivazian
@@ -24,17 +25,18 @@ open class AnnotationCommonTestHelper : AbstractCommonTestHelper() {
             productUuid: String? = uuid(),
             user: User = userCommonTestHelper.buildUser(),
             text: String? = uuid(),
-            number: Int = getPositiveRandomInt(),
+            number: Int? = getRandomInt(min = 1),
+            resolved: Boolean? = Random.nextBoolean(),
             d1: Double? = getRandomDouble(),
             d2: Double? = getRandomDouble(),
             d3: Double? = getRandomDouble()
-    ): Annotation = Annotation(productUuid, user, text, number, d1, d2, d3)
+    ): Annotation = Annotation(productUuid, user, text, number, resolved, d1, d2, d3)
     
     fun buildAnnotationCreateDto(
             userUuid: String? = uuid(),
             productUuid: String? = uuid(),
             text: String? = uuid(),
-            number: Int? = getPositiveRandomInt(),
+            number: Int? = getRandomInt(min = 1),
             d1: Double? = getRandomDouble(),
             d2: Double? = getRandomDouble(),
             d3: Double? = getRandomDouble()
@@ -43,10 +45,11 @@ open class AnnotationCommonTestHelper : AbstractCommonTestHelper() {
     fun buildAnnotationUpdateDto(
             uuid: String? = uuid(),
             text: String? = uuid(),
+            resolved: Boolean? = Random.nextBoolean(),
             d1: Double? = getRandomDouble(),
             d2: Double? = getRandomDouble(),
             d3: Double? = getRandomDouble()
-    ): AnnotationUpdateDto = AnnotationUpdateDto(uuid, text, d1, d2, d3)
+    ): AnnotationUpdateDto = AnnotationUpdateDto(uuid, text, resolved, d1, d2, d3)
 
     fun buildAnnotationPage(
             productUuid: String? = uuid(),

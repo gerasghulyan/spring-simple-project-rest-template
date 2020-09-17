@@ -10,10 +10,13 @@ create table annotation
     d3           float8            not null,
     number       int4              not null,
     product_uuid varchar(255)      not null,
+    resolved     boolean           not null,
     text         varchar(10485760) not null,
     user_id      int8              not null,
     primary key (id)
 );
 create sequence annotation_seq start 1 increment 1;
-alter table annotation add constraint uk_annotation_uuid unique (uuid);
-alter table annotation add constraint fk_user_id foreign key (user_id) references user_;
+alter table annotation
+    add constraint uk_annotation_uuid unique (uuid);
+alter table annotation
+    add constraint fk_annotation_user_id foreign key (user_id) references user_;

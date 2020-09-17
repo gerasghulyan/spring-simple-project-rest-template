@@ -1,7 +1,6 @@
 package com.vntana.core.service.annotation.impl
 
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*
@@ -11,14 +10,14 @@ import java.util.*
  * Date: 15.09.2020
  * Time: 13:54
  */
-class AnnotationFindByUuidServiceUnitTest : AbstractAnnotationServiceUnitTest() {
+class AnnotationFindByUuidServiceImplUnitTest : AbstractAnnotationServiceImplUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { annotationService.findByUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { annotationService.findByUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertIllegalArgumentException { annotationService.findByUuid(null) }
+        assertIllegalArgumentException { annotationService.findByUuid(emptyString()) }
         verifyAll()
     }
 

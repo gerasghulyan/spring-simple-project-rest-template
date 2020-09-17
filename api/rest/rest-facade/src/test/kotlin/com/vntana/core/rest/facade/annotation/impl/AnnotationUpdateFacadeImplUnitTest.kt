@@ -34,6 +34,7 @@ class AnnotationUpdateFacadeImplUnitTest : AbstractAnnotationFacadeImplUnitTest(
         val dto = commonTestHelper.buildAnnotationUpdateDto(
                 uuid = request.uuid,
                 text = request.text,
+                resolved = request.resolved,
                 d1 = request.d1,
                 d2 = request.d2,
                 d3 = request.d3
@@ -48,6 +49,7 @@ class AnnotationUpdateFacadeImplUnitTest : AbstractAnnotationFacadeImplUnitTest(
                 .response().let { 
                     assertThat(it.uuid).isEqualTo(annotation.uuid)
                     assertThat(it.text).isEqualTo(annotation.text)
+                    assertThat(it.resolved).isEqualTo(annotation.resolved)
                     assertThat(it.d1).isEqualTo(annotation.d1)
                     assertThat(it.d2).isEqualTo(annotation.d2)
                     assertThat(it.d3).isEqualTo(annotation.d3)

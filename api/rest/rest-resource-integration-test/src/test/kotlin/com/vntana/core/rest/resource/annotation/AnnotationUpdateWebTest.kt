@@ -46,6 +46,11 @@ class AnnotationUpdateWebTest : AbstractAnnotationWebTest() {
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
+                annotationResourceClient.update(resourceTestHelper.buildUpdateAnnotationRequestModel(resolved = null)),
+                AnnotationErrorResponseModel.MISSING_RESOLVED
+        )
+        assertBasicErrorResultResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
                 annotationResourceClient.update(resourceTestHelper.buildUpdateAnnotationRequestModel(d1 = null)),
                 AnnotationErrorResponseModel.MISSING_DIMENSION
         )
@@ -97,13 +102,14 @@ class AnnotationUpdateWebTest : AbstractAnnotationWebTest() {
         val d1 = resourceTestHelper.getRandomDouble()
         val d2 = resourceTestHelper.getRandomDouble()
         val d3 = resourceTestHelper.getRandomDouble()
-        resourceTestHelper.buildUpdateAnnotationRequestModel(uuid = uuid, userUuid = userUuid, text = text, d1 = d1, d2 = d2, d3 = d3)
+        resourceTestHelper.buildUpdateAnnotationRequestModel(uuid = uuid, userUuid = userUuid, text = text, resolved = true, d1 = d1, d2 = d2, d3 = d3)
                 .let { annotationResourceClient.update(it) }
                 .apply { assertBasicSuccessResultResponse(this) }
                 .body!!.response()
                 .apply {
                     assertThat(this.uuid).isEqualTo(uuid)
                     assertThat(this.text).isEqualTo(text)
+                    assertThat(this.resolved).isTrue()
                     assertThat(this.d1).isEqualTo(d1)
                     assertThat(this.d2).isEqualTo(d2)
                     assertThat(this.d3).isEqualTo(d3)

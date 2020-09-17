@@ -9,7 +9,9 @@ import com.vntana.core.model.annotation.request.UpdateAnnotationRequestModel
 import com.vntana.core.model.annotation.response.AnnotationViewResponseModel
 import com.vntana.core.model.user.response.get.model.UserViewResponseModel
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.random.Random
 
 /**
  * Created by Vardan Aivazian
@@ -21,17 +23,15 @@ class AnnotationRestTestHelper : AbstractRestTestHelper() {
 
     private val userRestTestHelper = UserRestTestHelper()
 
-    fun getRandomInt(): Int = (Integer.MIN_VALUE..Integer.MAX_VALUE).random()
+    fun getRandomInt(min: Int = Integer.MIN_VALUE, max: Int = Integer.MAX_VALUE): Int = (min..max).random()
     
-    fun getPositiveRandomInt(): Int = (1..Integer.MAX_VALUE).random()
+    fun getRandomDouble(min: Double = Double.MIN_VALUE, max: Double = Double.MAX_VALUE): Double = ThreadLocalRandom.current().nextDouble(min, max)
     
-    fun getRandomDouble(): Double = ThreadLocalRandom.current().nextDouble(Double.MIN_VALUE, Double.MAX_VALUE)
-
     fun buildCreateAnnotationRequestModel(
             userUuid: String? = uuid(),
             productUuid: String? = uuid(),
             text: String? = uuid(),
-            number: Int? = getPositiveRandomInt(),
+            number: Int? = getRandomInt(min = 1),
             d1: Double? = getRandomDouble(),
             d2: Double? = getRandomDouble(),
             d3: Double? = getRandomDouble()
@@ -41,10 +41,11 @@ class AnnotationRestTestHelper : AbstractRestTestHelper() {
             uuid: String? = uuid(),
             userUuid: String? = uuid(),
             text: String? = uuid(),
+            resolved: Boolean? = Random.nextBoolean(),
             d1: Double? = getRandomDouble(),
             d2: Double? = getRandomDouble(),
             d3: Double? = getRandomDouble()
-    ) = UpdateAnnotationRequestModel(uuid, userUuid, text, d1, d2, d3)
+    ) = UpdateAnnotationRequestModel(uuid, userUuid, text, resolved, d1, d2, d3)
 
     fun buildDeleteAnnotationRequestModel(
             uuid: String? = uuid(),
@@ -62,9 +63,12 @@ class AnnotationRestTestHelper : AbstractRestTestHelper() {
                                          productUuid: String? = uuid(),
                                          text: String? = uuid(),
                                          owner: UserViewResponseModel = userRestTestHelper.buildUserViewResponseModel(),
-                                         number: Int? = getPositiveRandomInt(),
+                                         number: Int? = getRandomInt(min = 1),
+                                         resolved: Boolean? = Random.nextBoolean(),
                                          d1: Double? = getRandomDouble(),
                                          d2: Double? = getRandomDouble(),
-                                         d3: Double? = getRandomDouble()
-    ) = AnnotationViewResponseModel(uuid, productUuid, text, owner, number, d1, d2, d3)
+                                         d3: Double? = getRandomDouble(),
+                                         created: LocalDateTime? = LocalDateTime.now(),
+                                         updated: LocalDateTime? = LocalDateTime.now()
+    ) = AnnotationViewResponseModel(uuid, productUuid, text, owner, number, resolved, d1, d2, d3, created, updated)
 }

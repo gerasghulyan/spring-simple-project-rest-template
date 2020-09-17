@@ -22,7 +22,7 @@ class AnnotationResourceTestHelper : AnnotationRestTestHelper() {
     fun persistAnnotation(userUuid: String = userResourceTestHelper.persistUser().response().uuid,
                               productUuid: String = uuid(),
                               text: String = uuid(),
-                          number: Int? = getPositiveRandomInt(),
+                          number: Int? = getRandomInt(min = 1),
                           d1: Double? = getRandomDouble(),
                           d2: Double? = getRandomDouble(),
                           d3: Double? = getRandomDouble()

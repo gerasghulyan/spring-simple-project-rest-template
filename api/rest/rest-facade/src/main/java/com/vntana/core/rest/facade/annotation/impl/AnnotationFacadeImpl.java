@@ -68,11 +68,11 @@ public class AnnotationFacadeImpl implements AnnotationFacade {
             return new UpdateAnnotationResultResponse(error.getHttpStatus(), error.getError());
         }
         final Annotation annotation = annotationService.update(
-                new AnnotationUpdateDto(request.getUuid(), request.getText(), request.getD1(), request.getD2(), request.getD3())
+                new AnnotationUpdateDto(request.getUuid(), request.getText(), request.getResolved(), request.getD1(), request.getD2(), request.getD3())
         );
 
         LOGGER.debug("Successfully updated annotation for the provided request - {}", request);
-        final UpdateAnnotationResponseModel responseModel = new UpdateAnnotationResponseModel(annotation.getUuid(), annotation.getText(), annotation.getD1(), annotation.getD2(), annotation.getD3());
+        final UpdateAnnotationResponseModel responseModel = new UpdateAnnotationResponseModel(annotation.getUuid(), annotation.getText(), annotation.getResolved(), annotation.getD1(), annotation.getD2(), annotation.getD3());
         return new UpdateAnnotationResultResponse(responseModel);
     }
 
@@ -99,7 +99,6 @@ public class AnnotationFacadeImpl implements AnnotationFacade {
         final List<AnnotationViewResponseModel> viewModels = annotations.get()
                 .map(annotationViewModelBuilder::build)
                 .collect(Collectors.toList());
-
         final AnnotationGridResponseModel responseModel = new AnnotationGridResponseModel(
                 (int) annotations.getTotalElements(),
                 viewModels

@@ -11,7 +11,6 @@ import java.util.concurrent.ThreadLocalRandom
  */
 abstract class AbstractCommonTestHelper : AbstractTestHelper() {
     fun buildPageRequest(page: Int = 0, size: Int): PageRequest = PageRequest.of(page, size)
-    fun getRandomInt(): Int = (Integer.MIN_VALUE..Integer.MAX_VALUE).random()
-    fun getPositiveRandomInt(): Int = (1..Integer.MAX_VALUE).random()
-    fun getRandomDouble(): Double = ThreadLocalRandom.current().nextDouble(Double.MIN_VALUE, Double.MAX_VALUE)
+    fun getRandomInt(min: Int = Integer.MIN_VALUE, max: Int = Integer.MAX_VALUE): Int = (min..max).random()
+    fun getRandomDouble(min: Double = Double.MIN_VALUE, max: Double = Double.MAX_VALUE): Double = ThreadLocalRandom.current().nextDouble(min, max)
 }

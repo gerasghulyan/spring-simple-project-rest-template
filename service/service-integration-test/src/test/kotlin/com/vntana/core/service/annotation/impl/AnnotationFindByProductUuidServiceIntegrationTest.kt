@@ -19,7 +19,7 @@ class AnnotationFindByProductUuidServiceIntegrationTest : AbstractAnnotationServ
             annotationService.findByProductUuid(it)
         }.let {
             assertThat(it.totalElements).isEqualTo(2)
-            assertThat(it).containsExactlyInAnyOrder(persistAnnotation1, persistAnnotation2)
+            assertThat(it).containsExactly(persistAnnotation1, persistAnnotation2)
         }
     }
 }

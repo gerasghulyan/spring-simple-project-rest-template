@@ -13,6 +13,7 @@ class AnnotationDeleteServiceIntegrationTest : AbstractAnnotationServiceIntegrat
     @Test
     fun `delete test`() {
         val annotation = integrationTestHelper.persistAnnotation()
+        flushAndClear()
         annotationService.delete(annotation.uuid).let {
             assertThat(it.removed).isNotNull()
         }

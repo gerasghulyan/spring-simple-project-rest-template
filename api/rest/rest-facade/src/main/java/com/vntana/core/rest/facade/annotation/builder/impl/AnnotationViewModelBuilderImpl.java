@@ -36,9 +36,12 @@ public class AnnotationViewModelBuilderImpl implements AnnotationViewModelBuilde
                 annotation.getText(),
                 userModelBuilder.build(annotation.getUser()),
                 annotation.getNumber(),
+                annotation.getResolved(),
                 annotation.getD1(),
                 annotation.getD2(),
-                annotation.getD3()
+                annotation.getD3(),
+                annotation.getCreated(),
+                annotation.getUpdated()
         );
         LOGGER.debug(
                 "Successfully built annotation view model for the provided annotation - {}, result - {}",

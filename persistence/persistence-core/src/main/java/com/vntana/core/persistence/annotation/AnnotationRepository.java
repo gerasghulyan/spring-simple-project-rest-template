@@ -14,11 +14,9 @@ import java.util.Optional;
  */
 public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
     
-    Optional<Annotation> findByUuid(String uuid);
+    Optional<Annotation> findByUuid(final String uuid);
     
-    Annotation getByUuid(String uuid);
+    boolean existsByUuid(final String uuid);
     
-    boolean existsByUuid(String uuid);
-    
-    Page<Annotation> findByProductUuidAndRemovedIsNull(String productUuid, Pageable pageable);
+    Page<Annotation> findByProductUuidAndRemovedIsNullOrderByCreated(final String productUuid, final Pageable pageable);
 }

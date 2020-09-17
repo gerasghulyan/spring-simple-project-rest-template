@@ -2,7 +2,6 @@ package com.vntana.core.service.annotation.impl
 
 import com.vntana.core.domain.annotation.Annotation
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.*
 import org.junit.Test
 import java.util.*
@@ -12,16 +11,14 @@ import java.util.*
  * Date: 15.09.2020
  * Time: 13:45
  */
-class AnnotationDeleteServiceUnitTest : AbstractAnnotationServiceUnitTest() {
+class AnnotationDeleteServiceImplUnitTest : AbstractAnnotationServiceImplUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { annotationService.delete(null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { annotationService.delete(emptyString()) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertIllegalArgumentException { annotationService.delete(null) }
+        assertIllegalArgumentException { annotationService.delete(emptyString()) }
         verifyAll()
     }
 

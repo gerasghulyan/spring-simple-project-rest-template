@@ -15,6 +15,9 @@ public class UpdateAnnotationResponseModel extends AbstractUuidAwareResponseMode
 
     @JsonProperty("text")
     private String text;
+    
+    @JsonProperty("resolved")
+    private Boolean resolved;
 
     @JsonProperty("d1")
     private Double d1;
@@ -29,9 +32,10 @@ public class UpdateAnnotationResponseModel extends AbstractUuidAwareResponseMode
         super();
     }
 
-    public UpdateAnnotationResponseModel(final String uuid, final String text, final Double d1, final Double d2, final Double d3) {
+    public UpdateAnnotationResponseModel(final String uuid, final String text, final Boolean resolved, final Double d1, final Double d2, final Double d3) {
         super(uuid);
         this.text = text;
+        this.resolved = resolved;
         this.d1 = d1;
         this.d2 = d2;
         this.d3 = d3;
@@ -48,6 +52,7 @@ public class UpdateAnnotationResponseModel extends AbstractUuidAwareResponseMode
         final UpdateAnnotationResponseModel that = (UpdateAnnotationResponseModel) o;
         return new EqualsBuilder()
                 .append(text, that.text)
+                .append(resolved, that.resolved)
                 .append(d1, that.d1)
                 .append(d2, that.d2)
                 .append(d3, that.d3)
@@ -55,24 +60,26 @@ public class UpdateAnnotationResponseModel extends AbstractUuidAwareResponseMode
     }
 
     @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .appendSuper(super.toString())
-                .append("text", text)
-                .append("d1", d1)
-                .append("d2", d2)
-                .append("d3", d3)
-                .toString();
-    }
-
-    @Override
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(text)
+                .append(resolved)
                 .append(d1)
                 .append(d2)
                 .append(d3)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .appendSuper(super.toString())
+                .append("text", text)
+                .append("resolved", resolved)
+                .append("d1", d1)
+                .append("d2", d2)
+                .append("d3", d3)
+                .toString();
     }
 
     public String getText() {
@@ -81,6 +88,14 @@ public class UpdateAnnotationResponseModel extends AbstractUuidAwareResponseMode
 
     public void setText(final String text) {
         this.text = text;
+    }
+    
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(final Boolean resolved) {
+        this.resolved = resolved;
     }
 
     public Double getD1() {

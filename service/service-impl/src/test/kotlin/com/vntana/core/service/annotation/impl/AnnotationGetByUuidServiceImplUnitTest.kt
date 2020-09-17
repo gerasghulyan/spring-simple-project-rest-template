@@ -12,14 +12,14 @@ import java.util.*
  * Date: 15.09.2020
  * Time: 13:58
  */
-class AnnotationGetByUuidServiceUnitTest : AbstractAnnotationServiceUnitTest() {
+class AnnotationGetByUuidServiceImplUnitTest : AbstractAnnotationServiceImplUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { annotationService.getByUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { annotationService.getByUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertIllegalArgumentException { annotationService.getByUuid(null) }
+        assertIllegalArgumentException { annotationService.getByUuid(emptyString()) }
         verifyAll()
     }
 

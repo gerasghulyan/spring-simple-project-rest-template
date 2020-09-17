@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by Vardan Aivazian
  * Date: 16.09.2020
@@ -26,6 +28,9 @@ public class AnnotationViewResponseModel extends AbstractUuidAwareResponseModel 
     @JsonProperty("number")
     private Integer number;
 
+    @JsonProperty("resolved")
+    private Boolean resolved;
+
     @JsonProperty("d1")
     private Double d1;
 
@@ -34,20 +39,29 @@ public class AnnotationViewResponseModel extends AbstractUuidAwareResponseModel 
 
     @JsonProperty("d3")
     private Double d3;
+    
+    @JsonProperty("created")
+    private LocalDateTime created;
+
+    @JsonProperty("updated")
+    private LocalDateTime updated;
 
     public AnnotationViewResponseModel() {
         super();
     }
 
-    public AnnotationViewResponseModel(final String uuid, final String productUuid, final String text, final UserViewResponseModel owner, final Integer number, final Double d1, final Double d2, final Double d3) {
+    public AnnotationViewResponseModel(final String uuid, final String productUuid, final String text, final UserViewResponseModel owner, final Integer number, final Boolean resolved, final Double d1, final Double d2, final Double d3, final LocalDateTime created, final LocalDateTime updated) {
         super(uuid);
         this.productUuid = productUuid;
         this.text = text;
         this.owner = owner;
         this.number = number;
+        this.resolved = resolved;
         this.d1 = d1;
         this.d2 = d2;
         this.d3 = d3;
+        this.created = created;
+        this.updated = updated;
     }
 
     @Override
@@ -64,9 +78,12 @@ public class AnnotationViewResponseModel extends AbstractUuidAwareResponseModel 
                 .append(text, that.text)
                 .append(owner, that.owner)
                 .append(number, that.number)
+                .append(resolved, that.resolved)
                 .append(d1, that.d1)
                 .append(d2, that.d2)
                 .append(d3, that.d3)
+                .append(created, that.created)
+                .append(updated, that.updated)
                 .isEquals();
     }
 
@@ -77,9 +94,12 @@ public class AnnotationViewResponseModel extends AbstractUuidAwareResponseModel 
                 .append(text)
                 .append(owner)
                 .append(number)
+                .append(resolved)
                 .append(d1)
                 .append(d2)
                 .append(d3)
+                .append(created)
+                .append(updated)
                 .toHashCode();
     }
 
@@ -91,9 +111,12 @@ public class AnnotationViewResponseModel extends AbstractUuidAwareResponseModel 
                 .append("text", text)
                 .append("owner", owner)
                 .append("number", number)
+                .append("resolved", resolved)
                 .append("d1", d1)
                 .append("d2", d2)
                 .append("d3", d3)
+                .append("created", created)
+                .append("updated", updated)
                 .toString();
     }
 
@@ -129,6 +152,14 @@ public class AnnotationViewResponseModel extends AbstractUuidAwareResponseModel 
         this.number = number;
     }
 
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(final Boolean resolved) {
+        this.resolved = resolved;
+    }
+
     public Double getD1() {
         return d1;
     }
@@ -151,5 +182,21 @@ public class AnnotationViewResponseModel extends AbstractUuidAwareResponseModel 
 
     public void setD3(final Double d3) {
         this.d3 = d3;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(final LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(final LocalDateTime updated) {
+        this.updated = updated;
     }
 }

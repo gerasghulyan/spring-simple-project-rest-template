@@ -14,8 +14,8 @@ class AnnotationUpdateServiceIntegrationTest : AbstractAnnotationServiceIntegrat
     fun `test update`() {
         val annotation = integrationTestHelper.persistAnnotation()
         val dto = integrationTestHelper.buildAnnotationUpdateDto(annotation.uuid)
+        flushAndClear()
         annotationService.update(dto).let {
-            flushAndClear()
             assertThat(it.uuid).isEqualTo(annotation.uuid)
             assertThat(it.text).isEqualTo(dto.text)
             assertThat(it.d1).isEqualTo(dto.d1)

@@ -28,7 +28,7 @@ class AnnotationFindByFilterWebTest : AbstractAnnotationWebTest() {
         ).response().uuid
         val productUuid = uuid()
         val text = uuid()
-        val number = resourceTestHelper.getPositiveRandomInt()
+        val number = resourceTestHelper.getRandomInt(min = 1)
         val d1 = resourceTestHelper.getRandomDouble()
         val d2 = resourceTestHelper.getRandomDouble()
         val d3 = resourceTestHelper.getRandomDouble()

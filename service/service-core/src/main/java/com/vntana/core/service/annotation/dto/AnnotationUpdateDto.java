@@ -15,18 +15,21 @@ public class AnnotationUpdateDto implements ServiceDto {
     
     private final String uuid;
     private final String text;
+    private final Boolean resolved;
     private final Double d1;
     private final Double d2;
     private final Double d3;
 
-    public AnnotationUpdateDto(final String uuid, final String text, final Double d1, final Double d2, final Double d3) {
+    public AnnotationUpdateDto(final String uuid, final String text, final Boolean resolved, final Double d1, final Double d2, final Double d3) {
         Assert.hasText(uuid, "The annotation uuid should not be null or empty");
         Assert.hasText(text, "The annotation text should not be null or empty");
+        Assert.notNull(resolved, "The annotation resolved should not be null");
         Assert.notNull(d1, "The annotation dimension d1 should not be null");
         Assert.notNull(d2, "The annotation dimension d2 should not be null");
         Assert.notNull(d3, "The annotation dimension d3 should not be null");
         this.uuid = uuid;
         this.text = text;
+        this.resolved = resolved;
         this.d1 = d1;
         this.d2 = d2;
         this.d3 = d3;
@@ -42,11 +45,12 @@ public class AnnotationUpdateDto implements ServiceDto {
         }
         final AnnotationUpdateDto that = (AnnotationUpdateDto) o;
         return new EqualsBuilder()
+                .append(uuid, that.uuid)
+                .append(text, that.text)
+                .append(resolved, that.resolved)
                 .append(d1, that.d1)
                 .append(d2, that.d2)
                 .append(d3, that.d3)
-                .append(uuid, that.uuid)
-                .append(text, that.text)
                 .isEquals();
     }
 
@@ -55,6 +59,7 @@ public class AnnotationUpdateDto implements ServiceDto {
         return new HashCodeBuilder()
                 .append(uuid)
                 .append(text)
+                .append(resolved)
                 .append(d1)
                 .append(d2)
                 .append(d3)
@@ -67,6 +72,7 @@ public class AnnotationUpdateDto implements ServiceDto {
                 .appendSuper(super.toString())
                 .append("uuid", uuid)
                 .append("text", text)
+                .append("resolved", resolved)
                 .append("d1", d1)
                 .append("d2", d2)
                 .append("d3", d3)
@@ -79,6 +85,10 @@ public class AnnotationUpdateDto implements ServiceDto {
 
     public String getText() {
         return text;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
     }
 
     public Double getD1() {

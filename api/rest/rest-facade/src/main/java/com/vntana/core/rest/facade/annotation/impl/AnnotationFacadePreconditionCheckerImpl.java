@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
@@ -71,6 +72,9 @@ public class AnnotationFacadePreconditionCheckerImpl implements AnnotationFacade
         final Annotation annotation = optionalAnnotation.get();
         if (!annotation.getUser().getUuid().equals(request.getUserUuid())) {
             return SingleErrorWithStatus.of(SC_FORBIDDEN, AnnotationErrorResponseModel.USER_ACCESS_DENIED);
+        }
+        if (Objects.nonNull(annotation.getRemoved())) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, AnnotationErrorResponseModel.ALREADY_DELETED);
         }
         LOGGER.debug("Successfully checked annotation delete for possible errors for the provided request - {}", request);
         return SingleErrorWithStatus.empty();

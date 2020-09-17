@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.annotation.AnnotationErrorResponseModel;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Vardan Aivazian
@@ -66,13 +68,13 @@ public class CreateAnnotationRequestModel extends AbstractRequestModel implement
         if (StringUtils.isEmpty(text)) {
             errors.add(AnnotationErrorResponseModel.MISSING_TEXT);
         }
-        if (number == null) {
+        if (Objects.isNull(number)) {
             errors.add(AnnotationErrorResponseModel.MISSING_NUMBER);
         }
-        if (number != null && number < 1) {
+        if (Objects.nonNull(number) && number < 1) {
             errors.add(AnnotationErrorResponseModel.NOT_POSITIVE_NUMBER);
         }
-        if (d1 == null || d2 == null || d3 == null) {
+        if (!ObjectUtils.allNotNull(d1, d2, d3)) {
             errors.add(AnnotationErrorResponseModel.MISSING_DIMENSION);
         }
         return errors;

@@ -17,15 +17,15 @@ public interface AnnotationService {
 
     Annotation create(final AnnotationCreateDto dto);
 
-    Annotation update(final AnnotationUpdateDto dto);
-
-    Annotation delete(final String uuid);
-
     Optional<Annotation> findByUuid(final String uuid);
 
     boolean existsByUuid(final String uuid);
 
     Annotation getByUuid(final String uuid);
-    
+
     Page<Annotation> findByProductUuid(final AnnotationFindByProductUuidDto dto);
+
+    Annotation update(final AnnotationUpdateDto dto);
+    
+    Annotation delete(final String uuid);
 }

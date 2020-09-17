@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.annotation.AnnotationErrorResponseModel;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Vardan Aivazian
@@ -28,6 +30,9 @@ public class UpdateAnnotationRequestModel extends AbstractRequestModel implement
     @JsonProperty("text")
     private String text;
 
+    @JsonProperty("resolved")
+    private Boolean resolved;
+
     @JsonProperty("d1")
     private Double d1;
 
@@ -41,10 +46,11 @@ public class UpdateAnnotationRequestModel extends AbstractRequestModel implement
         super();
     }
 
-    public UpdateAnnotationRequestModel(final String uuid, final String userUuid, final String text, final Double d1, final Double d2, final Double d3) {
+    public UpdateAnnotationRequestModel(final String uuid, final String userUuid, final String text, final Boolean resolved, final Double d1, final Double d2, final Double d3) {
         this.uuid = uuid;
         this.userUuid = userUuid;
         this.text = text;
+        this.resolved = resolved;
         this.d1 = d1;
         this.d2 = d2;
         this.d3 = d3;
@@ -62,7 +68,10 @@ public class UpdateAnnotationRequestModel extends AbstractRequestModel implement
         if (StringUtils.isEmpty(text)) {
             errors.add(AnnotationErrorResponseModel.MISSING_TEXT);
         }
-        if (d1 == null || d2 == null || d3 == null) {
+        if (Objects.isNull(resolved)) {
+            errors.add(AnnotationErrorResponseModel.MISSING_RESOLVED);
+        }
+        if (!ObjectUtils.allNotNull(d1, d2, d3)) {
             errors.add(AnnotationErrorResponseModel.MISSING_DIMENSION);
         }
         return errors;
@@ -81,6 +90,7 @@ public class UpdateAnnotationRequestModel extends AbstractRequestModel implement
                 .append(uuid, that.uuid)
                 .append(userUuid, that.userUuid)
                 .append(text, that.text)
+                .append(resolved, that.resolved)
                 .append(d1, that.d1)
                 .append(d2, that.d2)
                 .append(d3, that.d3)
@@ -93,6 +103,7 @@ public class UpdateAnnotationRequestModel extends AbstractRequestModel implement
                 .append(uuid)
                 .append(userUuid)
                 .append(text)
+                .append(resolved)
                 .append(d1)
                 .append(d2)
                 .append(d3)
@@ -106,6 +117,7 @@ public class UpdateAnnotationRequestModel extends AbstractRequestModel implement
                 .append("uuid", uuid)
                 .append("userUuid", userUuid)
                 .append("text", text)
+                .append("resolved", resolved)
                 .append("d1", d1)
                 .append("d2", d2)
                 .append("d3", d3)
@@ -134,6 +146,14 @@ public class UpdateAnnotationRequestModel extends AbstractRequestModel implement
 
     public void setText(final String text) {
         this.text = text;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(final Boolean resolved) {
+        this.resolved = resolved;
     }
 
     public Double getD1() {
