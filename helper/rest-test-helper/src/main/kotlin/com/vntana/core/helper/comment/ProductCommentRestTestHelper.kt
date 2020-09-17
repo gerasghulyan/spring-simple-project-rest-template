@@ -52,4 +52,6 @@ class ProductCommentRestTestHelper : AbstractRestTestHelper() {
                                              created: LocalDateTime? = LocalDateTime.now(),
                                              updated: LocalDateTime? = LocalDateTime.now()
     ) = ProductCommentViewResponseModel(uuid, productUuid, message, owner, taggedUsers, created, updated)
+
+    fun buildCommentWithTaggedUser(userUuid: String = uuid()): String = "[~accountUuid:$userUuid] ${uuid()}"
 }

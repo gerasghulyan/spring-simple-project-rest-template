@@ -28,7 +28,7 @@ class ProductCommentFindByFilterWebTest : AbstractProductCommentWebTest() {
         ).response().uuid
         val productUuid = uuid()
         val message = uuid()
-        resourceTestHelper.persistProductComment()
+        resourceTestHelper.persistProductComment(message = resourceTestHelper.buildCommentWithTaggedUser(userUuid = userUuid))
         resourceTestHelper.persistProductComment(userUuid = userUuid, productUuid = productUuid, message = message)
         resourceTestHelper.buildFindProductCommentByFilterRequestModel(productUuid = productUuid)
                 .let { productCommentResourceClient.search(it) }
@@ -39,6 +39,11 @@ class ProductCommentFindByFilterWebTest : AbstractProductCommentWebTest() {
                 .apply { assertThat(this.size).isEqualTo(1) }[0]
                 .apply { assertThat(this.productUuid).isEqualTo(productUuid) }
                 .apply { assertThat(this.message).isEqualTo(message) }
+                .apply {
+                    assertThat(this.taggedUsers).isNotEmpty
+                    assertThat(this.taggedUsers[0].uuid).isEqualTo(userUuid)
+                    assertThat(this.taggedUsers[0].fullName).isEqualTo(userFullName)
+                }
                 .owner
                 .apply { assertThat(this.fullName).isEqualTo(userFullName) }
                 .apply { assertThat(this.uuid).isEqualTo(userUuid) }
