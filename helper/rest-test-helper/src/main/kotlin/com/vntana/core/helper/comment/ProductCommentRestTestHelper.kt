@@ -39,8 +39,8 @@ class ProductCommentRestTestHelper : AbstractRestTestHelper() {
     ) = DeleteProductCommentRequestModel(uuid, userUuid)
 
     fun buildFindProductCommentByFilterRequestModel(
-            page: Int = 0,
-            size: Int = 10,
+            page: Int? = 0,
+            size: Int? = 10,
             productUuid: String? = uuid()
     ) = FindProductCommentByFilterRequestModel(page, size, productUuid)
 

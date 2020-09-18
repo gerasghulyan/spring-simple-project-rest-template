@@ -9,6 +9,8 @@ import com.vntana.commons.api.model.response.ErrorResponseModel;
  */
 public enum CommentErrorResponseModel implements ErrorResponseModel {
     MISSING_UUID,
+    MISSING_PAGE,
+    MISSING_SIZE,
     MISSING_USER_UUID,
     MISSING_PRODUCT_UUID,
     MISSING_MESSAGE,

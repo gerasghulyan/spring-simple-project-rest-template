@@ -1,7 +1,9 @@
 package com.vntana.core.rest.resource.comment
 
+import com.vntana.core.model.comment.CommentErrorResponseModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.springframework.http.HttpStatus
 
 /**
  * Created by Arman Gevorgyan.
@@ -9,6 +11,30 @@ import org.junit.Test
  * Time: 5:22 PM
  */
 class ProductCommentFindByFilterWebTest : AbstractProductCommentWebTest() {
+
+    @Test
+    fun `test with invalid arguments`() {
+        assertBasicErrorResultResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                productCommentResourceClient.search(resourceTestHelper.buildFindProductCommentByFilterRequestModel(page = null)),
+                CommentErrorResponseModel.MISSING_PAGE
+        )
+        assertBasicErrorResultResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                productCommentResourceClient.search(resourceTestHelper.buildFindProductCommentByFilterRequestModel(size = null)),
+                CommentErrorResponseModel.MISSING_SIZE
+        )
+        assertBasicErrorResultResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                productCommentResourceClient.search(resourceTestHelper.buildFindProductCommentByFilterRequestModel(productUuid = null)),
+                CommentErrorResponseModel.MISSING_PRODUCT_UUID
+        )
+        assertBasicErrorResultResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                productCommentResourceClient.search(resourceTestHelper.buildFindProductCommentByFilterRequestModel(productUuid = "")),
+                CommentErrorResponseModel.MISSING_PRODUCT_UUID
+        )
+    }
 
     @Test
     fun `test when nothing found`() {
