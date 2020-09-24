@@ -20,7 +20,7 @@ class ProductCommentFindByProductUuidIntegrationTest : AbstractProductCommentSer
             productCommentService.findByProductUuid(it)
         }.let {
             assertThat(it.totalElements).isEqualTo(3)
-            assertThat(it).containsExactly(persistProductComment1, persistProductComment2, persistProductComment3)
+            assertThat(it).containsExactly(persistProductComment3, persistProductComment2, persistProductComment1)
         }
     }
 }

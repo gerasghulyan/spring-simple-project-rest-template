@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ProductCommentRepository extends JpaRepository<ProductComment, Long> {
 
-    Page<ProductComment> findByProductUuidAndRemovedIsNullOrderByCreated(final String productUuid, final Pageable pageable);
+    Page<ProductComment> findByProductUuidAndRemovedIsNullOrderByCreatedDesc(final String productUuid, final Pageable pageable);
 }
