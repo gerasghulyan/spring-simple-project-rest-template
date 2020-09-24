@@ -35,7 +35,7 @@ class ProductCommentFindByProductUuidUnitTest : AbstractProductCommentServiceUni
         val productUuid = uuid()
         val productCommentPage = commonTestHelper.buildProductCommentPage(productUuid = productUuid)
         val dto = commonTestHelper.buildProductCommentFindByProductUuidDto(page = page, size = size, productUuid = productUuid)
-        expect(productCommentRepository.findByProductUuidAndRemovedIsNullOrderByCreated(productUuid, PageRequest.of(page, size))).andReturn(productCommentPage)
+        expect(productCommentRepository.findByProductUuidAndRemovedIsNullOrderByCreatedDesc(productUuid, PageRequest.of(page, size))).andReturn(productCommentPage)
         replayAll()
         assertThat(productCommentService.findByProductUuid(dto)).isEqualTo(productCommentPage)
         verifyAll()
