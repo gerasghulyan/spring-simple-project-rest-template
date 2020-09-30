@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.user.component.precondition
 
+import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.precondition.impl.UserFacadePreconditionCheckerComponentImpl
 import com.vntana.core.service.organization.OrganizationService
@@ -21,6 +22,8 @@ abstract class AbstractUserFacadePreconditionCheckerComponentUnitTest : Abstract
 
     @Mock
     protected lateinit var organizationService: OrganizationService
+
+    protected val restTestHelper = UserRestTestHelper()
 
     @Before
     fun prepare() {

@@ -7,6 +7,7 @@ import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,14 @@ public class UserResource {
         LOGGER.debug("Processing find user by email request - {}", request);
         final FindUserByEmailResponse resultResponse = userServiceFacade.findByEmail(request);
         LOGGER.debug("Successfully proceeded find user by email request with response - {}", resultResponse);
+        return ResponseEntity.ok(resultResponse);
+    }
+
+    @PostMapping(path = "/by-uuids-and-organization")
+    public ResponseEntity<GetUsersByUuidsAndOrganizationUuidResponse> getByUuidsAndOrganizationUuid(@RequestBody GetByUuidsAndOrganizationUuidRequest request) {
+        LOGGER.debug("Processing get users by uuids and organization uuid resource method for request - {}", request);
+        final GetUsersByUuidsAndOrganizationUuidResponse resultResponse = userServiceFacade.getByUuidsAndOrganizationUuid(request);
+        LOGGER.debug("Successfully processed get users by uuids and organization uuid resource method for request - {}", request);
         return ResponseEntity.ok(resultResponse);
     }
 

@@ -6,6 +6,7 @@ import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,9 @@ public interface UserResourceClient {
 
     @GetMapping(path = "/{uuid}")
     FindUserByUuidResponse findByUuid(@PathVariable("uuid") final String uuid);
+
+    @PostMapping(path = "/by-uuids-and-organization")
+    ResponseEntity<GetUsersByUuidsAndOrganizationUuidResponse> getByUuidsAndOrganizationUuid(@RequestBody GetByUuidsAndOrganizationUuidRequest request);
 
     @GetMapping(path = "/{uuid}/account-details")
     ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid);

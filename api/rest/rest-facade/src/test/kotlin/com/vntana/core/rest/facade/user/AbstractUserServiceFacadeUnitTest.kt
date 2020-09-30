@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.user
 
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
@@ -37,6 +38,7 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractFacadeUnitTest() {
     protected val userHelper = UserCommonTestHelper()
     protected val organizationHelper = OrganizationCommonTestHelper()
     protected val userRoleCommonTestHelper = UserRoleCommonTestHelper()
+    protected val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
     protected val tokenCommonTestHelper = TokenCommonTestHelper()
 
     @Mock

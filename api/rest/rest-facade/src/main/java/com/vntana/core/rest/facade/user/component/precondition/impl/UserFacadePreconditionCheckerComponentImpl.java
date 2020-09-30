@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.user.component.precondition.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
+import com.vntana.core.model.user.request.GetByUuidsAndOrganizationUuidRequest;
 import com.vntana.core.rest.facade.user.component.precondition.UserFacadePreconditionCheckerComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -53,6 +54,18 @@ public class UserFacadePreconditionCheckerComponentImpl implements UserFacadePre
         }
         if (!organizationService.existsByUuid(organizationUuid)) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, NOT_FOUND_FOR_ORGANIZATION);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<UserErrorResponseModel> checkGetByUuidsAndOrganizationUuid(final GetByUuidsAndOrganizationUuidRequest request) {
+        LOGGER.debug("Processing precondition check for user facade get by uuids and organization uuid for request - {}", request);
+        if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, NOT_FOUND_FOR_ORGANIZATION);
+        }
+        if (!userService.existsByUuids(request.getUuids())) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, NOT_FOUND_FOR_USERS_UUIDS);
         }
         return SingleErrorWithStatus.empty();
     }

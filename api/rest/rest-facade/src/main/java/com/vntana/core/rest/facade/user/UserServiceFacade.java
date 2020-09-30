@@ -6,6 +6,7 @@ import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
 
 /**
  * Created by Arthur Asatryan.
@@ -20,6 +21,8 @@ public interface UserServiceFacade {
     FindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
     FindUserByUuidResponse findByUuid(final String uuid);
+    
+    GetUsersByUuidsAndOrganizationUuidResponse getByUuidsAndOrganizationUuid(final GetByUuidsAndOrganizationUuidRequest request);
 
     AccountUserResponse accountDetails(final String uuid);
 

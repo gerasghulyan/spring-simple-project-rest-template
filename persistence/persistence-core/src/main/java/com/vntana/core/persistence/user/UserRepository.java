@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by Arthur Asatryan.
@@ -24,6 +25,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUuid(final String uuid);
 
+    Set<User> findByUuidIn(final Set<String> uuids);
+    
+    boolean existsAllByUuidIn(final Set<String> uuids);
+        
     boolean existsByUuid(final String uuid);
 
     @Query("select u from User u where u.id in " +
