@@ -34,7 +34,6 @@ import static java.lang.String.format;
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
-    private static final String EMAIL_ASSERTION_TEXT = "The email should not be null or empty";
 
     private final UserRepository userRepository;
     private final OrganizationService organizationService;
@@ -166,7 +165,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(final String email) {
         LOGGER.debug("Checking existence of user having email - {}", email);
-        Assert.hasText(email, EMAIL_ASSERTION_TEXT);
+        assertEmail(email);
         final boolean exists = userRepository.existsByEmail(email);
         LOGGER.debug("Successfully checked existence of user having email - {}", email);
         return exists;
@@ -196,7 +195,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid) {
-        Assert.hasText(email, EMAIL_ASSERTION_TEXT);
+        assertEmail(email);
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         LOGGER.debug("Retrieving the user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
         final Optional<User> userOptional = userRepository.findByEmailAndOrganizationUuid(email, organizationUuid);
@@ -219,6 +218,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private void assertEmail(final String email) {
-        Assert.hasText(email, EMAIL_ASSERTION_TEXT);
+        Assert.hasText(email, "The email should not be null or empty");
     }
 }
