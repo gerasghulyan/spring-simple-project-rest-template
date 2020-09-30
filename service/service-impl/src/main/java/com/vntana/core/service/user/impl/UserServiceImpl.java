@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -33,6 +34,7 @@ import static java.lang.String.format;
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final String EMAIL_ASSERTION_TEXT = "The email should not be null or empty";
 
     private final UserRepository userRepository;
     private final OrganizationService organizationService;
@@ -102,6 +104,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public Set<User> findByUuids(final Set<String> uuids) {
+        Assert.notEmpty(uuids, "The users uuids should not be null or empty");
+        return userRepository.findByUuidIn(uuids);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public User getByUuid(final String uuid) {
         Assert.notNull(uuid, "The user uuid should not be null");
         return (findByUuid(uuid)).orElseThrow(() -> {
@@ -148,9 +157,16 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public boolean existsByUuids(final Set<String> uuids) {
+        Assert.notEmpty(uuids, "The users uuids should not be null or empty");
+        return userRepository.existsAllByUuidIn(uuids);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public boolean existsByEmail(final String email) {
         LOGGER.debug("Checking existence of user having email - {}", email);
-        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(email, EMAIL_ASSERTION_TEXT);
         final boolean exists = userRepository.existsByEmail(email);
         LOGGER.debug("Successfully checked existence of user having email - {}", email);
         return exists;
@@ -180,7 +196,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid) {
-        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(email, EMAIL_ASSERTION_TEXT);
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         LOGGER.debug("Retrieving the user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
         final Optional<User> userOptional = userRepository.findByEmailAndOrganizationUuid(email, organizationUuid);
@@ -203,6 +219,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private void assertEmail(final String email) {
-        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(email, EMAIL_ASSERTION_TEXT);
     }
 }

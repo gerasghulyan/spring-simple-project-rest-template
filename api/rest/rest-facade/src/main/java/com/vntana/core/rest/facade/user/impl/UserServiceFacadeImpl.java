@@ -17,13 +17,12 @@ import com.vntana.core.model.user.response.account.model.AccountUserResponseMode
 import com.vntana.core.model.user.response.account.model.AccountUserRolesModel;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
-import com.vntana.core.model.user.response.get.model.GetUsersByOrganizationGridResponseModel;
-import com.vntana.core.model.user.response.get.model.GetUsersByOrganizationResponseModel;
-import com.vntana.core.model.user.response.get.model.GetUsersByRoleAndOrganizationUuidGridResponseModel;
-import com.vntana.core.model.user.response.get.model.GetUsersByRoleAndOrganizationUuidResponseModel;
+import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.get.model.*;
 import com.vntana.core.model.user.response.model.CreateUserResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByEmailResponseModel;
 import com.vntana.core.model.user.response.model.FindUserByUuidResponseModel;
+import com.vntana.core.model.user.response.model.GetUserByUuidsAndOrganizationUuidResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import com.vntana.core.rest.facade.user.component.UserResetPasswordEmailSenderComponent;
@@ -182,6 +181,28 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return response;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public GetUsersByUuidsAndOrganizationUuidResponse getByUuidsAndOrganizationUuid(final GetByUuidsAndOrganizationUuidRequest request) {
+        LOGGER.debug("Processing facade getByUuidsAndOrganizationUuid method for request - {}", request);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkGetByUuidsAndOrganizationUuid(request);
+        if (error.isPresent()) {
+            return new GetUsersByUuidsAndOrganizationUuidResponse(error.getHttpStatus(), error.getError());
+        }
+        final Set<String> organizationUsersUuids = userRoleService.findAllByOrganizationUuid(request.getOrganizationUuid())
+                .stream().map(user -> user.getUser().getUuid()).collect(Collectors.toSet());
+        final Set<User> users = userService.findByUuids(request.getUuids());
+        final GetUsersByUuidsAndOrganizationUuidGridResponseModel responseModel = users.stream().map(user -> new GetUserByUuidsAndOrganizationUuidResponseModel(
+                user.getUuid(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getImageBlobId(),
+                organizationUsersUuids.contains(user.getUuid())
+        )).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByUuidsAndOrganizationUuidGridResponseModel::new));
+        LOGGER.debug("Successfully processed facade getByUuidsAndOrganizationUuid method for request - {}", request);
+        return new GetUsersByUuidsAndOrganizationUuidResponse(responseModel);
+    }
+    
     @Transactional
     @Override
     public AccountUserResponse accountDetails(final String uuid) {

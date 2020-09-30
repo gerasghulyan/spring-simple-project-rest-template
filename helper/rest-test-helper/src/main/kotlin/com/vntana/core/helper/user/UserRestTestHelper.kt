@@ -26,6 +26,10 @@ open class UserRestTestHelper : AbstractRestTestHelper() {
     ): FindUserByUuidAndOrganizationRequest = FindUserByUuidAndOrganizationRequest(uuid, organizationUuid)
 
     fun buildVerifyUserRequest(email: String? = uuid()): VerifyUserRequest = VerifyUserRequest(email)
+    
+    fun buildGetByUuidsAndOrganizationUuid(uuids: Set<String>? = setOf(uuid(), uuid()),
+                                           organizationUuid: String? = uuid()
+    ): GetByUuidsAndOrganizationUuidRequest = GetByUuidsAndOrganizationUuidRequest(uuids, organizationUuid)
 
     fun buildSendUserVerificationRequest(email: String? = uuid(), token: String? = uuid()
     ): SendUserVerificationRequest = SendUserVerificationRequest(email, token)

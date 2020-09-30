@@ -8,6 +8,7 @@ import com.vntana.core.service.user.dto.UpdateUserDto;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by Arthur Asatryan.
@@ -25,6 +26,8 @@ public interface UserService {
 
     Optional<User> findByUuid(final String uuid);
 
+    Set<User> findByUuids(final Set<String> uuids);
+    
     User getByUuid(final String uuid);
 
     User makeVerified(final String email);
@@ -32,6 +35,8 @@ public interface UserService {
     User changePassword(final String uuid, final String password);
 
     boolean existsByUuid(final String uuid);
+
+    boolean existsByUuids(final Set<String> uuids);
 
     boolean existsByEmail(final String email);
 
