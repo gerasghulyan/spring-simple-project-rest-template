@@ -21,3 +21,6 @@ include 'notification'
 include 'listener:listener-core'
 include 'listener:listener-impl'
 include 'indexation:indexation-producer'
+include 'queue:queue-consumer'
+include 'queue:queue-consumer-executable'
+

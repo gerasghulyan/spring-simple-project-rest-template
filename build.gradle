@@ -160,6 +160,7 @@ allprojects {
             dependency("io.springfox:springfox-swagger-ui:$springFoxSwaggerVersion")
             dependency("com.vntana.commons:api-models:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:queue-commons:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:queue-asset-producer-message:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:persistence-domain:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:cache:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:indexation:$vntanaCommonsVersion${versionPostfix()}")
@@ -217,6 +218,43 @@ project(":commons:persistence-utils") {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     }
 
+}
+
+project(':queue:queue-consumer') {
+
+    apply plugin: "kotlin-spring"
+    apply plugin: "jacoco"
+
+    dependencies {
+        api project(":api:rest:rest-facade")
+        api "com.vntana.commons:queue-commons"
+        api "com.vntana.commons:queue-asset-producer-message"
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+    }
+}
+
+project(':queue:queue-consumer-executable') {
+
+    apply plugin: "org.springframework.boot"
+
+    bootJar {
+        mainClassName = "${platformGroup}.queue.consumer.boot.QueueMessageConsumerBootApplication"
+        manifest {
+            attributes(
+                    "Implementation-Version": environmentPlatformVersion()
+            )
+        }
+    }
+
+    dependencies {
+        implementation project(":queue:queue-consumer")
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation 'org.springframework.data:spring-data-jpa'
+        implementation "org.postgresql:postgresql"
+        implementation "com.sflpro.notifier:api-client-library"
+        implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+        runtimeOnly project(":service:service-impl")
+    }
 }
 
 project(":migration:migration-library") {
@@ -648,7 +686,8 @@ configure(subprojects.findAll {
 
 //region Jacoco integration tests
 configure(subprojects.findAll {
-    it.name == "service-integration-test" || it.name == "rest-resource-integration-test"}) {
+    it.name == "service-integration-test" || it.name == "rest-resource-integration-test"
+}) {
     jacocoTestReport {
 
         reports {
@@ -744,7 +783,8 @@ import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 configure(subprojects.findAll {
-    it.name == "rest-resource-executable" || it.name == "scheduler" || it.name == "queue-consumer" || it.name == "migration-executable"
+    it.name == "rest-resource-executable" || it.name == "scheduler" || it.name == "queue-consumer" || it.name == "migration-executable" \
+ || it.name == "queue-consumer-executable"
 }) {
 
     apply plugin: 'com.bmuschko.docker-remote-api'
@@ -786,7 +826,8 @@ configure(subprojects.findAll {
         }
         def repo = [
                 "rest-resource-executable": "core",
-                "migration-executable"    : "migration"
+                "migration-executable"    : "migration",
+                "queue-consumer-executable": "core-consumer"
         ][project.name]
         tags.add("$registry$repo:$project.version")
         def v = versionDetails()

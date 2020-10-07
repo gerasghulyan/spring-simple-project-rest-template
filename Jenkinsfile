@@ -112,7 +112,8 @@ pipeline {
                 build(
                     job: 'DeployDEV/master',
                     parameters: [
-                        booleanParam(name: "core", value: true)
+                        booleanParam(name: "core", value: true),
+                        booleanParam(name: "coreConsumer", value: true)
                     ],
                     propagate: 'true',
                     wait: 'false'
