@@ -47,6 +47,7 @@ class UserFindByUuidServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() 
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().email).isEqualTo(user.email)
             assertThat(it.response().uuid).isEqualTo(user.uuid)
+            assertThat(it.response().fullName).isEqualTo(user.fullName)
         }
         verifyAll()
     }

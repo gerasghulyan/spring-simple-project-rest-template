@@ -16,13 +16,17 @@ public class FindUserByUuidResponseModel extends AbstractUuidAwareResponseModel 
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("fullName")
+    private String fullName;
+
     public FindUserByUuidResponseModel() {
         super();
     }
 
-    public FindUserByUuidResponseModel(final String uuid, final String email) {
+    public FindUserByUuidResponseModel(final String uuid, final String email, final String fullName) {
         super(uuid);
         this.email = email;
+        this.fullName = fullName;
     }
 
     @Override
@@ -37,6 +41,7 @@ public class FindUserByUuidResponseModel extends AbstractUuidAwareResponseModel 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(email, that.email)
+                .append(fullName, that.fullName)
                 .isEquals();
     }
 
@@ -45,6 +50,7 @@ public class FindUserByUuidResponseModel extends AbstractUuidAwareResponseModel 
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(email)
+                .append(fullName)
                 .toHashCode();
     }
 
@@ -52,6 +58,7 @@ public class FindUserByUuidResponseModel extends AbstractUuidAwareResponseModel 
     public String toString() {
         return new ToStringBuilder(this)
                 .append("email", email)
+                .append("fullName", fullName)
                 .toString();
     }
 
@@ -61,5 +68,13 @@ public class FindUserByUuidResponseModel extends AbstractUuidAwareResponseModel 
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(final String fullName) {
+        this.fullName = fullName;
     }
 }

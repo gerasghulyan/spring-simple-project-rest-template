@@ -174,7 +174,8 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         final FindUserByUuidResponse response = userService.findByUuid(uuid)
                 .map(user -> new FindUserByUuidResponse(new FindUserByUuidResponseModel(
                         user.getUuid(),
-                        user.getEmail()
+                        user.getEmail(),
+                        user.getFullName()
                 )))
                 .orElseGet(() -> new FindUserByUuidResponse(UserErrorResponseModel.NOT_FOUND_FOR_UUID));
         LOGGER.debug("Successfully processed facade findByUuid method for uuid - {}", uuid);

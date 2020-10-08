@@ -23,11 +23,13 @@ class UserFindByUuidWebTest : AbstractUserWebTest() {
     @Test
     fun test() {
         val email = resourceHelper.email()
-        val userUuid = resourceHelper.persistUser(resourceHelper.buildCreateUserRequest(email = email)).response().uuid
+        val fullName = uuid()
+        val userUuid = resourceHelper.persistUser(resourceHelper.buildCreateUserRequest(email = email, fullName = fullName)).response().uuid
         userResourceClient.findByUuid(userUuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().email).isEqualTo(email)
             assertThat(it.response().uuid).isEqualTo(userUuid)
+            assertThat(it.response().fullName).isEqualTo(fullName)
         }
     }
 }
