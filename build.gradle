@@ -227,6 +227,9 @@ project(':queue:queue-consumer') {
 
     dependencies {
         api project(":api:rest:rest-facade")
+        implementation project(":service:service-core")
+        runtimeOnly project(":service:service-impl")
+        implementation project(":domain")
         api "com.vntana.commons:queue-commons"
         api "com.vntana.commons:queue-asset-producer-message"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
