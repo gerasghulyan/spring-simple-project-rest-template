@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * Created by Vardan Aivazian
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class UserMentionEmailSenderComponentImpl implements UserMentionEmailSenderComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserMentionEmailSenderComponentImpl.class);
+    private static final String EMAIL_SUBJECT = "You are mentioned";
 
     private final EmailSenderService emailSenderService;
     private final TemplateEmailService templateEmailService;
@@ -41,19 +43,26 @@ public class UserMentionEmailSenderComponentImpl implements UserMentionEmailSend
 
     @Override
     public void sendMentionedUsersEmails(final SendUserMentionDto dto) {
+        LOGGER.debug("Sending email to mentioned users for dto - {}", dto);
+        Assert.notNull(dto, "The SendUserMentionDto should not be null");
+        final MentionUserEmailSendPayload payload = createMentionUserEmailSendPayload(dto);
+        emailSenderService.sendEmail(payload);
+        LOGGER.debug("Successfully sent email to mentioned users for dto - {}", dto);
+    }
+
+    private MentionUserEmailSendPayload createMentionUserEmailSendPayload(final SendUserMentionDto dto) {
         final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_MENTION);
-        final MentionUserEmailSendPayload payload = new MentionUserEmailSendPayload(
+        return new MentionUserEmailSendPayload(
                 templateEmail.getTemplateName(),
                 dto.getEmail(),
                 senderEmail,
-                "You are mentioned",
+                EMAIL_SUBJECT,
                 dto.getPromptingUserName(),
                 dto.getMentionedUserName(),
                 dto.getEntityType().name(),
                 dto.getProductName(),
                 String.format("%s/%s/%s/products/edit/%s?type=%s&entityUuid=%s",
-                        userMentionedUrlPrefix, dto.getOrganizationSlug(), dto.getClientSlug(), dto.getProductUuid(), dto.getEntityType(), dto.getEntityUuid()) 
+                        userMentionedUrlPrefix, dto.getOrganizationSlug(), dto.getClientSlug(), dto.getProductUuid(), dto.getEntityType(), dto.getEntityUuid())
         );
-        emailSenderService.sendEmail(payload);
     }
 }

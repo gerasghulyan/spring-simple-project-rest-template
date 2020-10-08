@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user.component.dto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.util.Assert;
 
 /**
  * Created by Vardan Aivazian
@@ -11,27 +12,23 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class SendUserMentionDto {
 
-    private String email;
+    private final String email;
 
-    private String promptingUserName;
+    private final String promptingUserName;
 
-    private String mentionedUserName;
+    private final String mentionedUserName;
     
-    private UserMentionedEntityType entityType;
+    private final UserMentionedEntityType entityType;
 
-    private String entityUuid;
+    private final String entityUuid;
     
-    private String productUuid;
+    private final String productUuid;
     
-    private String productName;
+    private final String productName;
 
-    private String clientSlug;
+    private final String clientSlug;
     
-    private String organizationSlug;
-
-    public SendUserMentionDto() {
-        super();
-    }
+    private final String organizationSlug;
 
     public SendUserMentionDto(final String email,
                               final String promptingUserName,
@@ -42,6 +39,15 @@ public class SendUserMentionDto {
                               final String productName,
                               final String clientSlug,
                               final String organizationSlug) {
+        Assert.hasText(email, "The email should not be null or empty");
+        Assert.hasText(promptingUserName, "The prompting user full name should not be null or empty");
+        Assert.hasText(mentionedUserName, "The mentioned user full name should not be null or empty");
+        Assert.notNull(entityType, "The UserMentionedEntityType should not be null");
+        Assert.hasText(entityUuid, "The entityUuid should not be null or empty");
+        Assert.hasText(productUuid, "The productUuid should not be null or empty");
+        Assert.hasText(productName, "The productName should not be null or empty");
+        Assert.hasText(clientSlug, "The clientSlug should not be null or empty");
+        Assert.hasText(organizationSlug, "The organizationSlug should not be null or empty");
         this.email = email;
         this.promptingUserName = promptingUserName;
         this.mentionedUserName = mentionedUserName;
@@ -110,71 +116,35 @@ public class SendUserMentionDto {
         return email;
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
     public String getPromptingUserName() {
         return promptingUserName;
-    }
-
-    public void setPromptingUserName(final String promptingUserName) {
-        this.promptingUserName = promptingUserName;
     }
 
     public String getMentionedUserName() {
         return mentionedUserName;
     }
 
-    public void setMentionedUserName(final String mentionedUserName) {
-        this.mentionedUserName = mentionedUserName;
-    }
-
     public UserMentionedEntityType getEntityType() {
         return entityType;
-    }
-
-    public void setEntityType(final UserMentionedEntityType entityType) {
-        this.entityType = entityType;
     }
 
     public String getEntityUuid() {
         return entityUuid;
     }
 
-    public void setEntityUuid(final String entityUuid) {
-        this.entityUuid = entityUuid;
-    }
-
     public String getProductUuid() {
         return productUuid;
-    }
-
-    public void setProductUuid(final String productUuid) {
-        this.productUuid = productUuid;
     }
 
     public String getProductName() {
         return productName;
     }
 
-    public void setProductName(final String productName) {
-        this.productName = productName;
-    }
-
     public String getClientSlug() {
         return clientSlug;
     }
 
-    public void setClientSlug(final String clientSlug) {
-        this.clientSlug = clientSlug;
-    }
-
     public String getOrganizationSlug() {
         return organizationSlug;
-    }
-
-    public void setOrganizationSlug(final String organizationSlug) {
-        this.organizationSlug = organizationSlug;
     }
 }

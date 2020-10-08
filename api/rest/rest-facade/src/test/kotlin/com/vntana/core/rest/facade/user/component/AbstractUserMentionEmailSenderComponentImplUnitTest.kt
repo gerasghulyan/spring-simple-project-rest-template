@@ -18,10 +18,6 @@ abstract class AbstractUserMentionEmailSenderComponentImplUnitTest : AbstractFac
 
     protected lateinit var mentionEmailSenderComponent: UserMentionEmailSenderComponent
 
-//    protected val restHelper = UserRestTestHelper()
-
-//    protected val userHelper = UserCommonTestHelper()
-
     @Mock
     protected lateinit var emailSenderService: EmailSenderService
 

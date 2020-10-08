@@ -52,21 +52,33 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
         final Organization organization = organizationService.getByUuid(message.getOrganizationUuid());
         final ClientOrganization client = clientOrganizationService.getByUuid(message.getClientUuid());
         final UserMentionedEntityType userMentionedEntityType = UserMentionedEntityType.valueOf(message.getUserMentionedInType().name());
-        for (final String mentionedUserUuid : message.getMentionedUserUuids()) {
-            final User mentionedUser = userService.getByUuid(mentionedUserUuid);
-            final SendUserMentionDto sendUserMentionDto = new SendUserMentionDto(
-                    mentionedUser.getEmail(),
-                    user.getFullName(),
-                    mentionedUser.getFullName(),
-                    userMentionedEntityType,
-                    message.getMentionedInEntityUuid(),
-                    message.getProductUuid(),
-                    message.getProductName(),
-                    client.getSlug(),
-                    organization.getSlug()
-            );
+        message.getMentionedUserUuids().forEach(mentionedUserUuid -> {
+            final SendUserMentionDto sendUserMentionDto = createSendUserMentionDto(mentionedUserUuid, user.getFullName(), userMentionedEntityType, message, client.getSlug(), organization.getSlug());
+            LOGGER.debug("Created sendUserMentionDto - {}", sendUserMentionDto);
             mentionEmailSenderComponent.sendMentionedUsersEmails(sendUserMentionDto);
-        }
+            LOGGER.debug("Successfully sent email to mentioned users for dto - {}", sendUserMentionDto);
+        });
         LOGGER.debug("Successfully processed consumption of user mentioned queue message - {}", message);
+    }
+
+    private SendUserMentionDto createSendUserMentionDto(final String mentionedUserUuid,
+                                                        final String promptingUserName,
+                                                        final UserMentionedEntityType userMentionedEntityType,
+                                                        final UserMentionedQueueMessage message,
+                                                        final String clientSlug,
+                                                        final String organizationSlug
+    ) {
+        final User mentionedUser = userService.getByUuid(mentionedUserUuid);
+        return new SendUserMentionDto(
+                mentionedUser.getEmail(),
+                promptingUserName,
+                mentionedUser.getFullName(),
+                userMentionedEntityType,
+                message.getMentionedInEntityUuid(),
+                message.getProductUuid(),
+                message.getProductName(),
+                clientSlug,
+                organizationSlug
+        );
     }
 }
