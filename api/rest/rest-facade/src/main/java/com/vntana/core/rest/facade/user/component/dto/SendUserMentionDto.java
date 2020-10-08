@@ -13,21 +13,13 @@ import org.springframework.util.Assert;
 public class SendUserMentionDto {
 
     private final String email;
-
     private final String promptingUserName;
-
     private final String mentionedUserName;
-    
     private final UserMentionedEntityType entityType;
-
     private final String entityUuid;
-    
     private final String productUuid;
-    
     private final String productName;
-
     private final String clientSlug;
-    
     private final String organizationSlug;
 
     public SendUserMentionDto(final String email,
