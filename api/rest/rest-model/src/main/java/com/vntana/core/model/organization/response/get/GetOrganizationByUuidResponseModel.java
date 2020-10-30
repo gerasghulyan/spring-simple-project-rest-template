@@ -22,6 +22,9 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
     @JsonProperty("slug")
     private String slug;
 
+    @JsonProperty("email")
+    private String email;
+
     @JsonProperty("imageBlobId")
     private String imageBlobId;
 
@@ -35,15 +38,18 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         super();
     }
 
-    public GetOrganizationByUuidResponseModel(final String uuid,
-                                              final String name,
-                                              final String slug,
-                                              final String imageBlobId,
-                                              final OrganizationStatusModel status,
-                                              final LocalDateTime created) {
+    public GetOrganizationByUuidResponseModel(
+            final String uuid,
+            final String name,
+            final String slug,
+            final String email,
+            final String imageBlobId,
+            final OrganizationStatusModel status,
+            final LocalDateTime created) {
         super(uuid);
         this.name = name;
         this.slug = slug;
+        this.email = email;
         this.imageBlobId = imageBlobId;
         this.status = status;
         this.created = created;
@@ -61,6 +67,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(slug, that.slug)
+                .append(email, that.email)
                 .append(imageBlobId, that.imageBlobId)
                 .append(status, that.status)
                 .append(created, that.created)
@@ -72,6 +79,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         return new HashCodeBuilder()
                 .append(name)
                 .append(slug)
+                .append(email)
                 .append(imageBlobId)
                 .append(status)
                 .append(created)
@@ -83,6 +91,7 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
+                .append("email", email)
                 .append("imageBlobId", imageBlobId)
                 .append("status", status)
                 .append("created", created)
@@ -103,6 +112,14 @@ public class GetOrganizationByUuidResponseModel extends AbstractUuidAwareRespons
 
     public void setSlug(final String slug) {
         this.slug = slug;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
     public String getImageBlobId() {

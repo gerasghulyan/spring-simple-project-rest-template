@@ -1,6 +1,7 @@
 package com.vntana.core.rest.facade.organization.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.*;
 import com.vntana.core.model.auth.response.UserRoleModel;
@@ -213,6 +214,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 organization.getUuid(),
                 organization.getName(),
                 organization.getSlug(),
+                extractEmail(organization),
                 organization.getImageBlobId(),
                 OrganizationStatusModel.valueOf(organization.getStatus().name()),
                 organization.getCreated()
@@ -314,5 +316,13 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.SLUG_NOT_VALID);
         }
         return SingleErrorWithStatus.empty();
+    }
+
+    private String extractEmail(final Organization organization) {
+        final InvitationOrganization invitation = organization.getInvitation();
+        if (invitation == null) {
+            return null;
+        }
+        return invitation.getEmail();
     }
 }
