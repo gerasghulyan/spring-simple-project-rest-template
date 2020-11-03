@@ -13,7 +13,7 @@ import javax.persistence.*;
  * Time: 14:42
  */
 @Entity
-@Table(name = "user_role_client_viewer_organization")
+@Table(name = "user_role_client_viewer")
 @DiscriminatorValue("CLIENT_VIEWER_ROLE")
 public class UserClientViewerOrganizationRole extends AbstractUserRole {
 

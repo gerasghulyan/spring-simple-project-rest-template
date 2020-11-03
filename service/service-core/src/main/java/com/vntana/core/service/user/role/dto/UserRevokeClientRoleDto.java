@@ -9,17 +9,17 @@ import org.springframework.util.Assert;
 /**
  * Created by Vardan Aivazian
  * Date: 03.11.2020
- * Time: 15:29
+ * Time: 15:36
  */
-public class UserGrantOrganizationClientRoleDto implements ServiceDto {
+public class UserRevokeClientRoleDto implements ServiceDto {
 
     private final String userUuid;
 
     private final String organizationUuid;
-    
+
     private final UserClientRole clientRole;
 
-    public UserGrantOrganizationClientRoleDto(final String userUuid, final String organizationUuid, final UserClientRole clientRole) {
+    public UserRevokeClientRoleDto(final String userUuid, final String organizationUuid, final UserClientRole clientRole) {
         Assert.hasText(userUuid, "The user uuid should not be null or empty");
         Assert.hasText(organizationUuid, "The organization uuid should not be null or empty");
         Assert.notNull(clientRole, "The client role should not be null");
@@ -33,10 +33,10 @@ public class UserGrantOrganizationClientRoleDto implements ServiceDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserGrantOrganizationClientRoleDto)) {
+        if (!(o instanceof UserRevokeClientRoleDto)) {
             return false;
         }
-        final UserGrantOrganizationClientRoleDto that = (UserGrantOrganizationClientRoleDto) o;
+        final UserRevokeClientRoleDto that = (UserRevokeClientRoleDto) o;
         return new EqualsBuilder()
                 .append(userUuid, that.userUuid)
                 .append(organizationUuid, that.organizationUuid)

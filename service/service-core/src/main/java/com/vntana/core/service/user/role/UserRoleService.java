@@ -1,10 +1,10 @@
 package com.vntana.core.service.user.role;
 
 import com.vntana.core.domain.user.*;
-import com.vntana.core.service.user.role.dto.UserGrantOrganizationClientRoleDto;
+import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
-import com.vntana.core.service.user.role.dto.UserRevokeOrganizationClientRoleDto;
+import com.vntana.core.service.user.role.dto.UserRevokeClientRoleDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +29,9 @@ public interface UserRoleService {
 
     UserSuperAdminRole grantSuperAdminRole(final String userUuid);
     
-    AbstractUserRole grantOrganizationClientRole(UserGrantOrganizationClientRoleDto dto);
+    AbstractUserRole grantClientRole(UserGrantClientRoleDto dto);
     
     void revokeOrganizationAdminRole(final UserRevokeOrganizationAdminRoleDto dto);
 
-    void revokeOrganizationClientRole(UserRevokeOrganizationClientRoleDto dto);
+    void revokeClientRole(UserRevokeClientRoleDto dto);
 }
