@@ -13,19 +13,19 @@ import javax.persistence.*;
  * Time: 4:53 PM
  */
 @Entity
-@Table(name = "user_role_client_organization")
-@DiscriminatorValue("CLIENT_ROLE")
-public class UserClientOrganizationRole extends AbstractUserRole {
+@Table(name = "user_role_client_admin_organization")
+@DiscriminatorValue("CLIENT_ADMIN_ROLE")
+public class UserClientAdminOrganizationRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_client_organization_id"), updatable = false)
     private ClientOrganization clientOrganization;
 
-    UserClientOrganizationRole() {
+    UserClientAdminOrganizationRole() {
         super();
     }
 
-    public UserClientOrganizationRole(final User user, final UserRole userRole, final ClientOrganization clientOrganization) {
+    public UserClientAdminOrganizationRole(final User user, final UserRole userRole, final ClientOrganization clientOrganization) {
         super(user, userRole);
         this.clientOrganization = clientOrganization;
     }
@@ -35,10 +35,10 @@ public class UserClientOrganizationRole extends AbstractUserRole {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserClientOrganizationRole)) {
+        if (!(o instanceof UserClientAdminOrganizationRole)) {
             return false;
         }
-        final UserClientOrganizationRole that = (UserClientOrganizationRole) o;
+        final UserClientAdminOrganizationRole that = (UserClientAdminOrganizationRole) o;
         return new EqualsBuilder()
                 .append(getId(), that.getId())
                 .append(getIdOrNull(clientOrganization), that.getIdOrNull(clientOrganization))

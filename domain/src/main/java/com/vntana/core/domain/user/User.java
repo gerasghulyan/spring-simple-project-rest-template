@@ -61,7 +61,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         if (roleOfClient(clientOrganization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in client organization - %s", this, clientOrganization));
         }
-        final AbstractUserRole role = new UserClientOrganizationRole(this, userRole, clientOrganization);
+        final AbstractUserRole role = new UserClientAdminOrganizationRole(this, userRole, clientOrganization);
         mutableRoles().add(role);
     }
 
@@ -82,12 +82,12 @@ public class User extends AbstractUuidAwareDomainEntity {
     }
 
     public void revokeClientRole(final ClientOrganization clientOrganization) {
-        final UserClientOrganizationRole role = roleOfClient(clientOrganization)
+        final UserClientAdminOrganizationRole role = roleOfClient(clientOrganization)
                 .orElseThrow(() -> new IllegalStateException(format("User - %s does not have role in client organization - %s", this, clientOrganization)));
         mutableRoles().remove(role);
     }
 
-    public Optional<UserClientOrganizationRole> roleOfClient(final ClientOrganization clientOrganization) {
+    public Optional<UserClientAdminOrganizationRole> roleOfClient(final ClientOrganization clientOrganization) {
         return immutableClientRoles().stream()
                 .filter(role -> role.getClientOrganization().equals(clientOrganization))
                 .findAny();
@@ -172,11 +172,11 @@ public class User extends AbstractUuidAwareDomainEntity {
         }
     }
 
-    private List<UserClientOrganizationRole> immutableClientRoles() {
+    private List<UserClientAdminOrganizationRole> immutableClientRoles() {
         return Optional.ofNullable(roles)
                 .map(theRoles -> theRoles.stream()
-                        .filter(UserClientOrganizationRole.class::isInstance)
-                        .map(UserClientOrganizationRole.class::cast)
+                        .filter(UserClientAdminOrganizationRole.class::isInstance)
+                        .map(UserClientAdminOrganizationRole.class::cast)
                         .collect(Collectors.toList())
                 )
                 .map(Collections::unmodifiableList)

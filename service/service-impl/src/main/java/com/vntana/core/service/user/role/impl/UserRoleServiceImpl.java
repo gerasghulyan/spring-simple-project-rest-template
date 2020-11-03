@@ -6,8 +6,10 @@ import com.vntana.core.persistence.user.role.UserRoleRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationClientRoleDto;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
+import com.vntana.core.service.user.role.dto.UserRevokeOrganizationClientRoleDto;
 import com.vntana.core.service.user.role.exception.UserOrganizationAdminRoleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +121,11 @@ public class UserRoleServiceImpl implements UserRoleService {
         return saveSuperAdminRole;
     }
 
+    @Override
+    public AbstractUserRole grantOrganizationClientRole(final UserGrantOrganizationClientRoleDto dto) {
+        return null;
+    }
+
     @Transactional
     @Override
     public void revokeOrganizationAdminRole(final UserRevokeOrganizationAdminRoleDto dto) {
@@ -133,5 +140,10 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
         roleOptional.ifPresent(userRoleRepository::delete);
         LOGGER.debug("Successfully revoked admin role using dto - {}", dto);
+    }
+
+    @Override
+    public void revokeOrganizationClientRole(final UserRevokeOrganizationClientRoleDto dto) {
+
     }
 }

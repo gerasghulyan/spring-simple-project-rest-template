@@ -38,7 +38,7 @@ open class UserRoleCommonTestHelper : AbstractTestHelper() {
     fun buildUserClientOrganizationRole(
             user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
-    ): UserClientOrganizationRole = UserClientOrganizationRole(user, UserRole.CLIENT_ADMIN, clientOrganization)
+    ): UserClientAdminOrganizationRole = UserClientAdminOrganizationRole(user, UserRole.CLIENT_ADMIN, clientOrganization)
 
     fun buildUserGrantOrganizationRoleDto(
             userUuid: String? = uuid(),
