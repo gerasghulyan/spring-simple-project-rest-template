@@ -319,10 +319,9 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
     }
 
     private String extractEmail(final Organization organization) {
-        final InvitationOrganization invitation = organization.getInvitation();
-        if (invitation == null) {
-            return null;
-        }
-        return invitation.getEmail();
+        return Optional
+                .ofNullable(organization.getInvitation())
+                .map(InvitationOrganization::getEmail)
+                .orElse(null);
     }
 }
