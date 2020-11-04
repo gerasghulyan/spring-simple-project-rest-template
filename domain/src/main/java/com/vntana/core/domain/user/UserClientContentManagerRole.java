@@ -15,18 +15,18 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_role_client_content_manager")
 @DiscriminatorValue("CLIENT_CONTENT_MANAGER_ROLE")
-public class UserClientContentManagerOrganizationRole extends AbstractUserRole {
+public class UserClientContentManagerRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_client_organization_id"), updatable = false)
     private ClientOrganization clientOrganization;
 
-    UserClientContentManagerOrganizationRole() {
+    UserClientContentManagerRole() {
         super();
     }
 
-    public UserClientContentManagerOrganizationRole(final User user, final UserRole userRole, final ClientOrganization clientOrganization) {
-        super(user, userRole);
+    public UserClientContentManagerRole(final User user, final ClientOrganization clientOrganization) {
+        super(user, UserRole.CLIENT_CONTENT_MANAGER);
         this.clientOrganization = clientOrganization;
     }
 
@@ -35,10 +35,10 @@ public class UserClientContentManagerOrganizationRole extends AbstractUserRole {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserClientContentManagerOrganizationRole)) {
+        if (!(o instanceof UserClientContentManagerRole)) {
             return false;
         }
-        final UserClientContentManagerOrganizationRole that = (UserClientContentManagerOrganizationRole) o;
+        final UserClientContentManagerRole that = (UserClientContentManagerRole) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(clientOrganization, that.clientOrganization)

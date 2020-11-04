@@ -7,6 +7,8 @@ import com.vntana.core.helper.AbstractTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
+import com.vntana.core.service.user.role.dto.UserClientRole
+import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto
 
@@ -38,7 +40,13 @@ open class UserRoleCommonTestHelper : AbstractTestHelper() {
     fun buildUserClientOrganizationRole(
             user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
-    ): UserClientAdminOrganizationRole = UserClientAdminOrganizationRole(user, UserRole.CLIENT_ADMIN, clientOrganization)
+    ): UserClientAdminRole = UserClientAdminRole(user, clientOrganization)
+
+    fun buildUserGrantClientRoleDto(
+            userUuid: String? = uuid(),
+            clientOrganizationUuid: String? = uuid(),
+            clientRole: UserClientRole? = UserClientRole.CLIENT_ADMIN
+    ): UserGrantClientRoleDto = UserGrantClientRoleDto(userUuid, clientOrganizationUuid, clientRole)
 
     fun buildUserGrantOrganizationRoleDto(
             userUuid: String? = uuid(),

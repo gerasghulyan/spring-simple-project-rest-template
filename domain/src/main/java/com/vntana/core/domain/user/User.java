@@ -61,7 +61,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         if (roleOfClient(clientOrganization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in client organization - %s", this, clientOrganization));
         }
-        final AbstractUserRole role = new UserClientAdminOrganizationRole(this, userRole, clientOrganization);
+        final AbstractUserRole role = buildClientRole(userRole, this, clientOrganization);
         mutableRoles().add(role);
     }
 
@@ -82,12 +82,12 @@ public class User extends AbstractUuidAwareDomainEntity {
     }
 
     public void revokeClientRole(final ClientOrganization clientOrganization) {
-        final UserClientAdminOrganizationRole role = roleOfClient(clientOrganization)
+        final UserClientAdminRole role = roleOfClient(clientOrganization)
                 .orElseThrow(() -> new IllegalStateException(format("User - %s does not have role in client organization - %s", this, clientOrganization)));
         mutableRoles().remove(role);
     }
 
-    public Optional<UserClientAdminOrganizationRole> roleOfClient(final ClientOrganization clientOrganization) {
+    public Optional<UserClientAdminRole> roleOfClient(final ClientOrganization clientOrganization) {
         return immutableClientRoles().stream()
                 .filter(role -> role.getClientOrganization().equals(clientOrganization))
                 .findAny();
@@ -172,11 +172,11 @@ public class User extends AbstractUuidAwareDomainEntity {
         }
     }
 
-    private List<UserClientAdminOrganizationRole> immutableClientRoles() {
+    private List<UserClientAdminRole> immutableClientRoles() {
         return Optional.ofNullable(roles)
                 .map(theRoles -> theRoles.stream()
-                        .filter(UserClientAdminOrganizationRole.class::isInstance)
-                        .map(UserClientAdminOrganizationRole.class::cast)
+                        .filter(UserClientAdminRole.class::isInstance)
+                        .map(UserClientAdminRole.class::cast)
                         .collect(Collectors.toList())
                 )
                 .map(Collections::unmodifiableList)
@@ -187,6 +187,19 @@ public class User extends AbstractUuidAwareDomainEntity {
         return Optional.ofNullable(roles)
                 .map(Collections::unmodifiableList)
                 .orElseGet(Collections::emptyList);
+    }
+
+    private AbstractUserRole buildClientRole(final UserRole userRole, final User user, final ClientOrganization clientOrganization) {
+        switch (userRole) {
+            case CLIENT_ADMIN:
+                return new UserClientAdminRole(user, clientOrganization);
+            case CLIENT_CONTENT_MANAGER:
+                return new UserClientContentManagerRole(user, clientOrganization);
+            case CLIENT_VIEWER:
+                return new UserClientViewerRole(user, clientOrganization);
+            default:
+                throw new IllegalStateException(format("Unknown user role %s", userRole));
+        }
     }
     //endregion
 

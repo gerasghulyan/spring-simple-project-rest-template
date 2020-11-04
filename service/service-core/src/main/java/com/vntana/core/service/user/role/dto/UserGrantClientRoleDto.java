@@ -15,17 +15,17 @@ public class UserGrantClientRoleDto implements ServiceDto {
 
     private final String userUuid;
 
-    private final String organizationUuid;
+    private final String clientOrganizationUuid;
     
     private final UserClientRole clientRole;
 
-    public UserGrantClientRoleDto(final String userUuid, final String organizationUuid, final UserClientRole clientRole) {
+    public UserGrantClientRoleDto(final String userUuid, final String clientOrganizationUuid, final UserClientRole clientRole) {
         Assert.hasText(userUuid, "The user uuid should not be null or empty");
-        Assert.hasText(organizationUuid, "The organization uuid should not be null or empty");
+        Assert.hasText(clientOrganizationUuid, "The client organization uuid should not be null or empty");
         Assert.notNull(clientRole, "The client role should not be null");
         this.clientRole = clientRole;
         this.userUuid = userUuid;
-        this.organizationUuid = organizationUuid;
+        this.clientOrganizationUuid = clientOrganizationUuid;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class UserGrantClientRoleDto implements ServiceDto {
         final UserGrantClientRoleDto that = (UserGrantClientRoleDto) o;
         return new EqualsBuilder()
                 .append(userUuid, that.userUuid)
-                .append(organizationUuid, that.organizationUuid)
+                .append(clientOrganizationUuid, that.clientOrganizationUuid)
                 .append(clientRole, that.clientRole)
                 .isEquals();
     }
@@ -48,7 +48,7 @@ public class UserGrantClientRoleDto implements ServiceDto {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(userUuid)
-                .append(organizationUuid)
+                .append(clientOrganizationUuid)
                 .append(clientRole)
                 .toHashCode();
     }
@@ -58,7 +58,7 @@ public class UserGrantClientRoleDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("userUuid", userUuid)
-                .append("organizationUuid", organizationUuid)
+                .append("clientOrganizationUuid", clientOrganizationUuid)
                 .append("clientRole", clientRole)
                 .toString();
     }
@@ -67,8 +67,8 @@ public class UserGrantClientRoleDto implements ServiceDto {
         return userUuid;
     }
 
-    public String getOrganizationUuid() {
-        return organizationUuid;
+    public String getClientOrganizationUuid() {
+        return clientOrganizationUuid;
     }
 
     public UserClientRole getClientRole() {
