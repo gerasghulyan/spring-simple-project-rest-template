@@ -22,6 +22,8 @@ public interface UserRoleService {
     Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
     boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole);
+    
+    boolean existsByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid);
 
     UserOrganizationOwnerRole grantOrganizationOwnerRole(final UserGrantOrganizationRoleDto dto);
 

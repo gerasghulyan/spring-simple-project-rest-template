@@ -88,6 +88,19 @@ public class UserRoleServiceImpl implements UserRoleService {
         return !CollectionUtils.isEmpty(roles);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid) {
+        LOGGER.debug("Checking existence of user client role belonging to organization - {}, user - {}", clientOrganizationUuid, userUuid);
+        Assert.hasText(clientOrganizationUuid, "The organizationUuid should not be null or empty");
+        assertUserUuid(userUuid);
+        final List<AbstractUserRole> roles = userRoleRepository.findAllByClientOrganizationUuid(clientOrganizationUuid).stream()
+                .filter(abstractUserRole -> abstractUserRole.getUser().getUuid().equals(userUuid))
+                .collect(Collectors.toList());
+        LOGGER.debug("Successfully checked existence of user client role belonging to organization - {}, user - {}", clientOrganizationUuid, userUuid);
+        return !CollectionUtils.isEmpty(roles);
+    }
+
     @Transactional
     @Override
     public UserOrganizationOwnerRole grantOrganizationOwnerRole(final UserGrantOrganizationRoleDto dto) {
@@ -124,6 +137,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         return saveSuperAdminRole;
     }
 
+    @Transactional
     @Override
     public AbstractUserRole grantClientRole(final UserGrantClientRoleDto dto) {
         LOGGER.debug("Granting client role using dto - {}", dto);
@@ -152,6 +166,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         LOGGER.debug("Successfully revoked admin role using dto - {}", dto);
     }
 
+    @Transactional
     @Override
     public void revokeClientRole(final UserRevokeClientRoleDto dto) {
         LOGGER.debug("Revoking client role using dto - {}", dto);

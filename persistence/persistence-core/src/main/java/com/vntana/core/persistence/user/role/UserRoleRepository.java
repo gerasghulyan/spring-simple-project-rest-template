@@ -16,11 +16,11 @@ import java.util.Optional;
 public interface UserRoleRepository extends JpaRepository<AbstractUserRole, Long> {
 
     @Query("select role from AbstractUserRole role where role.id in " +
-            "(select aur.id from UserClientAdminRole ucor join AbstractUserRole aur on aur.id = ucor.id where ucor.clientOrganization.organization.uuid = :organizationUuid)" +
+            "(select aur.id from UserClientAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid)" +
             " or role.id in " +
-            "(select aur.id from UserClientContentManagerRole ucor join AbstractUserRole aur on aur.id = ucor.id where ucor.clientOrganization.organization.uuid = :organizationUuid)" +
+            "(select aur.id from UserClientContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.organization.uuid = :organizationUuid)" +
             " or role.id in " +
-            "(select aur.id from UserClientViewerRole ucor join AbstractUserRole aur on aur.id = ucor.id where ucor.clientOrganization.organization.uuid = :organizationUuid)" +
+            "(select aur.id from UserClientViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.organization.uuid = :organizationUuid)" +
             " or role.id in " +
             "(select aur.id from UserOrganizationOwnerRole uoor join AbstractUserRole aur on aur.id = uoor.id where uoor.organization.uuid = :organizationUuid)" +
             " or role.id in " +
@@ -38,6 +38,14 @@ public interface UserRoleRepository extends JpaRepository<AbstractUserRole, Long
             " or role.id in " +
             "(select aur.id from UserOrganizationAdminRole uoar join AbstractUserRole aur on aur.id = uoar.id where uoar.organization.uuid = :organizationUuid and aur.user.uuid = :userUuid)")
     Optional<AbstractUserRole> findAllByOrganizationAndUser(@Param("organizationUuid") final String organizationUuid, @Param("userUuid") final String userUuid);
+
+    @Query("select role from AbstractUserRole role where role.id in " +
+            "(select aur.id from UserClientAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid = :clientOrganizationUuid)" +
+            " or role.id in " +
+            "(select aur.id from UserClientContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.uuid = :clientOrganizationUuid)" +
+            " or role.id in " +
+            "(select aur.id from UserClientViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid = :clientOrganizationUuid)")
+    List<AbstractUserRole> findAllByClientOrganizationUuid(@Param("clientOrganizationUuid") final String clientOrganizationUuid);
 
     @Query("select aur from UserOrganizationAdminRole uoar join AbstractUserRole aur on aur.id = uoar.id where uoar.organization.uuid = :organizationUuid and uoar.user.uuid = :userUuid")
     Optional<AbstractUserRole> findAdminRoleByUserAndOrganization(@Param("userUuid") final String userUuid,
