@@ -15,7 +15,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
 
     private final String userUuid;
 
-    private final String organizationUuid;
+    private final String clientOrganizationUuid;
 
     private final UserClientRole clientRole;
 
@@ -25,7 +25,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
         Assert.notNull(clientRole, "The client role should not be null");
         this.clientRole = clientRole;
         this.userUuid = userUuid;
-        this.organizationUuid = organizationUuid;
+        this.clientOrganizationUuid = organizationUuid;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
         final UserRevokeClientRoleDto that = (UserRevokeClientRoleDto) o;
         return new EqualsBuilder()
                 .append(userUuid, that.userUuid)
-                .append(organizationUuid, that.organizationUuid)
+                .append(clientOrganizationUuid, that.clientOrganizationUuid)
                 .append(clientRole, that.clientRole)
                 .isEquals();
     }
@@ -48,7 +48,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(userUuid)
-                .append(organizationUuid)
+                .append(clientOrganizationUuid)
                 .append(clientRole)
                 .toHashCode();
     }
@@ -58,7 +58,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("userUuid", userUuid)
-                .append("organizationUuid", organizationUuid)
+                .append("clientOrganizationUuid", clientOrganizationUuid)
                 .append("clientRole", clientRole)
                 .toString();
     }
@@ -68,7 +68,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
     }
 
     public String getOrganizationUuid() {
-        return organizationUuid;
+        return clientOrganizationUuid;
     }
 
     public UserClientRole getClientRole() {

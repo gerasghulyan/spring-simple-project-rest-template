@@ -1,11 +1,7 @@
 package com.vntana.core.rest.facade.user.role;
 
-import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
-import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminResponse;
-import com.vntana.core.model.user.role.response.UserRoleGrantSuperAdminResponse;
-import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse;
+import com.vntana.core.model.user.role.request.*;
+import com.vntana.core.model.user.role.response.*;
 
 /**
  * Created by Arman Gevorgyan.
@@ -18,5 +14,9 @@ public interface UserRoleServiceFacade {
 
     UserRoleGrantOrganizationAdminResponse grantOrganizationAdminRole(final UserRoleGrantOrganizationAdminRequest request);
 
+    UserRoleGrantClientAdminResponse grantClientAdminRole(final UserRoleGrantClientAdminRequest request);
+
     UserRoleRevokeOrganizationAdminResponse revokeOrganizationAdminRole(final UserRoleRevokeOrganizationAdminRequest request);
+
+    UserRoleRevokeClientAdminResponse revokeClientAdminRole(final UserRoleRevokeClientAdminRequest request);
 }

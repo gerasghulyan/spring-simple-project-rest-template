@@ -53,7 +53,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public List<AbstractUserRole> findAllByOrganizationUuid(final String organizationUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {}", organizationUuid);
-        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        assertOrganizationUuid(organizationUuid);
         final List<AbstractUserRole> userRoles = userRoleRepository.findAllByOrganizationUuid(organizationUuid);
         LOGGER.debug("Successfully userRoles users belonging to organization - {}", organizationUuid);
         return userRoles;
@@ -63,7 +63,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
-        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        assertOrganizationUuid(organizationUuid);
         assertUserUuid(userUuid);
         final Optional<AbstractUserRole> userRole = userRoleRepository.findAllByOrganizationAndUser(organizationUuid, userUuid);
         LOGGER.debug("Successfully retrieved userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
@@ -74,9 +74,9 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole) {
         LOGGER.debug("Checking existence of userRole belonging to organization - {}, user - {}  with role - {}", organizationUuid, userUuid, userRole);
-        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        assertOrganizationUuid(organizationUuid);
         assertUserUuid(userUuid);
-        Assert.notNull(userRole, "The userRole should not be null");
+        assertUserRole(userRole);
         final List<AbstractUserRole> roles = userRoleRepository.findAllByOrganizationUuid(organizationUuid).stream()
                 .filter(abstractUserRole -> abstractUserRole.getUserRole() == userRole && abstractUserRole.getUser().getUuid().equals(userUuid))
                 .collect(Collectors.toList());
@@ -171,5 +171,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     
     private void assertUserUuid(final String userUuid) {
         Assert.hasText(userUuid, "The userUuid should not be null or empty");
+    }
+
+    private void assertUserRole(final UserRole userRole) {
+        Assert.notNull(userRole, "The userRole should not be null");
+    }
+    
+    private void assertOrganizationUuid(final String organizationUuid) {
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
     }
 }
