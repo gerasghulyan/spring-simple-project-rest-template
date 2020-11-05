@@ -28,7 +28,7 @@ class OrganizationGetUserOrganizationsByUserUuidAndRoleServiceIntegrationTest : 
         )).let {
             assertThat(it).isNotEmpty
             assertThat(it.size).isEqualTo(2)
-            assertThat(it).containsExactlyElementsOf(mutableListOf(organization1, organization3))
+            assertThat(it).containsExactlyInAnyOrderElementsOf(mutableListOf(organization1, organization3))
         }
     }
 
@@ -47,7 +47,7 @@ class OrganizationGetUserOrganizationsByUserUuidAndRoleServiceIntegrationTest : 
         )).let {
             assertThat(it).isNotEmpty
             assertThat(it.size).isEqualTo(1)
-            assertThat(it).containsExactlyElementsOf(mutableListOf(organization2))
+            assertThat(it).containsExactlyInAnyOrderElementsOf(mutableListOf(organization2))
         }
     }
 }
