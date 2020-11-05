@@ -9,6 +9,7 @@ import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
 import com.vntana.core.service.user.role.dto.*;
+import com.vntana.core.service.user.role.exception.UserClientRoleNotFoundException;
 import com.vntana.core.service.user.role.exception.UserOrganizationAdminRoleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,7 +154,36 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public void revokeClientRole(final UserRevokeClientRoleDto dto) {
-
+        LOGGER.debug("Revoking client role using dto - {}", dto);
+        Assert.notNull(dto, "The UserRevokeClientRoleDto should not be null");
+        final Optional<AbstractUserRole> roleOptional = findClientRoleByUserAndOrganization(dto);
+        if (!roleOptional.isPresent()) {
+            throw new UserClientRoleNotFoundException(dto.getClientRole(), dto.getUserUuid(), dto.getClientOrganizationUuid());
+        }
+        roleOptional.ifPresent(userRoleRepository::delete);
+        LOGGER.debug("Successfully revoked client role using dto - {}", dto);
+    }
+    
+    private Optional<AbstractUserRole> findClientRoleByUserAndOrganization(final UserRevokeClientRoleDto dto) {
+        switch (dto.getClientRole()) {
+            case CLIENT_ADMIN:
+                return userRoleRepository.findClientAdminRoleByUserAndClientOrganization(
+                        dto.getUserUuid(),
+                        dto.getClientOrganizationUuid()
+                );
+            case CLIENT_CONTENT_MANAGER:
+                return userRoleRepository.findClientContentManagerRoleByUserAndClientOrganization(
+                        dto.getUserUuid(),
+                        dto.getClientOrganizationUuid()
+                );
+            case CLIENT_VIEWER:
+                return userRoleRepository.findClientViewerRoleByUserAndClientOrganization(
+                        dto.getUserUuid(),
+                        dto.getClientOrganizationUuid()
+                );
+            default:
+                throw new IllegalStateException(format("Unknown user client role %s", dto.getClientRole()));
+        }
     }
 
     private AbstractUserRole buildClientRole(final UserClientRole clientRole, final User user, final ClientOrganization clientOrganization) {

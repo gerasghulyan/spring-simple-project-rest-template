@@ -19,13 +19,13 @@ public class UserRevokeClientRoleDto implements ServiceDto {
 
     private final UserClientRole clientRole;
 
-    public UserRevokeClientRoleDto(final String userUuid, final String organizationUuid, final UserClientRole clientRole) {
+    public UserRevokeClientRoleDto(final String userUuid, final String clientOrganizationUuid, final UserClientRole clientRole) {
         Assert.hasText(userUuid, "The user uuid should not be null or empty");
-        Assert.hasText(organizationUuid, "The organization uuid should not be null or empty");
+        Assert.hasText(clientOrganizationUuid, "The client organization uuid should not be null or empty");
         Assert.notNull(clientRole, "The client role should not be null");
         this.clientRole = clientRole;
         this.userUuid = userUuid;
-        this.clientOrganizationUuid = organizationUuid;
+        this.clientOrganizationUuid = clientOrganizationUuid;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
         return userUuid;
     }
 
-    public String getOrganizationUuid() {
+    public String getClientOrganizationUuid() {
         return clientOrganizationUuid;
     }
 

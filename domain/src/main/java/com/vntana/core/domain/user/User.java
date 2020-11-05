@@ -198,7 +198,7 @@ public class User extends AbstractUuidAwareDomainEntity {
             case CLIENT_VIEWER:
                 return new UserClientViewerRole(user, clientOrganization);
             default:
-                throw new IllegalStateException(format("Unknown user role %s", userRole));
+                throw new IllegalStateException(format("Unknown user client role %s", userRole));
         }
     }
     //endregion
