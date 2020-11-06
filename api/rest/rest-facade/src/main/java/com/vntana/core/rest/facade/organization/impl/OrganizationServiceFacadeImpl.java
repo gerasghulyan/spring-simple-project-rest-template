@@ -199,6 +199,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         return new GetOrganizationBySlugResultResponse(response);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public GetOrganizationByUuidResultResponse getByUuid(final String uuid) {
         if (StringUtils.isBlank(uuid)) {
