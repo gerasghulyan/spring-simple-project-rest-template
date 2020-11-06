@@ -30,10 +30,12 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
     fun `test getByUuid`() {
         // test data
         resetAll()
+        val ownerEmail = uuid()
         val organization = commonTestHelper.buildOrganization()
         // expectations
         expect(organizationService.existsByUuid(organization.uuid)).andReturn(true)
         expect(organizationService.getByUuid(organization.uuid)).andReturn(organization)
+        expect(organizationService.getOrganizationOwnerEmail(organization.uuid)).andReturn(ownerEmail)
         replayAll()
         // test scenario
         val resultResponse = organizationServiceFacade.getByUuid(organization.uuid)
@@ -44,6 +46,7 @@ class OrganizationGetByUuidServiceFacadeUnitTest : AbstractOrganizationServiceFa
         assertThat(resultResponse.response().imageBlobId).isEqualTo(organization.imageBlobId)
         assertThat(resultResponse.response().status).isEqualTo(OrganizationStatusModel.valueOf(organization.status.name))
         assertThat(resultResponse.response().created).isEqualTo(organization.created)
+        assertThat(resultResponse.response().email).isEqualTo(ownerEmail)
         verifyAll()
     }
 
