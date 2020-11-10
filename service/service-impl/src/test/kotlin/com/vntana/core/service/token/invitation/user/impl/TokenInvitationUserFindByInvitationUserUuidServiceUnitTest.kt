@@ -38,7 +38,7 @@ class TokenInvitationUserFindByInvitationUserUuidServiceUnitTest : AbstractToken
     @Test
     fun test() {
         val invitationUser = invitationUserCommonTestHelper.buildInvitationUser()
-        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser(invitationUser = invitationUser)
+        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser(invitationOrganizationUser = invitationUser)
         resetAll()
         expect(tokenRepository.findByInvitationUserUuid(invitationUser.uuid)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()

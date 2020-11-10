@@ -16,4 +16,6 @@ public interface ClientOrganizationRepository extends JpaRepository<ClientOrgani
     Optional<ClientOrganization> findBySlugAndOrganizationUuid(final String slug, final String organizationUuid);
 
     Optional<ClientOrganization> findByUuid(final String uuid);
+
+    boolean existsByUuid(String uuid);
 }

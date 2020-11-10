@@ -62,6 +62,14 @@ public class ClientOrganizationServiceImpl implements ClientOrganizationService 
 
     @Transactional(readOnly = true)
     @Override
+    public boolean existsByUuid(final String uuid) {
+        Assert.hasText(uuid, "The client organization uuid should not be null or empty");
+        LOGGER.debug("Checking existence of client organization having uuid - {}", uuid);
+        return clientOrganizationRepository.existsByUuid(uuid);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<ClientOrganization> findBySlugAndOrganization(final String slug, final String organizationUuid) {
         Assert.hasText(slug, "The client organization slug should not be null");
         Assert.hasText(organizationUuid, "The client organization uuid should not be null");

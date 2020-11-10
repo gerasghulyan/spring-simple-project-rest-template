@@ -18,7 +18,7 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
             email: String? = email(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
-    ): CreateInvitationUserRequest = CreateInvitationUserRequest(userRole, email, inviterUserUuid, organizationUuid)
+    ): CreateInvitationForOrganizationUserRequest = CreateInvitationForOrganizationUserRequest(userRole, email, inviterUserUuid, organizationUuid)
 
     fun buildGetAllByStatusInvitationUserRequest(
             page: Int = 0,

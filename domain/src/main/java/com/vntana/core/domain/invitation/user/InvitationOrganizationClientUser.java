@@ -1,8 +1,8 @@
 package com.vntana.core.domain.invitation.user;
 
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
+import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.invitation.InvitationStatus;
-import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -12,15 +12,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 
 /**
- * Created by Manuk Gharslyan.
- * Date: 5/11/2020
- * Time: 11:44 AM
+ * Created by Diana Gevorgyan
+ * Date: 11/10/20
+ * Time: 4:31 PM
  */
 @Entity
-@Table(name = "invitation_user", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_invitation_user_uuid", columnNames = {"uuid"})
-})
-public class InvitationUser extends AbstractUuidAwareDomainEntity {
+@Table(name = "invitation_organization_client_user",
+        uniqueConstraints = {@UniqueConstraint(name = "uk_invitation_organization_client_user_uuid", columnNames = {"uuid"})})
+public class InvitationOrganizationClientUser extends AbstractUuidAwareDomainEntity {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "user_role", nullable = false)
@@ -34,44 +33,46 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
     private InvitationStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invitation_user_user_id"), updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invitation_client_user_user_id"), updatable = false)
     private User inviterUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invitation_user_organization_id"), updatable = false)
-    private Organization organization;
+    @JoinColumn(name = "organization_client_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invitation_client_user_organization_user_id"), updatable = false)
+    private ClientOrganization clientOrganization;
 
-    public InvitationUser() {
+    public InvitationOrganizationClientUser() {
         super();
     }
 
-    public InvitationUser(final UserRole role,
-                          final String email,
-                          final InvitationStatus status,
-                          final User inviterUser, final Organization organization) {
-        super();
+    public InvitationOrganizationClientUser(
+            final UserRole role,
+            final String email,
+            final InvitationStatus status,
+            final User inviterUser,
+            final ClientOrganization clientOrganization) {
         this.role = role;
         this.email = email;
         this.status = status;
         this.inviterUser = inviterUser;
-        this.organization = organization;
+        this.clientOrganization = clientOrganization;
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof InvitationUser)) return false;
-
-        final InvitationUser that = (InvitationUser) o;
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof InvitationOrganizationClientUser)) {
+            return false;
+        }
+        final InvitationOrganizationClientUser that = (InvitationOrganizationClientUser) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(role, that.role)
                 .append(email, that.email)
                 .append(status, that.status)
-                .append(getIdOrNull(inviterUser), getIdOrNull(that.inviterUser))
-                .append(getIdOrNull(organization), getIdOrNull(that.organization))
+                .append(inviterUser, that.inviterUser)
+                .append(clientOrganization, that.clientOrganization)
                 .isEquals();
     }
 
@@ -82,8 +83,8 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
                 .append(role)
                 .append(email)
                 .append(status)
-                .append(getIdOrNull(inviterUser))
-                .append(getIdOrNull(organization))
+                .append(inviterUser)
+                .append(clientOrganization)
                 .toHashCode();
     }
 
@@ -94,8 +95,8 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
                 .append("role", role)
                 .append("email", email)
                 .append("status", status)
-                .append("inviterUser", getIdOrNull(inviterUser))
-                .append("organization", getIdOrNull(organization))
+                .append("inviterUser", inviterUser)
+                .append("clientOrganization", clientOrganization)
                 .toString();
     }
 
@@ -131,11 +132,11 @@ public class InvitationUser extends AbstractUuidAwareDomainEntity {
         this.inviterUser = inviterUser;
     }
 
-    public Organization getOrganization() {
-        return organization;
+    public ClientOrganization getClientOrganization() {
+        return clientOrganization;
     }
 
-    public void setOrganization(final Organization organization) {
-        this.organization = organization;
+    public void setClientOrganization(final ClientOrganization clientOrganization) {
+        this.clientOrganization = clientOrganization;
     }
 }

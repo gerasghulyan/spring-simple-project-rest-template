@@ -3,7 +3,7 @@ package com.vntana.core.rest.facade.invitation.user.impl
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.rest.facade.invitation.user.AbstractInvitationUserFacadeUnitTest
-import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto
+import com.vntana.core.service.invitation.user.dto.CreateInvitationForOrganizationUserDto
 import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*
@@ -22,7 +22,7 @@ class InvitationUserCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
         expect(preconditionChecker.checkCreateForPossibleErrors(request))
                 .andReturn(SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND))
         replayAll()
-        assertBasicErrorResultResponse(invitationUserServiceFacade.create(request), InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
+        assertBasicErrorResultResponse(invitationUserServiceFacade.createInvitationForOrganization(request), InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
         verifyAll()
     }
 
@@ -34,7 +34,7 @@ class InvitationUserCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
                 email = request.email,
                 organizationUuid = request.organizationUuid
         )
-        val dto = invitationUserCommonTestHelper.buildCreateInvitationUserDto(
+        val dto = invitationUserCommonTestHelper.buildCreateInvitationUserForOrganizationDto(
                 email = request.email,
                 inviterUserUuid = request.inviterUserUuid,
                 organizationUuid = request.organizationUuid
@@ -43,17 +43,17 @@ class InvitationUserCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
                 invitationUserCommonTestHelper.buildInvitationUser(email = request.email, organization = organization)
         )
         val updatedUserInvitation = invitationUserCommonTestHelper.buildInvitationUser()
-        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUser(invitationUser = updatedUserInvitation)
+        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUser(invitationOrganizationUser = updatedUserInvitation)
         val updateDto = invitationUserCommonTestHelper.buildUpdateInvitationUserStatusDto(uuid = userInvitations[0].uuid)
         resetAll()
         expect(preconditionChecker.checkCreateForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(mapperFacade.map(request, CreateInvitationUserDto::class.java)).andReturn(dto)
+        expect(mapperFacade.map(request, CreateInvitationForOrganizationUserDto::class.java)).andReturn(dto)
         expect(invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(getAllDto)).andReturn(userInvitations)
         expect(invitationUserService.updateStatus(updateDto)).andReturn(updatedUserInvitation)
         expect(tokenInvitationUserService.findByInvitationUserUuid(updatedUserInvitation.uuid)).andReturn(Optional.of(tokenInvitationUser))
-        expect(invitationUserService.create(dto)).andReturn(userInvitations[0])
+        expect(invitationUserService.createInvitationForOrganization(dto)).andReturn(userInvitations[0])
         replayAll()
-        assertBasicSuccessResultResponse(invitationUserServiceFacade.create(request))
+        assertBasicSuccessResultResponse(invitationUserServiceFacade.createInvitationForOrganization(request))
         verifyAll()
     }
 }

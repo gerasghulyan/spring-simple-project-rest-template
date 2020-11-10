@@ -28,7 +28,7 @@ class InvitationUserGetByTokenServiceUnitTest : AbstractInvitationUserServiceUni
     fun `test when not found`() {
         resetAll()
         val token = uuid()
-        expect(invitationUserRepository.findByTokenInvitationUser(token)).andReturn(Optional.empty())
+        expect(invitationOrganizationUserRepository.findByTokenInvitationUser(token)).andReturn(Optional.empty())
         replayAll()
         assertThatThrownBy { invitationUserService.getByToken(token) }
                 .isExactlyInstanceOf(InvitationUserNotFoundForTokenException::class.java)
@@ -40,7 +40,7 @@ class InvitationUserGetByTokenServiceUnitTest : AbstractInvitationUserServiceUni
         resetAll()
         val token = uuid()
         val invitationUser = commonTestHelper.buildInvitationUser()
-        expect(invitationUserRepository.findByTokenInvitationUser(token)).andReturn(Optional.of(invitationUser))
+        expect(invitationOrganizationUserRepository.findByTokenInvitationUser(token)).andReturn(Optional.of(invitationUser))
         replayAll()
         invitationUserService.getByToken(token).let {
             assertThat(it).isNotNull

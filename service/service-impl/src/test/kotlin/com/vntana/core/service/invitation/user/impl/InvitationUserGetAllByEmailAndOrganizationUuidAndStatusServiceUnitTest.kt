@@ -35,7 +35,7 @@ class InvitationUserGetAllByEmailAndOrganizationUuidAndStatusServiceUnitTest : A
         val invitationUser2 = commonTestHelper.buildInvitationUser(organization = organization, email = email)
         val invitationUser3 = commonTestHelper.buildInvitationUser(organization = organization, email = email)
         resetAll()
-        expect(invitationUserRepository.findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(email, organization.uuid, InvitationStatus.INVITED)).andReturn(listOf(invitationUser3, invitationUser2, invitationUser1))
+        expect(invitationOrganizationUserRepository.findByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(email, organization.uuid, InvitationStatus.INVITED)).andReturn(listOf(invitationUser3, invitationUser2, invitationUser1))
         replayAll()
         invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(
                 commonTestHelper.buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(

@@ -26,7 +26,7 @@ class InvitationUserExistsByUuidServiceUnitTest : AbstractInvitationUserServiceU
     fun `test when does not exist`() {
         val uuid = uuid()
         resetAll()
-        expect(invitationUserRepository.existsByUuid(uuid)).andReturn(false)
+        expect(invitationOrganizationUserRepository.existsByUuid(uuid)).andReturn(false)
         replayAll()
         assertThat(invitationUserService.existsByUuid(uuid)).isFalse()
         verifyAll()
@@ -36,7 +36,7 @@ class InvitationUserExistsByUuidServiceUnitTest : AbstractInvitationUserServiceU
     fun `test when found`() {
         val uuid = uuid()
         resetAll()
-        expect(invitationUserRepository.existsByUuid(uuid)).andReturn(true)
+        expect(invitationOrganizationUserRepository.existsByUuid(uuid)).andReturn(true)
         replayAll()
         assertThat(invitationUserService.existsByUuid(uuid)).isTrue()
         verifyAll()

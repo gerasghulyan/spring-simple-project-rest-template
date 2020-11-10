@@ -27,11 +27,19 @@ public class InvitationUserResource {
         this.invitationUserServiceFacade = invitationUserServiceFacade;
     }
 
-    @PostMapping
-    public ResponseEntity<CreateInvitationUserResultResponse> create(@RequestBody final CreateInvitationUserRequest request) {
-        LOGGER.debug("Processing InvitationUserResource create method for request - {}", request);
-        final CreateInvitationUserResultResponse resultResponse = invitationUserServiceFacade.create(request);
-        LOGGER.debug("Successfully processed InvitationUserResource create method for request - {}", request);
+    @PostMapping(path = "/organization")
+    public ResponseEntity<CreateInvitationUserForOrganizationResultResponse> createInvitationForOrganization(@RequestBody final CreateInvitationForOrganizationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource createInvitationForOrganization method for request - {}", request);
+        final CreateInvitationUserForOrganizationResultResponse resultResponse = invitationUserServiceFacade.createInvitationForOrganization(request);
+        LOGGER.debug("Successfully processed InvitationUserResource createInvitationToOrganization method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "/client-organization")
+    public ResponseEntity<CreateInvitationUserForOrganizationClientsResultResponse> createInvitationForClient(@RequestBody final CreateInvitationForOrganizationClientUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource createInvitationForClient method for request - {}", request);
+        final CreateInvitationUserForOrganizationClientsResultResponse resultResponse = invitationUserServiceFacade.createInvitationForClient(request);
+        LOGGER.debug("Successfully processed InvitationUserResource createInvitationToClient method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 

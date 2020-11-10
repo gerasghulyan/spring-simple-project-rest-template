@@ -5,6 +5,7 @@ import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,34 +13,35 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel.*;
 
 /**
- * Created by Manuk Gharslyan.
- * Date: 5/12/2020
- * Time: 1:40 PM
+ * Created by Diana Gevorgyan
+ * Date: 11/10/20
+ * Time: 8:43 AM
  */
-public class CreateInvitationUserRequest extends AbstractRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
+public class CreateInvitationForOrganizationClientUserRequest extends AbstractRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
 
-    @JsonProperty("userRole")
-    private UserRoleModel userRole;
+    @JsonProperty("userRoles")
+    private final Map<String, UserRoleModel> userRoles;
 
     @JsonProperty("email")
-    private String email;
+    private final String email;
 
     @JsonProperty("inviterUserUuid")
-    private String inviterUserUuid;
+    private final String inviterUserUuid;
 
     @JsonProperty("organizationUuid")
-    private String organizationUuid;
+    private final String organizationUuid;
 
-    public CreateInvitationUserRequest() {
-        super();
-    }
-
-    public CreateInvitationUserRequest(final UserRoleModel userRole, final String email, final String inviterUserUuid, final String organizationUuid) {
-        this.userRole = userRole;
+    public CreateInvitationForOrganizationClientUserRequest(
+            final Map<String, UserRoleModel> userRoles,
+            final String email,
+            final String inviterUserUuid,
+            final String organizationUuid) {
+        this.userRoles = userRoles;
         this.email = email;
         this.inviterUserUuid = inviterUserUuid;
         this.organizationUuid = organizationUuid;
@@ -47,8 +49,8 @@ public class CreateInvitationUserRequest extends AbstractRequestModel implements
 
     @Override
     public List<InvitationUserErrorResponseModel> validate() {
-        if (userRole == null) {
-            return Collections.singletonList(MISSING_USER_ROLE);
+        if (MapUtils.isEmpty(userRoles)) {
+            return Collections.singletonList(MISSING_USER_ROLES);
         }
         if (StringUtils.isEmpty(email)) {
             return Collections.singletonList(MISSING_INVITED_USER_EMAIL);
@@ -64,14 +66,15 @@ public class CreateInvitationUserRequest extends AbstractRequestModel implements
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof CreateInvitationUserRequest)) return false;
-
-        final CreateInvitationUserRequest that = (CreateInvitationUserRequest) o;
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CreateInvitationForOrganizationClientUserRequest)) {
+            return false;
+        }
+        final CreateInvitationForOrganizationClientUserRequest that = (CreateInvitationForOrganizationClientUserRequest) o;
         return new EqualsBuilder()
-                .append(userRole, that.userRole)
+                .append(userRoles, that.userRoles)
                 .append(email, that.email)
                 .append(inviterUserUuid, that.inviterUserUuid)
                 .append(organizationUuid, that.organizationUuid)
@@ -81,7 +84,7 @@ public class CreateInvitationUserRequest extends AbstractRequestModel implements
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(userRole)
+                .append(userRoles)
                 .append(email)
                 .append(inviterUserUuid)
                 .append(organizationUuid)
@@ -91,15 +94,16 @@ public class CreateInvitationUserRequest extends AbstractRequestModel implements
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("userRole", userRole)
+                .appendSuper(super.toString())
+                .append("userRoles", userRoles)
                 .append("email", email)
                 .append("inviterUserUuid", inviterUserUuid)
                 .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
-    public UserRoleModel getUserRole() {
-        return userRole;
+    public Map<String, UserRoleModel> getUserRoles() {
+        return userRoles;
     }
 
     public String getEmail() {

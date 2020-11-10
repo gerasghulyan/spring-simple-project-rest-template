@@ -1,17 +1,16 @@
 package com.vntana.core.helper.unit.invitation.user
 
+import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.domain.invitation.InvitationStatus
-import com.vntana.core.domain.invitation.user.InvitationUser
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto
-import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto
-import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto
-import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto
+import com.vntana.core.service.invitation.user.dto.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -24,18 +23,25 @@ import org.springframework.data.domain.Pageable
 open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
     private val userCommonTestHelper = UserCommonTestHelper()
     private val organizationCommonTestHelper = OrganizationCommonTestHelper()
+    private val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
-    fun buildCreateInvitationUserDto(
+    fun buildCreateInvitationUserForOrganizationDto(
             userRole: UserRole? = UserRole.ORGANIZATION_ADMIN,
             email: String? = uuid(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
-    ) = CreateInvitationUserDto(userRole, email, inviterUserUuid, organizationUuid)
+    ) = CreateInvitationForOrganizationUserDto(userRole, email, inviterUserUuid, organizationUuid)
 
-    fun buildInvitationUserPage(entities: List<InvitationUser> = listOf(buildInvitationUser(), buildInvitationUser()),
+    fun buildCreateInvitationUserForClientsDto(
+            clientUuid: String? = uuid(),
+            email: String? = uuid(),
+            inviterUserUuid: String? = uuid()
+    ) = CreateInvitationForClientsUserDto(mapOf(clientUuid to UserRole.CLIENT_CONTENT_MANAGER), email, inviterUserUuid)
+
+    fun buildInvitationUserPage(entities: List<InvitationOrganizationUser> = listOf(buildInvitationUser(), buildInvitationUser()),
                                 pageAble: Pageable = buildPageRequest(0, 5),
                                 total: Long = entities.size.toLong()
-    ): Page<InvitationUser> {
+    ): Page<InvitationOrganizationUser> {
         return PageImpl(entities, pageAble, total)
     }
 
@@ -45,7 +51,7 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             status: InvitationStatus? = InvitationStatus.INVITED,
             invitedByUser: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             organization: Organization? = organizationCommonTestHelper.buildOrganization()
-    ) = InvitationUser(userRole, email, status, invitedByUser, organization)
+    ) = InvitationOrganizationUser(userRole, email, status, invitedByUser, organization)
 
     fun buildUpdateInvitationUserStatusDto(
             uuid: String? = uuid(),
@@ -70,6 +76,6 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
     ): GetAllByOrganizationUuidAndStatusInvitationUsersDto = GetAllByOrganizationUuidAndStatusInvitationUsersDto(page, size, organizationUuid, status)
 
     fun buildGetAllByStatusInvitationUsersPage(totalCount: Long = 0,
-                                               tagGroups: List<InvitationUser> = listOf(buildInvitationUser())
-    ): Page<InvitationUser> = PageImpl(tagGroups, Pageable.unpaged(), totalCount)
+                                               tagGroups: List<InvitationOrganizationUser> = listOf(buildInvitationUser())
+    ): Page<InvitationOrganizationUser> = PageImpl(tagGroups, Pageable.unpaged(), totalCount)
 }

@@ -10,15 +10,15 @@ import org.junit.Test
  * Date: 5/11/2020
  * Time: 1:27 PM
  */
-class InvitationUserCreateServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
+class InvitationUserCreateForOrganizationServiceIntegrationTest : AbstractInvitationUserServiceIntegrationTest() {
 
     @Test
     fun test() {
-        val dto = integrationInvitationUserTestHelper.buildCreateInvitationUserDto(
+        val dto = integrationInvitationUserTestHelper.buildCreateInvitationUserForOrganizationDto(
                 inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
                 organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid
         )
-        invitationUserService.create(dto).let {
+        invitationUserService.createInvitationForOrganization(dto).let {
             flushAndClear()
             assertThat(it.uuid).isNotBlank()
             assertThat(it.role).isEqualTo(dto.userRole)

@@ -1,7 +1,7 @@
 package com.vntana.core.helper.integration.invitation.user
 
 import com.vntana.core.domain.invitation.InvitationStatus
-import com.vntana.core.domain.invitation.user.InvitationUser
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
@@ -33,11 +33,11 @@ class InvitationUserIntegrationTestHelper : InvitationUserCommonTestHelper() {
             email: String? = uuid(),
             inviterUserUuid: String? = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
             organizationUuid: String? = organizationIntegrationTestHelper.persistOrganization().uuid
-    ): InvitationUser = invitationUserService.create(buildCreateInvitationUserDto(userRole, email, inviterUserUuid, organizationUuid))
+    ): InvitationOrganizationUser = invitationUserService.createInvitationForOrganization(buildCreateInvitationUserForOrganizationDto(userRole, email, inviterUserUuid, organizationUuid))
 
     fun updateInvitationUserStatus(
             uuid: String? = uuid(),
             status: InvitationStatus? = InvitationStatus.NOT_APPLICABLE,
             dto: UpdateInvitationUserStatusDto? = buildUpdateInvitationUserStatusDto(uuid, status)
-    ): InvitationUser = invitationUserService.updateStatus(dto)
+    ): InvitationOrganizationUser = invitationUserService.updateStatus(dto)
 }

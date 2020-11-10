@@ -1,6 +1,6 @@
 package com.vntana.core.service.token.invitation.user.impl;
 
-import com.vntana.core.domain.invitation.user.InvitationUser;
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
 import com.vntana.core.domain.token.TokenInvitationUser;
 import com.vntana.core.persistence.token.TokenInvitationUserRepository;
 import com.vntana.core.service.invitation.user.InvitationUserService;
@@ -39,7 +39,7 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     public TokenInvitationUser create(final CreateTokenInvitationUserDto dto) {
         LOGGER.debug("Creating user invitation token for dto - {}", dto);
         Assert.notNull(dto, "The CreateTokenInvitationUserDto should not be null");
-        final InvitationUser invitationUser = invitationUserService.getByUuid(dto.getInvitationUserUuid());
+        final InvitationOrganizationUser invitationUser = invitationUserService.getByUuid(dto.getInvitationUserUuid());
         final TokenInvitationUser token = new TokenInvitationUser(dto.getToken(), invitationUser);
         final TokenInvitationUser savedToken = tokenRepository.save(token);
         LOGGER.debug("Successfully created user invitation token for dto - {}", dto);

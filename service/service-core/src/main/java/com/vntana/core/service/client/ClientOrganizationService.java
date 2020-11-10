@@ -15,6 +15,8 @@ public interface ClientOrganizationService {
     ClientOrganization create(final CreateClientOrganizationDto dto);
 
     Optional<ClientOrganization> findByUuid(final String uuid);
+    
+    boolean existsByUuid(final String uuid);
 
     Optional<ClientOrganization> findBySlugAndOrganization(final String slug, final String organizationUuid);
 
