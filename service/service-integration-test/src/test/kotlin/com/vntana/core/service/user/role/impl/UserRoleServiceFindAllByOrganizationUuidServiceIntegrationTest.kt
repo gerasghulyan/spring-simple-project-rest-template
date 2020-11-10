@@ -38,22 +38,22 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
     }
 
     @Test
-    fun `test owner and client role`() {
+    fun `test owner and client role not exists`() {
         organizationIntegrationTestHelper.persistOrganization()
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
         val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
-        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.grantClientRole(clientOrganization, UserRole.CLIENT_CONTENT_MANAGER)
         flushAndClear()
         userRoleService.findAllByOrganizationUuid(organization.uuid).let {
-            assertThat(it.size).isEqualTo(2)
+            assertThat(it.size).isEqualTo(1)
             it.map { role -> role.user }.forEach { u -> assertThat(u).isEqualTo(user) }
-            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.CLIENT_ADMIN, UserRole.ORGANIZATION_OWNER)
+            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.ORGANIZATION_OWNER)
         }
     }
 
     @Test
-    fun `test when other user with roles in other organization exists`() {
+    fun `test when client roles not exists`() {
         let {
             val organization1 = organizationIntegrationTestHelper.persistOrganization()
             val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization1.uuid)
@@ -63,17 +63,17 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
         val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
-        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.grantClientRole(clientOrganization, UserRole.CLIENT_VIEWER)
         flushAndClear()
         userRoleService.findAllByOrganizationUuid(organization.uuid).let {
-            assertThat(it.size).isEqualTo(2)
+            assertThat(it.size).isEqualTo(1)
             it.map { role -> role.user }.forEach { u -> assertThat(u).isEqualTo(user) }
-            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.CLIENT_ADMIN, UserRole.ORGANIZATION_OWNER)
+            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.ORGANIZATION_OWNER)
         }
     }
 
     @Test
-    fun `test multiple users in one organization`() {
+    fun `test multiple users in one organization and clients not exist`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
         val user1 = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
@@ -83,7 +83,6 @@ class UserRoleServiceFindAllByOrganizationUuidServiceIntegrationTest : AbstractU
         userRoleService.findAllByOrganizationUuid(organization.uuid).let {
             it.map { role -> role.user }.forEach { u -> assertThat(u).isEqualTo(user1) }
             assertThat(it.map { role -> role.userRole }.toList()).containsOnly(
-                    UserRole.CLIENT_ADMIN,
                     UserRole.ORGANIZATION_OWNER,
                     UserRole.ORGANIZATION_ADMIN
             )

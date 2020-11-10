@@ -50,13 +50,23 @@ public class UserRoleServiceImpl implements UserRoleService {
         this.clientOrganizationService = clientOrganizationService;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<AbstractUserRole> findAllByOrganizationUuid(final String organizationUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {}", organizationUuid);
         assertOrganizationUuid(organizationUuid);
         final List<AbstractUserRole> userRoles = userRoleRepository.findAllByOrganizationUuid(organizationUuid);
         LOGGER.debug("Successfully userRoles users belonging to organization - {}", organizationUuid);
+        return userRoles;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<AbstractUserRole> findClientsByOrganization(final String organizationUuid) {
+        LOGGER.debug("Retrieving user client roles belonging to organization - {}", organizationUuid);
+        assertOrganizationUuid(organizationUuid);
+        final List<AbstractUserRole> userRoles = userRoleRepository.findAllOrganizationClientsByOrganization(organizationUuid);
+        LOGGER.debug("Successfully user client roles belonging to organization - {}", organizationUuid);
         return userRoles;
     }
 
@@ -71,6 +81,17 @@ public class UserRoleServiceImpl implements UserRoleService {
         return userRole;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<AbstractUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid) {
+        LOGGER.debug("Retrieving userRole belonging to client organization - {} and user - {}", clientOrganizationUuid, userUuid);
+        assertOrganizationUuid(clientOrganizationUuid);
+        assertUserUuid(userUuid);
+        final Optional<AbstractUserRole> clientUserRole = userRoleRepository.findByClientOrganizationAndUser(clientOrganizationUuid, userUuid);
+        LOGGER.debug("Successfully retrieved userRole belonging to client organization - {} and user - {}", clientOrganizationUuid, userUuid);
+        return clientUserRole;
+    }
+    
     @Transactional(readOnly = true)
     @Override
     public boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole) {
@@ -90,14 +111,14 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public boolean existsByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid) {
-        LOGGER.debug("Checking existence of user client role belonging to organization - {}, user - {}", clientOrganizationUuid, userUuid);
-        Assert.hasText(clientOrganizationUuid, "The organizationUuid should not be null or empty");
+    public boolean existsClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid) {
+        LOGGER.debug("Checking existence of user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         assertUserUuid(userUuid);
-        final List<AbstractUserRole> roles = userRoleRepository.findAllByClientOrganizationUuid(clientOrganizationUuid).stream()
+        final List<AbstractUserRole> roles = userRoleRepository.findAllOrganizationClientsByOrganization(organizationUuid).stream()
                 .filter(abstractUserRole -> abstractUserRole.getUser().getUuid().equals(userUuid))
                 .collect(Collectors.toList());
-        LOGGER.debug("Successfully checked existence of user client role belonging to organization - {}, user - {}", clientOrganizationUuid, userUuid);
+        LOGGER.debug("Successfully checked existence of user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
         return !CollectionUtils.isEmpty(roles);
     }
 
@@ -178,7 +199,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         roleOptional.ifPresent(userRoleRepository::delete);
         LOGGER.debug("Successfully revoked client role using dto - {}", dto);
     }
-    
+
     private Optional<AbstractUserRole> findClientRoleByUserAndOrganization(final UserRevokeClientRoleDto dto) {
         switch (dto.getClientRole()) {
             case CLIENT_ADMIN:
@@ -213,7 +234,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                 throw new IllegalStateException(format("Unknown user client role %s", clientRole));
         }
     }
-    
+
     private void assertUserUuid(final String userUuid) {
         Assert.hasText(userUuid, "The userUuid should not be null or empty");
     }
@@ -221,7 +242,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     private void assertUserRole(final UserRole userRole) {
         Assert.notNull(userRole, "The userRole should not be null");
     }
-    
+
     private void assertOrganizationUuid(final String organizationUuid) {
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
     }

@@ -2,7 +2,7 @@ package com.vntana.core.service.user.role.impl
 
 import com.vntana.core.service.user.role.AbstractUserRoleServiceIntegrationTest
 import com.vntana.core.service.user.role.dto.UserClientRole
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 /**
@@ -14,8 +14,8 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
 
     @Test
     fun `test when noting found`() {
-        val result = userRoleService.existsByClientOrganizationAndUser(uuid(), uuid())
-        Assertions.assertThat(result).isFalse()
+        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(uuid(), uuid())
+        assertThat(result).isFalse()
     }
 
     @Test
@@ -26,10 +26,11 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
                 clientRole = UserClientRole.CLIENT_ADMIN
         )
         flushAndClear()
-        val result = userRoleService.existsByClientOrganizationAndUser(clientOrganization.uuid,
+        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+                clientOrganization.organization.uuid,
                 clientAdminRole.user.uuid
         )
-        Assertions.assertThat(result).isTrue()
+        assertThat(result).isTrue()
     }
     
     @Test
@@ -40,10 +41,11 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
                 clientRole = UserClientRole.CLIENT_CONTENT_MANAGER
         )
         flushAndClear()
-        val result = userRoleService.existsByClientOrganizationAndUser(clientOrganization.uuid,
+        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+                clientOrganization.organization.uuid,
                 clientAdminRole.user.uuid
         )
-        Assertions.assertThat(result).isTrue()
+        assertThat(result).isTrue()
     }
     
     @Test
@@ -54,9 +56,10 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
                 clientRole = UserClientRole.CLIENT_VIEWER
         )
         flushAndClear()
-        val result = userRoleService.existsByClientOrganizationAndUser(clientOrganization.uuid,
+        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+                clientOrganization.organization.uuid,
                 clientAdminRole.user.uuid
         )
-        Assertions.assertThat(result).isTrue()
+        assertThat(result).isTrue()
     }
 }
