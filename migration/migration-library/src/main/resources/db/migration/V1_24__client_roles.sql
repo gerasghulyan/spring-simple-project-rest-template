@@ -2,7 +2,7 @@ alter table user_role alter column type type character varying(120);
 
 update user_role
 set type = 'CLIENT_ORGANIZATION_ADMIN_ROLE'
-where type = 'CLIENT_ADMIN_ROLE';
+where type = 'CLIENT_ROLE';
 
 alter sequence user_role_slient_organization_seq rename to user_role_client_admin_seq;
 

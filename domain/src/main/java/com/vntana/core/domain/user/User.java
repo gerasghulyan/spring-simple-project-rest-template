@@ -163,6 +163,19 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .orElseGet(Collections::emptyList);
     }
 
+    public AbstractUserRole buildClientRole(final UserRole userRole, final ClientOrganization clientOrganization) {
+        switch (userRole) {
+            case CLIENT_ORGANIZATION_ADMIN:
+                return new UserClientOrganizationAdminRole(this, clientOrganization);
+            case CLIENT_ORGANIZATION_CONTENT_MANAGER:
+                return new UserClientOrganizationContentManagerRole(this, clientOrganization);
+            case CLIENT_ORGANIZATION_VIEWER:
+                return new UserClientOrganizationViewerRole(this, clientOrganization);
+            default:
+                throw new IllegalStateException(format("Unknown user client role %s", userRole));
+        }
+    }
+
     private List<AbstractUserRole> mutableRoles() {
         if (roles == null) {
             roles = new ArrayList<>();
@@ -187,19 +200,6 @@ public class User extends AbstractUuidAwareDomainEntity {
         return Optional.ofNullable(roles)
                 .map(Collections::unmodifiableList)
                 .orElseGet(Collections::emptyList);
-    }
-
-    public AbstractUserRole buildClientRole(final UserRole userRole, final ClientOrganization clientOrganization) {
-        switch (userRole) {
-            case CLIENT_ORGANIZATION_ADMIN:
-                return new UserClientOrganizationAdminRole(this, clientOrganization);
-            case CLIENT_ORGANIZATION_CONTENT_MANAGER:
-                return new UserClientOrganizationContentManagerRole(this, clientOrganization);
-            case CLIENT_ORGANIZATION_VIEWER:
-                return new UserClientOrganizationViewerRole(this, clientOrganization);
-            default:
-                throw new IllegalStateException(format("Unknown user client role %s", userRole));
-        }
     }
     //endregion
 
