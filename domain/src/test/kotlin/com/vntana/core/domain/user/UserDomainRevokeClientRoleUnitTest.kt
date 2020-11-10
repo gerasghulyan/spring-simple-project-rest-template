@@ -24,7 +24,7 @@ class UserDomainRevokeClientRoleUnitTest : AbstractDomainUnitTest() {
     fun `test revoke`() {
         val clientOrganization = ClientOrganization()
         val user = User(uuid(), uuid(), uuid())
-        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         user.revokeClientRole(clientOrganization)
         assertThat(user.roleOfClient(clientOrganization)).isEmpty
     }

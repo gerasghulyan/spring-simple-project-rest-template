@@ -1,12 +1,8 @@
 package com.vntana.core.rest.resource.user.role;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
-import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
-import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminResponse;
-import com.vntana.core.model.user.role.response.UserRoleGrantSuperAdminResponse;
-import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse;
+import com.vntana.core.model.user.role.request.*;
+import com.vntana.core.model.user.role.response.*;
 import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +45,27 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantOrganizationAdminResponse);
     }
 
+    @PostMapping("client-admin")
+    public ResponseEntity<UserRoleGrantClientAdminResponse> grantUserClientAdminRole(@RequestBody final UserRoleGrantClientAdminRequest request) {
+        LOGGER.debug("Processing user-roles resource grantUserClientAdminRole for request - {}", request);
+        final UserRoleGrantClientAdminResponse userRoleGrantClientAdminResponse = userRoleServiceFacade.grantClientAdminRole(request);
+        LOGGER.debug("Successfully processing user-roles resource grantUserClientAdminRole for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantClientAdminResponse);
+    }
+
     @DeleteMapping("organization-admin")
     public ResponseEntity<UserRoleRevokeOrganizationAdminResponse> revokeUserOrganizationAdminRole(@RequestBody final UserRoleRevokeOrganizationAdminRequest request) {
         LOGGER.debug("Processing user-roles resource revokeUserOrganizationAdminRole for request - {}", request);
         final UserRoleRevokeOrganizationAdminResponse userRoleRevokeOrganizationAdminResponse = userRoleServiceFacade.revokeOrganizationAdminRole(request);
         LOGGER.debug("Successfully processing user-roles resource revokeUserOrganizationAdminRole for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(userRoleRevokeOrganizationAdminResponse);
+    }
+
+    @DeleteMapping("client-admin")
+    public ResponseEntity<UserRoleRevokeClientAdminResponse> revokeUserClientAdminRole(@RequestBody final UserRoleRevokeClientAdminRequest request) {
+        LOGGER.debug("Processing user-roles resource revokeUserClientAdminRole for request - {}", request);
+        final UserRoleRevokeClientAdminResponse userRoleRevokeClientAdminResponse = userRoleServiceFacade.revokeClientAdminRole(request);
+        LOGGER.debug("Successfully processing user-roles resource revokeUserClientAdminRole for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(userRoleRevokeClientAdminResponse);
     }
 }

@@ -7,7 +7,9 @@ import com.vntana.core.helper.AbstractTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
+import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto
+import com.vntana.core.service.user.role.dto.UserRevokeClientRoleDto
 import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto
 
 /**
@@ -35,10 +37,32 @@ open class UserRoleCommonTestHelper : AbstractTestHelper() {
             user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
     ): UserSuperAdminRole = UserSuperAdminRole(user)
 
-    fun buildUserClientOrganizationRole(
+    fun buildUserClientAdminRole(
             user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
-    ): UserClientOrganizationRole = UserClientOrganizationRole(user, UserRole.CLIENT_ADMIN, clientOrganization)
+    ): UserClientOrganizationAdminRole = UserClientOrganizationAdminRole(user, clientOrganization)
+
+    fun buildUserClientContentManagerRole(
+            user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
+            clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
+    ): UserClientOrganizationContentManagerRole = UserClientOrganizationContentManagerRole(user, clientOrganization)
+
+    fun buildUserClientViewerRole(
+            user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
+            clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
+    ): UserClientOrganizationViewerRole = UserClientOrganizationViewerRole(user, clientOrganization)
+
+    fun buildUserGrantClientRoleDto(
+            userUuid: String? = uuid(),
+            clientOrganizationUuid: String? = uuid(),
+            clientRole: UserRole? = UserRole.CLIENT_ORGANIZATION_ADMIN
+    ): UserGrantClientRoleDto = UserGrantClientRoleDto(userUuid, clientOrganizationUuid, clientRole)
+
+    fun buildUserRevokeClientRoleDto(
+            userUuid: String? = uuid(),
+            clientOrganizationUuid: String? = uuid(),
+            clientRole: UserRole? = UserRole.CLIENT_ORGANIZATION_ADMIN
+    ): UserRevokeClientRoleDto = UserRevokeClientRoleDto(userUuid, clientOrganizationUuid, clientRole)
 
     fun buildUserGrantOrganizationRoleDto(
             userUuid: String? = uuid(),

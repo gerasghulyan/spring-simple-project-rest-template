@@ -4,6 +4,7 @@ import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.helper.user.role.UserRoleRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.role.component.impl.UserRoleFacadePreconditionCheckerComponentImpl
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import com.vntana.core.service.user.role.UserRoleService
@@ -31,8 +32,11 @@ abstract class AbstractUserRoleFacadePreconditionCheckerComponentUnitTest : Abst
     @Mock
     protected lateinit var userRoleService: UserRoleService
 
+    @Mock
+    protected lateinit var clientOrganizationService: ClientOrganizationService
+
     @Before
     fun prepare() {
-        preconditionChecker = UserRoleFacadePreconditionCheckerComponentImpl(organizationService, userService, userRoleService)
+        preconditionChecker = UserRoleFacadePreconditionCheckerComponentImpl(organizationService, userService, userRoleService, clientOrganizationService)
     }
 }

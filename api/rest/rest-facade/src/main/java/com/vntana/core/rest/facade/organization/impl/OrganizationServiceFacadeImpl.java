@@ -278,8 +278,8 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                                     userOrganizationAdminRole.getOrganization().getImageBlobId(),
                                     userOrganizationAdminRole.getOrganization().getCreated()
                             );
-                        case CLIENT_ADMIN:
-                            final UserClientOrganizationRole userClientOrganizationRole = (UserClientOrganizationRole) userRole;
+                        case CLIENT_ORGANIZATION_ADMIN:
+                            final UserClientOrganizationAdminRole userClientOrganizationRole = (UserClientOrganizationAdminRole) userRole;
                             return new GetUserOrganizationsResponseModel(
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),
                                     userClientOrganizationRole.getClientOrganization().getOrganization().getSlug(),

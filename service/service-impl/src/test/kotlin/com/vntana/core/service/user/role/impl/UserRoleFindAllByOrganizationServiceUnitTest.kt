@@ -11,14 +11,14 @@ import org.junit.Test
  * Date: 5/7/20
  * Time: 4:10 PM
  */
-class UserRoleFindAllByOrganizationUuidServiceUnitTest : AbstractUserRoleServiceUnitTest() {
+class UserRoleFindAllByOrganizationServiceUnitTest : AbstractUserRoleServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { userRoleService.findAllByOrganizationUuid(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userRoleService.findAllByOrganizationUuid(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { userRoleService.findAllByOrganization(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { userRoleService.findAllByOrganization(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -30,9 +30,9 @@ class UserRoleFindAllByOrganizationUuidServiceUnitTest : AbstractUserRoleService
                 commonTestHelper.buildUserOrganizationOwnerRole(),
                 commonTestHelper.buildUserOrganizationOwnerRole()
         )
-        expect(userRoleRepository.findAllByOrganizationUuid(organizationUuid)).andReturn(roles)
+        expect(userRoleRepository.findAllByOrganization(organizationUuid)).andReturn(roles)
         replayAll()
-        userRoleService.findAllByOrganizationUuid(organizationUuid).let {
+        userRoleService.findAllByOrganization(organizationUuid).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(roles)
         }
         verifyAll()

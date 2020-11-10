@@ -2,9 +2,7 @@ package com.vntana.core.rest.facade.user.role.component;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
-import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
+import com.vntana.core.model.user.role.request.*;
 
 /**
  * Created by Arman Gevorgyan.
@@ -17,5 +15,9 @@ public interface UserRoleFacadePreconditionCheckerComponent {
 
     SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantOrganizationAdminRole(final UserRoleGrantOrganizationAdminRequest request);
 
+    SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientAdminRole(final UserRoleGrantClientAdminRequest request);
+
     SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeOrganizationAdminRole(final UserRoleRevokeOrganizationAdminRequest request);
+
+    SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientAdminRole(final UserRoleRevokeClientAdminRequest request);
 }

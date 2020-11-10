@@ -10,7 +10,9 @@ import com.vntana.commons.api.model.response.ErrorResponseModel;
 public enum UserRoleErrorResponseModel implements ErrorResponseModel {
     MISSING_ORGANIZATION_UUID,
     MISSING_USER_UUID,
+    MISSING_CLIENT_ORGANIZATION_UUID,
     ORGANIZATION_NOT_FOUND,
+    CLIENT_ORGANIZATION_NOT_FOUND,
     USER_NOT_FOUND,
     REQUESTED_ROLE_IS_ABSENT,
     REQUESTED_ROLE_ALREADY_GRANTED

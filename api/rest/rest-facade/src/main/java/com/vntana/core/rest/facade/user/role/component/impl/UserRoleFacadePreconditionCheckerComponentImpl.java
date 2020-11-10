@@ -4,10 +4,9 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
-import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
+import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
@@ -31,16 +30,19 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleFacadePreconditionCheckerComponentImpl.class);
 
     private final OrganizationService organizationService;
+    private final ClientOrganizationService clientOrganizationService;
     private final UserService userService;
     private final UserRoleService userRoleService;
 
     public UserRoleFacadePreconditionCheckerComponentImpl(final OrganizationService organizationService,
                                                           final UserService userService,
-                                                          final UserRoleService userRoleService) {
+                                                          final UserRoleService userRoleService,
+                                                          final ClientOrganizationService clientOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.organizationService = organizationService;
         this.userService = userService;
         this.userRoleService = userRoleService;
+        this.clientOrganizationService = clientOrganizationService;
     }
 
     @Override
@@ -72,6 +74,17 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     }
 
     @Override
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientAdminRole(final UserRoleGrantClientAdminRequest request) {
+        LOGGER.debug("Processing checkGrantClientAdminRole for request - {}", request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientOrganizationUuid(), request.getUserUuid());
+        if (error.isPresent()) {
+            return error;
+        }
+        LOGGER.debug("Successfully processed checkGrantClientAdminRole for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
     public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeOrganizationAdminRole(final UserRoleRevokeOrganizationAdminRequest request) {
         LOGGER.debug("Processing checkRevokeOrganizationAdminRole for request - {}", request);
         final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(request.getOrganizationUuid(), request.getUserUuid());
@@ -82,6 +95,18 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
             return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_IS_ABSENT);
         }
         LOGGER.debug("Successfully processed checkRevokeOrganizationAdminRole for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientAdminRole(final UserRoleRevokeClientAdminRequest request) {
+        LOGGER.debug("Processing checkRevokeClientAdminRole for request - {}", request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientOrganizationUuid(), request.getUserUuid());
+        if (error.isPresent()) {
+            return error;
+        }
+        // TODO: 11/5/20 add user role service check if needed 
+        LOGGER.debug("Successfully processed checkRevokeClientAdminRole for request - {}", request);
         return SingleErrorWithStatus.empty();
     }
 
@@ -96,4 +121,14 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         return SingleErrorWithStatus.empty();
     }
 
+    private SingleErrorWithStatus<UserRoleErrorResponseModel> checkClientAndUserExistence(final String clientOrganizationUuid,
+                                                                                          final String userUuid) {
+        if (!clientOrganizationService.existsByUuid(clientOrganizationUuid)) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.CLIENT_ORGANIZATION_NOT_FOUND);
+        }
+        if (!userService.existsByUuid(userUuid)) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.USER_NOT_FOUND);
+        }
+        return SingleErrorWithStatus.empty();
+    }
 }

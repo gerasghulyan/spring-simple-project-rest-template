@@ -22,9 +22,9 @@ class UserDomainRoleOfClientUnitTest : AbstractDomainUnitTest() {
     fun `test roleOf when found`() {
         val clientOrganization = ClientOrganization()
         val user = User(uuid(), uuid(), uuid())
-        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         val role = user.roleOfClient(clientOrganization).get()
-        assertThat(role.userRole).isEqualTo(UserRole.CLIENT_ADMIN)
+        assertThat(role.userRole).isEqualTo(UserRole.CLIENT_ORGANIZATION_ADMIN)
         assertThat(role.user).isEqualTo(user)
         assertThat(role.clientOrganization).isEqualTo(clientOrganization)
     }
