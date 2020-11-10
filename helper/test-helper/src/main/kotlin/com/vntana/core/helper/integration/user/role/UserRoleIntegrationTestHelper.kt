@@ -5,12 +5,12 @@ import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.AbstractUserRole
 import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserOrganizationAdminRole
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.helper.integration.client.ClientOrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.service.user.role.UserRoleService
-import com.vntana.core.service.user.role.dto.UserClientRole
 import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,6 +42,6 @@ class UserRoleIntegrationTestHelper : UserRoleCommonTestHelper() {
 
     fun persistUserClientRole(user: User = userIntegrationTestHelper.persistUser(),
                               clientOrganization: ClientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(),
-                              clientRole: UserClientRole = UserClientRole.CLIENT_ADMIN
+                              clientRole: UserRole = UserRole.CLIENT_ORGANIZATION_ADMIN
                               ): AbstractUserRole = userRoleService.grantClientRole(UserGrantClientRoleDto(user.uuid, clientOrganization.uuid, clientRole))
 }

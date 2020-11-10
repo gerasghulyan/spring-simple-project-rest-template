@@ -1,7 +1,7 @@
 package com.vntana.core.service.user.role.impl
 
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.user.role.AbstractUserRoleServiceIntegrationTest
-import com.vntana.core.service.user.role.dto.UserClientRole
 import com.vntana.core.service.user.role.exception.UserClientRoleNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -26,13 +26,13 @@ class UserRoleRevokeClientRoleServiceIntegrationTest : AbstractUserRoleServiceIn
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
         val clientAdminRole = integrationTestHelper.persistUserClientRole(
                 clientOrganization = clientOrganization, 
-                clientRole = UserClientRole.CLIENT_ADMIN
+                clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN
         )
         val user = clientAdminRole.user
         val revokeDto = integrationTestHelper.buildUserRevokeClientRoleDto(
                 userUuid = user.uuid,
                 clientOrganizationUuid = clientOrganization.uuid,
-                clientRole = UserClientRole.CLIENT_ADMIN
+                clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN
         )
         flushAndClear()
         userRoleService.revokeClientRole(revokeDto).let {
@@ -47,13 +47,13 @@ class UserRoleRevokeClientRoleServiceIntegrationTest : AbstractUserRoleServiceIn
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
         val clientAdminRole = integrationTestHelper.persistUserClientRole(
                 clientOrganization = clientOrganization, 
-                clientRole = UserClientRole.CLIENT_CONTENT_MANAGER
+                clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER
         )
         val user = clientAdminRole.user
         val revokeDto = integrationTestHelper.buildUserRevokeClientRoleDto(
                 userUuid = user.uuid,
                 clientOrganizationUuid = clientOrganization.uuid,
-                clientRole = UserClientRole.CLIENT_CONTENT_MANAGER
+                clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER
         )
         flushAndClear()
         userRoleService.revokeClientRole(revokeDto).let {
@@ -68,13 +68,13 @@ class UserRoleRevokeClientRoleServiceIntegrationTest : AbstractUserRoleServiceIn
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
         val clientAdminRole = integrationTestHelper.persistUserClientRole(
                 clientOrganization = clientOrganization, 
-                clientRole = UserClientRole.CLIENT_VIEWER
+                clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         val user = clientAdminRole.user
         val revokeDto = integrationTestHelper.buildUserRevokeClientRoleDto(
                 userUuid = user.uuid,
                 clientOrganizationUuid = clientOrganization.uuid,
-                clientRole = UserClientRole.CLIENT_VIEWER
+                clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         flushAndClear()
         userRoleService.revokeClientRole(revokeDto).let {

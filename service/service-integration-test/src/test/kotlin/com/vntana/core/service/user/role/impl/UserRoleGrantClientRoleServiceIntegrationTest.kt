@@ -1,7 +1,7 @@
 package com.vntana.core.service.user.role.impl
 
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.user.role.AbstractUserRoleServiceIntegrationTest
-import com.vntana.core.service.user.role.dto.UserClientRole
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -19,7 +19,7 @@ class UserRoleGrantClientRoleServiceIntegrationTest : AbstractUserRoleServiceInt
         flushAndClear()
         val dto = integrationTestHelper.buildUserGrantClientRoleDto(
                 clientOrganizationUuid = clientOrganization.uuid,
-                clientRole = UserClientRole.CLIENT_ADMIN,
+                clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN,
                 userUuid = user.uuid
         )
         userRoleService.grantClientRole(dto).let {

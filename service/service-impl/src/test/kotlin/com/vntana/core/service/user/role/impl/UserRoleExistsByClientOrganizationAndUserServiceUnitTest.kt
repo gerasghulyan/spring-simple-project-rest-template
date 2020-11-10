@@ -15,10 +15,11 @@ class UserRoleExistsByClientOrganizationAndUserServiceUnitTest : AbstractUserRol
     @Test
     fun `test when noting found`() {
         resetAll()
-        val clientOrganizationUuid = uuid()
-        expect(userRoleRepository.findAllOrganizationClientsByOrganization(clientOrganizationUuid)).andReturn(listOf())
+        val organizationUuid = uuid()
+        val userUuid = uuid()
+        expect(userRoleRepository.findAllOrganizationClientsByOrganizationAndUser(organizationUuid, userUuid)).andReturn(listOf())
         replayAll()
-        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(clientOrganizationUuid, uuid())
+        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
         assertThat(result).isFalse()
         verifyAll()
     }
@@ -26,13 +27,13 @@ class UserRoleExistsByClientOrganizationAndUserServiceUnitTest : AbstractUserRol
     @Test
     fun test() {
         resetAll()
-        val clientOrganizationUuid = uuid()
+        val organizationUuid = uuid()
         val user = userCommonTestHelper.buildUser()
         val clientContentManagerRole = commonTestHelper.buildUserClientContentManagerRole(user = user)
         val clientAdminRole = commonTestHelper.buildUserClientAdminRole(user = user)
-        expect(userRoleRepository.findAllOrganizationClientsByOrganization(clientOrganizationUuid)).andReturn(listOf(clientContentManagerRole, clientAdminRole))
+        expect(userRoleRepository.findAllOrganizationClientsByOrganizationAndUser(organizationUuid, user.uuid)).andReturn(listOf(clientContentManagerRole, clientAdminRole))
         replayAll()
-        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(clientOrganizationUuid, user.uuid)
+        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(organizationUuid, user.uuid)
         assertThat(result).isTrue()
         verifyAll()
     }

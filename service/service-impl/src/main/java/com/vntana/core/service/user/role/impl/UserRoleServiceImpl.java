@@ -52,10 +52,10 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<AbstractUserRole> findAllByOrganizationUuid(final String organizationUuid) {
+    public List<AbstractUserRole> findAllByOrganization(final String organizationUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {}", organizationUuid);
         assertOrganizationUuid(organizationUuid);
-        final List<AbstractUserRole> userRoles = userRoleRepository.findAllByOrganizationUuid(organizationUuid);
+        final List<AbstractUserRole> userRoles = userRoleRepository.findAllByOrganization(organizationUuid);
         LOGGER.debug("Successfully userRoles users belonging to organization - {}", organizationUuid);
         return userRoles;
     }
@@ -76,7 +76,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         LOGGER.debug("Retrieving userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
         assertOrganizationUuid(organizationUuid);
         assertUserUuid(userUuid);
-        final Optional<AbstractUserRole> userRole = userRoleRepository.findAllByOrganizationAndUser(organizationUuid, userUuid);
+        final Optional<AbstractUserRole> userRole = userRoleRepository.findByOrganizationAndUser(organizationUuid, userUuid);
         LOGGER.debug("Successfully retrieved userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
         return userRole;
     }
@@ -91,7 +91,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         LOGGER.debug("Successfully retrieved userRole belonging to client organization - {} and user - {}", clientOrganizationUuid, userUuid);
         return clientUserRole;
     }
-    
+
     @Transactional(readOnly = true)
     @Override
     public boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole) {
@@ -99,7 +99,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         assertOrganizationUuid(organizationUuid);
         assertUserUuid(userUuid);
         assertUserRole(userRole);
-        final List<AbstractUserRole> roles = userRoleRepository.findAllByOrganizationUuid(organizationUuid).stream()
+        final List<AbstractUserRole> roles = userRoleRepository.findAllByOrganization(organizationUuid).stream()
                 .filter(abstractUserRole -> abstractUserRole.getUserRole() == userRole && abstractUserRole.getUser().getUuid().equals(userUuid))
                 .collect(Collectors.toList());
         if (roles.size() > 1) {
@@ -115,9 +115,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         LOGGER.debug("Checking existence of user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         assertUserUuid(userUuid);
-        final List<AbstractUserRole> roles = userRoleRepository.findAllOrganizationClientsByOrganization(organizationUuid).stream()
-                .filter(abstractUserRole -> abstractUserRole.getUser().getUuid().equals(userUuid))
-                .collect(Collectors.toList());
+        final List<AbstractUserRole> roles = userRoleRepository.findAllOrganizationClientsByOrganizationAndUser(organizationUuid, userUuid);
         LOGGER.debug("Successfully checked existence of user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
         return !CollectionUtils.isEmpty(roles);
     }
@@ -165,7 +163,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         Assert.notNull(dto, "The UserGrantClientRoleDto should not be null");
         final User user = userService.getByUuid(dto.getUserUuid());
         final ClientOrganization clientOrganization = clientOrganizationService.getByUuid(dto.getClientOrganizationUuid());
-        final AbstractUserRole userClientRole = buildClientRole(dto.getClientRole(), user, clientOrganization);
+        final AbstractUserRole userClientRole = user.buildClientRole(dto.getClientRole(), clientOrganization);
         final AbstractUserRole userRole = userRoleRepository.save(userClientRole);
         LOGGER.debug("Successfully granted client role using dto - {}", dto);
         return userRole;
@@ -202,36 +200,23 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     private Optional<AbstractUserRole> findClientRoleByUserAndOrganization(final UserRevokeClientRoleDto dto) {
         switch (dto.getClientRole()) {
-            case CLIENT_ADMIN:
+            case CLIENT_ORGANIZATION_ADMIN:
                 return userRoleRepository.findClientAdminRoleByUserAndClientOrganization(
                         dto.getUserUuid(),
                         dto.getClientOrganizationUuid()
                 );
-            case CLIENT_CONTENT_MANAGER:
+            case CLIENT_ORGANIZATION_CONTENT_MANAGER:
                 return userRoleRepository.findClientContentManagerRoleByUserAndClientOrganization(
                         dto.getUserUuid(),
                         dto.getClientOrganizationUuid()
                 );
-            case CLIENT_VIEWER:
+            case CLIENT_ORGANIZATION_VIEWER:
                 return userRoleRepository.findClientViewerRoleByUserAndClientOrganization(
                         dto.getUserUuid(),
                         dto.getClientOrganizationUuid()
                 );
             default:
                 throw new IllegalStateException(format("Unknown user client role %s", dto.getClientRole()));
-        }
-    }
-
-    private AbstractUserRole buildClientRole(final UserClientRole clientRole, final User user, final ClientOrganization clientOrganization) {
-        switch (clientRole) {
-            case CLIENT_ADMIN:
-                return new UserClientOrganizationAdminRole(user, clientOrganization);
-            case CLIENT_CONTENT_MANAGER:
-                return new UserClientOrganizationContentManagerRole(user, clientOrganization);
-            case CLIENT_VIEWER:
-                return new UserClientOrganizationViewerRole(user, clientOrganization);
-            default:
-                throw new IllegalStateException(format("Unknown user client role %s", clientRole));
         }
     }
 

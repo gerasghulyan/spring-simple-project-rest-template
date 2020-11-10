@@ -54,7 +54,7 @@ class UserGetByUuidsAndOrganizationUuidFacadeImplUnitTest : AbstractUserServiceF
         val client1Organization = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization)
         val user1WithOrganizationRole = userRoleCommonTestHelper.buildUserClientAdminRole(user = user1, clientOrganization = client1Organization)
         expect(preconditionCheckerComponent.checkGetByUuidsAndOrganizationUuid(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(userRoleService.findAllByOrganizationUuid(request.organizationUuid)).andReturn(listOf(user1WithOrganizationRole))
+        expect(userRoleService.findAllByOrganization(request.organizationUuid)).andReturn(listOf(user1WithOrganizationRole))
         expect(userService.findByUuids(userUuids)).andReturn(setOf(user1, user2))
         replayAll()
         userServiceFacade.getByUuidsAndOrganizationUuid(request).let {
@@ -88,7 +88,7 @@ class UserGetByUuidsAndOrganizationUuidFacadeImplUnitTest : AbstractUserServiceF
         val user1WithOrganizationRole = userRoleCommonTestHelper.buildUserClientAdminRole(user = user1, clientOrganization = clientOrganization)
         val user2WithOrganizationRole = userRoleCommonTestHelper.buildUserClientAdminRole(user = user2, clientOrganization = clientOrganization)
         expect(preconditionCheckerComponent.checkGetByUuidsAndOrganizationUuid(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(userRoleService.findAllByOrganizationUuid(request.organizationUuid)).andReturn(listOf(user1WithOrganizationRole, user2WithOrganizationRole))
+        expect(userRoleService.findAllByOrganization(request.organizationUuid)).andReturn(listOf(user1WithOrganizationRole, user2WithOrganizationRole))
         expect(userService.findByUuids(userUuids)).andReturn(setOf(user1, user2))
         replayAll()
         userServiceFacade.getByUuidsAndOrganizationUuid(request).let {

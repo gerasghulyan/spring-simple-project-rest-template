@@ -1,6 +1,6 @@
 package com.vntana.core.service.user.role.exception;
 
-import com.vntana.core.service.user.role.dto.UserClientRole;
+import com.vntana.core.domain.user.UserRole;
 
 import static java.lang.String.format;
 
@@ -11,12 +11,12 @@ import static java.lang.String.format;
  */
 public class UserClientRoleNotFoundException extends RuntimeException {
 
-    private final UserClientRole clientRole;
+    private final UserRole clientRole;
     private final String userUuid;
     private final String clientOrganizationUuid;
 
     public UserClientRoleNotFoundException(
-            final UserClientRole clientRole,
+            final UserRole clientRole,
             final String userUuid,
             final String clientOrganizationUuid
     ) {
@@ -26,7 +26,7 @@ public class UserClientRoleNotFoundException extends RuntimeException {
         this.clientOrganizationUuid = clientOrganizationUuid;
     }
 
-    public UserClientRole getClientRole() {
+    public UserRole getClientRole() {
         return clientRole;
     }
 

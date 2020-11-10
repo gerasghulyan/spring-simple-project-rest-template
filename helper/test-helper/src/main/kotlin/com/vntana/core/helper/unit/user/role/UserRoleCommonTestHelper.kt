@@ -7,7 +7,10 @@ import com.vntana.core.helper.AbstractTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.service.user.role.dto.*
+import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto
+import com.vntana.core.service.user.role.dto.UserRevokeClientRoleDto
+import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto
 
 /**
  * Created by Arman Gevorgyan.
@@ -52,13 +55,13 @@ open class UserRoleCommonTestHelper : AbstractTestHelper() {
     fun buildUserGrantClientRoleDto(
             userUuid: String? = uuid(),
             clientOrganizationUuid: String? = uuid(),
-            clientRole: UserClientRole? = UserClientRole.CLIENT_ADMIN
+            clientRole: UserRole? = UserRole.CLIENT_ORGANIZATION_ADMIN
     ): UserGrantClientRoleDto = UserGrantClientRoleDto(userUuid, clientOrganizationUuid, clientRole)
 
     fun buildUserRevokeClientRoleDto(
             userUuid: String? = uuid(),
             clientOrganizationUuid: String? = uuid(),
-            clientRole: UserClientRole? = UserClientRole.CLIENT_ADMIN
+            clientRole: UserRole? = UserRole.CLIENT_ORGANIZATION_ADMIN
     ): UserRevokeClientRoleDto = UserRevokeClientRoleDto(userUuid, clientOrganizationUuid, clientRole)
 
     fun buildUserGrantOrganizationRoleDto(

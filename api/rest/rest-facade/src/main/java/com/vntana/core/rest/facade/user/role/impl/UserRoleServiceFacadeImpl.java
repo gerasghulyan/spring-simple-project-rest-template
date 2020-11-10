@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user.role.impl;
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.UserOrganizationAdminRole;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.model.user.role.response.*;
@@ -72,7 +73,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         if (error.isPresent()) {
             return new UserRoleGrantClientAdminResponse(error.getHttpStatus(), error.getError());
         }
-        final AbstractUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(request.getUserUuid(), request.getClientOrganizationUuid(), UserClientRole.CLIENT_ADMIN));
+        final AbstractUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(request.getUserUuid(), request.getClientOrganizationUuid(), UserRole.CLIENT_ORGANIZATION_ADMIN));
         LOGGER.debug("Successfully granted user organization client role for request - {}", request);
         return new UserRoleGrantClientAdminResponse(clientRole.getUser().getUuid());
     }
@@ -99,7 +100,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         if (error.isPresent()) {
             return new UserRoleRevokeClientAdminResponse(error.getHttpStatus(), error.getError());
         }
-        userRoleService.revokeClientRole(new UserRevokeClientRoleDto(request.getUserUuid(), request.getClientOrganizationUuid(), UserClientRole.CLIENT_ADMIN));
+        userRoleService.revokeClientRole(new UserRevokeClientRoleDto(request.getUserUuid(), request.getClientOrganizationUuid(), UserRole.CLIENT_ORGANIZATION_ADMIN));
         authTokenService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user client role for request - {}", request);
         return new UserRoleRevokeClientAdminResponse(request.getUserUuid());

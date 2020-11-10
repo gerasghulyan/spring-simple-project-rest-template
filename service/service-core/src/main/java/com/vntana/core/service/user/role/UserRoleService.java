@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public interface UserRoleService {
 
-    List<AbstractUserRole> findAllByOrganizationUuid(final String organizationUuid);
+    List<AbstractUserRole> findAllByOrganization(final String organizationUuid);
 
     List<AbstractUserRole> findClientsByOrganization(final String organizationUuid);
 

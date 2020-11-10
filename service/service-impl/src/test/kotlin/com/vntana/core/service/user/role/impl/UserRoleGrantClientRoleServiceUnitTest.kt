@@ -3,7 +3,6 @@ package com.vntana.core.service.user.role.impl
 import com.vntana.core.domain.user.AbstractUserRole
 import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.user.role.AbstractUserRoleServiceUnitTest
-import com.vntana.core.service.user.role.dto.UserClientRole
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.*
 import org.junit.Test
@@ -33,14 +32,14 @@ class UserRoleGrantClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest()
         resetAll()
         val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserClientRole.CLIENT_ADMIN)
+        val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
         expect(clientOrganizationService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
         expect(userRoleRepository.save(isA(AbstractUserRole::class.java))).andAnswer { getCurrentArguments()[0] as AbstractUserRole }
         replayAll()
         userRoleService.grantClientRole(dto).let {
             assertThat(it.user).isEqualTo(user)
-            assertThat(it.userRole).isEqualTo(UserRole.CLIENT_ADMIN)
+            assertThat(it.userRole).isEqualTo(UserRole.CLIENT_ORGANIZATION_ADMIN)
         }
         verifyAll()
     }
@@ -50,14 +49,14 @@ class UserRoleGrantClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest()
         resetAll()
         val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserClientRole.CLIENT_CONTENT_MANAGER)
+        val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
         expect(clientOrganizationService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
         expect(userRoleRepository.save(isA(AbstractUserRole::class.java))).andAnswer { getCurrentArguments()[0] as AbstractUserRole }
         replayAll()
         userRoleService.grantClientRole(dto).let {
             assertThat(it.user).isEqualTo(user)
-            assertThat(it.userRole).isEqualTo(UserRole.CLIENT_CONTENT_MANAGER)
+            assertThat(it.userRole).isEqualTo(UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER)
         }
         verifyAll()
     }
@@ -67,14 +66,14 @@ class UserRoleGrantClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest()
         resetAll()
         val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserClientRole.CLIENT_VIEWER)
+        val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
         expect(clientOrganizationService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
         expect(userRoleRepository.save(isA(AbstractUserRole::class.java))).andAnswer { getCurrentArguments()[0] as AbstractUserRole }
         replayAll()
         userRoleService.grantClientRole(dto).let {
             assertThat(it.user).isEqualTo(user)
-            assertThat(it.userRole).isEqualTo(UserRole.CLIENT_VIEWER)
+            assertThat(it.userRole).isEqualTo(UserRole.CLIENT_ORGANIZATION_VIEWER)
         }
         verifyAll()
     }

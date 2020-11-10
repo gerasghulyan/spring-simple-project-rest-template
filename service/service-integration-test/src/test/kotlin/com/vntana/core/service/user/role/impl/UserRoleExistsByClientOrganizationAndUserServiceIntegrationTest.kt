@@ -1,7 +1,7 @@
 package com.vntana.core.service.user.role.impl
 
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.user.role.AbstractUserRoleServiceIntegrationTest
-import com.vntana.core.service.user.role.dto.UserClientRole
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -19,11 +19,35 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
     }
 
     @Test
+    fun `test multiple client roles in organization`() {
+        val persistOrganization = organizationIntegrationTestHelper.persistOrganization()
+        val clientOrganization1 = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = persistOrganization.uuid)
+        val clientOrganization2 = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = persistOrganization.uuid)
+        val persistUser = userIntegrationTestHelper.persistUser()
+        integrationTestHelper.persistUserClientRole(
+                user = persistUser,
+                clientOrganization = clientOrganization1,
+                clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN
+        )
+        integrationTestHelper.persistUserClientRole(
+                user = persistUser,
+                clientOrganization = clientOrganization2,
+                clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
+        )
+        flushAndClear()
+        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+                persistOrganization.uuid,
+                persistUser.uuid
+        )
+        assertThat(result).isTrue()
+    }
+
+    @Test
     fun `test client admin`() {
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
         val clientAdminRole = integrationTestHelper.persistUserClientRole(
                 clientOrganization = clientOrganization,
-                clientRole = UserClientRole.CLIENT_ADMIN
+                clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN
         )
         flushAndClear()
         val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
@@ -32,33 +56,33 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
         )
         assertThat(result).isTrue()
     }
-    
+
     @Test
     fun `test client content manager`() {
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
-        val clientAdminRole = integrationTestHelper.persistUserClientRole(
+        val clientContentManagerRole = integrationTestHelper.persistUserClientRole(
                 clientOrganization = clientOrganization,
-                clientRole = UserClientRole.CLIENT_CONTENT_MANAGER
+                clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER
         )
         flushAndClear()
         val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
-                clientAdminRole.user.uuid
+                clientContentManagerRole.user.uuid
         )
         assertThat(result).isTrue()
     }
-    
+
     @Test
     fun `test client viewer`() {
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
-        val clientAdminRole = integrationTestHelper.persistUserClientRole(
+        val clientViewerRole = integrationTestHelper.persistUserClientRole(
                 clientOrganization = clientOrganization,
-                clientRole = UserClientRole.CLIENT_VIEWER
+                clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         flushAndClear()
         val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
-                clientAdminRole.user.uuid
+                clientViewerRole.user.uuid
         )
         assertThat(result).isTrue()
     }

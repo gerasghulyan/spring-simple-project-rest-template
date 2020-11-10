@@ -1,6 +1,7 @@
 package com.vntana.core.service.user.role.dto;
 
 import com.vntana.commons.service.dto.ServiceDto;
+import com.vntana.core.domain.user.UserRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,12 +18,13 @@ public class UserRevokeClientRoleDto implements ServiceDto {
 
     private final String clientOrganizationUuid;
 
-    private final UserClientRole clientRole;
+    private final UserRole clientRole;
 
-    public UserRevokeClientRoleDto(final String userUuid, final String clientOrganizationUuid, final UserClientRole clientRole) {
+    public UserRevokeClientRoleDto(final String userUuid, final String clientOrganizationUuid, final UserRole clientRole) {
         Assert.hasText(userUuid, "The user uuid should not be null or empty");
         Assert.hasText(clientOrganizationUuid, "The client organization uuid should not be null or empty");
         Assert.notNull(clientRole, "The client role should not be null");
+        Assert.isTrue(clientRole.isClientRelatedRole(), "The UserRole should be client related role");
         this.clientRole = clientRole;
         this.userUuid = userUuid;
         this.clientOrganizationUuid = clientOrganizationUuid;
@@ -71,7 +73,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
         return clientOrganizationUuid;
     }
 
-    public UserClientRole getClientRole() {
+    public UserRole getClientRole() {
         return clientRole;
     }
 }

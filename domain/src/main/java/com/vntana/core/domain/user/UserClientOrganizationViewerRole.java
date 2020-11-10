@@ -14,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "user_role_client_organization_viewer")
-@DiscriminatorValue("CLIENT_VIEWER_ROLE")
+@DiscriminatorValue("CLIENT_ORGANIZATION_VIEWER_ROLE")
 public class UserClientOrganizationViewerRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -26,7 +26,7 @@ public class UserClientOrganizationViewerRole extends AbstractUserRole {
     }
 
     public UserClientOrganizationViewerRole(final User user, final ClientOrganization clientOrganization) {
-        super(user, UserRole.CLIENT_VIEWER);
+        super(user, UserRole.CLIENT_ORGANIZATION_VIEWER);
         this.clientOrganization = clientOrganization;
     }
 

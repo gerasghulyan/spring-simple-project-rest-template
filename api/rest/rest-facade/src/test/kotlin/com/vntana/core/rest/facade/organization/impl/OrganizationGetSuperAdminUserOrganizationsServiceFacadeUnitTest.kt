@@ -69,7 +69,7 @@ class OrganizationGetSuperAdminUserOrganizationsServiceFacadeUnitTest : Abstract
         val user = userHelper.buildUserWithOrganizationOwnerRole(
                 organization = organization
         )
-        user.grantClientRole(clientOrganization, UserRole.CLIENT_ADMIN)
+        user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         // expectations
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.empty())
         replayAll()

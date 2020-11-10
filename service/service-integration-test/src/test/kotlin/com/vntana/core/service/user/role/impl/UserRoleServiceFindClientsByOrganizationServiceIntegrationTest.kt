@@ -26,14 +26,14 @@ class UserRoleServiceFindClientsByOrganizationServiceIntegrationTest : AbstractU
         val clientOrganization1 = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
         val clientOrganization2 = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
         val user1 = userIntegrationTestHelper.persistUser()
-        user1.grantClientRole(clientOrganization1, UserRole.CLIENT_VIEWER)
+        user1.grantClientRole(clientOrganization1, UserRole.CLIENT_ORGANIZATION_VIEWER)
         val user2 = userIntegrationTestHelper.persistUser()
-        user2.grantClientRole(clientOrganization2, UserRole.CLIENT_ADMIN)
+        user2.grantClientRole(clientOrganization2, UserRole.CLIENT_ORGANIZATION_ADMIN)
         flushAndClear()
         userRoleService.findClientsByOrganization(organization.uuid).let {
             assertThat(it.size).isEqualTo(2)
             assertThat(listOf(it[0].user, it[1].user)).containsExactlyInAnyOrder(user1, user2)
-            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.CLIENT_ADMIN, UserRole.CLIENT_VIEWER)
+            assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.CLIENT_ORGANIZATION_ADMIN, UserRole.CLIENT_ORGANIZATION_VIEWER)
         }
     }
 }

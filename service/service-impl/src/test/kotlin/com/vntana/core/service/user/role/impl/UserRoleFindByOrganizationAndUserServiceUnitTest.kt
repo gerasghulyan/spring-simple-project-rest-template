@@ -34,7 +34,7 @@ class UserRoleFindByOrganizationAndUserServiceUnitTest : AbstractUserRoleService
         resetAll()
         val organizationUuid = uuid()
         val userUuid = uuid()
-        expect(userRoleRepository.findAllByOrganizationAndUser(organizationUuid, userUuid)).andReturn(Optional.empty())
+        expect(userRoleRepository.findByOrganizationAndUser(organizationUuid, userUuid)).andReturn(Optional.empty())
         replayAll()
         assertThat(userRoleService.findByOrganizationAndUser(organizationUuid, userUuid)).isEmpty
         verifyAll()
@@ -46,7 +46,7 @@ class UserRoleFindByOrganizationAndUserServiceUnitTest : AbstractUserRoleService
         val organizationUuid = uuid()
         val userUuid = uuid()
         val role = commonTestHelper.buildUserOrganizationAdminRole()
-        expect(userRoleRepository.findAllByOrganizationAndUser(organizationUuid, userUuid)).andReturn(Optional.of(role))
+        expect(userRoleRepository.findByOrganizationAndUser(organizationUuid, userUuid)).andReturn(Optional.of(role))
         replayAll()
         userRoleService.findByOrganizationAndUser(organizationUuid, userUuid).let {
             assertThat(it).isPresent

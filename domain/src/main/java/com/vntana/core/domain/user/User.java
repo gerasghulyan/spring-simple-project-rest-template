@@ -61,7 +61,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         if (roleOfClient(clientOrganization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in client organization - %s", this, clientOrganization));
         }
-        final AbstractUserRole role = buildClientRole(userRole, this, clientOrganization);
+        final AbstractUserRole role = buildClientRole(userRole, clientOrganization);
         mutableRoles().add(role);
     }
 
@@ -189,14 +189,14 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .orElseGet(Collections::emptyList);
     }
 
-    private AbstractUserRole buildClientRole(final UserRole userRole, final User user, final ClientOrganization clientOrganization) {
+    public AbstractUserRole buildClientRole(final UserRole userRole, final ClientOrganization clientOrganization) {
         switch (userRole) {
-            case CLIENT_ADMIN:
-                return new UserClientOrganizationAdminRole(user, clientOrganization);
-            case CLIENT_CONTENT_MANAGER:
-                return new UserClientOrganizationContentManagerRole(user, clientOrganization);
-            case CLIENT_VIEWER:
-                return new UserClientOrganizationViewerRole(user, clientOrganization);
+            case CLIENT_ORGANIZATION_ADMIN:
+                return new UserClientOrganizationAdminRole(this, clientOrganization);
+            case CLIENT_ORGANIZATION_CONTENT_MANAGER:
+                return new UserClientOrganizationContentManagerRole(this, clientOrganization);
+            case CLIENT_ORGANIZATION_VIEWER:
+                return new UserClientOrganizationViewerRole(this, clientOrganization);
             default:
                 throw new IllegalStateException(format("Unknown user client role %s", userRole));
         }

@@ -1,7 +1,7 @@
 package com.vntana.core.service.user.role.impl
 
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.user.role.AbstractUserRoleServiceIntegrationTest
-import com.vntana.core.service.user.role.dto.UserClientRole
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -20,7 +20,7 @@ class UserRoleServiceFindByClientOrganizationAndUserServiceIntegrationTest : Abs
     @Test
     fun test() {
         val clientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization()
-        val clientRole = integrationTestHelper.persistUserClientRole(clientRole = UserClientRole.CLIENT_CONTENT_MANAGER, clientOrganization = clientOrganization)
+        val clientRole = integrationTestHelper.persistUserClientRole(clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER, clientOrganization = clientOrganization)
         flushAndClear()
         userRoleService.findByClientOrganizationAndUser(clientOrganization.uuid, clientRole.user.uuid).let {
             assertThat(it).isPresent

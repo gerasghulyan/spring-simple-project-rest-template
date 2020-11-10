@@ -1,7 +1,7 @@
 package com.vntana.core.service.user.role.impl
 
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.user.role.AbstractUserRoleServiceUnitTest
-import com.vntana.core.service.user.role.dto.UserClientRole
 import com.vntana.core.service.user.role.exception.UserClientRoleNotFoundException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
@@ -48,7 +48,7 @@ class UserRoleRevokeClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest(
         val dto = commonTestHelper.buildUserRevokeClientRoleDto(
                 userUuid = user.uuid,
                 clientOrganizationUuid = clientOrganization.uuid,
-                clientRole = UserClientRole.CLIENT_ADMIN
+                clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN
         )
         expect(userRoleRepository.findClientAdminRoleByUserAndClientOrganization(dto.userUuid, dto.clientOrganizationUuid)).andReturn(Optional.of(clientAdminRole))
         expect(userRoleRepository.delete(clientAdminRole))
@@ -66,7 +66,7 @@ class UserRoleRevokeClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest(
         val dto = commonTestHelper.buildUserRevokeClientRoleDto(
                 userUuid = user.uuid,
                 clientOrganizationUuid = clientOrganization.uuid,
-                clientRole = UserClientRole.CLIENT_CONTENT_MANAGER
+                clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER
         )
         expect(userRoleRepository.findClientContentManagerRoleByUserAndClientOrganization(dto.userUuid, dto.clientOrganizationUuid)).andReturn(Optional.of(clientContentManagerRole))
         expect(userRoleRepository.delete(clientContentManagerRole))
@@ -84,7 +84,7 @@ class UserRoleRevokeClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest(
         val dto = commonTestHelper.buildUserRevokeClientRoleDto(
                 userUuid = user.uuid,
                 clientOrganizationUuid = clientOrganization.uuid,
-                clientRole = UserClientRole.CLIENT_VIEWER
+                clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         expect(userRoleRepository.findClientViewerRoleByUserAndClientOrganization(dto.userUuid, dto.clientOrganizationUuid)).andReturn(Optional.of(role))
         expect(userRoleRepository.delete(role))
