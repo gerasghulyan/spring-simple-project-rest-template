@@ -10,23 +10,23 @@ import javax.persistence.*;
 /**
  * Created by Vardan Aivazian
  * Date: 03.11.2020
- * Time: 14:42
+ * Time: 14:40
  */
 @Entity
-@Table(name = "user_role_client_viewer")
-@DiscriminatorValue("CLIENT_VIEWER_ROLE")
-public class UserClientViewerRole extends AbstractUserRole {
+@Table(name = "user_role_client_organization_content_manager")
+@DiscriminatorValue("CLIENT_CONTENT_MANAGER_ROLE")
+public class UserClientOrganizationContentManagerRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_client_organization_id"), updatable = false)
     private ClientOrganization clientOrganization;
 
-    UserClientViewerRole() {
+    UserClientOrganizationContentManagerRole() {
         super();
     }
 
-    public UserClientViewerRole(final User user, final ClientOrganization clientOrganization) {
-        super(user, UserRole.CLIENT_VIEWER);
+    public UserClientOrganizationContentManagerRole(final User user, final ClientOrganization clientOrganization) {
+        super(user, UserRole.CLIENT_CONTENT_MANAGER);
         this.clientOrganization = clientOrganization;
     }
 
@@ -35,10 +35,10 @@ public class UserClientViewerRole extends AbstractUserRole {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserClientViewerRole)) {
+        if (!(o instanceof UserClientOrganizationContentManagerRole)) {
             return false;
         }
-        final UserClientViewerRole that = (UserClientViewerRole) o;
+        final UserClientOrganizationContentManagerRole that = (UserClientOrganizationContentManagerRole) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(clientOrganization, that.clientOrganization)

@@ -37,17 +37,17 @@ open class UserRoleCommonTestHelper : AbstractTestHelper() {
     fun buildUserClientAdminRole(
             user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
-    ): UserClientAdminRole = UserClientAdminRole(user, clientOrganization)
+    ): UserClientOrganizationAdminRole = UserClientOrganizationAdminRole(user, clientOrganization)
 
     fun buildUserClientContentManagerRole(
             user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
-    ): UserClientContentManagerRole = UserClientContentManagerRole(user, clientOrganization)
+    ): UserClientOrganizationContentManagerRole = UserClientOrganizationContentManagerRole(user, clientOrganization)
 
     fun buildUserClientViewerRole(
             user: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
-    ): UserClientViewerRole = UserClientViewerRole(user, clientOrganization)
+    ): UserClientOrganizationViewerRole = UserClientOrganizationViewerRole(user, clientOrganization)
 
     fun buildUserGrantClientRoleDto(
             userUuid: String? = uuid(),

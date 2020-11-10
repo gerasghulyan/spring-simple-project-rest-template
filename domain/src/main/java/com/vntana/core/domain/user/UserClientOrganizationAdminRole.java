@@ -8,25 +8,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 
 /**
- * Created by Vardan Aivazian
- * Date: 03.11.2020
- * Time: 14:40
+ * Created by Arthur Asatryan.
+ * Date: 10/10/19
+ * Time: 4:53 PM
  */
 @Entity
-@Table(name = "user_role_client_content_manager")
-@DiscriminatorValue("CLIENT_CONTENT_MANAGER_ROLE")
-public class UserClientContentManagerRole extends AbstractUserRole {
+@Table(name = "user_role_client_organization_admin")
+@DiscriminatorValue("CLIENT_ADMIN_ROLE")
+public class UserClientOrganizationAdminRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_client_organization_id"), updatable = false)
     private ClientOrganization clientOrganization;
 
-    UserClientContentManagerRole() {
+    UserClientOrganizationAdminRole() {
         super();
     }
 
-    public UserClientContentManagerRole(final User user, final ClientOrganization clientOrganization) {
-        super(user, UserRole.CLIENT_CONTENT_MANAGER);
+    public UserClientOrganizationAdminRole(final User user, final ClientOrganization clientOrganization) {
+        super(user, UserRole.CLIENT_ADMIN);
         this.clientOrganization = clientOrganization;
     }
 
@@ -35,29 +35,28 @@ public class UserClientContentManagerRole extends AbstractUserRole {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserClientContentManagerRole)) {
+        if (!(o instanceof UserClientOrganizationAdminRole)) {
             return false;
         }
-        final UserClientContentManagerRole that = (UserClientContentManagerRole) o;
+        final UserClientOrganizationAdminRole that = (UserClientOrganizationAdminRole) o;
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(clientOrganization, that.clientOrganization)
+                .append(getId(), that.getId())
+                .append(getIdOrNull(clientOrganization), that.getIdOrNull(clientOrganization))
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
-                .append(clientOrganization)
+                .append(getId())
+                .append(getIdOrNull(clientOrganization))
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .appendSuper(super.toString())
-                .append("clientOrganization", clientOrganization)
+                .append("client_organization_id", getIdOrNull(clientOrganization))
                 .toString();
     }
 

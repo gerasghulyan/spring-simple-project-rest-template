@@ -225,11 +225,11 @@ public class UserRoleServiceImpl implements UserRoleService {
     private AbstractUserRole buildClientRole(final UserClientRole clientRole, final User user, final ClientOrganization clientOrganization) {
         switch (clientRole) {
             case CLIENT_ADMIN:
-                return new UserClientAdminRole(user, clientOrganization);
+                return new UserClientOrganizationAdminRole(user, clientOrganization);
             case CLIENT_CONTENT_MANAGER:
-                return new UserClientContentManagerRole(user, clientOrganization);
+                return new UserClientOrganizationContentManagerRole(user, clientOrganization);
             case CLIENT_VIEWER:
-                return new UserClientViewerRole(user, clientOrganization);
+                return new UserClientOrganizationViewerRole(user, clientOrganization);
             default:
                 throw new IllegalStateException(format("Unknown user client role %s", clientRole));
         }

@@ -82,12 +82,12 @@ public class User extends AbstractUuidAwareDomainEntity {
     }
 
     public void revokeClientRole(final ClientOrganization clientOrganization) {
-        final UserClientAdminRole role = roleOfClient(clientOrganization)
+        final UserClientOrganizationAdminRole role = roleOfClient(clientOrganization)
                 .orElseThrow(() -> new IllegalStateException(format("User - %s does not have role in client organization - %s", this, clientOrganization)));
         mutableRoles().remove(role);
     }
 
-    public Optional<UserClientAdminRole> roleOfClient(final ClientOrganization clientOrganization) {
+    public Optional<UserClientOrganizationAdminRole> roleOfClient(final ClientOrganization clientOrganization) {
         return immutableClientRoles().stream()
                 .filter(role -> role.getClientOrganization().equals(clientOrganization))
                 .findAny();
@@ -172,11 +172,11 @@ public class User extends AbstractUuidAwareDomainEntity {
         }
     }
 
-    private List<UserClientAdminRole> immutableClientRoles() {
+    private List<UserClientOrganizationAdminRole> immutableClientRoles() {
         return Optional.ofNullable(roles)
                 .map(theRoles -> theRoles.stream()
-                        .filter(UserClientAdminRole.class::isInstance)
-                        .map(UserClientAdminRole.class::cast)
+                        .filter(UserClientOrganizationAdminRole.class::isInstance)
+                        .map(UserClientOrganizationAdminRole.class::cast)
                         .collect(Collectors.toList())
                 )
                 .map(Collections::unmodifiableList)
@@ -192,11 +192,11 @@ public class User extends AbstractUuidAwareDomainEntity {
     private AbstractUserRole buildClientRole(final UserRole userRole, final User user, final ClientOrganization clientOrganization) {
         switch (userRole) {
             case CLIENT_ADMIN:
-                return new UserClientAdminRole(user, clientOrganization);
+                return new UserClientOrganizationAdminRole(user, clientOrganization);
             case CLIENT_CONTENT_MANAGER:
-                return new UserClientContentManagerRole(user, clientOrganization);
+                return new UserClientOrganizationContentManagerRole(user, clientOrganization);
             case CLIENT_VIEWER:
-                return new UserClientViewerRole(user, clientOrganization);
+                return new UserClientOrganizationViewerRole(user, clientOrganization);
             default:
                 throw new IllegalStateException(format("Unknown user client role %s", userRole));
         }
