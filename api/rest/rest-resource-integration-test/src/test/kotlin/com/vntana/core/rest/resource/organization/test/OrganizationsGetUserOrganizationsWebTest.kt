@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.organization.test
 
+import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -20,8 +21,8 @@ class OrganizationsGetUserOrganizationsWebTest : AbstractOrganizationWebTest() {
         val clientOrganization2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid, newOrganizationUuid)
-        userRoleResourceTestHelper.grantUserClientAdminRole(userUuid, clientOrganization.response().uuid)
-        userRoleResourceTestHelper.grantUserClientAdminRole(userUuid, clientOrganization2.response().uuid)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid, clientOrganization.response().uuid)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid, clientOrganization2.response().uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
         organizationResourceClient.getUserOrganizations(userUuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().items().size).isEqualTo(3)

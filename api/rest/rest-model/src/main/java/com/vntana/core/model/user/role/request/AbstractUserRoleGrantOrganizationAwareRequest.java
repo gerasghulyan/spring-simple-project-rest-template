@@ -1,5 +1,6 @@
 package com.vntana.core.model.user.role.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class AbstractUserRoleGrantOrganizationAwareRequest extends AbstractUserRoleGrantUserAwareRequest {
 
+    @JsonProperty("organizationUuid")
     private String organizationUuid;
 
     public AbstractUserRoleGrantOrganizationAwareRequest() {

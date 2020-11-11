@@ -67,15 +67,19 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
     }
 
     @Override
-    public UserRoleGrantClientAdminResponse grantClientAdminRole(final UserRoleGrantClientAdminOrganizationRequest request) {
+    public UserRoleGrantClientOrganizationResponse grantClientRole(final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Granting user client role for request - {}", request);
         final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkGrantClientAdminRole(request);
         if (error.isPresent()) {
-            return new UserRoleGrantClientAdminResponse(error.getHttpStatus(), error.getError());
+            return new UserRoleGrantClientOrganizationResponse(error.getHttpStatus(), error.getError());
         }
-        final AbstractUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(request.getUserUuid(), request.getClientOrganizationUuid(), UserRole.CLIENT_ORGANIZATION_ADMIN));
+        final AbstractUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(
+                request.getUserUuid(),
+                request.getClientOrganizationUuid(),
+                UserRole.valueOf(request.getUserRole().name())
+        ));
         LOGGER.debug("Successfully granted user organization client role for request - {}", request);
-        return new UserRoleGrantClientAdminResponse(clientRole.getUser().getUuid());
+        return new UserRoleGrantClientOrganizationResponse(clientRole.getUser().getUuid());
     }
 
     @Transactional

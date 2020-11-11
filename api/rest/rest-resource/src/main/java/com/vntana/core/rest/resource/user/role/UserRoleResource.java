@@ -45,12 +45,12 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantOrganizationAdminResponse);
     }
 
-    @PostMapping("client-admin")
-    public ResponseEntity<UserRoleGrantClientAdminResponse> grantUserClientAdminRole(@RequestBody final UserRoleGrantClientAdminOrganizationRequest request) {
+    @PostMapping("client")
+    public ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientAdminRole(@RequestBody final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Processing user-roles resource grantUserClientAdminRole for request - {}", request);
-        final UserRoleGrantClientAdminResponse userRoleGrantClientAdminResponse = userRoleServiceFacade.grantClientAdminRole(request);
+        final UserRoleGrantClientOrganizationResponse userRoleGrantClientOrganizationResponse = userRoleServiceFacade.grantClientRole(request);
         LOGGER.debug("Successfully processing user-roles resource grantUserClientAdminRole for request - {}", request);
-        return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantClientAdminResponse);
+        return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantClientOrganizationResponse);
     }
 
     @DeleteMapping("organization-admin")

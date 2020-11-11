@@ -1,7 +1,8 @@
 package com.vntana.core.helper.user.role
 
 import com.vntana.commons.helper.AbstractRestTestHelper
-import com.vntana.core.model.user.role.request.UserRoleGrantClientAdminOrganizationRequest
+import com.vntana.core.model.auth.response.UserRoleModel
+import com.vntana.core.model.user.role.request.UserRoleGrantClientOrganizationRequest
 import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest
 import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest
 import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest
@@ -27,6 +28,7 @@ open class UserRoleRestTestHelper : AbstractRestTestHelper() {
 
     fun buildUserRoleGrantClientAdminRequest(
             userUuid: String? = uuid(),
-            clientOrganizationUuid: String? = uuid()
-    ): UserRoleGrantClientAdminOrganizationRequest = UserRoleGrantClientAdminOrganizationRequest(userUuid, clientOrganizationUuid)
+            clientOrganizationUuid: String? = uuid(),
+            userRole: UserRoleModel? = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
+    ): UserRoleGrantClientOrganizationRequest = UserRoleGrantClientOrganizationRequest(userUuid, clientOrganizationUuid, userRole)
 }

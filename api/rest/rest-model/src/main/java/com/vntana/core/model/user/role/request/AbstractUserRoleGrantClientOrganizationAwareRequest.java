@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class AbstractUserRoleGrantClientOrganizationAwareRequest extends AbstractUserRoleGrantUserAwareRequest implements ValidatableRequest<UserRoleErrorResponseModel> {
 
-
     @JsonProperty("clientOrganizationUuid")
     private String clientOrganizationUuid;
 

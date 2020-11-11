@@ -1,6 +1,6 @@
 package com.vntana.core.helper.user.role
 
-import com.vntana.core.model.user.role.response.UserRoleGrantClientAdminResponse
+import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminResponse
 import com.vntana.core.model.user.role.response.UserRoleGrantSuperAdminResponse
 import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse
@@ -20,10 +20,11 @@ class UserRoleResourceTestHelper : UserRoleRestTestHelper() {
     @Autowired
     protected lateinit var userRoleResourceClient: UserRoleResourceClient
 
-    fun grantUserClientAdminRole(
+    fun grantUserClientRole(
             userUuid: String? = uuid(),
-            clientOrganizationUuid: String? = uuid()) {
-        userRoleResourceClient.grantUserClientAdminRole(buildUserRoleGrantClientAdminRequest(userUuid, clientOrganizationUuid))
+            clientOrganizationUuid: String? = uuid(),
+            userRole: UserRoleModel? = UserRoleModel.CLIENT_ORGANIZATION_ADMIN) {
+        userRoleResourceClient.grantUserClientRole(buildUserRoleGrantClientAdminRequest(userUuid, clientOrganizationUuid, userRole))
     }
 
     fun grantSuperAdmin(userUuid: String? = uuid()): ResponseEntity<UserRoleGrantSuperAdminResponse> = userRoleResourceClient.grantSuperAdmin(buildUserRoleGrantSuperAdminRequest(userUuid))

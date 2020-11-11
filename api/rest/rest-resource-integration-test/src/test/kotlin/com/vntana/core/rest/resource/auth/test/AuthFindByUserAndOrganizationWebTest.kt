@@ -2,7 +2,6 @@ package com.vntana.core.rest.resource.auth.test
 
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.user.error.UserErrorResponseModel
-import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest
 import com.vntana.core.rest.resource.auth.AbstractAuthWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -67,7 +66,7 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val clientOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
         val userUuid = user.response().uuid
-        userRoleResourceTestHelper.grantUserClientAdminRole(userUuid, clientOrganization.response().uuid)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid, clientOrganization.response().uuid)
         val request = userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(
                 uuid = userUuid,
                 organizationUuid = organizationUuid

@@ -74,7 +74,7 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     }
 
     @Override
-    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientAdminRole(final UserRoleGrantClientAdminOrganizationRequest request) {
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientAdminRole(final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Processing checkGrantClientAdminRole for request - {}", request);
         final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientOrganizationUuid(), request.getUserUuid());
         if (error.isPresent()) {

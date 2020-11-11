@@ -1,10 +1,10 @@
 package com.vntana.core.rest.client.user.role;
 
-import com.vntana.core.model.user.role.request.UserRoleGrantClientAdminOrganizationRequest;
+import com.vntana.core.model.user.role.request.UserRoleGrantClientOrganizationRequest;
 import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
 import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
 import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
-import com.vntana.core.model.user.role.response.UserRoleGrantClientAdminResponse;
+import com.vntana.core.model.user.role.response.UserRoleGrantClientOrganizationResponse;
 import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminResponse;
 import com.vntana.core.model.user.role.response.UserRoleGrantSuperAdminResponse;
 import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse;
@@ -31,6 +31,6 @@ public interface UserRoleResourceClient {
     @DeleteMapping("organization-admin")
     ResponseEntity<UserRoleRevokeOrganizationAdminResponse> revokeUserOrganizationAdminRole(@RequestBody final UserRoleRevokeOrganizationAdminRequest request);
 
-    @PostMapping("client-admin")
-    ResponseEntity<UserRoleGrantClientAdminResponse> grantUserClientAdminRole(@RequestBody final UserRoleGrantClientAdminOrganizationRequest request);
+    @PostMapping("client")
+    ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientRole(@RequestBody final UserRoleGrantClientOrganizationRequest request);
 }
