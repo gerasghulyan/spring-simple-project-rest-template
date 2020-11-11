@@ -5,6 +5,7 @@ import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
+import org.easymock.EasyMock.anyString
 import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*
@@ -40,6 +41,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         // expectations
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
         replayAll()
         // test scenario
         organizationServiceFacade.getUserOrganizations(user.uuid).let {
