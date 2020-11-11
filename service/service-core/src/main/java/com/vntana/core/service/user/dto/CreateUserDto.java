@@ -58,7 +58,6 @@ public class CreateUserDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .append("fullName", fullName)
                 .append("email", email)
-                .append("password", "***")
                 .toString();
     }
 

@@ -6,10 +6,10 @@ import com.vntana.core.helper.invitation.user.InvitationUserResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.token.TokenResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
+import com.vntana.core.helper.user.role.UserRoleResourceTestHelper
 import com.vntana.core.rest.client.invitation.user.InvitationUserResourceClient
 import com.vntana.core.rest.client.token.TokenResourceClient
 import com.vntana.core.rest.client.user.UserResourceClient
-import com.vntana.core.rest.client.user.role.UserRoleResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -27,9 +27,6 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userResourceClient: UserResourceClient
 
     @Autowired
-    protected lateinit var userRoleResourceClient: UserRoleResourceClient
-
-    @Autowired
     protected lateinit var tokenResourceClient: TokenResourceClient
 
     @Autowired
@@ -40,7 +37,7 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
-    
+
     @Autowired
     protected lateinit var clientOrganizationResourceTestHelper: ClientOrganizationResourceTestHelper
     
@@ -52,4 +49,7 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var emailNotificationResourceClient: EmailNotificationResourceClient
+
+    @Autowired
+    protected lateinit var userRoleResourceTestHelper: UserRoleResourceTestHelper
 }

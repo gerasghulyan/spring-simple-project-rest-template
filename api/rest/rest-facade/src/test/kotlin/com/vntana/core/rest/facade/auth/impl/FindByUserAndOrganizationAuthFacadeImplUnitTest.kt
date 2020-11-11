@@ -5,6 +5,7 @@ import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationReque
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.rest.facade.auth.AbstractAuthFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
+import org.easymock.EasyMock.anyString
 import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*
@@ -24,6 +25,21 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         replayAll()
         assertBasicErrorResultResponse(
                 authFacade.findByUserAndOrganization(FindUserByUuidAndOrganizationRequest(userUuid, uuid())),
+                UserErrorResponseModel.NOT_FOUND_FOR_ROLE
+        )
+        verifyAll()
+    }
+
+    @Test
+    fun `test when no role found by organization`() {
+        resetAll()
+        val user = userHelper.buildUser()
+        expect(userService.findByUuid(anyString())).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf())
+        replayAll()
+        assertBasicErrorResultResponse(
+                authFacade.findByUserAndOrganization(FindUserByUuidAndOrganizationRequest(user.uuid, uuid())),
                 UserErrorResponseModel.NOT_FOUND_FOR_ROLE
         )
         verifyAll()
@@ -70,25 +86,22 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
     }
 
     @Test
-    fun `test user has no any role`() {
+    fun `test user has client organization role but no organization role`() {
         resetAll()
-        val user = userHelper.buildUserWithOrganizationOwnerRole()
-        val adminRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole()
-        val userUuid = user.uuid
-        val request = FindUserByUuidAndOrganizationRequest(userUuid, uuid())
-        expect(userService.findByUuid(userUuid)).andReturn(Optional.of(user))
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(adminRole))
+        val user = userHelper.buildUser()
+        val request = FindUserByUuidAndOrganizationRequest(user.uuid, uuid())
+        expect(userService.findByUuid(anyString())).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf(userRoleCommonTestHelper.buildUserClientContentManagerRole()))
         replayAll()
         authFacade.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
             assertThat(it.response().uuid).isEqualTo(request.uuid)
             assertThat(it.response().organizationUuid).isEqualTo(request.organizationUuid)
             assertThat(it.response().username).isEqualTo(user.email)
+            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_CLIENTS_VIEWER)
             assertThat(it.response().superAdmin).isFalse()
         }
         verifyAll()
     }
-
-
 }

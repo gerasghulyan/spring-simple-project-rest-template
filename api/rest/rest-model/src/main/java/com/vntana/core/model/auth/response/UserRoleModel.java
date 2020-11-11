@@ -6,13 +6,33 @@ package com.vntana.core.model.auth.response;
  * Time: 4:57 PM
  */
 public enum UserRoleModel {
-    SUPER_ADMIN(1),
-    ORGANIZATION_OWNER(2),
-    ORGANIZATION_ADMIN(3),
-    CLIENT_ORGANIZATION_ADMIN(4),
-    CLIENT_ORGANIZATION_CONTENT_MANAGER(5),
-    ASSET_MANAGER(6),
-    CLIENT_ORGANIZATION_VIEWER(7);
+    SUPER_ADMIN,
+    ORGANIZATION_OWNER,
+    ORGANIZATION_ADMIN,
+    ORGANIZATION_CLIENTS_VIEWER,
+    CLIENT_ORGANIZATION_ADMIN {
+        @Override
+        public Boolean isClientRelatedRole() {
+            return true;
+        }
+    },
+    CLIENT_ORGANIZATION_CONTENT_MANAGER {
+        @Override
+        public Boolean isClientRelatedRole() {
+            return true;
+        }
+    },
+    CLIENT_ORGANIZATION_VIEWER {
+        @Override
+        public Boolean isClientRelatedRole() {
+            return true;
+        }
+    },
+    ASSET_MANAGER;
+
+    public Boolean isClientRelatedRole() {
+        return false;
+    }
 
     private final int priority;
 

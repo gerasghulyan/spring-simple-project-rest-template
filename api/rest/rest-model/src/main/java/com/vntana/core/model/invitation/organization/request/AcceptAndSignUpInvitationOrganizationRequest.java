@@ -82,7 +82,6 @@ public class AcceptAndSignUpInvitationOrganizationRequest extends AcceptInvitati
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("userFullName", userFullName)
-                .append("userPassword", userPassword)
                 .toString();
     }
 

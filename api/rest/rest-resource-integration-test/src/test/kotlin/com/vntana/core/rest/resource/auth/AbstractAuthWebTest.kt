@@ -1,6 +1,9 @@
 package com.vntana.core.rest.resource.auth
 
+import com.vntana.core.helper.client.ClientOrganizationResourceTestHelper
+import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
+import com.vntana.core.helper.user.role.UserRoleResourceTestHelper
 import com.vntana.core.rest.client.auth.AuthResourceClient
 import com.vntana.core.rest.client.user.role.UserRoleResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
@@ -20,5 +23,11 @@ abstract class AbstractAuthWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 
     @Autowired
-    protected lateinit var userRoleResourceClient: UserRoleResourceClient
+    protected lateinit var clientOrganizationResourceTestHelper : ClientOrganizationResourceTestHelper
+
+    @Autowired
+    protected lateinit var organizationResourceTestHelper : OrganizationResourceTestHelper
+
+    @Autowired
+    protected lateinit var userRoleResourceTestHelper: UserRoleResourceTestHelper
 }

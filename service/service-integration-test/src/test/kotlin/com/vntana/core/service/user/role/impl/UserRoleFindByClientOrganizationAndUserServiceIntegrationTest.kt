@@ -10,12 +10,12 @@ import org.junit.Test
  * Date: 06.11.2020
  * Time: 14:13
  */
-class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
+class UserRoleFindByClientOrganizationAndUserServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
 
     @Test
     fun `test when noting found`() {
-        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(uuid(), uuid())
-        assertThat(result).isFalse()
+        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(uuid(), uuid())
+        assertThat(result).isEmpty()
     }
 
     @Test
@@ -35,11 +35,11 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
                 clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         flushAndClear()
-        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
                 persistOrganization.uuid,
                 persistUser.uuid
         )
-        assertThat(result).isTrue()
+        assertThat(result).isNotEmpty()
     }
 
     @Test
@@ -50,11 +50,11 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
                 clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN
         )
         flushAndClear()
-        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
                 clientAdminRole.user.uuid
         )
-        assertThat(result).isTrue()
+        assertThat(result).isNotEmpty()
     }
 
     @Test
@@ -65,11 +65,11 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
                 clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER
         )
         flushAndClear()
-        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
                 clientContentManagerRole.user.uuid
         )
-        assertThat(result).isTrue()
+        assertThat(result).isNotEmpty()
     }
 
     @Test
@@ -80,10 +80,10 @@ class UserRoleExistsByClientOrganizationAndUserServiceIntegrationTest : Abstract
                 clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         flushAndClear()
-        val result = userRoleService.existsClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
                 clientViewerRole.user.uuid
         )
-        assertThat(result).isTrue()
+        assertThat(result).isNotEmpty()
     }
 }
