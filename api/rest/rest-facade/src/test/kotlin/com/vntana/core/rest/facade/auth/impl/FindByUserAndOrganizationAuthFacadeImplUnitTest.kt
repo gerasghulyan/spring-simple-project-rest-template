@@ -1,6 +1,5 @@
 package com.vntana.core.rest.facade.auth.impl
 
-import com.vntana.core.domain.user.UserRole
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest
 import com.vntana.core.model.user.error.UserErrorResponseModel
@@ -37,7 +36,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         val user = userHelper.buildUser()
         expect(userService.findByUuid(anyString())).andReturn(Optional.of(user))
         expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
-        expect(userRoleService.existsClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(false)
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf())
         replayAll()
         assertBasicErrorResultResponse(
                 authFacade.findByUserAndOrganization(FindUserByUuidAndOrganizationRequest(user.uuid, uuid())),
@@ -93,7 +92,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         val request = FindUserByUuidAndOrganizationRequest(user.uuid, uuid())
         expect(userService.findByUuid(anyString())).andReturn(Optional.of(user))
         expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
-        expect(userRoleService.existsClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(true)
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf(userRoleCommonTestHelper.buildUserClientContentManagerRole()))
         replayAll()
         authFacade.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)

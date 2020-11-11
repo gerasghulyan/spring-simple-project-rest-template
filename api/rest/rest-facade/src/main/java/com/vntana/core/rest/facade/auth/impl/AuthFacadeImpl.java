@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -106,7 +107,7 @@ public class AuthFacadeImpl implements AuthFacade {
         return Optional.ofNullable(userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid())
                 .map(theRole -> UserRoleModel.valueOf(theRole.getUserRole().name()))
                 .orElseGet(() -> {
-                    if (userRoleService.existsClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid())) {
+                    if (!CollectionUtils.isEmpty(userRoleService.findClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid()))) {
                         return UserRoleModel.ORGANIZATION_CLIENTS_VIEWER;
                     }
                     return null;

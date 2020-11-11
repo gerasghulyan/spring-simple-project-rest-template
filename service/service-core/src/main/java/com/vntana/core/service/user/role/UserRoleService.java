@@ -21,13 +21,13 @@ public interface UserRoleService {
 
     List<AbstractUserRole> findClientsByOrganization(final String organizationUuid);
 
+    List<AbstractClientOrganizationAwareUserRole> findClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid);
+
     Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
     Optional<AbstractUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid);
-    
+
     boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole);
-    
-    boolean existsClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
     UserOrganizationOwnerRole grantOrganizationOwnerRole(final UserGrantOrganizationRoleDto dto);
 
