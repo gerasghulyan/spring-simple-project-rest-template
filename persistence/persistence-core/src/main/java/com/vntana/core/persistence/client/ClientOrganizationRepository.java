@@ -17,5 +17,5 @@ public interface ClientOrganizationRepository extends JpaRepository<ClientOrgani
 
     Optional<ClientOrganization> findByUuid(final String uuid);
 
-    boolean existsByUuid(String uuid);
+    boolean existsByUuid(final String uuid);
 }

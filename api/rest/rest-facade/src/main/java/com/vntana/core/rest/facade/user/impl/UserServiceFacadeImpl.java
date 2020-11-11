@@ -190,7 +190,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByUuidsAndOrganizationUuidResponse(error.getHttpStatus(), error.getError());
         }
-        final Set<String> organizationUsersUuids = userRoleService.findAllByOrganizationUuid(request.getOrganizationUuid())
+        final Set<String> organizationUsersUuids = userRoleService.findAllByOrganization(request.getOrganizationUuid())
                 .stream().map(user -> user.getUser().getUuid()).collect(Collectors.toSet());
         final Set<User> users = userService.findByUuids(request.getUuids());
         final GetUsersByUuidsAndOrganizationUuidGridResponseModel responseModel = users.stream().map(user -> new GetUserByUuidsAndOrganizationUuidResponseModel(
@@ -350,7 +350,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
         }
-        final List<AbstractUserRole> userRoles = userRoleService.findAllByOrganizationUuid(organizationUuid);
+        final List<AbstractUserRole> userRoles = userRoleService.findAllByOrganization(organizationUuid);
         final GetUsersByOrganizationGridResponseModel responseModel = userRoles.stream().map(userRole -> {
             final User user = userRole.getUser();
             return new GetUsersByOrganizationResponseModel(
