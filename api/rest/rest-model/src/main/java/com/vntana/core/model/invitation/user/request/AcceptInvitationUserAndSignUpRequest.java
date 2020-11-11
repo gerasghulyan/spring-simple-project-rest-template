@@ -80,9 +80,7 @@ public class AcceptInvitationUserAndSignUpRequest extends AbstractRequestModel i
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("token", token)
                 .append("newUserFullName", newUserFullName)
-                .append("password", "***")
                 .toString();
     }
 

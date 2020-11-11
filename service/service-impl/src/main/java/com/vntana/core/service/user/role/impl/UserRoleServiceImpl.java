@@ -72,6 +72,20 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<AbstractClientOrganizationAwareUserRole> findClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid) {
+        LOGGER.debug("Retrieving user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        assertUserUuid(userUuid);
+        final List<AbstractClientOrganizationAwareUserRole> roles = userRoleRepository.findAllOrganizationClientsByOrganizationAndUser(organizationUuid, userUuid).stream()
+                .map(AbstractClientOrganizationAwareUserRole.class::cast)
+                .collect(Collectors.toList());
+        LOGGER.debug("Successfully retrieved user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
+        return roles;
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
         assertOrganizationUuid(organizationUuid);
@@ -106,17 +120,6 @@ public class UserRoleServiceImpl implements UserRoleService {
             throw new IllegalStateException(format("More then 1 role found in organization %s for user %s and role %s", organizationUuid, userUuid, userRole));
         }
         LOGGER.debug("Successfully checked existence of userRole belonging to organization - {}, user - {}  with role - {}", organizationUuid, userUuid, userRole);
-        return !CollectionUtils.isEmpty(roles);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public boolean existsClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid) {
-        LOGGER.debug("Checking existence of user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
-        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
-        assertUserUuid(userUuid);
-        final List<AbstractUserRole> roles = userRoleRepository.findAllOrganizationClientsByOrganizationAndUser(organizationUuid, userUuid);
-        LOGGER.debug("Successfully checked existence of user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
         return !CollectionUtils.isEmpty(roles);
     }
 

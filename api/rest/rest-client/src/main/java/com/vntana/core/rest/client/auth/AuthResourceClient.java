@@ -19,5 +19,5 @@ public interface AuthResourceClient {
     SecureFindUserByEmailResponse findByEmail(final FindUserByEmailRequest request);
 
     @PostMapping(path = "/by-user-and-organization")
-    SecureFindUserByUuidAndOrganizationResponse findByEmailAndOrganization(final FindUserByUuidAndOrganizationRequest request);
+    SecureFindUserByUuidAndOrganizationResponse findByUserAndOrganization(final FindUserByUuidAndOrganizationRequest request);
 }

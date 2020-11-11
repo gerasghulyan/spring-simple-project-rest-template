@@ -3,6 +3,7 @@ package com.vntana.core.rest.resource.user.role
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.token.auth.AuthTokenResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
+import com.vntana.core.helper.user.role.UserRoleResourceTestHelper
 import com.vntana.core.helper.user.role.UserRoleRestTestHelper
 import com.vntana.core.rest.client.token.auth.AuthTokenResourceClient
 import com.vntana.core.rest.client.user.UserResourceClient
@@ -16,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired
  * Time: 3:23 PM
  */
 abstract class AbstractUserRoleWebTest : AbstractWebIntegrationTest() {
-
-    @Autowired
-    protected lateinit var userRoleResourceClient: UserRoleResourceClient
 
     @Autowired
     protected lateinit var userResourceClient: UserResourceClient
@@ -37,5 +35,8 @@ abstract class AbstractUserRoleWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var authTokenResourceTestHelper: AuthTokenResourceTestHelper
+
+    @Autowired
+    protected lateinit var userRoleResourceTestHelper: UserRoleResourceTestHelper
 
 }

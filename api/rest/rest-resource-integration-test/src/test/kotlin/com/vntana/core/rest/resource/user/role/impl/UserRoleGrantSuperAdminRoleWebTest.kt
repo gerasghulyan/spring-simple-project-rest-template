@@ -16,12 +16,12 @@ class UserRoleGrantSuperAdminRoleWebTest : AbstractUserRoleWebTest() {
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceClient.grantSuperAdmin(resourceTestHelper.buildUserRoleGrantSuperAdminRequest(userUuid = null)),
+                userRoleResourceTestHelper.grantSuperAdmin(userUuid = null),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceClient.grantSuperAdmin(resourceTestHelper.buildUserRoleGrantSuperAdminRequest(userUuid = emptyString())),
+                userRoleResourceTestHelper.grantSuperAdmin(emptyString()),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
     }
@@ -30,7 +30,7 @@ class UserRoleGrantSuperAdminRoleWebTest : AbstractUserRoleWebTest() {
     fun `test when user does not exist`() {
         assertBasicErrorResultResponse(
                 HttpStatus.NOT_FOUND,
-                userRoleResourceClient.grantSuperAdmin(resourceTestHelper.buildUserRoleGrantSuperAdminRequest()),
+                userRoleResourceTestHelper.grantSuperAdmin(),
                 UserRoleErrorResponseModel.USER_NOT_FOUND
         )
     }
@@ -38,6 +38,6 @@ class UserRoleGrantSuperAdminRoleWebTest : AbstractUserRoleWebTest() {
     @Test
     fun test() {
         val userUuid = userResourceTestHelper.persistUser().response().uuid
-        assertBasicSuccessResultResponse(userRoleResourceClient.grantSuperAdmin(resourceTestHelper.buildUserRoleGrantSuperAdminRequest(userUuid = userUuid)))
+        assertBasicSuccessResultResponse(userRoleResourceTestHelper.grantSuperAdmin(userUuid = userUuid))
     }
 }

@@ -5,6 +5,7 @@ import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
+import org.easymock.EasyMock.anyString
 import org.easymock.EasyMock.expect
 import org.junit.Test
 import java.util.*
@@ -40,6 +41,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         // expectations
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
         replayAll()
         // test scenario
         organizationServiceFacade.getUserOrganizations(user.uuid).let {
@@ -49,7 +51,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
             assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             assertThat(it.response().items()[1].uuid).isEqualTo(clientOrganization.organization.uuid)
             assertThat(it.response().items()[1].name).isEqualTo(clientOrganization.organization.name)
-            assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+            assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.ORGANIZATION_CLIENTS_VIEWER)
         }
         verifyAll()
     }
