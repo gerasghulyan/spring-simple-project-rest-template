@@ -13,6 +13,10 @@ import java.util.List;
  */
 public class CreateInvitationUserForOrganizationClientsResultResponse extends AbstractResultResponseModel<CreateInvitationUserForClientsResponseModel, InvitationUserErrorResponseModel> {
 
+    public CreateInvitationUserForOrganizationClientsResultResponse() {
+        super();
+    }
+
     public CreateInvitationUserForOrganizationClientsResultResponse(final int httpStatusCode, final InvitationUserErrorResponseModel error) {
         super(httpStatusCode, error);
     }
@@ -22,6 +26,6 @@ public class CreateInvitationUserForOrganizationClientsResultResponse extends Ab
     }
 
     public CreateInvitationUserForOrganizationClientsResultResponse(final List<String> uuids) {
-        new CreateInvitationUserForClientsResponseModel(uuids);
+        super(new CreateInvitationUserForClientsResponseModel(uuids));
     }
 }

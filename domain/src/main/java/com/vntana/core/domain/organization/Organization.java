@@ -62,6 +62,14 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         this.invitation = invitation;
     }
 
+    public Organization(final String name, final String slug, final String imageBlobId, final OrganizationStatus status, final List<ClientOrganization> clientOrganizations) {
+        this.name = name;
+        this.slug = slug;
+        this.imageBlobId = imageBlobId;
+        this.status = status;
+        this.clientOrganizations = clientOrganizations;
+    }
+
     //region Public methods
     public void grantClientOrganization(final ClientOrganization clientOrganization) {
         if (!containsClientOrganization(clientOrganization)) {

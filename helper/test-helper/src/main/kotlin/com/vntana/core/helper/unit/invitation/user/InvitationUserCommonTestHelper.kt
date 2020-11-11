@@ -2,6 +2,7 @@ package com.vntana.core.helper.unit.invitation.user
 
 import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.domain.invitation.InvitationStatus
+import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.User
@@ -35,8 +36,9 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
     fun buildCreateInvitationUserForClientsDto(
             clientUuid: String? = uuid(),
             email: String? = uuid(),
-            inviterUserUuid: String? = uuid()
-    ) = CreateInvitationForClientsUserDto(mapOf(clientUuid to UserRole.CLIENT_CONTENT_MANAGER), email, inviterUserUuid)
+            inviterUserUuid: String? = uuid(),
+            organizationUuid: String? = uuid()
+    ) = CreateInvitationForClientsUserDto(mapOf(clientUuid to UserRole.CLIENT_CONTENT_MANAGER), email, inviterUserUuid, organizationUuid)
 
     fun buildInvitationUserPage(entities: List<InvitationOrganizationUser> = listOf(buildInvitationUser(), buildInvitationUser()),
                                 pageAble: Pageable = buildPageRequest(0, 5),
@@ -52,6 +54,14 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             invitedByUser: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             organization: Organization? = organizationCommonTestHelper.buildOrganization()
     ) = InvitationOrganizationUser(userRole, email, status, invitedByUser, organization)
+    
+    fun buildInvitationOrganizationClientUser(
+            userRole: UserRole? = UserRole.CLIENT_CONTENT_MANAGER,
+            email: String? = uuid(),
+            status: InvitationStatus? = InvitationStatus.INVITED,
+            inviterUser: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
+            clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
+    ) = InvitationOrganizationClientUser(userRole, email, status, inviterUser, clientOrganization)
 
     fun buildUpdateInvitationUserStatusDto(
             uuid: String? = uuid(),

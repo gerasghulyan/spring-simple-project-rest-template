@@ -11,43 +11,43 @@ import org.springframework.http.HttpStatus
  * Date: 5/12/2020
  * Time: 6:35 PM
  */
-class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
+class InvitationForOrganizationUserCreateWebTest : AbstractInvitationUserWebTest() {
 
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(userRole = null)),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(userRole = null)),
                 InvitationUserErrorResponseModel.MISSING_USER_ROLE
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(email = null)),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(email = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITED_USER_EMAIL
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(email = emptyString())),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(email = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITED_USER_EMAIL
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(inviterUserUuid = null)),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITER_USER_UUID
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(inviterUserUuid = emptyString())),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITER_USER_UUID
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(organizationUuid = null)),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(organizationUuid = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(organizationUuid = emptyString())),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(organizationUuid = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
     }
@@ -56,7 +56,7 @@ class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
     fun `test when invited role is owner`() {
         assertBasicErrorResultResponse(
                 HttpStatus.CONFLICT,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(userRole = UserRoleModel.ORGANIZATION_OWNER)),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(userRole = UserRoleModel.ORGANIZATION_OWNER)),
                 InvitationUserErrorResponseModel.INVITED_USER_ROLE_COULD_NOT_BE_ORGANIZATION_OWNER
         )
     }
@@ -65,7 +65,7 @@ class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
     fun `test when inviter user does not exist`() {
         assertBasicErrorResultResponse(
                 HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest()),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest()),
                 InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND
         )
     }
@@ -75,7 +75,7 @@ class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
         val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
         assertBasicErrorResultResponse(
                 HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(inviterUserUuid = inviterUserUuid)),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = inviterUserUuid)),
                 InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND
         )
     }
@@ -88,7 +88,7 @@ class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = invitedUserUuid).response().uuid
         assertBasicErrorResultResponse(
                 HttpStatus.CONFLICT,
-                invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)),
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)),
                 InvitationUserErrorResponseModel.USER_ALREADY_PART_OF_ORGANIZATION
         )
     }
@@ -100,6 +100,6 @@ class InvitationUserCreateWebTest : AbstractInvitationUserWebTest() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
         tokenResourceTestHelper.persistTokenInvitationUser(invitationUserUuid = invitationUserUuid)
-        assertBasicSuccessResultResponse(invitationUserResourceClient.create(resourceTestHelper.buildCreateInvitationUserRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)))
+        assertBasicSuccessResultResponse(invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)))
     }
 }

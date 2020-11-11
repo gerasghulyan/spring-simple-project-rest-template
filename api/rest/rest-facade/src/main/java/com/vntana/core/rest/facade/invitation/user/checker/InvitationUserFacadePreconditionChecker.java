@@ -11,7 +11,7 @@ import com.vntana.core.model.invitation.user.request.*;
  */
 public interface InvitationUserFacadePreconditionChecker {
 
-    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateForPossibleErrors(final CreateInvitationForOrganizationUserRequest request);
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateInvitationForOrganizationForPossibleErrors(final CreateInvitationForOrganizationUserRequest request);
     
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateInvitationForClientsForPossibleErrors(final CreateInvitationForOrganizationClientUserRequest request);
 

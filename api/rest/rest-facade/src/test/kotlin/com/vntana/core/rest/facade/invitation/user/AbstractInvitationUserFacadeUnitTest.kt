@@ -1,6 +1,7 @@
 package com.vntana.core.rest.facade.invitation.user
 
 import com.vntana.core.helper.invitation.user.InvitationUserRestTestHelper
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.invitation.user.TokenInvitationUserCommonTestHelper
@@ -57,6 +58,7 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractFacadeUnitTest() {
     protected val userCommonTestHelper = UserCommonTestHelper()
     protected val userRoleCommonTestHelper = UserRoleCommonTestHelper()
     protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
+    protected val organizationClientCommonTestHelper = ClientOrganizationCommonTestHelper()
 
     @Before
     fun prepare() {

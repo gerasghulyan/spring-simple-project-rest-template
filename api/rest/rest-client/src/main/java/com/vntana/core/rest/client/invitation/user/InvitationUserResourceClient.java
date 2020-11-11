@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
  * Date: 5/12/2020
  * Time: 5:42 PM
  */
-@FeignClient(name = "coreInvitationUsers", path = "user-invitatilllons", url = "${ms.core.url}")
+@FeignClient(name = "coreInvitationUsers", path = "user-invitations", url = "${ms.core.url}")
 public interface InvitationUserResourceClient {
 
-    @PostMapping(path = "/organization")
-    ResponseEntity<CreateInvitationUserForOrganizationResultResponse> create(@RequestBody final CreateInvitationForOrganizationUserRequest request);
+    @PostMapping("/organization")
+    ResponseEntity<CreateInvitationUserForOrganizationResultResponse> createInvitationForOrganization(@RequestBody final CreateInvitationForOrganizationUserRequest request);
 
-    @PostMapping(path = "/client")
-    ResponseEntity<CreateInvitationUserForOrganizationClientsResultResponse> createInvitationToClient(@RequestBody final CreateInvitationForOrganizationClientUserRequest request);
+    @PostMapping("/client-organization")
+    ResponseEntity<CreateInvitationUserForOrganizationClientsResultResponse> createInvitationForClient(@RequestBody final CreateInvitationForOrganizationClientUserRequest request);
 
     @PostMapping("/by-status")
     ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request);

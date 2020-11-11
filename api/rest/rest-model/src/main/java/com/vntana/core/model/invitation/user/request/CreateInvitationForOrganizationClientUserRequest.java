@@ -25,16 +25,20 @@ import static com.vntana.core.model.invitation.user.error.InvitationUserErrorRes
 public class CreateInvitationForOrganizationClientUserRequest extends AbstractRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
 
     @JsonProperty("userRoles")
-    private final Map<String, UserRoleModel> userRoles;
+    private Map<String, UserRoleModel> userRoles;
 
     @JsonProperty("email")
-    private final String email;
+    private String email;
 
     @JsonProperty("inviterUserUuid")
-    private final String inviterUserUuid;
+    private String inviterUserUuid;
 
     @JsonProperty("organizationUuid")
-    private final String organizationUuid;
+    private String organizationUuid;
+
+    public CreateInvitationForOrganizationClientUserRequest() {
+        super();
+    }
 
     public CreateInvitationForOrganizationClientUserRequest(
             final Map<String, UserRoleModel> userRoles,

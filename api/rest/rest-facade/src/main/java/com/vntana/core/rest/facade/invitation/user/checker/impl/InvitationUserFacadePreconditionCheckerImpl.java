@@ -10,7 +10,6 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
 import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
-import com.vntana.core.rest.facade.invitation.user.checker.UserRolesComparator;
 import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.organization.OrganizationService;
@@ -24,7 +23,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -42,27 +43,24 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     private final InvitationUserService invitationUserService;
     private final TokenInvitationUserService tokenInvitationUserService;
     private final ClientOrganizationService clientOrganizationService;
-    private final UserRolesComparator userRolesComparator;
 
     public InvitationUserFacadePreconditionCheckerImpl(final UserService userService,
                                                        final UserRoleService userRoleService,
                                                        final OrganizationService organizationService,
                                                        final InvitationUserService invitationUserService,
                                                        final TokenInvitationUserService tokenInvitationUserService,
-                                                       final ClientOrganizationService clientOrganizationService,
-                                                       final UserRolesComparator userRolesComparator) {
+                                                       final ClientOrganizationService clientOrganizationService) {
         this.userService = userService;
         this.userRoleService = userRoleService;
         this.organizationService = organizationService;
         this.invitationUserService = invitationUserService;
         this.tokenInvitationUserService = tokenInvitationUserService;
         this.clientOrganizationService = clientOrganizationService;
-        this.userRolesComparator = userRolesComparator;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
     @Override
-    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateForPossibleErrors(final CreateInvitationForOrganizationUserRequest request) {
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateInvitationForOrganizationForPossibleErrors(final CreateInvitationForOrganizationUserRequest request) {
         LOGGER.debug("Checking invitation user creation precondition for request - {}", request);
         if (UserRoleModel.ORGANIZATION_OWNER == request.getUserRole()) {
             LOGGER.debug("Checking invitation user creation for organization precondition for request - {} has been done with error, the invited role could not be organization owner", request);
@@ -96,23 +94,24 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
 
-        final List<String> clientsUuids = extractClientOrganizations(request.getOrganizationUuid());
+        final List<String> allClientsUuids = extractClientOrganizations(request.getOrganizationUuid());
 
-        request.getUserRoles().entrySet().stream().map(entry -> {
-            if (entry.getValue().getPriority() < UserRoleModel.CLIENT_ADMIN.getPriority()) {
+        final Map<String, UserRoleModel> userRoles = request.getUserRoles();
+        final Set<String> clientUuids = request.getUserRoles().keySet();
+        for (String clientUuid : clientUuids) {
+            if (userRoles.get(clientUuid).getPriority() < UserRoleModel.CLIENT_ADMIN.getPriority()){
                 LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, the invited role could not be organization owner", request);
-                return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.WRONG_PERMISSIONS);
+                return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.WRONG_PERMISSIONS);
             }
-            if (!clientOrganizationService.existsByUuid(entry.getKey())) {
-                LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, no organization was found by uuid - {}", request, entry.getKey());
+            if (!clientOrganizationService.existsByUuid(clientUuid)) {
+                LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, no organization was found by uuid - {}", request, clientUuid);
                 return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_CLIENT_NOT_FOUND);
             }
-            if (!clientsUuids.contains(entry.getKey())) {
-                LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, organization don't contain client - {}", request, entry.getKey());
+            if (!allClientsUuids.contains(clientUuid)) {
+                LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, organization don't contain client - {}", request, clientUuid);
                 return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.CLIENT_NOT_MATCHING_ORGANIZATION);
             }
-            return SingleErrorWithStatus.empty();
-        });
+        }
         return SingleErrorWithStatus.empty();
     }
 
@@ -214,9 +213,10 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     }
 
     private List<String> extractClientOrganizations(String organizationUuid) {
-        final Organization organization = organizationService
-                .findByUuid(organizationUuid)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Cannot find organization for uuid - %s", organizationUuid)));
-        return organization.getClientOrganizations().stream().map(AbstractUuidAwareDomainEntity::getUuid).collect(Collectors.toList());
+        final Organization organization = organizationService.getByUuid(organizationUuid);
+        return organization.getClientOrganizations()
+                .stream()
+                .map(AbstractUuidAwareDomainEntity::getUuid)
+                .collect(Collectors.toList());
     }
 }

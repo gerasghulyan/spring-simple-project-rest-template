@@ -83,7 +83,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
     @Override
     public CreateInvitationUserForOrganizationResultResponse createInvitationForOrganization(final CreateInvitationForOrganizationUserRequest request) {
         LOGGER.debug("Creating invitation user for request- {}", request);
-        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkCreateForPossibleErrors(request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkCreateInvitationForOrganizationForPossibleErrors(request);
         if (singleErrorWithStatus.isPresent()) {
             return new CreateInvitationUserForOrganizationResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
@@ -94,6 +94,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         return new CreateInvitationUserForOrganizationResultResponse(invitationUser.getUuid());
     }
 
+    @Transactional
     @Override
     public CreateInvitationUserForOrganizationClientsResultResponse createInvitationForClient(final CreateInvitationForOrganizationClientUserRequest request) {
         LOGGER.debug("Creating invitation to client for request- {}", request);

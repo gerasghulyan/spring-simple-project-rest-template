@@ -91,9 +91,7 @@ public class InvitationUserServiceImpl implements InvitationUserService {
                 .map(entry -> {
                     final String clientUuid = entry.getKey();
                     final UserRole role = entry.getValue();
-                    final ClientOrganization client = clientOrganizationService
-                            .findByUuid(clientUuid)
-                            .orElseThrow(() -> new IllegalStateException(String.format("Cannot find client for uuid - %s", clientUuid)));
+                    final ClientOrganization client = clientOrganizationService.getByUuid(clientUuid);
                     return invitationOrganizationClientUserRepository.save(new InvitationOrganizationClientUser(
                             role, 
                             email, 

@@ -32,7 +32,7 @@ class InvitationUserResourceTestHelper : InvitationUserRestTestHelper() {
             email: String? = uuid(),
             inviterUserUuid: String? = userResourceTestHelper.persistUser().response().uuid,
             organizationUuid: String? = organizationResourceTestHelper.persistOrganization().response().uuid
-    ): String = invitationUserResourceClient.create(buildCreateInvitationUserRequest(userRole, email, inviterUserUuid, organizationUuid))?.body?.response()?.uuid.toString()
+    ): String = invitationUserResourceClient.createInvitationForOrganization(buildCreateInvitationUserForOrganizationRequest(userRole, email, inviterUserUuid, organizationUuid))?.body?.response()?.uuid.toString()
 
     fun updateInvitationStatus(
             uuid: String? = uuid(),

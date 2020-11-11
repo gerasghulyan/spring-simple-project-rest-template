@@ -13,12 +13,19 @@ import com.vntana.core.model.invitation.user.request.*
 open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
     private fun email() = "${uuid()}@mail.com"
 
-    fun buildCreateInvitationUserRequest(
+    fun buildCreateInvitationUserForOrganizationRequest(
             userRole: UserRoleModel? = UserRoleModel.ORGANIZATION_ADMIN,
             email: String? = email(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
     ): CreateInvitationForOrganizationUserRequest = CreateInvitationForOrganizationUserRequest(userRole, email, inviterUserUuid, organizationUuid)
+
+    fun buildCreateInvitationUserForClientRequest(
+            userRoles: Map<String, UserRoleModel>? = mapOf(Pair(uuid(), UserRoleModel.CLIENT_CONTENT_MANAGER)),
+            email: String? = email(),
+            inviterUserUuid: String? = uuid(),
+            organizationUuid: String? = uuid()
+    ): CreateInvitationForOrganizationClientUserRequest = CreateInvitationForOrganizationClientUserRequest(userRoles, email, inviterUserUuid, organizationUuid)
 
     fun buildGetAllByStatusInvitationUserRequest(
             page: Int = 0,

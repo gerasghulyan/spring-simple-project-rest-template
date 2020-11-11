@@ -71,8 +71,8 @@ public class InvitationOrganizationClientUser extends AbstractUuidAwareDomainEnt
                 .append(role, that.role)
                 .append(email, that.email)
                 .append(status, that.status)
-                .append(inviterUser, that.inviterUser)
-                .append(clientOrganization, that.clientOrganization)
+                .append(getIdOrNull(inviterUser), getIdOrNull(that.inviterUser))
+                .append(getIdOrNull(clientOrganization), getIdOrNull(that.clientOrganization))
                 .isEquals();
     }
 
@@ -83,8 +83,8 @@ public class InvitationOrganizationClientUser extends AbstractUuidAwareDomainEnt
                 .append(role)
                 .append(email)
                 .append(status)
-                .append(inviterUser)
-                .append(clientOrganization)
+                .append(getIdOrNull(inviterUser))
+                .append(getIdOrNull(clientOrganization))
                 .toHashCode();
     }
 
@@ -95,8 +95,8 @@ public class InvitationOrganizationClientUser extends AbstractUuidAwareDomainEnt
                 .append("role", role)
                 .append("email", email)
                 .append("status", status)
-                .append("inviterUser", inviterUser)
-                .append("clientOrganization", clientOrganization)
+                .append("inviterUser", getIdOrNull(inviterUser))
+                .append("clientOrganization", getIdOrNull(clientOrganization))
                 .toString();
     }
 

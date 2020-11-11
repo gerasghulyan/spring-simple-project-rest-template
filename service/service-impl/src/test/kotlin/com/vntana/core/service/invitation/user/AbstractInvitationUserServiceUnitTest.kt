@@ -1,8 +1,10 @@
 package com.vntana.core.service.invitation.user
 
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
+import com.vntana.core.persistence.invitation.user.InvitationOrganizationClientUserRepository
 import com.vntana.core.persistence.invitation.user.InvitationOrganizationUserRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.client.ClientOrganizationService
@@ -25,11 +27,14 @@ abstract class AbstractInvitationUserServiceUnitTest : AbstractServiceUnitTest()
     protected lateinit var invitationOrganizationUserRepository: InvitationOrganizationUserRepository
 
     @Mock
+    protected lateinit var invitationOrganizationClientUserRepository: InvitationOrganizationClientUserRepository
+
+    @Mock
     protected lateinit var userService: UserService
 
     @Mock
     protected lateinit var organizationService: OrganizationService
-    
+
     @Mock
     protected lateinit var clientOrganizationService: ClientOrganizationService
 
@@ -39,8 +44,11 @@ abstract class AbstractInvitationUserServiceUnitTest : AbstractServiceUnitTest()
 
     protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
+    protected val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
+
     @Before
     fun prepare() {
-        invitationUserService = InvitationUserServiceImpl(invitationOrganizationUserRepository, userService, organizationService, clientOrganizationService)
+        invitationUserService =
+                InvitationUserServiceImpl(invitationOrganizationUserRepository, invitationOrganizationClientUserRepository, userService, organizationService, clientOrganizationService)
     }
 }

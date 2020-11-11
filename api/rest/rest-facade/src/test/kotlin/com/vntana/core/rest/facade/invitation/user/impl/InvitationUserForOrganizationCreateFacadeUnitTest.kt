@@ -13,13 +13,13 @@ import java.util.*
  * Date: 5/12/2020
  * Time: 6:12 PM
  */
-class InvitationUserCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
+class InvitationUserForOrganizationCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
 
     @Test
     fun `test when precondition check failed`() {
-        val request = invitationUserRestTestHelper.buildCreateInvitationUserRequest()
+        val request = invitationUserRestTestHelper.buildCreateInvitationUserForOrganizationRequest()
         resetAll()
-        expect(preconditionChecker.checkCreateForPossibleErrors(request))
+        expect(preconditionChecker.checkCreateInvitationForOrganizationForPossibleErrors(request))
                 .andReturn(SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND))
         replayAll()
         assertBasicErrorResultResponse(invitationUserServiceFacade.createInvitationForOrganization(request), InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
@@ -29,7 +29,7 @@ class InvitationUserCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
     @Test
     fun test() {
         val organization = organizationCommonTestHelper.buildOrganization()
-        val request = invitationUserRestTestHelper.buildCreateInvitationUserRequest(organizationUuid = organization.uuid)
+        val request = invitationUserRestTestHelper.buildCreateInvitationUserForOrganizationRequest(organizationUuid = organization.uuid)
         val getAllDto = invitationUserCommonTestHelper.buildGetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
                 email = request.email,
                 organizationUuid = request.organizationUuid
@@ -46,7 +46,7 @@ class InvitationUserCreateFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
         val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUser(invitationOrganizationUser = updatedUserInvitation)
         val updateDto = invitationUserCommonTestHelper.buildUpdateInvitationUserStatusDto(uuid = userInvitations[0].uuid)
         resetAll()
-        expect(preconditionChecker.checkCreateForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(preconditionChecker.checkCreateInvitationForOrganizationForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(mapperFacade.map(request, CreateInvitationForOrganizationUserDto::class.java)).andReturn(dto)
         expect(invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(getAllDto)).andReturn(userInvitations)
         expect(invitationUserService.updateStatus(updateDto)).andReturn(updatedUserInvitation)

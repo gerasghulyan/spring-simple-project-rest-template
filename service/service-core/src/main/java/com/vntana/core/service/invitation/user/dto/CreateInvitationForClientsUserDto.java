@@ -19,17 +19,21 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
     private final Map<String, UserRole> userRoles;
     private final String email;
     private final String inviterUserUuid;
+    private final String organizationUuid;
 
     public CreateInvitationForClientsUserDto(
             final Map<String, UserRole> userRoles,
             final String email,
-            final String inviterUserUuid) {
+            final String inviterUserUuid, 
+            final String organizationUuid) {
         Assert.notNull(userRoles, "The user roles should not be null");
         Assert.hasText(email, "The email should not be null or empty");
         Assert.hasText(inviterUserUuid, "The inviterUserUuid should not be null or empty");
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         this.userRoles = userRoles;
         this.email = email;
         this.inviterUserUuid = inviterUserUuid;
+        this.organizationUuid = organizationUuid;
     }
 
     @Override
@@ -45,6 +49,7 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
                 .append(userRoles, that.userRoles)
                 .append(email, that.email)
                 .append(inviterUserUuid, that.inviterUserUuid)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -54,6 +59,7 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
                 .append(userRoles)
                 .append(email)
                 .append(inviterUserUuid)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -64,6 +70,7 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
                 .append("userRoles", userRoles)
                 .append("email", email)
                 .append("inviterUserUuid", inviterUserUuid)
+                .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
@@ -77,5 +84,9 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
 
     public String getInviterUserUuid() {
         return inviterUserUuid;
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
     }
 }

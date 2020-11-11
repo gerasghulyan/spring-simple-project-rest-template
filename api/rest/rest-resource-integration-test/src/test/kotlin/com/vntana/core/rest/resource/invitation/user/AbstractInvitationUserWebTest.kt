@@ -1,6 +1,7 @@
 package com.vntana.core.rest.resource.invitation.user
 
 import com.sflpro.notifier.api.client.notification.email.EmailNotificationResourceClient
+import com.vntana.core.helper.client.ClientOrganizationResourceTestHelper
 import com.vntana.core.helper.invitation.user.InvitationUserResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.token.TokenResourceTestHelper
@@ -39,6 +40,9 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
+    
+    @Autowired
+    protected lateinit var clientOrganizationResourceTestHelper: ClientOrganizationResourceTestHelper
     
     @Autowired
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
