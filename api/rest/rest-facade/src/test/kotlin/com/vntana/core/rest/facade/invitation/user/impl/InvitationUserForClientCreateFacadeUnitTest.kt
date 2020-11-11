@@ -32,7 +32,7 @@ class InvitationUserForClientCreateFacadeUnitTest : AbstractInvitationUserFacade
         val clientOrganization = organizationClientCommonTestHelper.buildClientOrganization(organization = organization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 organizationUuid = organization.uuid,
-                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_CONTENT_MANAGER))
+                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER))
         )
         val dto = invitationUserCommonTestHelper.buildCreateInvitationUserForClientsDto(
                 clientUuid = clientOrganization.uuid,

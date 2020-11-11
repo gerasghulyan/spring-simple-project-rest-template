@@ -99,7 +99,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         final Map<String, UserRoleModel> userRoles = request.getUserRoles();
         final Set<String> clientUuids = request.getUserRoles().keySet();
         for (String clientUuid : clientUuids) {
-            if (userRoles.get(clientUuid).getPriority() < UserRoleModel.CLIENT_ADMIN.getPriority()){
+            if (userRoles.get(clientUuid).getPriority() < UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority()){
                 LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, the invited role could not be organization owner", request);
                 return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.WRONG_PERMISSIONS);
             }

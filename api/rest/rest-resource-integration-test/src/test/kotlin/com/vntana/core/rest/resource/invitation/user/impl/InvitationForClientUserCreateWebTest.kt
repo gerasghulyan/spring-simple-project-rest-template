@@ -98,7 +98,7 @@ class InvitationForClientUserCreateWebTest : AbstractInvitationUserWebTest() {
         val anotherClient = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = anotherOrganizationUuid)
 
         val request = resourceTestHelper.buildCreateInvitationUserForClientRequest(
-                userRoles = mapOf(Pair(anotherClient.response().uuid, UserRoleModel.CLIENT_CONTENT_VIEWER)),
+                userRoles = mapOf(Pair(anotherClient.response().uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
                 inviterUserUuid = inviterUserUuid, 
                 organizationUuid = originalOrganizationUuid
         )
@@ -119,7 +119,7 @@ class InvitationForClientUserCreateWebTest : AbstractInvitationUserWebTest() {
         val originalClient = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = originalOrganizationUuid)
 
         val request = resourceTestHelper.buildCreateInvitationUserForClientRequest(
-                userRoles = mapOf(Pair(originalClient.response().uuid, UserRoleModel.CLIENT_CONTENT_VIEWER)),
+                userRoles = mapOf(Pair(originalClient.response().uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
                 inviterUserUuid = inviterUserUuid,
                 organizationUuid = originalOrganizationUuid
         )

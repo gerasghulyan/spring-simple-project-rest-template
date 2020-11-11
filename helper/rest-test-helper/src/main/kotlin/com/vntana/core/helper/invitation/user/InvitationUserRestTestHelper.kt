@@ -21,7 +21,7 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
     ): CreateInvitationForOrganizationUserRequest = CreateInvitationForOrganizationUserRequest(userRole, email, inviterUserUuid, organizationUuid)
 
     fun buildCreateInvitationUserForClientRequest(
-            userRoles: Map<String, UserRoleModel>? = mapOf(Pair(uuid(), UserRoleModel.CLIENT_CONTENT_MANAGER)),
+            userRoles: Map<String, UserRoleModel>? = mapOf(Pair(uuid(), UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)),
             email: String? = email(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()

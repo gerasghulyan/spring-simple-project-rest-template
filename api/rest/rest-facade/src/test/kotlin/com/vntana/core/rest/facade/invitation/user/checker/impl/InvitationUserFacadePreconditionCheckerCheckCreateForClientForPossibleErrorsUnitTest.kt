@@ -105,7 +105,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val organization = organizationCommonTestHelper.buildOrganizationWithClients(clientOrganization = listOf(clientOrganization));
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_CONTENT_VIEWER))
+                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
