@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.vntana.core.model.user.error.UserErrorResponseModel.NOT_FOUND_FOR_ROLE;
@@ -76,33 +76,40 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public SecureFindUserByUuidAndOrganizationResponse findByUserAndOrganization(final FindUserByUuidAndOrganizationRequest request) {
         LOGGER.debug("Processing auth facade findByUserAndOrganization for request - {}", request);
-        return userService.findByUuid(request.getUuid())
-                .map(theUser -> {
-                    final SecureUserOrganizationResponseModel responseModel = new SecureUserOrganizationResponseModel();
-                    responseModel.setUuid(theUser.getUuid());
-                    responseModel.setUsername(theUser.getEmail());
-                    responseModel.setOrganizationUuid(request.getOrganizationUuid());
-                    final boolean userHasSuperAdminRole = theUser.roleOfSuperAdmin().isPresent();
-                    responseModel.setSuperAdmin(userHasSuperAdminRole);
-                    if (userHasSuperAdminRole) {
-                        responseModel.setUserRole(UserRoleModel.SUPER_ADMIN);
-                    } else {
-                        final UserRoleModel userRoleModel = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid())
-                                .map(theRole -> UserRoleModel.valueOf(theRole.getUserRole().name()))
-                                .orElseGet(() -> {
-                                    if (userRoleService.existsClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid())) {
-                                        return UserRoleModel.ORGANIZATION_CLIENTS_VIEWER;
-                                    }
-                                    return null;
-                                });
-                        if (Objects.isNull(userRoleModel)) {
-                            return new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE));
-                        }
-                        responseModel.setUserRole(userRoleModel);
-                    }
-                    LOGGER.debug("Successfully processed auth facade findByUserAndOrganization for request - {}", request);
-                    return new SecureFindUserByUuidAndOrganizationResponse(responseModel);
+        final SecureFindUserByUuidAndOrganizationResponse result = userService.findByUuid(request.getUuid())
+                .flatMap(user -> {
+                    final boolean isSuperAdminRole = user.roleOfSuperAdmin().isPresent();
+                    return findUserRole(request, isSuperAdminRole)
+                            .map(role -> {
+                                final SecureUserOrganizationResponseModel response = new SecureUserOrganizationResponseModel(
+                                        user.getUuid(),
+                                        user.getEmail(),
+                                        role,
+                                        request.getOrganizationUuid(),
+                                        isSuperAdminRole
+                                );
+                                LOGGER.debug("Successfully found user roles for findByUserAndOrganization request - {} with response - {}", request, response);
+                                return new SecureFindUserByUuidAndOrganizationResponse(
+                                        response
+                                );
+                            });
                 })
                 .orElse(new SecureFindUserByUuidAndOrganizationResponse(Collections.singletonList(NOT_FOUND_FOR_ROLE)));
+        LOGGER.debug("Successfully processed auth facade findByUserAndOrganization for request - {}", request);
+        return result;
+    }
+
+    private Optional<UserRoleModel> findUserRole(final FindUserByUuidAndOrganizationRequest request, final boolean isSuperAdminRole) {
+        if (isSuperAdminRole) {
+            return Optional.of(UserRoleModel.SUPER_ADMIN);
+        }
+        return Optional.ofNullable(userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid())
+                .map(theRole -> UserRoleModel.valueOf(theRole.getUserRole().name()))
+                .orElseGet(() -> {
+                    if (userRoleService.existsClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid())) {
+                        return UserRoleModel.ORGANIZATION_CLIENTS_VIEWER;
+                    }
+                    return null;
+                }));
     }
 }
