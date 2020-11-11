@@ -13,7 +13,7 @@ import javax.persistence.*;
  * Time: 10:16 AM
  */
 @MappedSuperclass
-public class AbstractClientOrganizationAwareUserRole extends AbstractUserRole {
+public abstract class AbstractClientOrganizationAwareUserRole extends AbstractUserRole {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_organization_id", nullable = false, foreignKey = @ForeignKey(name = "fk_client_organization_id"), updatable = false)
