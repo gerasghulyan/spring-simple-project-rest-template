@@ -26,31 +26,31 @@ class InvitationUserForClientCreateFacadeUnitTest : AbstractInvitationUserFacade
         verifyAll()
     }
 
-//    @Test
-//    fun test() {
-//        val organization = organizationCommonTestHelper.buildOrganization()
-//        val clientOrganization = organizationClientCommonTestHelper.buildClientOrganization(organization = organization)
-//        val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-//                organizationUuid = organization.uuid,
-//                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_CONTENT_MANAGER))
-//        )
-//        val dto = invitationUserCommonTestHelper.buildCreateInvitationUserForClientsDto(
-//                clientUuid = clientOrganization.uuid,
-//                email = request.email,
-//                inviterUserUuid = request.inviterUserUuid,
-//                organizationUuid = request.organizationUuid
-//        )
-//        val invitationOrganizationClientUser = listOf(
-//                invitationUserCommonTestHelper.buildInvitationOrganizationClientUser(
-//                        email = request.email, 
-//                        clientOrganization = clientOrganization)
-//        )
-//        resetAll()
-//        expect(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
-//        expect(mapperFacade.map(request, CreateInvitationForClientsUserDto::class.java)).andReturn(dto)
-//        expect(invitationUserService.creteInvitationForClients(dto)).andReturn(invitationOrganizationClientUser)
-//        replayAll()
-//        assertBasicSuccessResultResponse(invitationUserServiceFacade.createInvitationForClient(request))
-//        verifyAll()
-//    }
+    @Test
+    fun test() {
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val clientOrganization = organizationClientCommonTestHelper.buildClientOrganization(organization = organization)
+        val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
+                organizationUuid = organization.uuid,
+                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_CONTENT_MANAGER))
+        )
+        val dto = invitationUserCommonTestHelper.buildCreateInvitationUserForClientsDto(
+                clientUuid = clientOrganization.uuid,
+                email = request.email,
+                inviterUserUuid = request.inviterUserUuid,
+                organizationUuid = request.organizationUuid
+        )
+        val invitationOrganizationClientUser = listOf(
+                invitationUserCommonTestHelper.buildInvitationOrganizationClientUser(
+                        email = request.email, 
+                        clientOrganization = clientOrganization)
+        )
+        resetAll()
+        expect(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(mapperFacade.map(request, CreateInvitationForClientsUserDto::class.java)).andReturn(dto)
+        expect(invitationUserService.creteInvitationForClients(dto)).andReturn(invitationOrganizationClientUser)
+        replayAll()
+        assertBasicSuccessResultResponse(invitationUserServiceFacade.createInvitationForClient(request))
+        verifyAll()
+    }
 }
