@@ -14,7 +14,7 @@ public interface UserRoleServiceFacade {
 
     UserRoleGrantOrganizationAdminResponse grantOrganizationAdminRole(final UserRoleGrantOrganizationAdminRequest request);
 
-    UserRoleGrantClientAdminResponse grantClientAdminRole(final UserRoleGrantClientAdminRequest request);
+    UserRoleGrantClientAdminResponse grantClientAdminRole(final UserRoleGrantClientAdminOrganizationRequest request);
 
     UserRoleRevokeOrganizationAdminResponse revokeOrganizationAdminRole(final UserRoleRevokeOrganizationAdminRequest request);
 

@@ -46,7 +46,7 @@ public class UserRoleResource {
     }
 
     @PostMapping("client-admin")
-    public ResponseEntity<UserRoleGrantClientAdminResponse> grantUserClientAdminRole(@RequestBody final UserRoleGrantClientAdminRequest request) {
+    public ResponseEntity<UserRoleGrantClientAdminResponse> grantUserClientAdminRole(@RequestBody final UserRoleGrantClientAdminOrganizationRequest request) {
         LOGGER.debug("Processing user-roles resource grantUserClientAdminRole for request - {}", request);
         final UserRoleGrantClientAdminResponse userRoleGrantClientAdminResponse = userRoleServiceFacade.grantClientAdminRole(request);
         LOGGER.debug("Successfully processing user-roles resource grantUserClientAdminRole for request - {}", request);

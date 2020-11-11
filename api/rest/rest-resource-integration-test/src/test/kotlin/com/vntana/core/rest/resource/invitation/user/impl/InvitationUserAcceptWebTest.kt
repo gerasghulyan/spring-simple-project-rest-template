@@ -46,7 +46,7 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUser(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
         tokenResourceTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUserUuid)
-        userRoleResourceClient.grantUserOrganizationAdminRole(UserRoleGrantOrganizationAdminRequest(newOrganizationUuid, userUuid))
+        userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid, newOrganizationUuid)
         val request = resourceTestHelper.buildAcceptInvitationUserRequest(token = token)
         assertBasicErrorResultResponse(HttpStatus.CONFLICT, invitationUserResourceClient.accept(request), InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION)
     }

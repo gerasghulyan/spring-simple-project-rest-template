@@ -255,39 +255,41 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         return user.roles()
                 .stream()
                 .filter(userRole -> !userRole.getUserRole().equals(UserRole.SUPER_ADMIN))
+                .filter(userRole -> {
+                    if (userRole instanceof AbstractClientOrganizationAwareUserRole) {
+                        final AbstractClientOrganizationAwareUserRole clientOrganizationAwareUserRole = (AbstractClientOrganizationAwareUserRole) userRole;
+                        return !userRoleService.findByOrganizationAndUser(
+                                clientOrganizationAwareUserRole.getClientOrganization().getOrganization().getUuid(),
+                                user.getUuid()
+                        ).isPresent();
+                    }
+                    return true;
+                })
                 .map(userRole -> {
                     LOGGER.debug("Retrieving user organizations for not super admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
                     switch (userRole.getUserRole()) {
                         case ORGANIZATION_OWNER:
-                            final UserOrganizationOwnerRole userOrganizationOwnerRole = (UserOrganizationOwnerRole) userRole;
-                            return new GetUserOrganizationsResponseModel(
-                                    userOrganizationOwnerRole.getOrganization().getUuid(),
-                                    userOrganizationOwnerRole.getOrganization().getSlug(),
-                                    userOrganizationOwnerRole.getOrganization().getName(),
-                                    UserRoleModel.valueOf(userOrganizationOwnerRole.getUserRole().name()),
-                                    userOrganizationOwnerRole.getOrganization().getImageBlobId(),
-                                    userOrganizationOwnerRole.getOrganization().getCreated()
-                            );
                         case ORGANIZATION_ADMIN:
-                            final UserOrganizationAdminRole userOrganizationAdminRole = (UserOrganizationAdminRole) userRole;
-                            return new GetUserOrganizationsResponseModel(
-                                    userOrganizationAdminRole.getOrganization().getUuid(),
-                                    userOrganizationAdminRole.getOrganization().getSlug(),
-                                    userOrganizationAdminRole.getOrganization().getName(),
-                                    UserRoleModel.valueOf(userOrganizationAdminRole.getUserRole().name()),
-                                    userOrganizationAdminRole.getOrganization().getImageBlobId(),
-                                    userOrganizationAdminRole.getOrganization().getCreated()
-                            );
+                            if (userRole instanceof AbstractOrganizationAwareUserRole) {
+                                final AbstractOrganizationAwareUserRole organizationAwareUserRole = (AbstractOrganizationAwareUserRole) userRole;
+                                return mapOrganizationToGetUserOrganizationsResponseModel(
+                                        organizationAwareUserRole.getOrganization(),
+                                        UserRoleModel.valueOf(organizationAwareUserRole.getUserRole().name())
+                                );
+                            }
+                            throw new IllegalStateException(format("The give role %s had not properly crated", userRole));
                         case CLIENT_ORGANIZATION_ADMIN:
-                            final UserClientOrganizationAdminRole userClientOrganizationRole = (UserClientOrganizationAdminRole) userRole;
-                            return new GetUserOrganizationsResponseModel(
-                                    userClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),
-                                    userClientOrganizationRole.getClientOrganization().getOrganization().getSlug(),
-                                    userClientOrganizationRole.getClientOrganization().getOrganization().getName(),
-                                    UserRoleModel.valueOf(userClientOrganizationRole.getUserRole().name()),
-                                    userClientOrganizationRole.getClientOrganization().getOrganization().getImageBlobId(),
-                                    userClientOrganizationRole.getClientOrganization().getOrganization().getCreated()
-                            );
+                        case CLIENT_ORGANIZATION_CONTENT_MANAGER:
+                        case CLIENT_ORGANIZATION_VIEWER:
+                            if (userRole instanceof AbstractClientOrganizationAwareUserRole) {
+                                final AbstractClientOrganizationAwareUserRole clientOrganizationAwareUserRole = (AbstractClientOrganizationAwareUserRole) userRole;
+                                final Organization organization = clientOrganizationAwareUserRole.getClientOrganization().getOrganization();
+                                return mapOrganizationToGetUserOrganizationsResponseModel(
+                                        organization,
+                                        UserRoleModel.ORGANIZATION_CLIENTS_VIEWER
+                                );
+                            }
+                            throw new IllegalStateException(format("The give role %s had not properly crated", userRole));
                         default:
                             throw new IllegalStateException(format("Unknown user role %s", userRole.toString()));
                     }
@@ -316,5 +318,15 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, OrganizationErrorResponseModel.SLUG_NOT_VALID);
         }
         return SingleErrorWithStatus.empty();
+    }
+
+    private GetUserOrganizationsResponseModel mapOrganizationToGetUserOrganizationsResponseModel(final Organization organization, UserRoleModel userRoleModel) {
+        return new GetUserOrganizationsResponseModel(
+                organization.getUuid(),
+                organization.getSlug(),
+                organization.getName(),
+                userRoleModel,
+                organization.getImageBlobId(),
+                organization.getCreated());
     }
 }

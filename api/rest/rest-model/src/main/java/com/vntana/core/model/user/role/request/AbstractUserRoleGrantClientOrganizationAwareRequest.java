@@ -1,7 +1,7 @@
 package com.vntana.core.model.user.role.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
-import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,44 +11,53 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.List;
 
 /**
- * Created by Diana Gevorgyan
- * Date: 11/5/20
- * Time: 10:10 AM
+ * Created by Manuk Gharslyan.
+ * Date: 11/11/2020
+ * Time: 11:01 AM
  */
-public class UserRoleGrantClientAdminRequest extends AbstractRequestModel implements ValidatableRequest<UserRoleErrorResponseModel> {
+public class AbstractUserRoleGrantClientOrganizationAwareRequest extends AbstractUserRoleGrantUserAwareRequest implements ValidatableRequest<UserRoleErrorResponseModel> {
 
-    private final String userUuid;
 
-    private final String clientOrganizationUuid;
+    @JsonProperty("clientOrganizationUuid")
+    private String clientOrganizationUuid;
 
-    public UserRoleGrantClientAdminRequest(final String userUuid, final String clientOrganizationUuid) {
-        this.userUuid = userUuid;
+    public AbstractUserRoleGrantClientOrganizationAwareRequest() {
+        super();
+    }
+
+    public AbstractUserRoleGrantClientOrganizationAwareRequest(final String userUuid, final String clientOrganizationUuid) {
+        super(userUuid);
         this.clientOrganizationUuid = clientOrganizationUuid;
     }
 
     @Override
     public List<UserRoleErrorResponseModel> validate() {
-        final List<UserRoleErrorResponseModel> errors = initializeNew();
+        final List<UserRoleErrorResponseModel> errors = super.validate();
         if (StringUtils.isEmpty(clientOrganizationUuid)) {
             errors.add(UserRoleErrorResponseModel.MISSING_CLIENT_ORGANIZATION_UUID);
-        }
-        if (StringUtils.isEmpty(userUuid)) {
-            errors.add(UserRoleErrorResponseModel.MISSING_USER_UUID);
         }
         return errors;
     }
 
+    public String getClientOrganizationUuid() {
+        return clientOrganizationUuid;
+    }
+
+    public void setClientOrganizationUuid(final String clientOrganizationUuid) {
+        this.clientOrganizationUuid = clientOrganizationUuid;
+    }
+
+
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof UserRoleGrantClientAdminRequest)) {
-            return false;
-        }
-        final UserRoleGrantClientAdminRequest that = (UserRoleGrantClientAdminRequest) o;
+        if (this == o) return true;
+
+        if (!(o instanceof AbstractUserRoleGrantClientOrganizationAwareRequest)) return false;
+
+        final AbstractUserRoleGrantClientOrganizationAwareRequest that = (AbstractUserRoleGrantClientOrganizationAwareRequest) o;
+
         return new EqualsBuilder()
-                .append(userUuid, that.userUuid)
+                .appendSuper(super.equals(o))
                 .append(clientOrganizationUuid, that.clientOrganizationUuid)
                 .isEquals();
     }
@@ -56,7 +65,7 @@ public class UserRoleGrantClientAdminRequest extends AbstractRequestModel implem
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(userUuid)
+                .appendSuper(super.hashCode())
                 .append(clientOrganizationUuid)
                 .toHashCode();
     }
@@ -65,16 +74,7 @@ public class UserRoleGrantClientAdminRequest extends AbstractRequestModel implem
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("userUuid", userUuid)
                 .append("clientOrganizationUuid", clientOrganizationUuid)
                 .toString();
-    }
-
-    public String getUserUuid() {
-        return userUuid;
-    }
-
-    public String getClientOrganizationUuid() {
-        return clientOrganizationUuid;
     }
 }

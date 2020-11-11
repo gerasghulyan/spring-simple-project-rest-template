@@ -23,9 +23,6 @@ abstract class AbstractAuthFacadeUnitTest : AbstractFacadeUnitTest() {
     protected lateinit var authFacade: AuthFacade
 
     @Mock
-    protected lateinit var organizationService: OrganizationService
-
-    @Mock
     protected lateinit var persistenceUtilityService: PersistenceUtilityService
 
     @Mock
@@ -42,6 +39,6 @@ abstract class AbstractAuthFacadeUnitTest : AbstractFacadeUnitTest() {
 
     @Before
     fun before() {
-        authFacade = AuthFacadeImpl(userService, userRoleService, organizationService, persistenceUtilityService)
+        authFacade = AuthFacadeImpl(userService, userRoleService, persistenceUtilityService)
     }
 }

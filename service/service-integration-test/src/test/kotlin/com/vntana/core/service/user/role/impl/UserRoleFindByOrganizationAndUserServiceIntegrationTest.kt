@@ -21,7 +21,7 @@ class UserRoleFindByOrganizationAndUserServiceIntegrationTest : AbstractUserRole
         val adminRole = integrationTestHelper.persistUserOrganizationAdminRole()
         val organizationUuid = adminRole.organization.uuid
         val userUuid = adminRole.user.uuid
-        flushAndClear()
+        flush()
         userRoleService.findByOrganizationAndUser(organizationUuid, userUuid).let {
             flushAndClear()
             assertThat(it).isPresent
@@ -34,7 +34,7 @@ class UserRoleFindByOrganizationAndUserServiceIntegrationTest : AbstractUserRole
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         val organizationOwnerRole = user.roleOfOrganizationOwner(organization).get()
-        flushAndClear()
+        flush()
         userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid).let {
             flushAndClear()
             assertThat(it).isPresent

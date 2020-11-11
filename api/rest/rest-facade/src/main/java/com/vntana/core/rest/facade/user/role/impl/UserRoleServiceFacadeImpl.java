@@ -67,7 +67,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
     }
 
     @Override
-    public UserRoleGrantClientAdminResponse grantClientAdminRole(final UserRoleGrantClientAdminRequest request) {
+    public UserRoleGrantClientAdminResponse grantClientAdminRole(final UserRoleGrantClientAdminOrganizationRequest request) {
         LOGGER.debug("Granting user client role for request - {}", request);
         final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkGrantClientAdminRole(request);
         if (error.isPresent()) {

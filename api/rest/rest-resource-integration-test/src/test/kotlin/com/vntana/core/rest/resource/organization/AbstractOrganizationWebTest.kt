@@ -1,9 +1,11 @@
 package com.vntana.core.rest.resource.organization
 
+import com.vntana.core.helper.client.ClientOrganizationResourceTestHelper
 import com.vntana.core.helper.invitation.organization.InvitationOrganizationResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.token.TokenResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
+import com.vntana.core.helper.user.role.UserRoleResourceTestHelper
 import com.vntana.core.indexation.producer.organization.OrganizationUuidAwareActionProducer
 import com.vntana.core.rest.client.invitation.organization.InvitationOrganizationResourceClient
 import com.vntana.core.rest.client.organization.OrganizationResourceClient
@@ -28,19 +30,22 @@ abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
     protected lateinit var organizationResourceClient: OrganizationResourceClient
 
     @Autowired
+    protected lateinit var customerResourceClient: PaymentCustomerResourceClient
+
+    @Autowired
+    protected lateinit var userResourceClient: UserResourceClient
+
+    @Autowired
+    protected lateinit var invitationOrganizationResourceClient: InvitationOrganizationResourceClient
+
+    @Autowired
     protected lateinit var resourceTestHelper: OrganizationResourceTestHelper
 
     @Autowired
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 
     @Autowired
-    protected lateinit var customerResourceClient: PaymentCustomerResourceClient
-
-    @Autowired
     protected lateinit var organizationUuidAwareActionProducer: OrganizationUuidAwareActionProducer
-
-    @Autowired
-    protected lateinit var userResourceClient: UserResourceClient
 
     @Autowired
     protected lateinit var invitationOrganizationResourceTestHelper: InvitationOrganizationResourceTestHelper
@@ -49,7 +54,13 @@ abstract class AbstractOrganizationWebTest : AbstractWebIntegrationTest() {
     protected lateinit var tokenResourceTestHelper: TokenResourceTestHelper
 
     @Autowired
-    protected lateinit var invitationOrganizationResourceClient: InvitationOrganizationResourceClient
+    protected lateinit var clientOrganizationResourceTestHelper : ClientOrganizationResourceTestHelper
+
+    @Autowired
+    protected lateinit var organizationResourceTestHelper : OrganizationResourceTestHelper
+
+    @Autowired
+    protected lateinit var userRoleResourceTestHelper: UserRoleResourceTestHelper
     
     @Before
     fun prepare() {

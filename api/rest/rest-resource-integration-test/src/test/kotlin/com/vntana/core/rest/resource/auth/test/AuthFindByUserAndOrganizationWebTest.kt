@@ -17,19 +17,19 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
-                authResourceClient.findByEmailAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(uuid = null)),
+                authResourceClient.findByUserAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(uuid = null)),
                 UserErrorResponseModel.MISSING_UUID
         )
         assertBasicErrorResultResponse(
-                authResourceClient.findByEmailAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(uuid = emptyString())),
+                authResourceClient.findByUserAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(uuid = emptyString())),
                 UserErrorResponseModel.MISSING_UUID
         )
         assertBasicErrorResultResponse(
-                authResourceClient.findByEmailAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(organizationUuid = null)),
+                authResourceClient.findByUserAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(organizationUuid = null)),
                 UserErrorResponseModel.MISSING_ORGANIZATION
         )
         assertBasicErrorResultResponse(
-                authResourceClient.findByEmailAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(organizationUuid = emptyString())),
+                authResourceClient.findByUserAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(organizationUuid = emptyString())),
                 UserErrorResponseModel.MISSING_ORGANIZATION
         )
     }
@@ -37,7 +37,7 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
     @Test
     fun `test when not found`() {
         assertBasicErrorResultResponse(
-                authResourceClient.findByEmailAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest()),
+                authResourceClient.findByUserAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest()),
                 UserErrorResponseModel.NOT_FOUND_FOR_ROLE
         )
     }
@@ -51,13 +51,33 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
                 uuid = userUuid,
                 organizationUuid = organizationUuid
         )
-        userRoleResourceClient.grantSuperAdmin(UserRoleGrantSuperAdminRequest(userUuid))
-        authResourceClient.findByEmailAndOrganization(request).let {
+        userRoleResourceTestHelper.grantSuperAdmin(userUuid)
+        authResourceClient.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().userRole).isEqualTo(UserRoleModel.SUPER_ADMIN)
             assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
             assertThat(it.response().uuid).isEqualTo(userUuid)
             assertThat(it.response().superAdmin).isTrue()
+        }
+    }
+
+    @Test
+    fun `test with client organization role`() {
+        val user = userResourceTestHelper.persistUser()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
+        val clientOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
+        val userUuid = user.response().uuid
+        userRoleResourceTestHelper.grantUserClientAdminRole(userUuid, clientOrganization.response().uuid)
+        val request = userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(
+                uuid = userUuid,
+                organizationUuid = organizationUuid
+        )
+        authResourceClient.findByUserAndOrganization(request).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_CLIENTS_VIEWER)
+            assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
+            assertThat(it.response().uuid).isEqualTo(userUuid)
+            assertThat(it.response().superAdmin).isFalse()
         }
     }
 
@@ -70,7 +90,7 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
                 uuid = userUuid,
                 organizationUuid = organizationUuid
         )
-        authResourceClient.findByEmailAndOrganization(request).let {
+        authResourceClient.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
             assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
