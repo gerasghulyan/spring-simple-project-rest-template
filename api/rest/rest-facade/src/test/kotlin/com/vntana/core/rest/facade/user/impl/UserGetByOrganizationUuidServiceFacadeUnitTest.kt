@@ -35,7 +35,7 @@ class UserGetByOrganizationUuidServiceFacadeUnitTest : AbstractUserServiceFacade
         val organizationOwnerRole = userRoleCommonTestHelper.buildUserOrganizationOwnerRole(user = user)
         val organizationAdminRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole(user = user)
         expect(preconditionCheckerComponent.checkGetByOrganizationUuid(organizationUuid)).andReturn(SingleErrorWithStatus.empty())
-        expect(userRoleService.findByOrganization(organizationUuid)).andReturn(listOf(organizationOwnerRole, organizationAdminRole))
+        expect(userRoleService.findAllByOrganization(organizationUuid)).andReturn(listOf(organizationOwnerRole, organizationAdminRole))
         replayAll()
         userServiceFacade.getByOrganizationUuid(organizationUuid).let {
             assertBasicSuccessResultResponse(it)

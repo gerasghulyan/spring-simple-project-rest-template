@@ -187,7 +187,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByUuidsAndOrganizationUuidResponse(error.getHttpStatus(), error.getError());
         }
-        final Set<String> organizationUsersUuids = userRoleService.findByOrganization(request.getOrganizationUuid())
+        final Set<String> organizationUsersUuids = userRoleService.findAllByOrganization(request.getOrganizationUuid())
                 .stream().map(user -> user.getUser().getUuid()).collect(Collectors.toSet());
         final Set<User> users = userService.findByUuids(request.getUuids());
         final GetUsersByUuidsAndOrganizationUuidGridResponseModel responseModel = users.stream().map(user -> new GetUserByUuidsAndOrganizationUuidResponseModel(
@@ -348,7 +348,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
         }
         // TODO: 12.11.2020 Vardan: in the future add fetching by organization for client roles also
-        final List<AbstractOrganizationAwareUserRole> userRoles = userRoleService.findByOrganization(organizationUuid);
+        final List<AbstractOrganizationAwareUserRole> userRoles = userRoleService.findAllByOrganization(organizationUuid);
         final GetUsersByOrganizationGridResponseModel responseModel = userRoles.stream().map(userRole -> {
             final User user = userRole.getUser();
             return new GetUsersByOrganizationResponseModel(

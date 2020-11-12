@@ -56,7 +56,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<AbstractOrganizationAwareUserRole> findByOrganization(final String organizationUuid) {
+    public List<AbstractOrganizationAwareUserRole> findAllByOrganization(final String organizationUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {}", organizationUuid);
         assertOrganizationUuid(organizationUuid);
         final List<AbstractOrganizationAwareUserRole> userRoles = userRoleRepository.findAllByOrganization(organizationUuid)
@@ -69,7 +69,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<AbstractClientOrganizationAwareUserRole> findClientsByOrganization(final String organizationUuid) {
+    public List<AbstractClientOrganizationAwareUserRole> findAllClientsByOrganization(final String organizationUuid) {
         LOGGER.debug("Retrieving user client roles belonging to organization - {}", organizationUuid);
         assertOrganizationUuid(organizationUuid);
         final List<AbstractClientOrganizationAwareUserRole> userRoles = userRoleRepository.findAllOrganizationClientsByOrganization(organizationUuid)
@@ -82,7 +82,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<AbstractClientOrganizationAwareUserRole> findClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid) {
+    public List<AbstractClientOrganizationAwareUserRole> findAllClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         LOGGER.debug("Retrieving user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         assertUserUuid(userUuid);
@@ -124,7 +124,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         LOGGER.debug("Checking existence of userRole belonging to organization - {}, user - {}  with role - {}", organizationUuid, userUuid, userRole);
         assertOrganizationUuid(organizationUuid);
         assertUserUuid(userUuid);
-        assertUserRole(userRole);
+        assertOrganizationRelatedUserRole(userRole);
         final List<AbstractUserRole> roles = userRoleRepository.findAllByOrganization(organizationUuid).stream()
                 .filter(abstractUserRole -> abstractUserRole.getUserRole() == userRole && abstractUserRole.getUser().getUuid().equals(userUuid))
                 .collect(Collectors.toList());
@@ -178,8 +178,8 @@ public class UserRoleServiceImpl implements UserRoleService {
         Assert.notNull(dto, "The UserGrantClientRoleDto should not be null");
         final User user = userService.getByUuid(dto.getUserUuid());
         final ClientOrganization clientOrganization = clientOrganizationService.getByUuid(dto.getClientOrganizationUuid());
-        final AbstractUserRole userClientRole = user.buildClientRole(dto.getClientRole(), clientOrganization);
-        final AbstractClientOrganizationAwareUserRole userRole = (AbstractClientOrganizationAwareUserRole) userRoleRepository.save(userClientRole);
+        final AbstractClientOrganizationAwareUserRole userClientRole = user.buildClientRole(dto.getClientRole(), clientOrganization);
+        final AbstractClientOrganizationAwareUserRole userRole = userRoleRepository.save(userClientRole);
         LOGGER.debug("Successfully granted client role using dto - {}", dto);
         return userRole;
     }
@@ -239,8 +239,9 @@ public class UserRoleServiceImpl implements UserRoleService {
         Assert.hasText(userUuid, "The userUuid should not be null or empty");
     }
 
-    private void assertUserRole(final UserRole userRole) {
+    private void assertOrganizationRelatedUserRole(final UserRole userRole) {
         Assert.notNull(userRole, "The userRole should not be null");
+        Assert.isTrue(userRole.equals(UserRole.ORGANIZATION_OWNER) || userRole.equals(UserRole.ORGANIZATION_ADMIN), "The should be organization related user roles");
     }
 
     private void assertOrganizationUuid(final String organizationUuid) {

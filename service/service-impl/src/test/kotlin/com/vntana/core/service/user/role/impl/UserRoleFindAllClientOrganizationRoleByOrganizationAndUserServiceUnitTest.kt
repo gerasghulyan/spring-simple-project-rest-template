@@ -10,7 +10,7 @@ import org.junit.Test
  * Date: 06.11.2020
  * Time: 14:07
  */
-class UserRoleFindClientOrganizationRoleByOrganizationAndUserServiceUnitTest : AbstractUserRoleServiceUnitTest() {
+class UserRoleFindAllClientOrganizationRoleByOrganizationAndUserServiceUnitTest : AbstractUserRoleServiceUnitTest() {
 
     @Test
     fun `test when noting found`() {
@@ -19,7 +19,7 @@ class UserRoleFindClientOrganizationRoleByOrganizationAndUserServiceUnitTest : A
         val userUuid = uuid()
         expect(userRoleRepository.findAllOrganizationClientsRolesByOrganizationAndUser(organizationUuid, userUuid)).andReturn(listOf())
         replayAll()
-        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
+        val result = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
         assertThat(result).isEmpty()
         verifyAll()
     }
@@ -33,7 +33,7 @@ class UserRoleFindClientOrganizationRoleByOrganizationAndUserServiceUnitTest : A
         val clientAdminRole = commonTestHelper.buildUserClientAdminRole(user = user)
         expect(userRoleRepository.findAllOrganizationClientsRolesByOrganizationAndUser(organizationUuid, user.uuid)).andReturn(listOf(clientContentManagerRole, clientAdminRole))
         replayAll()
-        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(organizationUuid, user.uuid)
+        val result = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, user.uuid)
         assertThat(result).isNotEmpty()
         verifyAll()
     }

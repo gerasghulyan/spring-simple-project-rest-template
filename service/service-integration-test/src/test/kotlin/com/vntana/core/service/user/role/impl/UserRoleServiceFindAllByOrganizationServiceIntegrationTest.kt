@@ -11,7 +11,7 @@ import org.junit.Test
  * Date: 5/7/20
  * Time: 2:13 PM
  */
-class UserRoleServiceFindByOrganizationServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
+class UserRoleServiceFindAllByOrganizationServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
 
     @Test
     fun `test when noting found`() {
@@ -19,7 +19,7 @@ class UserRoleServiceFindByOrganizationServiceIntegrationTest : AbstractUserRole
         val organization = organizationIntegrationTestHelper.persistOrganization()
         userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         flushAndClear()
-        userRoleService.findByOrganization(uuid()).let {
+        userRoleService.findAllByOrganization(uuid()).let {
             assertThat(it.size).isEqualTo(0)
         }
     }
@@ -30,7 +30,7 @@ class UserRoleServiceFindByOrganizationServiceIntegrationTest : AbstractUserRole
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         flushAndClear()
-        userRoleService.findByOrganization(organization.uuid).let {
+        userRoleService.findAllByOrganization(organization.uuid).let {
             assertThat(it.size).isEqualTo(1)
             assertThat(it[0].user).isEqualTo(user)
             assertThat(it[0].userRole).isEqualTo(UserRole.ORGANIZATION_OWNER)
@@ -45,7 +45,7 @@ class UserRoleServiceFindByOrganizationServiceIntegrationTest : AbstractUserRole
         val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER)
         flushAndClear()
-        userRoleService.findByOrganization(organization.uuid).let {
+        userRoleService.findAllByOrganization(organization.uuid).let {
             assertThat(it.size).isEqualTo(1)
             it.map { role -> role.user }.forEach { u -> assertThat(u).isEqualTo(user) }
             assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.ORGANIZATION_OWNER)
@@ -65,7 +65,7 @@ class UserRoleServiceFindByOrganizationServiceIntegrationTest : AbstractUserRole
         val user = userIntegrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_VIEWER)
         flushAndClear()
-        userRoleService.findByOrganization(organization.uuid).let {
+        userRoleService.findAllByOrganization(organization.uuid).let {
             assertThat(it.size).isEqualTo(1)
             it.map { role -> role.user }.forEach { u -> assertThat(u).isEqualTo(user) }
             assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.ORGANIZATION_OWNER)
@@ -80,7 +80,7 @@ class UserRoleServiceFindByOrganizationServiceIntegrationTest : AbstractUserRole
         user1.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         userRoleService.grantOrganizationAdminRole(UserGrantOrganizationRoleDto(user1.uuid, organization.uuid))
         flushAndClear()
-        userRoleService.findByOrganization(organization.uuid).let {
+        userRoleService.findAllByOrganization(organization.uuid).let {
             it.map { role -> role.user }.forEach { u -> assertThat(u).isEqualTo(user1) }
             assertThat(it.map { role -> role.userRole }.toList()).containsOnly(
                     UserRole.ORGANIZATION_OWNER,

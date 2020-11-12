@@ -163,7 +163,7 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .orElseGet(Collections::emptyList);
     }
 
-    public AbstractUserRole buildClientRole(final UserRole userRole, final ClientOrganization clientOrganization) {
+    public AbstractClientOrganizationAwareUserRole buildClientRole(final UserRole userRole, final ClientOrganization clientOrganization) {
         switch (userRole) {
             case CLIENT_ORGANIZATION_ADMIN:
                 return new UserClientOrganizationAdminRole(this, clientOrganization);

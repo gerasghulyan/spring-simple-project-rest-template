@@ -10,14 +10,14 @@ import org.junit.Test
  * Date: 10.11.2020
  * Time: 12:05
  */
-class UserRoleFindClientsByOrganizationServiceUnitTest : AbstractUserRoleServiceUnitTest() {
+class UserRoleFindAllClientsByOrganizationServiceUnitTest : AbstractUserRoleServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertIllegalArgumentException { userRoleService.findClientsByOrganization(null) }
-        assertIllegalArgumentException { userRoleService.findClientsByOrganization(emptyString()) }
+        assertIllegalArgumentException { userRoleService.findAllClientsByOrganization(null) }
+        assertIllegalArgumentException { userRoleService.findAllClientsByOrganization(emptyString()) }
         verifyAll()
     }
     
@@ -31,7 +31,7 @@ class UserRoleFindClientsByOrganizationServiceUnitTest : AbstractUserRoleService
         )
         expect(userRoleRepository.findAllOrganizationClientsByOrganization(organizationUuid)).andReturn(roles)
         replayAll()
-        userRoleService.findClientsByOrganization(organizationUuid).let {
+        userRoleService.findAllClientsByOrganization(organizationUuid).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(roles)
         }
         verifyAll()

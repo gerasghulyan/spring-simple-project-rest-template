@@ -17,11 +17,11 @@ import java.util.Optional;
 
 public interface UserRoleService {
 
-    List<AbstractOrganizationAwareUserRole> findByOrganization(final String organizationUuid);
+    List<AbstractOrganizationAwareUserRole> findAllByOrganization(final String organizationUuid);
 
-    List<AbstractClientOrganizationAwareUserRole> findClientsByOrganization(final String organizationUuid);
+    List<AbstractClientOrganizationAwareUserRole> findAllClientsByOrganization(final String organizationUuid);
 
-    List<AbstractClientOrganizationAwareUserRole> findClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid);
+    List<AbstractClientOrganizationAwareUserRole> findAllClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
     Optional<AbstractOrganizationAwareUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
 

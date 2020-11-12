@@ -10,11 +10,11 @@ import org.junit.Test
  * Date: 06.11.2020
  * Time: 14:13
  */
-class UserRoleFindByClientOrganizationAndUserServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
+class UserRoleFindAllClientOrganizationRoleByOrganizationAndUserServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
 
     @Test
     fun `test when noting found`() {
-        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(uuid(), uuid())
+        val result = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(uuid(), uuid())
         assertThat(result).isEmpty()
     }
 
@@ -35,7 +35,7 @@ class UserRoleFindByClientOrganizationAndUserServiceIntegrationTest : AbstractUs
                 clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         flushAndClear()
-        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(
                 persistOrganization.uuid,
                 persistUser.uuid
         )
@@ -50,7 +50,7 @@ class UserRoleFindByClientOrganizationAndUserServiceIntegrationTest : AbstractUs
                 clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN
         )
         flushAndClear()
-        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
                 clientAdminRole.user.uuid
         )
@@ -65,7 +65,7 @@ class UserRoleFindByClientOrganizationAndUserServiceIntegrationTest : AbstractUs
                 clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER
         )
         flushAndClear()
-        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
                 clientContentManagerRole.user.uuid
         )
@@ -80,7 +80,7 @@ class UserRoleFindByClientOrganizationAndUserServiceIntegrationTest : AbstractUs
                 clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER
         )
         flushAndClear()
-        val result = userRoleService.findClientOrganizationRoleByOrganizationAndUser(
+        val result = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(
                 clientOrganization.organization.uuid,
                 clientViewerRole.user.uuid
         )
