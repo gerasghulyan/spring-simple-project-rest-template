@@ -1,10 +1,9 @@
 package com.vntana.core.persistence.user.impl.util.helper;
 
-import com.vntana.core.persistence.user.impl.util.retriever.RepositoryRetriever;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.vntana.commons.persistence.domain.AbstractDomainEntity;
+import com.vntana.core.persistence.custom.entity.manager.CustomPersistenceEntityManager;
+import io.vavr.control.Try;
 
-import javax.persistence.NoResultException;
 import java.util.Optional;
 
 /**
@@ -14,17 +13,12 @@ import java.util.Optional;
  */
 public class RepositoryHelper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryHelper.class);
-
     private RepositoryHelper() {
     }
 
-    public static <T> Optional<T> findOrEmpty(final RepositoryRetriever<T> retriever) {
-        try {
-            return Optional.of(retriever.retrieve());
-        } catch (NoResultException e) {
-            LOGGER.debug("No result exception - {}", e.getMessage());
-        }
-        return Optional.empty();
+    public static <T extends AbstractDomainEntity> Optional<T> find(final CustomPersistenceEntityManager<T> customPersistenceEntityManager) {
+        return Try.of(customPersistenceEntityManager::find)
+                .map(Optional::of)
+                .getOrElse(Optional::empty);
     }
 }

@@ -4,10 +4,7 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.token.TokenResetPassword;
-import com.vntana.core.domain.user.AbstractUserRole;
-import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
@@ -190,7 +187,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByUuidsAndOrganizationUuidResponse(error.getHttpStatus(), error.getError());
         }
-        final Set<String> organizationUsersUuids = userRoleService.findAllByOrganization(request.getOrganizationUuid())
+        final Set<String> organizationUsersUuids = userRoleService.findByOrganization(request.getOrganizationUuid())
                 .stream().map(user -> user.getUser().getUuid()).collect(Collectors.toSet());
         final Set<User> users = userService.findByUuids(request.getUuids());
         final GetUsersByUuidsAndOrganizationUuidGridResponseModel responseModel = users.stream().map(user -> new GetUserByUuidsAndOrganizationUuidResponseModel(
@@ -350,7 +347,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
         }
-        final List<AbstractUserRole> userRoles = userRoleService.findAllByOrganization(organizationUuid);
+        final List<AbstractOrganizationAwareUserRole> userRoles = userRoleService.findByOrganization(organizationUuid);
         final GetUsersByOrganizationGridResponseModel responseModel = userRoles.stream().map(userRole -> {
             final User user = userRole.getUser();
             return new GetUsersByOrganizationResponseModel(

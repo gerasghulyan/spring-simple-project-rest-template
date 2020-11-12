@@ -8,7 +8,10 @@ import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
-import com.vntana.core.service.user.role.dto.*;
+import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto;
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
+import com.vntana.core.service.user.role.dto.UserRevokeClientRoleDto;
+import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
 import com.vntana.core.service.user.role.exception.UserClientRoleNotFoundException;
 import com.vntana.core.service.user.role.exception.UserOrganizationAdminRoleNotFoundException;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,20 +56,26 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<AbstractUserRole> findAllByOrganization(final String organizationUuid) {
+    public List<AbstractOrganizationAwareUserRole> findByOrganization(final String organizationUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {}", organizationUuid);
         assertOrganizationUuid(organizationUuid);
-        final List<AbstractUserRole> userRoles = userRoleRepository.findAllByOrganization(organizationUuid);
+        final List<AbstractOrganizationAwareUserRole> userRoles = userRoleRepository.findAllByOrganization(organizationUuid)
+                .stream()
+                .map(AbstractOrganizationAwareUserRole.class::cast)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         LOGGER.debug("Successfully userRoles users belonging to organization - {}", organizationUuid);
         return userRoles;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<AbstractUserRole> findClientsByOrganization(final String organizationUuid) {
+    public List<AbstractClientOrganizationAwareUserRole> findClientsByOrganization(final String organizationUuid) {
         LOGGER.debug("Retrieving user client roles belonging to organization - {}", organizationUuid);
         assertOrganizationUuid(organizationUuid);
-        final List<AbstractUserRole> userRoles = userRoleRepository.findAllOrganizationClientsByOrganization(organizationUuid);
+        final List<AbstractClientOrganizationAwareUserRole> userRoles = userRoleRepository.findAllOrganizationClientsByOrganization(organizationUuid)
+                .stream()
+                .map(AbstractClientOrganizationAwareUserRole.class::cast)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         LOGGER.debug("Successfully user client roles belonging to organization - {}", organizationUuid);
         return userRoles;
     }
@@ -76,7 +86,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         LOGGER.debug("Retrieving user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         assertUserUuid(userUuid);
-        final List<AbstractClientOrganizationAwareUserRole> roles = userRoleRepository.findAllOrganizationClientsByOrganizationAndUser(organizationUuid, userUuid).stream()
+        final List<AbstractClientOrganizationAwareUserRole> roles = userRoleRepository.findAllOrganizationClientsRolesByOrganizationAndUser(organizationUuid, userUuid).stream()
                 .map(AbstractClientOrganizationAwareUserRole.class::cast)
                 .collect(Collectors.toList());
         LOGGER.debug("Successfully retrieved user client role belonging to organization - {}, user - {}", organizationUuid, userUuid);
@@ -86,22 +96,24 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
+    public Optional<AbstractOrganizationAwareUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         LOGGER.debug("Retrieving userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
         assertOrganizationUuid(organizationUuid);
         assertUserUuid(userUuid);
-        final Optional<AbstractUserRole> userRole = userRoleRepository.findByOrganizationAndUser(organizationUuid, userUuid);
+        final Optional<AbstractOrganizationAwareUserRole> userRole = userRoleRepository.findByOrganizationAndUser(organizationUuid, userUuid)
+                .map(AbstractOrganizationAwareUserRole.class::cast);
         LOGGER.debug("Successfully retrieved userRoles belonging to organization - {} and user - {}", organizationUuid, userUuid);
         return userRole;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<AbstractUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid) {
+    public Optional<AbstractClientOrganizationAwareUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid) {
         LOGGER.debug("Retrieving userRole belonging to client organization - {} and user - {}", clientOrganizationUuid, userUuid);
         assertOrganizationUuid(clientOrganizationUuid);
         assertUserUuid(userUuid);
-        final Optional<AbstractUserRole> clientUserRole = userRoleRepository.findByClientOrganizationAndUser(clientOrganizationUuid, userUuid);
+        final Optional<AbstractClientOrganizationAwareUserRole> clientUserRole = userRoleRepository.findByClientOrganizationAndUser(clientOrganizationUuid, userUuid)
+                .map(AbstractClientOrganizationAwareUserRole.class::cast);
         LOGGER.debug("Successfully retrieved userRole belonging to client organization - {} and user - {}", clientOrganizationUuid, userUuid);
         return clientUserRole;
     }
@@ -161,13 +173,13 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional
     @Override
-    public AbstractUserRole grantClientRole(final UserGrantClientRoleDto dto) {
+    public AbstractClientOrganizationAwareUserRole grantClientRole(final UserGrantClientRoleDto dto) {
         LOGGER.debug("Granting client role using dto - {}", dto);
         Assert.notNull(dto, "The UserGrantClientRoleDto should not be null");
         final User user = userService.getByUuid(dto.getUserUuid());
         final ClientOrganization clientOrganization = clientOrganizationService.getByUuid(dto.getClientOrganizationUuid());
         final AbstractUserRole userClientRole = user.buildClientRole(dto.getClientRole(), clientOrganization);
-        final AbstractUserRole userRole = userRoleRepository.save(userClientRole);
+        final AbstractClientOrganizationAwareUserRole userRole = (AbstractClientOrganizationAwareUserRole) userRoleRepository.save(userClientRole);
         LOGGER.debug("Successfully granted client role using dto - {}", dto);
         return userRole;
     }

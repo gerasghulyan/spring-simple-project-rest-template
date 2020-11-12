@@ -11,14 +11,14 @@ import org.junit.Test
  * Date: 5/7/20
  * Time: 4:10 PM
  */
-class UserRoleFindAllByOrganizationServiceUnitTest : AbstractUserRoleServiceUnitTest() {
+class UserRoleFindByOrganizationServiceUnitTest : AbstractUserRoleServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { userRoleService.findAllByOrganization(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { userRoleService.findAllByOrganization(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { userRoleService.findByOrganization(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { userRoleService.findByOrganization(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -32,7 +32,7 @@ class UserRoleFindAllByOrganizationServiceUnitTest : AbstractUserRoleServiceUnit
         )
         expect(userRoleRepository.findAllByOrganization(organizationUuid)).andReturn(roles)
         replayAll()
-        userRoleService.findAllByOrganization(organizationUuid).let {
+        userRoleService.findByOrganization(organizationUuid).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(roles)
         }
         verifyAll()

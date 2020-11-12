@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vntana.core.persistence.user.impl.util.helper.RepositoryHelper.findOrEmpty;
+import static com.vntana.core.persistence.user.impl.util.helper.RepositoryHelper.find;
 
 /**
  * Created by Vardan Aivazian
@@ -42,7 +42,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
 
     @Override
     public Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
-        return findOrEmpty(() ->
+        return find(() ->
                 entityManager.createQuery(
                         "select role from AbstractUserRole role where role.id in " +
                                 "(select aur.id from UserOrganizationOwnerRole uoor join AbstractUserRole aur on aur.id = uoor.id where uoor.organization.uuid = :organizationUuid and aur.user.uuid = :userUuid)" +
@@ -70,7 +70,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
     }
 
     @Override
-    public List<AbstractUserRole> findAllOrganizationClientsByOrganizationAndUser(final String organizationUuid, final String userUuid) {
+    public List<AbstractUserRole> findAllOrganizationClientsRolesByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         return entityManager.createQuery(
                 "select role from AbstractUserRole role where role.id in " +
                         "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid and ucar.user.uuid = :userUuid)" +
@@ -86,7 +86,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
 
     @Override
     public Optional<AbstractUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid) {
-        return findOrEmpty(() ->
+        return find(() ->
                 entityManager.createQuery(
                         "select role from AbstractUserRole role where role.id in " +
                                 "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid = :clientOrganizationUuid and ucar.user.uuid = :userUuid)" +
@@ -103,7 +103,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
 
     @Override
     public Optional<AbstractUserRole> findAdminRoleByUserAndOrganization(final String userUuid, final String organizationUuid) {
-        return findOrEmpty(() ->
+        return find(() ->
                 entityManager.createQuery(
                         "select aur from UserOrganizationAdminRole uoar join AbstractUserRole aur on aur.id = uoar.id " +
                                 "where uoar.organization.uuid = :organizationUuid and uoar.user.uuid = :userUuid",
@@ -116,7 +116,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
 
     @Override
     public Optional<AbstractUserRole> findClientAdminRoleByUserAndClientOrganization(final String userUuid, final String clientOrganizationUuid) {
-        return findOrEmpty(() ->
+        return find(() ->
                 entityManager.createQuery(
                         "select aur from UserClientOrganizationAdminRole uoar join AbstractUserRole aur on aur.id = uoar.id " +
                                 "where uoar.clientOrganization.uuid = :clientOrganizationUuid and uoar.user.uuid = :userUuid",
@@ -129,7 +129,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
 
     @Override
     public Optional<AbstractUserRole> findClientContentManagerRoleByUserAndClientOrganization(final String userUuid, final String clientOrganizationUuid) {
-        return findOrEmpty(() ->
+        return find(() ->
                 entityManager.createQuery(
                         "select aur from UserClientOrganizationContentManagerRole uoar join AbstractUserRole aur on aur.id = uoar.id " +
                                 "where uoar.clientOrganization.uuid = :clientOrganizationUuid and uoar.user.uuid = :userUuid",
@@ -142,7 +142,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
 
     @Override
     public Optional<AbstractUserRole> findClientViewerRoleByUserAndClientOrganization(final String userUuid, final String clientOrganizationUuid) {
-        return findOrEmpty(() ->
+        return find(() ->
                 entityManager.createQuery(
                         "select aur from UserClientOrganizationViewerRole uoar join AbstractUserRole aur on aur.id = uoar.id " +
                                 "where uoar.clientOrganization.uuid = :clientOrganizationUuid and uoar.user.uuid = :userUuid",
