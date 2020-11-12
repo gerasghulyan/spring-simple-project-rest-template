@@ -347,6 +347,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
         }
+        // TODO: 12.11.2020 Vardan: in the future add fetching by organization for client roles also
         final List<AbstractOrganizationAwareUserRole> userRoles = userRoleService.findByOrganization(organizationUuid);
         final GetUsersByOrganizationGridResponseModel responseModel = userRoles.stream().map(userRole -> {
             final User user = userRole.getUser();
