@@ -4,10 +4,7 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.token.TokenResetPassword;
-import com.vntana.core.domain.user.AbstractUserRole;
-import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
@@ -350,7 +347,8 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
         }
-        final List<AbstractUserRole> userRoles = userRoleService.findAllByOrganization(organizationUuid);
+        // TODO: 12.11.2020 Vardan: in the future add fetching by organization for client roles also
+        final List<AbstractOrganizationAwareUserRole> userRoles = userRoleService.findAllByOrganization(organizationUuid);
         final GetUsersByOrganizationGridResponseModel responseModel = userRoles.stream().map(userRole -> {
             final User user = userRole.getUser();
             return new GetUsersByOrganizationResponseModel(

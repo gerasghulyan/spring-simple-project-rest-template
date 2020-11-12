@@ -10,12 +10,12 @@ import org.junit.Test
  * Date: 10.11.2020
  * Time: 13:29
  */
-class UserRoleServiceFindClientsByOrganizationServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
+class UserRoleServiceFindAllClientsByOrganizationServiceIntegrationTest : AbstractUserRoleServiceIntegrationTest() {
 
     @Test
     fun `test when noting found`() {
         flushAndClear()
-        userRoleService.findClientsByOrganization(uuid()).let {
+        userRoleService.findAllClientsByOrganization(uuid()).let {
             assertThat(it.size).isEqualTo(0)
         }
     }
@@ -30,7 +30,7 @@ class UserRoleServiceFindClientsByOrganizationServiceIntegrationTest : AbstractU
         val user2 = userIntegrationTestHelper.persistUser()
         user2.grantClientRole(clientOrganization2, UserRole.CLIENT_ORGANIZATION_ADMIN)
         flushAndClear()
-        userRoleService.findClientsByOrganization(organization.uuid).let {
+        userRoleService.findAllClientsByOrganization(organization.uuid).let {
             assertThat(it.size).isEqualTo(2)
             assertThat(listOf(it[0].user, it[1].user)).containsExactlyInAnyOrder(user1, user2)
             assertThat(it.map { role -> role.userRole }.toList()).containsOnly(UserRole.CLIENT_ORGANIZATION_ADMIN, UserRole.CLIENT_ORGANIZATION_VIEWER)

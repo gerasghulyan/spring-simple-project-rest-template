@@ -36,7 +36,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         val user = userHelper.buildUser()
         expect(userService.findByUuid(anyString())).andReturn(Optional.of(user))
         expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
-        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf())
         replayAll()
         assertBasicErrorResultResponse(
                 authFacade.findByUserAndOrganization(FindUserByUuidAndOrganizationRequest(user.uuid, uuid())),
@@ -92,7 +92,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         val request = FindUserByUuidAndOrganizationRequest(user.uuid, uuid())
         expect(userService.findByUuid(anyString())).andReturn(Optional.of(user))
         expect(userRoleService.findByOrganizationAndUser(anyString(), anyString())).andReturn(Optional.empty())
-        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf(userRoleCommonTestHelper.buildUserClientContentManagerRole()))
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf(userRoleCommonTestHelper.buildUserClientContentManagerRole()))
         replayAll()
         authFacade.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)

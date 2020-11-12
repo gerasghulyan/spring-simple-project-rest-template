@@ -17,15 +17,15 @@ import java.util.Optional;
 
 public interface UserRoleService {
 
-    List<AbstractUserRole> findAllByOrganization(final String organizationUuid);
+    List<AbstractOrganizationAwareUserRole> findAllByOrganization(final String organizationUuid);
 
-    List<AbstractUserRole> findClientsByOrganization(final String organizationUuid);
+    List<AbstractClientOrganizationAwareUserRole> findAllClientsByOrganization(final String organizationUuid);
 
-    List<AbstractClientOrganizationAwareUserRole> findClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid);
+    List<AbstractClientOrganizationAwareUserRole> findAllClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
-    Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
+    Optional<AbstractOrganizationAwareUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
-    Optional<AbstractUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid);
+    Optional<AbstractClientOrganizationAwareUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid);
 
     boolean existsByOrganizationAndUserAndRole(final String organizationUuid, final String userUuid, final UserRole userRole);
 
@@ -34,8 +34,8 @@ public interface UserRoleService {
     UserOrganizationAdminRole grantOrganizationAdminRole(final UserGrantOrganizationRoleDto dto);
 
     UserSuperAdminRole grantSuperAdminRole(final String userUuid);
-    
-    AbstractUserRole grantClientRole(UserGrantClientRoleDto dto);
+
+    AbstractClientOrganizationAwareUserRole grantClientRole(UserGrantClientRoleDto dto);
     
     void revokeOrganizationAdminRole(final UserRevokeOrganizationAdminRoleDto dto);
 

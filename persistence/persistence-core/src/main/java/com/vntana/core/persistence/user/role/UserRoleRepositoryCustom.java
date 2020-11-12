@@ -12,7 +12,21 @@ import java.util.Optional;
  */
 public interface UserRoleRepositoryCustom {
 
-    List<AbstractUserRole> findAllByOrganizationUuid(final String organizationUuid);
+    List<AbstractUserRole> findAllByOrganization(final String organizationUuid);
 
-    Optional<AbstractUserRole> findAllByOrganizationAndUser(final String organizationUuid, final String userUuid);
+    Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
+
+    List<AbstractUserRole> findAllOrganizationClientsByOrganization(final String organizationUuid);
+
+    List<AbstractUserRole> findAllOrganizationClientsRolesByOrganizationAndUser(final String organizationUuid, final String userUuid);
+
+    Optional<AbstractUserRole> findByClientOrganizationAndUser(final String clientOrganizationUuid, final String userUuid);
+
+    Optional<AbstractUserRole> findAdminRoleByUserAndOrganization(final String userUuid, final String organizationUuid);
+
+    Optional<AbstractUserRole> findClientAdminRoleByUserAndClientOrganization(final String userUuid, final String clientOrganizationUuid);
+
+    Optional<AbstractUserRole> findClientContentManagerRoleByUserAndClientOrganization(final String userUuid, final String clientOrganizationUuid);
+
+    Optional<AbstractUserRole> findClientViewerRoleByUserAndClientOrganization(final String userUuid, final String clientOrganizationUuid);
 }
