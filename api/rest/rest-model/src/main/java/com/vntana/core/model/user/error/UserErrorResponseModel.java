@@ -10,6 +10,7 @@ import com.vntana.commons.api.model.response.ErrorResponseModel;
 public enum UserErrorResponseModel implements ErrorResponseModel {
     MISSING_CLIENT_NAME,
     MISSING_CLIENT_SLUG,
+    MISSING_CLIENT,
     MISSING_FULL_NAME,
     MISSING_EMAIL,
     MISSING_PASSWORD,

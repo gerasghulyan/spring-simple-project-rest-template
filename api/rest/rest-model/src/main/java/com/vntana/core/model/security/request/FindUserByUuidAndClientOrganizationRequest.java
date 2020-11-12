@@ -12,25 +12,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.List;
 
 /**
- * Created by Arthur Asatryan.
+ * Created by Manuk Gharslyan.
  * Date: 10/18/19
  * Time: 5:06 PM
  */
-public class FindUserByUuidAndOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
+public class FindUserByUuidAndClientOrganizationRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
 
     @JsonProperty("uuid")
     private String uuid;
 
-    @JsonProperty("organizationUuid")
-    private String organizationUuid;
+    @JsonProperty("clientUuid")
+    private String clientUuid;
 
-    public FindUserByUuidAndOrganizationRequest() {
+    public FindUserByUuidAndClientOrganizationRequest() {
         super();
     }
 
-    public FindUserByUuidAndOrganizationRequest(final String uuid, final String organizationUuid) {
+    public FindUserByUuidAndClientOrganizationRequest(final String uuid, final String clientUuid) {
         this.uuid = uuid;
-        this.organizationUuid = organizationUuid;
+        this.clientUuid = clientUuid;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class FindUserByUuidAndOrganizationRequest extends AbstractRequestModel i
         if (StringUtils.isBlank(uuid)) {
             errors.add(UserErrorResponseModel.MISSING_UUID);
         }
-        if (StringUtils.isBlank(organizationUuid)) {
-            errors.add(UserErrorResponseModel.MISSING_ORGANIZATION);
+        if (StringUtils.isBlank(clientUuid)) {
+            errors.add(UserErrorResponseModel.MISSING_CLIENT);
         }
         return errors;
     }
@@ -50,13 +50,13 @@ public class FindUserByUuidAndOrganizationRequest extends AbstractRequestModel i
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FindUserByUuidAndOrganizationRequest)) {
+        if (!(o instanceof FindUserByUuidAndClientOrganizationRequest)) {
             return false;
         }
-        final FindUserByUuidAndOrganizationRequest that = (FindUserByUuidAndOrganizationRequest) o;
+        final FindUserByUuidAndClientOrganizationRequest that = (FindUserByUuidAndClientOrganizationRequest) o;
         return new EqualsBuilder()
                 .append(uuid, that.uuid)
-                .append(organizationUuid, that.organizationUuid)
+                .append(clientUuid, that.clientUuid)
                 .isEquals();
     }
 
@@ -64,15 +64,16 @@ public class FindUserByUuidAndOrganizationRequest extends AbstractRequestModel i
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(uuid)
-                .append(organizationUuid)
+                .append(clientUuid)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .appendSuper(super.toString())
                 .append("uuid", uuid)
-                .append("organizationUuid", organizationUuid)
+                .append("clientUuid", clientUuid)
                 .toString();
     }
 
@@ -84,11 +85,11 @@ public class FindUserByUuidAndOrganizationRequest extends AbstractRequestModel i
         this.uuid = uuid;
     }
 
-    public String getOrganizationUuid() {
-        return organizationUuid;
+    public String getClientUuid() {
+        return clientUuid;
     }
 
-    public void setOrganizationUuid(final String organizationUuid) {
-        this.organizationUuid = organizationUuid;
+    public void setClientUuid(final String clientUuid) {
+        this.clientUuid = clientUuid;
     }
 }

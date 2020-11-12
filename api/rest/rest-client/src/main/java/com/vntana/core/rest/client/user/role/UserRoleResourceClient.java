@@ -1,13 +1,7 @@
 package com.vntana.core.rest.client.user.role;
 
-import com.vntana.core.model.user.role.request.UserRoleGrantClientOrganizationRequest;
-import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleGrantSuperAdminRequest;
-import com.vntana.core.model.user.role.request.UserRoleRevokeOrganizationAdminRequest;
-import com.vntana.core.model.user.role.response.UserRoleGrantClientOrganizationResponse;
-import com.vntana.core.model.user.role.response.UserRoleGrantOrganizationAdminResponse;
-import com.vntana.core.model.user.role.response.UserRoleGrantSuperAdminResponse;
-import com.vntana.core.model.user.role.response.UserRoleRevokeOrganizationAdminResponse;
+import com.vntana.core.model.user.role.request.*;
+import com.vntana.core.model.user.role.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,4 +27,7 @@ public interface UserRoleResourceClient {
 
     @PostMapping("client")
     ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientRole(@RequestBody final UserRoleGrantClientOrganizationRequest request);
+
+    @DeleteMapping("client")
+    ResponseEntity<UserRoleRevokeClientResponse> revokeUserClientRole(@RequestBody final UserRoleRevokeClientRequest request);
 }

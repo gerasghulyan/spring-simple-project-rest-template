@@ -25,7 +25,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
         replayAll()
         assertBasicErrorResultResponse(
                 authFacade.findByUserAndOrganization(FindUserByUuidAndOrganizationRequest(userUuid, uuid())),
-                UserErrorResponseModel.NOT_FOUND_FOR_ROLE
+                UserErrorResponseModel.USER_NOT_FOUND
         )
         verifyAll()
     }
