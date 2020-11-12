@@ -5,9 +5,9 @@ import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseMo
 import com.vntana.core.rest.facade.invitation.user.checker.AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions
+import org.easymock.EasyMock.anyString
 import org.easymock.EasyMock.expect
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by Diana Gevorgyan
@@ -45,18 +45,20 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
 
     @Test
     fun `test when sending wrong user role`() {
-        val organization = organizationCommonTestHelper.buildOrganizationWithClients()
-        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization)
+        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
+        val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
+        val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.ORGANIZATION_ADMIN))
+                inviterUserUuid = inviter.uuid,
+                userRoles = mapOf(Pair(inviterPermissions.clientOrganization.uuid, UserRoleModel.ORGANIZATION_ADMIN))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(organizationService.getByUuid(request.organizationUuid)).andReturn(organization)
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_ACCEPTABLE)
+            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
             Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.WRONG_PERMISSIONS)
         }
         verifyAll()
@@ -64,38 +66,45 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
 
     @Test
     fun `test when client does not exist`() {
-        val organization = organizationCommonTestHelper.buildOrganizationWithClients()
+        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
+        val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
+        val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
+                inviterUserUuid = inviter.uuid,
+                userRoles = mapOf(Pair(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(organizationService.getByUuid(request.organizationUuid)).andReturn(organization)
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
         expect(clientOrganizationService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(false).once()
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITING_CLIENT_NOT_FOUND)
+            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.WRONG_PERMISSIONS)
         }
         verifyAll()
     }
 
     @Test
-    fun `test when client does not belong to organization`() {
+    fun `test when client does not belong to inviter clients`() {
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val organization = organizationCommonTestHelper.buildOrganizationWithClients(clientOrganization = listOf(clientOrganization));
+        val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
+        val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
+                inviterUserUuid = inviter.uuid,
+                userRoles = mapOf(Pair(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(organizationService.getByUuid(request.organizationUuid)).andReturn(organization)
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
         expect(clientOrganizationService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_ACCEPTABLE)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.CLIENT_NOT_MATCHING_ORGANIZATION)
-        }
+            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.WRONG_PERMISSIONS)
+        }        
         verifyAll()
     }
 
@@ -103,15 +112,19 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
     @Test
     fun test() {
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val organization = organizationCommonTestHelper.buildOrganizationWithClients(clientOrganization = listOf(clientOrganization));
+        val organization = organizationCommonTestHelper.buildOrganizationWithClients(clientOrganization = listOf(clientOrganization))
+        val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
+        val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+                inviterUserUuid = inviter.uuid,
+                userRoles = mapOf(Pair(inviterPermissions.clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(organizationService.getByUuid(request.organizationUuid)).andReturn(organization)
+        expect(userRoleService.findClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
         expect(clientOrganizationService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
+        expect(userRolesPermissionsCheckerComponent.isPermittedToInvite(UserRoleModel.CLIENT_ORGANIZATION_ADMIN, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)).andReturn(true).once()
         replayAll()
         Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
         verifyAll()

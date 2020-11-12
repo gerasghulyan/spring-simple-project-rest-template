@@ -28,7 +28,7 @@ class UserFindByRoleAndOrganizationUuidServiceIntegrationTest : AbstractUserServ
         val organization = organizationIntegrationTest.persistOrganization()
         integrationTestHelper.persistUserWithOwnerRole(organizationUuid = organization.uuid)
         flushAndClear()
-        userService.findByRoleAndOrganizationUuid(UserRole.ASSET_MANAGER, organization.uuid).let {
+        userService.findByRoleAndOrganizationUuid(UserRole.CLIENT_ORGANIZATION_VIEWER, organization.uuid).let {
             assertThat(it).isEmpty()
         }
     }

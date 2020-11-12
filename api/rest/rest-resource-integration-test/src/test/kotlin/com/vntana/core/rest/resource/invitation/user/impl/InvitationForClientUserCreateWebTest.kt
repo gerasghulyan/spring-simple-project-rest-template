@@ -1,6 +1,5 @@
 package com.vntana.core.rest.resource.invitation.user.impl
 
-import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.rest.resource.invitation.user.AbstractInvitationUserWebTest
 import org.junit.Test
@@ -76,53 +75,11 @@ class InvitationForClientUserCreateWebTest : AbstractInvitationUserWebTest() {
         val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
         val organization = organizationResourceTestHelper.persistOrganization()
         val organizationUuid = organization.response().uuid
-        val originalOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
         assertBasicErrorResultResponse(
-                HttpStatus.NOT_FOUND,
+                HttpStatus.CONFLICT,
                 invitationUserResourceClient.createInvitationForClient(resourceTestHelper
                         .buildCreateInvitationUserForClientRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid)),
-                InvitationUserErrorResponseModel.INVITING_CLIENT_NOT_FOUND
+                InvitationUserErrorResponseModel.WRONG_PERMISSIONS
         )
-    }
-
-    @Test
-    fun `test when client does not belong to organisation`() {
-        val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
-        val originalOrganization = organizationResourceTestHelper.persistOrganization()
-        val anotherOrganization = organizationResourceTestHelper.persistOrganization()
-
-        val originalOrganizationUuid = originalOrganization.response().uuid
-        val anotherOrganizationUuid = anotherOrganization.response().uuid
-
-        clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = originalOrganizationUuid)
-        val anotherClient = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = anotherOrganizationUuid)
-
-        val request = resourceTestHelper.buildCreateInvitationUserForClientRequest(
-                userRoles = mapOf(Pair(anotherClient.response().uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
-                inviterUserUuid = inviterUserUuid, 
-                organizationUuid = originalOrganizationUuid
-        )
-
-        assertBasicErrorResultResponse(
-                HttpStatus.NOT_ACCEPTABLE,
-                invitationUserResourceClient.createInvitationForClient(request),
-                InvitationUserErrorResponseModel.CLIENT_NOT_MATCHING_ORGANIZATION
-        )
-    }
-
-    @Test
-    fun `test`() {
-        val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
-        val originalOrganization = organizationResourceTestHelper.persistOrganization()
-        val originalOrganizationUuid = originalOrganization.response().uuid
-
-        val originalClient = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = originalOrganizationUuid)
-
-        val request = resourceTestHelper.buildCreateInvitationUserForClientRequest(
-                userRoles = mapOf(Pair(originalClient.response().uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
-                inviterUserUuid = inviterUserUuid,
-                organizationUuid = originalOrganizationUuid
-        )
-        assertBasicSuccessResultResponse(invitationUserResourceClient.createInvitationForClient(request))
     }
 }

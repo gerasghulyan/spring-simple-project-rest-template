@@ -37,5 +37,4 @@ open class ClientOrganizationCommonTestHelper : AbstractCommonTestHelper() {
             name: String? = uuid(),
             imageBlobId: String? = uuid()
     ): UpdateClientOrganizationDto = UpdateClientOrganizationDto(uuid, name, imageBlobId)
-
 }

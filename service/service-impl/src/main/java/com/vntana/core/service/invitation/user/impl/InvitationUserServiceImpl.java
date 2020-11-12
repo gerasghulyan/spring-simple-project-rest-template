@@ -82,9 +82,7 @@ public class InvitationUserServiceImpl implements InvitationUserService {
     public List<InvitationOrganizationClientUser> creteInvitationForClients(final CreateInvitationForClientsUserDto dto) {
         Assert.notNull(dto, "The CreateInvitationToClientUserDto should not be null");
         LOGGER.debug("Creating user invitation to client for dto - {}", dto);
-        final String email = dto.getEmail();
         final User inviterUser = userService.getByUuid(dto.getInviterUserUuid());
-
         final List<InvitationOrganizationClientUser> result = dto.getUserRoles()
                 .entrySet()
                 .stream()
@@ -93,8 +91,8 @@ public class InvitationUserServiceImpl implements InvitationUserService {
                     final UserRole role = entry.getValue();
                     final ClientOrganization client = clientOrganizationService.getByUuid(clientUuid);
                     return invitationOrganizationClientUserRepository.save(new InvitationOrganizationClientUser(
-                            role, 
-                            email, 
+                            role,
+                            dto.getEmail(), 
                             InvitationStatus.INVITED,
                             inviterUser,
                             client));

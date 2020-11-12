@@ -7,6 +7,7 @@ import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.rest.facade.invitation.user.checker.impl.InvitationUserFacadePreconditionCheckerImpl
+import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.invitation.user.InvitationUserService
@@ -42,6 +43,9 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
 
     @Mock
     protected lateinit var tokenInvitationUserService: TokenInvitationUserService
+    
+    @Mock
+    protected lateinit var userRolesPermissionsCheckerComponent: UserRolesPermissionsCheckerComponent
 
     protected val tokenCommonTestHelper = TokenCommonTestHelper()
 
@@ -62,7 +66,8 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
                 organizationService,
                 invitationUserService,
                 tokenInvitationUserService,
-                clientOrganizationService
+                clientOrganizationService,
+                userRolesPermissionsCheckerComponent
         )
     }
 }
