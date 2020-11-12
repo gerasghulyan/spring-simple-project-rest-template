@@ -43,8 +43,7 @@ public class AbstractUserRoleClientOrganizationAwareRequest extends AbstractUser
         }
         if (Objects.isNull(userRole)) {
             errors.add(UserRoleErrorResponseModel.MISSING_CLIENT_ROLE);
-        }
-        if (!userRole.isClientRelatedRole()) {
+        } else if (!userRole.isClientRelatedRole()) {
             errors.add(UserRoleErrorResponseModel.REQUEST_ROLE_IS_NOT_CLIENT_RELATED);
         }
         return errors;

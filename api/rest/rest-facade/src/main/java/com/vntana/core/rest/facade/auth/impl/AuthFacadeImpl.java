@@ -124,7 +124,6 @@ public class AuthFacadeImpl implements AuthFacade {
                                     )
                             )).orElse(new SecureFindUserByUuidAndClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, NOT_FOUND_FOR_ROLE));
                 }).orElse(new SecureFindUserByUuidAndClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, USER_NOT_FOUND));
-
         LOGGER.debug("Successfully processed auth facade findByUserAndClientOrganization for request - {}", request);
         return result;
     }
