@@ -112,7 +112,6 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
     @Test
     fun test() {
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val organization = organizationCommonTestHelper.buildOrganizationWithClients(clientOrganization = listOf(clientOrganization))
         val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
