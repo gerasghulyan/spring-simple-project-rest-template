@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * Date: 3/23/20
  * Time: 11:41 AM
  */
-@FeignClient(name = "coreAuthTokens", primary = false, path = "auth-tokens", url = "${ms.core.url}")
+@FeignClient(name = "coreAuthTokenss", primary = false, path = "auth-tokens", url = "${ms.core.url}")
 public interface TokenAuthenticationResourceClient {
 
     @PostMapping("persist")

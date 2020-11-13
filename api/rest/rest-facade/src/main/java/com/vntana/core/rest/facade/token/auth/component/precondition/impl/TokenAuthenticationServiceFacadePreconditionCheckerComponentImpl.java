@@ -40,7 +40,7 @@ public class TokenAuthenticationServiceFacadePreconditionCheckerComponentImpl im
         if (!userService.existsByUuid(request.getUserUuid())) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, TokenAuthenticationErrorResponseModel.USER_NOT_FOUND);
         }
-        if (!organizationService.existsByUuid(request.getUserUuid())) {
+        if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, TokenAuthenticationErrorResponseModel.ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully done checking authentication token persisting with organization precondition for request - {}", request);
@@ -53,7 +53,7 @@ public class TokenAuthenticationServiceFacadePreconditionCheckerComponentImpl im
         if (!userService.existsByUuid(request.getUserUuid())) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, TokenAuthenticationErrorResponseModel.USER_NOT_FOUND);
         }
-        if (!clientOrganizationService.existsByUuid(request.getUserUuid())) {
+        if (!clientOrganizationService.existsByUuid(request.getClientUuid())) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, TokenAuthenticationErrorResponseModel.CLIENT_ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully done checking authentication token persisting with client organization precondition for request - {}", request);

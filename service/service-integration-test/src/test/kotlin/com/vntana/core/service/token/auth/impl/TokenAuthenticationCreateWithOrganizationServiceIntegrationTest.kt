@@ -21,5 +21,6 @@ class TokenAuthenticationCreateWithOrganizationServiceIntegrationTest : Abstract
         assertThat(token.isExpired).isFalse()
         assertThat(token.user).isEqualTo(user)
         assertThat(token.token).isEqualTo(dto.token)
+        assertThat(token.organization.uuid).isEqualTo(dto.organizationUuid)
     }
 }

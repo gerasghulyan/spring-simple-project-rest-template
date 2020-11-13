@@ -47,14 +47,15 @@ class TokenAuthenticationWithOrganizationPersistWebTest : AbstractTokenAuthentic
 
     @Test
     fun `test when organization not found`() {
-        val request = resourceTestHelper.buildTokenAuthenticationPersistWithClientOrganizationRequest(userUuid = userResourceTestHelper.persistUser().response().uuid)
-        assertBasicErrorResultResponse(tokenAuthenticationResourceClient.persistWithClientOrganization(request), TokenAuthenticationErrorResponseModel.ORGANIZATION_NOT_FOUND)
+        val request = resourceTestHelper.buildTokenAuthenticationPersistWithOrganizationRequest(userUuid = userResourceTestHelper.persistUser().response().uuid)
+        assertBasicErrorResultResponse(tokenAuthenticationResourceClient.persistWithOrganization(request), TokenAuthenticationErrorResponseModel.ORGANIZATION_NOT_FOUND)
     }
 
     @Test
     fun test() {
-        val userUuid = userResourceTestHelper.persistUser().response().uuid
-        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
+        val response = userResourceTestHelper.persistUser().response()
+        val userUuid = response.uuid
+        val organizationUuid = response.organizationUuid
         val request = resourceTestHelper.buildTokenAuthenticationPersistWithOrganizationRequest(userUuid = userUuid, organizationUuid = organizationUuid)
         assertBasicSuccessResultResponse(tokenAuthenticationResourceClient.persistWithOrganization(request))
     }

@@ -1,5 +1,6 @@
 package com.vntana.core.domain.token;
 
+import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
@@ -16,9 +17,19 @@ import java.time.LocalDateTime;
  * Time: 12:05 PM
  */
 @Entity
-@Table(name = "token_authentication")
-@DiscriminatorValue(value = "AUTHENTICATION")
-public class TokenAuthentication extends AbstractToken {
+@Table(name = "token_authentication",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_token_authentication_token", columnNames = {"token"})
+        }
+)
+//TODO refactor to extend from abstract token
+public class TokenAuthentication extends AbstractUuidAwareDomainEntity {
+
+    @Column(name = "expiration")
+    private LocalDateTime expiration;
+
+    @Column(name = "token", nullable = false, updatable = false)
+    private String token;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_token_authentication_user_id"))
@@ -37,20 +48,34 @@ public class TokenAuthentication extends AbstractToken {
     }
 
     public TokenAuthentication(final String token, final LocalDateTime expiration, final User user) {
-        super(token, expiration);
+        super();
+        this.token = token;
         this.user = user;
+        this.expiration = expiration;
     }
 
     public TokenAuthentication(final String token, final LocalDateTime expiration, final User user, final Organization organization) {
-        super(token, expiration);
+        super();
+        this.token = token;
         this.user = user;
+        this.expiration = expiration;
         this.organization = organization;
     }
 
     public TokenAuthentication(final String token, final LocalDateTime expiration, final User user, final ClientOrganization clientOrganization) {
-        super(token, expiration);
+        super();
+        this.token = token;
         this.user = user;
+        this.expiration = expiration;
         this.clientOrganization = clientOrganization;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public User getUser() {
@@ -76,9 +101,10 @@ public class TokenAuthentication extends AbstractToken {
         final TokenAuthentication tokenAuthentication = (TokenAuthentication) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
+                .append(expiration, tokenAuthentication.expiration)
+                .append(token, tokenAuthentication.token)
                 .append(getIdOrNull(user), getIdOrNull(tokenAuthentication.user))
                 .append(getIdOrNull(organization), getIdOrNull(tokenAuthentication.organization))
-                .append(getIdOrNull(clientOrganization), getIdOrNull(tokenAuthentication.clientOrganization))
                 .isEquals();
     }
 
@@ -86,6 +112,8 @@ public class TokenAuthentication extends AbstractToken {
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
+                .append(expiration)
+                .append(token)
                 .append(getIdOrNull(user))
                 .append(getIdOrNull(organization))
                 .append(getIdOrNull(clientOrganization))
@@ -95,20 +123,19 @@ public class TokenAuthentication extends AbstractToken {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .appendSuper(super.toString())
+                .append("expiration", expiration)
+                .append("token", token)
                 .append("userId", getIdOrNull(user))
                 .append("organizationId", getIdOrNull(organization))
                 .append("clientOrganizationId", getIdOrNull(clientOrganization))
                 .toString();
     }
 
-    @Override
-    public boolean isExpired() {
-        return !LocalDateTime.now().isBefore(getExpiration());
+    public void expire() {
+        this.expiration = LocalDateTime.now();
     }
 
-    @Override
-    public TokenType getType() {
-        return TokenType.AUTHENTICATION;
+    public boolean isExpired() {
+        return !LocalDateTime.now().isBefore(expiration);
     }
 }
