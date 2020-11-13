@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermissionsCheckerComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRolesPermissionsCheckerComponentImpl.class);
-    
+
     public UserRolesPermissionsCheckerComponentImpl() {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
@@ -26,6 +26,9 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
             return invited != UserRoleModel.ORGANIZATION_OWNER;
         }
         if (inviter == UserRoleModel.CLIENT_ORGANIZATION_VIEWER) {
+            return false;
+        }
+        if (inviter == UserRoleModel.ORGANIZATION_CLIENTS_VIEWER) {
             return false;
         }
         return inviter.getPriority() <= invited.getPriority();

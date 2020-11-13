@@ -52,6 +52,16 @@ class UserRolesPermissionsCheckerComponentUnitTest : AbstractFacadeUnitTest() {
     }
 
     @Test
+    fun `test when inviter - ORGANIZATION_CLIENTS_VIEWER`() {
+        val inviter = UserRoleModel.ORGANIZATION_CLIENTS_VIEWER
+        val invited = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+        resetAll()
+        replayAll()
+        Assertions.assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isFalse()
+        verifyAll()
+    }
+
+    @Test
     fun `test with roles inviter - CLIENT_ORGANIZATION_ADMIN, invited - CLIENT_ORGANIZATION_VIEWER`() {
         val inviter = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
         val invited = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
