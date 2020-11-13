@@ -1,5 +1,6 @@
 package com.vntana.core.helper.unit.organization
 
+import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.organization.status.OrganizationStatus
@@ -45,6 +46,14 @@ open class OrganizationCommonTestHelper : AbstractCommonTestHelper() {
             imageBlobId: String? = uuid(),
             status: OrganizationStatus? = OrganizationStatus.ACTIVE
     ): Organization = Organization(name, slug, imageBlobId, status)
+
+    fun buildOrganizationWithClients(
+            name: String? = uuid(),
+            slug: String? = uuid(),
+            imageBlobId: String? = uuid(),
+            status: OrganizationStatus? = OrganizationStatus.ACTIVE,
+            clientOrganization: List<ClientOrganization>? = emptyList()
+    ): Organization = Organization(name, slug, imageBlobId, status, clientOrganization)
 
     fun buildOrganizationWithInvitation(
             name: String? = uuid(),

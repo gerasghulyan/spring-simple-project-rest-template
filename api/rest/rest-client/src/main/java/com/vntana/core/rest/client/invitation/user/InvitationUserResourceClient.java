@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "coreInvitationUsers", path = "user-invitations", url = "${ms.core.url}")
 public interface InvitationUserResourceClient {
 
-    @PostMapping
-    ResponseEntity<CreateInvitationUserResultResponse> create(@RequestBody final CreateInvitationUserRequest request);
+    @PostMapping("/organization")
+    ResponseEntity<CreateInvitationUserForOrganizationResultResponse> createInvitationForOrganization(@RequestBody final CreateInvitationForOrganizationUserRequest request);
+
+    @PostMapping("/client-organization")
+    ResponseEntity<CreateInvitationUserForOrganizationClientsResultResponse> createInvitationForClient(@RequestBody final CreateInvitationForOrganizationClientUserRequest request);
 
     @PostMapping("/by-status")
     ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request);

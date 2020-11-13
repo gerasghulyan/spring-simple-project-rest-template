@@ -1,12 +1,15 @@
 package com.vntana.core.rest.facade.invitation.user.checker
 
 import com.vntana.core.helper.invitation.user.InvitationUserRestTestHelper
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.rest.facade.invitation.user.checker.impl.InvitationUserFacadePreconditionCheckerImpl
+import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.invitation.user.InvitationUserService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService
@@ -31,12 +34,18 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
 
     @Mock
     protected lateinit var organizationService: OrganizationService
+    
+    @Mock
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     @Mock
     protected lateinit var invitationUserService: InvitationUserService
 
     @Mock
     protected lateinit var tokenInvitationUserService: TokenInvitationUserService
+    
+    @Mock
+    protected lateinit var userRolesPermissionsCheckerComponent: UserRolesPermissionsCheckerComponent
 
     protected val tokenCommonTestHelper = TokenCommonTestHelper()
 
@@ -47,6 +56,8 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
     protected val userRoleCommonTestHelper = UserRoleCommonTestHelper()
 
     protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
+    
+    protected val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
     @Before
     fun prepare() {
@@ -54,7 +65,9 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
                 userRoleService,
                 organizationService,
                 invitationUserService,
-                tokenInvitationUserService
+                tokenInvitationUserService,
+                clientOrganizationService,
+                userRolesPermissionsCheckerComponent
         )
     }
 }

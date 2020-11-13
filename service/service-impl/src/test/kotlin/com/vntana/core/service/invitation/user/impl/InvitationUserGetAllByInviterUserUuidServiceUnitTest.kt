@@ -29,7 +29,7 @@ class InvitationUserGetAllByInviterUserUuidServiceUnitTest : AbstractInvitationU
         val invitationUser2 = commonTestHelper.buildInvitationUser(invitedByUser = inviterUser)
         val invitationUser3 = commonTestHelper.buildInvitationUser(invitedByUser = inviterUser)
         resetAll()
-        expect(invitationUserRepository.findByInviterUserUuid(inviterUser.uuid)).andReturn(listOf(invitationUser1, invitationUser2, invitationUser3))
+        expect(invitationOrganizationUserRepository.findByInviterUserUuid(inviterUser.uuid)).andReturn(listOf(invitationUser1, invitationUser2, invitationUser3))
         replayAll()
         invitationUserService.getAllByInviterUserUuid(inviterUser.uuid).let { list ->
             assertThat(list.isEmpty()).isFalse()

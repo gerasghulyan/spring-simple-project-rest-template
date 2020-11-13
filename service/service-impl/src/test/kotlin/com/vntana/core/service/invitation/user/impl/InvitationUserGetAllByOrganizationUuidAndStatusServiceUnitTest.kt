@@ -29,7 +29,7 @@ class InvitationUserGetAllByOrganizationUuidAndStatusServiceUnitTest : AbstractI
         val size = 2
         val dto = commonTestHelper.buildGetAllByOrganizationUuidAndStatusInvitationUsersDto(page, size)
         val pageOfInvitations = commonTestHelper.buildInvitationUserPage()
-        expect(invitationUserRepository.findAllByOrganizationUuidAndStatus(dto.organizationUuid, dto.status, PageRequest.of(page, size))).andReturn(pageOfInvitations)
+        expect(invitationOrganizationUserRepository.findAllByOrganizationUuidAndStatus(dto.organizationUuid, dto.status, PageRequest.of(page, size))).andReturn(pageOfInvitations)
         replayAll()
         assertThat(invitationUserService.getAllByOrganizationUuidAndStatus(dto)).isEqualTo(pageOfInvitations)
         verifyAll()

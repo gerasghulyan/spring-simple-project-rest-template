@@ -1,9 +1,12 @@
 package com.vntana.core.helper.unit.user
 
+import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.User
+import com.vntana.core.domain.user.UserClientOrganizationAdminRole
 import com.vntana.core.domain.user.UserOrganizationAdminRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto
 import com.vntana.core.service.user.dto.CreateUserDto
@@ -19,6 +22,8 @@ import java.time.LocalDateTime
 open class UserCommonTestHelper : AbstractCommonTestHelper() {
 
     private val organizationCommonTestHelper = OrganizationCommonTestHelper()
+    
+    private val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
     fun buildCreateUserWithOwnerRoleDto(
             fullName: String? = uuid(),
@@ -53,6 +58,18 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
         val user = User(fullName, email, password)
         val adminRole = UserOrganizationAdminRole(user, organization)
         user.setRoles(listOf(adminRole))
+        return user
+    }
+
+    fun buildUserWithClientAdminRole(
+            fullName: String? = uuid(),
+            email: String? = uuid(),
+            password: String? = uuid(),
+            clientOrganization: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization()
+    ): User {
+        val user = User(fullName, email, password)
+        val clientAdminRole = UserClientOrganizationAdminRole(user, clientOrganization)
+        user.setRoles(listOf(clientAdminRole))
         return user
     }
 

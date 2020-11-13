@@ -27,7 +27,7 @@ class InvitationUserGetByUuidServiceUnitTest : AbstractInvitationUserServiceUnit
     fun `test when not found`() {
         resetAll()
         val uuid = uuid()
-        expect(invitationUserRepository.findByUuid(uuid)).andReturn(Optional.empty())
+        expect(invitationOrganizationUserRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
         assertThatThrownBy { invitationUserService.getByUuid(uuid) }
                 .isExactlyInstanceOf(InvitationUserNotFoundForUuidException::class.java)
@@ -39,7 +39,7 @@ class InvitationUserGetByUuidServiceUnitTest : AbstractInvitationUserServiceUnit
         resetAll()
         val invitationUser = commonTestHelper.buildInvitationUser()
         val uuid = invitationUser.uuid
-        expect(invitationUserRepository.findByUuid(uuid)).andReturn(Optional.of(invitationUser))
+        expect(invitationOrganizationUserRepository.findByUuid(uuid)).andReturn(Optional.of(invitationUser))
         replayAll()
         assertThat(invitationUserService.getByUuid(uuid)).isEqualTo(invitationUser)
         verifyAll()

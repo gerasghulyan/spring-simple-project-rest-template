@@ -1,6 +1,6 @@
 package com.vntana.core.service.invitation.user.impl
 
-import com.vntana.core.domain.invitation.user.InvitationUser
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.service.invitation.user.AbstractInvitationUserServiceUnitTest
 import com.vntana.core.service.invitation.user.exception.InvitationUserNotFoundForUuidException
 import org.assertj.core.api.Assertions.assertThat
@@ -31,8 +31,8 @@ class InvitationUserUpdateStatusServiceUnitTest : AbstractInvitationUserServiceU
         val dto = commonTestHelper.buildUpdateInvitationUserStatusDto()
         val invitationUser = commonTestHelper.buildInvitationUser()
         resetAll()
-        expect(invitationUserRepository.findByUuid(dto.uuid)).andReturn(Optional.of(invitationUser))
-        expect(invitationUserRepository.save(EasyMock.isA(InvitationUser::class.java))).andReturn(invitationUser)
+        expect(invitationOrganizationUserRepository.findByUuid(dto.uuid)).andReturn(Optional.of(invitationUser))
+        expect(invitationOrganizationUserRepository.save(EasyMock.isA(InvitationOrganizationUser::class.java))).andReturn(invitationUser)
         replayAll()
         assertThat(invitationUserService.updateStatus(dto)).isEqualTo(invitationUser)
         verifyAll()
@@ -42,7 +42,7 @@ class InvitationUserUpdateStatusServiceUnitTest : AbstractInvitationUserServiceU
     fun `test update invitation organization not found`() {
         val dto = commonTestHelper.buildUpdateInvitationUserStatusDto()
         resetAll()
-        expect(invitationUserRepository.findByUuid(dto.uuid)).andReturn(Optional.empty())
+        expect(invitationOrganizationUserRepository.findByUuid(dto.uuid)).andReturn(Optional.empty())
         replayAll()
         assertThatThrownBy { invitationUserService.updateStatus(dto) }.isExactlyInstanceOf(InvitationUserNotFoundForUuidException::class.java)
         verifyAll()

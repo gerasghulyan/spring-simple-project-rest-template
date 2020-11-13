@@ -37,7 +37,7 @@ class InvitationUserAcceptFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserRequest()
         val invitationUser = invitationUserCommonTestHelper.buildInvitationUser(userRole = UserRole.ORGANIZATION_ADMIN)
         val organization = invitationUser.organization
-        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUser(invitationUser = invitationUser)
+        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUser(invitationOrganizationUser = invitationUser)
         val user = userCommonTestHelper.buildUser()
         val grantOrganizationRoleDto = userRoleCommonTestHelper.buildUserGrantOrganizationRoleDto(userUuid = user.uuid, organizationUuid = organization.uuid)
         val updateInvitationUserStatusDto = invitationUserCommonTestHelper.buildUpdateInvitationUserStatusDto(

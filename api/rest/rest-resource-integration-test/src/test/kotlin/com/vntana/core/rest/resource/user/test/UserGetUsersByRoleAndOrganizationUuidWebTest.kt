@@ -24,7 +24,7 @@ class UserGetUsersByRoleAndOrganizationUuidWebTest : AbstractUserWebTest() {
     @Test
     fun `test not found`() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val response = userResourceClient.getUsersByRoleAndOrganizationUuid(UserRoleModel.ASSET_MANAGER, organizationUuid)
+        val response = userResourceClient.getUsersByRoleAndOrganizationUuid(UserRoleModel.CLIENT_ORGANIZATION_VIEWER, organizationUuid)
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, response,
                 UserErrorResponseModel.NOT_FOUND_FOR_ROLE, UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)
     }

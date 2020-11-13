@@ -1,7 +1,7 @@
 package com.vntana.core.helper.unit.token
 
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
-import com.vntana.core.domain.invitation.user.InvitationUser
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.domain.token.TokenInvitationOrganization
 import com.vntana.core.domain.token.TokenInvitationUser
 import com.vntana.core.domain.token.TokenResetPassword
@@ -43,8 +43,8 @@ open class TokenCommonTestHelper : AbstractCommonTestHelper() {
 
     fun buildTokenInvitationUser(
             token: String? = uuid(),
-            invitationUser: InvitationUser? = invitationUserCommonTestHelper.buildInvitationUser()
-    ): TokenInvitationUser = TokenInvitationUser(token, invitationUser)
+            invitationOrganizationUser: InvitationOrganizationUser? = invitationUserCommonTestHelper.buildInvitationUser()
+    ): TokenInvitationUser = TokenInvitationUser(token, invitationOrganizationUser)
 
     fun buildCreateTokenResetPasswordDto(
             token: String? = uuid(),

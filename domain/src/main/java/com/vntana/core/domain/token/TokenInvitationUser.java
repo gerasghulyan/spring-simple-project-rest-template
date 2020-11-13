@@ -1,6 +1,6 @@
 package com.vntana.core.domain.token;
 
-import com.vntana.core.domain.invitation.user.InvitationUser;
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,13 +21,13 @@ public class TokenInvitationUser extends AbstractToken {
     @JoinColumn(name = "invitation_user_id", nullable = false, updatable = false,
             foreignKey = @ForeignKey(name = "fk_token_invitation_user_invitation_user_id")
     )
-    private InvitationUser invitationUser;
+    private InvitationOrganizationUser invitationUser;
 
     TokenInvitationUser() {
         super();
     }
 
-    public TokenInvitationUser(final String token, final InvitationUser invitationUser) {
+    public TokenInvitationUser(final String token, final InvitationOrganizationUser invitationUser) {
         super(token);
         this.invitationUser = invitationUser;
     }
@@ -68,7 +68,7 @@ public class TokenInvitationUser extends AbstractToken {
         return TokenType.INVITATION_USER;
     }
 
-    public InvitationUser getInvitationUser() {
+    public InvitationOrganizationUser getInvitationUser() {
         return invitationUser;
     }
 }

@@ -20,7 +20,7 @@ import static com.vntana.core.model.invitation.user.error.InvitationUserErrorRes
  * Date: 5/12/2020
  * Time: 1:40 PM
  */
-public class CreateInvitationUserRequest extends AbstractRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
+public class CreateInvitationForOrganizationUserRequest extends AbstractRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
 
     @JsonProperty("userRole")
     private UserRoleModel userRole;
@@ -34,11 +34,11 @@ public class CreateInvitationUserRequest extends AbstractRequestModel implements
     @JsonProperty("organizationUuid")
     private String organizationUuid;
 
-    public CreateInvitationUserRequest() {
+    public CreateInvitationForOrganizationUserRequest() {
         super();
     }
 
-    public CreateInvitationUserRequest(final UserRoleModel userRole, final String email, final String inviterUserUuid, final String organizationUuid) {
+    public CreateInvitationForOrganizationUserRequest(final UserRoleModel userRole, final String email, final String inviterUserUuid, final String organizationUuid) {
         this.userRole = userRole;
         this.email = email;
         this.inviterUserUuid = inviterUserUuid;
@@ -66,9 +66,9 @@ public class CreateInvitationUserRequest extends AbstractRequestModel implements
     public boolean equals(final Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof CreateInvitationUserRequest)) return false;
+        if (!(o instanceof CreateInvitationForOrganizationUserRequest)) return false;
 
-        final CreateInvitationUserRequest that = (CreateInvitationUserRequest) o;
+        final CreateInvitationForOrganizationUserRequest that = (CreateInvitationForOrganizationUserRequest) o;
 
         return new EqualsBuilder()
                 .append(userRole, that.userRole)

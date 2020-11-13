@@ -11,21 +11,21 @@ import java.util.List;
  * Date: 5/12/2020
  * Time: 1:48 PM
  */
-public class CreateInvitationUserResultResponse extends AbstractResultResponseModel<CreateInvitationUserResponseModel, InvitationUserErrorResponseModel> {
+public class CreateInvitationUserForOrganizationResultResponse extends AbstractResultResponseModel<CreateInvitationUserResponseModel, InvitationUserErrorResponseModel> {
 
-    public CreateInvitationUserResultResponse() {
+    public CreateInvitationUserForOrganizationResultResponse() {
         super();
     }
 
-    public CreateInvitationUserResultResponse(final int httpStatusCode, final InvitationUserErrorResponseModel error) {
+    public CreateInvitationUserForOrganizationResultResponse(final int httpStatusCode, final InvitationUserErrorResponseModel error) {
         super(httpStatusCode, error);
     }
 
-    public CreateInvitationUserResultResponse(final int httpStatusCode, final List<InvitationUserErrorResponseModel> errors) {
+    public CreateInvitationUserForOrganizationResultResponse(final int httpStatusCode, final List<InvitationUserErrorResponseModel> errors) {
         super(httpStatusCode, errors);
     }
 
-    public CreateInvitationUserResultResponse(final String uuid) {
+    public CreateInvitationUserForOrganizationResultResponse(final String uuid) {
         super(new CreateInvitationUserResponseModel(uuid));
     }
 }

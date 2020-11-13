@@ -1,6 +1,6 @@
 package com.vntana.core.service.invitation.user.exception;
 
-import com.vntana.core.domain.invitation.user.InvitationUser;
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
 import com.vntana.commons.service.exception.EntityNotFoundForUuidException;
 
 /**
@@ -11,6 +11,6 @@ import com.vntana.commons.service.exception.EntityNotFoundForUuidException;
 public class InvitationUserNotFoundForUuidException extends EntityNotFoundForUuidException {
 
     public InvitationUserNotFoundForUuidException(final String uuid) {
-        super(uuid, InvitationUser.class);
+        super(uuid, InvitationOrganizationUser.class);
     }
 }

@@ -1,10 +1,8 @@
 package com.vntana.core.service.invitation.user;
 
-import com.vntana.core.domain.invitation.user.InvitationUser;
-import com.vntana.core.service.invitation.user.dto.CreateInvitationUserDto;
-import com.vntana.core.service.invitation.user.dto.GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto;
-import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto;
-import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
+import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
+import com.vntana.core.service.invitation.user.dto.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -16,21 +14,23 @@ import java.util.List;
  */
 public interface InvitationUserService {
 
-    InvitationUser create(final CreateInvitationUserDto dto);
+    InvitationOrganizationUser createInvitationForOrganization(final CreateInvitationForOrganizationUserDto dto);
+    
+    List<InvitationOrganizationClientUser> creteInvitationForClients(final CreateInvitationForClientsUserDto dto);
 
     boolean existsByUuid(final String uuid);
 
-    InvitationUser getByUuid(final String uuid);
+    InvitationOrganizationUser getByUuid(final String uuid);
 
-    Page<InvitationUser> getAllByOrganizationUuidAndStatus(final GetAllByOrganizationUuidAndStatusInvitationUsersDto dto);
+    Page<InvitationOrganizationUser> getAllByOrganizationUuidAndStatus(final GetAllByOrganizationUuidAndStatusInvitationUsersDto dto);
 
-    List<InvitationUser> getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto dto);
+    List<InvitationOrganizationUser> getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(final GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto dto);
 
-    List<InvitationUser> getAllByInviterUserUuid(final String userUuid);
+    List<InvitationOrganizationUser> getAllByInviterUserUuid(final String userUuid);
 
-    InvitationUser updateStatus(final UpdateInvitationUserStatusDto dto);
+    InvitationOrganizationUser updateStatus(final UpdateInvitationUserStatusDto dto);
 
-    InvitationUser getByToken(final String token);
+    InvitationOrganizationUser getByToken(final String token);
 
     boolean existsByToken(final String token);
 }

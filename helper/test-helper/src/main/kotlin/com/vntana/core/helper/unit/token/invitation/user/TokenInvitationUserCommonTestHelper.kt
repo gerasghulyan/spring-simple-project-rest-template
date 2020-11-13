@@ -1,6 +1,6 @@
 package com.vntana.core.helper.unit.token.invitation.user
 
-import com.vntana.core.domain.invitation.user.InvitationUser
+import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.domain.token.TokenInvitationUser
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
@@ -22,6 +22,6 @@ open class TokenInvitationUserCommonTestHelper : AbstractCommonTestHelper() {
 
     fun buildTokenInvitationUser(
             token: String? = uuid(),
-            invitationUser: InvitationUser? = invitationUserCommonTestHelper.buildInvitationUser()
-    ): TokenInvitationUser = TokenInvitationUser(token, invitationUser)
+            invitationOrganizationUser: InvitationOrganizationUser? = invitationUserCommonTestHelper.buildInvitationUser()
+    ): TokenInvitationUser = TokenInvitationUser(token, invitationOrganizationUser)
 }
