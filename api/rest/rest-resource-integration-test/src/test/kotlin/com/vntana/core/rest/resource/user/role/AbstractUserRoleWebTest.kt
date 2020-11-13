@@ -2,11 +2,11 @@ package com.vntana.core.rest.resource.user.role
 
 import com.vntana.core.helper.client.ClientOrganizationResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
-import com.vntana.core.helper.token.auth.AuthTokenResourceTestHelper
+import com.vntana.core.helper.token.auth.TokenAuthenticationResourceTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
 import com.vntana.core.helper.user.role.UserRoleResourceTestHelper
 import com.vntana.core.helper.user.role.UserRoleRestTestHelper
-import com.vntana.core.rest.client.token.auth.AuthTokenResourceClient
+import com.vntana.core.rest.client.token.auth.TokenAuthenticationResourceClient
 import com.vntana.core.rest.client.user.UserResourceClient
 import com.vntana.core.rest.client.user.role.UserRoleResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
@@ -26,7 +26,7 @@ abstract class AbstractUserRoleWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userResourceClient: UserResourceClient
 
     @Autowired
-    protected lateinit var authTokenResourceClient: AuthTokenResourceClient
+    protected lateinit var tokenAuthenticationResourceClient: TokenAuthenticationResourceClient
     
     @Autowired
     protected lateinit var resourceTestHelper: UserRoleRestTestHelper
@@ -41,7 +41,7 @@ abstract class AbstractUserRoleWebTest : AbstractWebIntegrationTest() {
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 
     @Autowired
-    protected lateinit var authTokenResourceTestHelper: AuthTokenResourceTestHelper
+    protected lateinit var authTokenResourceTestHelper: TokenAuthenticationResourceTestHelper
 
     @Autowired
     protected lateinit var userRoleResourceTestHelper: UserRoleResourceTestHelper

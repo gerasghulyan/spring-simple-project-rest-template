@@ -16,7 +16,7 @@ import com.vntana.core.service.email.EmailValidationComponent
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator
 import com.vntana.core.service.token.TokenService
-import com.vntana.core.service.token.auth.AuthTokenService
+import com.vntana.core.service.token.auth.TokenAuthenticationService
 import com.vntana.core.service.token.reset_password.TokenResetPasswordService
 import com.vntana.core.service.user.UserService
 import com.vntana.core.service.user.role.UserRoleService
@@ -75,7 +75,7 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractFacadeUnitTest() {
     protected lateinit var tokenResetPasswordService: TokenResetPasswordService
 
     @Mock
-    protected lateinit var authTokenService: AuthTokenService
+    protected lateinit var tokenAuthenticationService: TokenAuthenticationService
 
     @Before
     fun before() {
@@ -90,7 +90,7 @@ abstract class AbstractUserServiceFacadeUnitTest : AbstractFacadeUnitTest() {
                 organizationLifecycleMediator,
                 tokenService,
                 tokenResetPasswordService,
-                authTokenService,
+                tokenAuthenticationService,
                 resetPasswordTokenExpirationInMinutes
         )
     }

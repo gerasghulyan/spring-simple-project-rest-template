@@ -37,7 +37,7 @@ class UserRoleRevokeClientRoleFacadeUnitTest : AbstractUserRoleServiceFacadeUnit
         )
         expect(preconditionChecker.checkRevokeClientRole(request)).andReturn(SingleErrorWithStatus.empty())
         expect(userRoleService.revokeClientRole(dto))
-        expect(authTokenService.expireAllByUser(request.userUuid))
+        expect(tokenAuthenticationService.expireAllByUser(request.userUuid))
         replayAll()
         userRoleServiceFacade.revokeClientRole(request).let {
             assertBasicSuccessResultResponse(it)

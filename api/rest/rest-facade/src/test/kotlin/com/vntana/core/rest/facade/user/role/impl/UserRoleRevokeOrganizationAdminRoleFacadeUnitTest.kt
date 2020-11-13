@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user.role.impl
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel
 import com.vntana.core.rest.facade.user.role.AbstractUserRoleServiceFacadeUnitTest
+import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -18,7 +19,7 @@ class UserRoleRevokeOrganizationAdminRoleFacadeUnitTest : AbstractUserRoleServic
     fun `test when precondition failed`() {
         resetAll()
         val request = restTestHelper.buildUserRoleRevokeOrganizationAdminRequest()
-        val error = SingleErrorWithStatus.of(404, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND)
+        val error = SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND)
         expect(preconditionChecker.checkRevokeOrganizationAdminRole(request)).andReturn(error)
         replayAll()
         assertBasicErrorResultResponse(userRoleServiceFacade.revokeOrganizationAdminRole(request), error.error)
@@ -35,7 +36,7 @@ class UserRoleRevokeOrganizationAdminRoleFacadeUnitTest : AbstractUserRoleServic
         )
         expect(preconditionChecker.checkRevokeOrganizationAdminRole(request)).andReturn(SingleErrorWithStatus.empty())
         expect(userRoleService.revokeOrganizationAdminRole(dto))
-        expect(authTokenService.expireAllByUser(request.userUuid))
+        expect(tokenAuthenticationService.expireAllByUser(request.userUuid))
         replayAll()
         userRoleServiceFacade.revokeOrganizationAdminRole(request).let {
             assertBasicSuccessResultResponse(it)

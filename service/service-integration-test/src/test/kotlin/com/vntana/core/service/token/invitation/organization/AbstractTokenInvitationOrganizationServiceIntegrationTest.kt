@@ -1,7 +1,6 @@
 package com.vntana.core.service.token.invitation.organization
 
 import com.vntana.core.helper.integration.invitation.organization.InvitationOrganizationIntegrationTestHelper
-import com.vntana.core.helper.integration.token.auth.AuthTokenIntegrationTestHelper
 import com.vntana.core.helper.integration.token.invitation.organization.TokenInvitationOrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest

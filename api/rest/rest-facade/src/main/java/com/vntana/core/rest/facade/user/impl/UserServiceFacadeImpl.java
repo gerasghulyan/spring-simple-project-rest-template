@@ -31,7 +31,7 @@ import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAndRoleDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.token.TokenService;
-import com.vntana.core.service.token.auth.AuthTokenService;
+import com.vntana.core.service.token.auth.TokenAuthenticationService;
 import com.vntana.core.service.token.reset_password.TokenResetPasswordService;
 import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto;
 import com.vntana.core.service.user.UserService;
@@ -77,7 +77,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final OrganizationLifecycleMediator organizationLifecycleMediator;
     private final TokenService tokenService;
     private final TokenResetPasswordService tokenResetPasswordService;
-    private final AuthTokenService authTokenService;
+    private final TokenAuthenticationService tokenAuthenticationService;
     private final Long resetPasswordTokenExpirationInMinutes;
 
     public UserServiceFacadeImpl(final UserService userService,
@@ -91,7 +91,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                                  final OrganizationLifecycleMediator organizationLifecycleMediator,
                                  final TokenService tokenService,
                                  final TokenResetPasswordService tokenResetPasswordService,
-                                 final AuthTokenService authTokenService,
+                                 final TokenAuthenticationService tokenAuthenticationService,
                                  @Value("${reset.password.token.expiration.minutes}") final Long resetPasswordTokenExpirationInMinutes) {
         this.userService = userService;
         this.userRoleService = userRoleService;
@@ -104,7 +104,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         this.organizationLifecycleMediator = organizationLifecycleMediator;
         this.tokenService = tokenService;
         this.tokenResetPasswordService = tokenResetPasswordService;
-        this.authTokenService = authTokenService;
+        this.tokenAuthenticationService = tokenAuthenticationService;
         this.resetPasswordTokenExpirationInMinutes = resetPasswordTokenExpirationInMinutes;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
@@ -271,7 +271,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                             resetPasswordToken.getUser().getUuid(),
                             request.getPassword()
                     );
-                    authTokenService.expireAllByUser(resetPasswordToken.getUser().getUuid());
+                    tokenAuthenticationService.expireAllByUser(resetPasswordToken.getUser().getUuid());
                     tokenService.expire(resetPasswordToken.getUuid());
                     LOGGER.debug("Successfully processed facade resetPassword for email - {}", resetPasswordToken.getUser().getEmail());
                     return new ResetUserPasswordResponse();
