@@ -9,7 +9,7 @@ import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.model.user.role.response.*;
 import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
-import com.vntana.core.service.token.auth.AuthTokenService;
+import com.vntana.core.service.token.auth.TokenAuthenticationService;
 import com.vntana.core.service.user.role.UserRoleService;
 import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
@@ -31,15 +31,15 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleServiceFacadeImpl.class);
 
     private final UserRoleFacadePreconditionCheckerComponent preconditionChecker;
-    private final AuthTokenService authTokenService;
+    private final TokenAuthenticationService tokenAuthenticationService;
     private final UserRoleService userRoleService;
 
     public UserRoleServiceFacadeImpl(final UserRoleFacadePreconditionCheckerComponent preconditionChecker,
-                                     final AuthTokenService authTokenService,
+                                     final TokenAuthenticationService tokenAuthenticationService,
                                      final UserRoleService userRoleService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.preconditionChecker = preconditionChecker;
-        this.authTokenService = authTokenService;
+        this.tokenAuthenticationService = tokenAuthenticationService;
         this.userRoleService = userRoleService;
     }
 
@@ -94,7 +94,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
             return new UserRoleRevokeOrganizationAdminResponse(error.getHttpStatus(), error.getError());
         }
         userRoleService.revokeOrganizationAdminRole(new UserRevokeOrganizationAdminRoleDto(request.getUserUuid(), request.getOrganizationUuid()));
-        authTokenService.expireAllByUser(request.getUserUuid());
+        tokenAuthenticationService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user organization role for request - {}", request);
         return new UserRoleRevokeOrganizationAdminResponse(request.getUserUuid());
     }
@@ -108,7 +108,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
             return new UserRoleRevokeClientResponse(error.getHttpStatus(), error.getError());
         }
         userRoleService.revokeClientRole(new UserRevokeClientRoleDto(request.getUserUuid(), request.getClientUuid(), UserRole.valueOf(request.getUserRole().name())));
-        authTokenService.expireAllByUser(request.getUserUuid());
+        tokenAuthenticationService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user client role for request - {}", request);
         return new UserRoleRevokeClientResponse(request.getUserUuid());
     }

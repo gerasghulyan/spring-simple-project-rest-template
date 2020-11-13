@@ -67,7 +67,7 @@ public abstract class AbstractToken extends AbstractUuidAwareDomainEntity {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("token", token)
+                .appendSuper(super.toString())
                 .toString();
     }
 

@@ -77,7 +77,7 @@ class UserRoleRevokeUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest()
                 }
             }
         }
-        assertThat(authTokenResourceClient.isExpired(token1)?.body?.response()?.expired).isTrue()
-        assertThat(authTokenResourceClient.isExpired(token2)?.body?.response()?.expired).isTrue()
+        assertThat(tokenAuthenticationResourceClient.isExpired(token1)?.body?.response()?.expired).isTrue()
+        assertThat(tokenAuthenticationResourceClient.isExpired(token2)?.body?.response()?.expired).isTrue()
     }
 }

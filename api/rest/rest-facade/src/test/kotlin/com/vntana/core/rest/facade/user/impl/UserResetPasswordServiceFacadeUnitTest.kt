@@ -48,7 +48,7 @@ class UserResetPasswordServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest
                 resetPasswordToken.user.uuid,
                 request.password
         )).andReturn(user)
-        expect(authTokenService.expireAllByUser(resetPasswordToken.user.uuid))
+        expect(tokenAuthenticationService.expireAllByUser(resetPasswordToken.user.uuid))
         expect(tokenService.expire(resetPasswordToken.uuid)).andReturn(resetPasswordToken)
         replayAll()
         userServiceFacade.resetPassword(request).let {
