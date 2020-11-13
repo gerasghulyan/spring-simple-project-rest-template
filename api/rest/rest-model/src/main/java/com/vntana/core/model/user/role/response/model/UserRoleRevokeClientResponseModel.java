@@ -11,16 +11,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 11/5/20
  * Time: 11:35 AM
  */
-public class UserRoleRevokeClientAdminResponseModel implements ResponseModel {
+public class UserRoleRevokeClientResponseModel implements ResponseModel {
 
     @JsonProperty("userUuid")
     private String userUuid;
 
-    public UserRoleRevokeClientAdminResponseModel() {
+    public UserRoleRevokeClientResponseModel() {
         super();
     }
 
-    public UserRoleRevokeClientAdminResponseModel(final String userUuid) {
+    public UserRoleRevokeClientResponseModel(final String userUuid) {
         this.userUuid = userUuid;
     }
 
@@ -29,10 +29,10 @@ public class UserRoleRevokeClientAdminResponseModel implements ResponseModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UserRoleRevokeClientAdminResponseModel)) {
+        if (!(o instanceof UserRoleRevokeClientResponseModel)) {
             return false;
         }
-        final UserRoleRevokeClientAdminResponseModel that = (UserRoleRevokeClientAdminResponseModel) o;
+        final UserRoleRevokeClientResponseModel that = (UserRoleRevokeClientResponseModel) o;
         return new EqualsBuilder()
                 .append(userUuid, that.userUuid)
                 .isEquals();

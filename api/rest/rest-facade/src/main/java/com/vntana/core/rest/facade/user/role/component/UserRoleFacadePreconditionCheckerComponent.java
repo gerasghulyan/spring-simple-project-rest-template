@@ -15,9 +15,9 @@ public interface UserRoleFacadePreconditionCheckerComponent {
 
     SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantOrganizationAdminRole(final UserRoleGrantOrganizationAdminRequest request);
 
-    SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientAdminRole(final UserRoleGrantClientOrganizationRequest request);
+    SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientRole(final UserRoleGrantClientOrganizationRequest request);
 
     SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeOrganizationAdminRole(final UserRoleRevokeOrganizationAdminRequest request);
 
-    SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientAdminRole(final UserRoleRevokeClientAdminRequest request);
+    SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientRole(final UserRoleRevokeClientRequest request);
 }

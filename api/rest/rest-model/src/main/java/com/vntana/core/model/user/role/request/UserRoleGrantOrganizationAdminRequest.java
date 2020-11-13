@@ -5,7 +5,7 @@ package com.vntana.core.model.user.role.request;
  * Date: 5/12/20
  * Time: 4:24 PM
  */
-public class UserRoleGrantOrganizationAdminRequest extends AbstractUserRoleGrantOrganizationAwareRequest {
+public class UserRoleGrantOrganizationAdminRequest extends AbstractUserRoleOrganizationAwareRequest {
 
     public UserRoleGrantOrganizationAdminRequest() {
         super();
