@@ -17,16 +17,16 @@ import java.util.List;
  * Date: 11/11/2020
  * Time: 11:09 AM
  */
-public class AbstractUserRoleGrantUserAwareRequest extends AbstractRequestModel implements ValidatableRequest<UserRoleErrorResponseModel> {
+public class AbstractUserRoleUserAwareRequest extends AbstractRequestModel implements ValidatableRequest<UserRoleErrorResponseModel> {
 
     @JsonProperty("userUuid")
     private String userUuid;
 
-    public AbstractUserRoleGrantUserAwareRequest() {
+    public AbstractUserRoleUserAwareRequest() {
         super();
     }
 
-    public AbstractUserRoleGrantUserAwareRequest(final String userUuid) {
+    public AbstractUserRoleUserAwareRequest(final String userUuid) {
         this.userUuid = userUuid;
     }
 
@@ -52,9 +52,9 @@ public class AbstractUserRoleGrantUserAwareRequest extends AbstractRequestModel 
     public boolean equals(final Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof AbstractUserRoleGrantUserAwareRequest)) return false;
+        if (!(o instanceof AbstractUserRoleUserAwareRequest)) return false;
 
-        final AbstractUserRoleGrantUserAwareRequest that = (AbstractUserRoleGrantUserAwareRequest) o;
+        final AbstractUserRoleUserAwareRequest that = (AbstractUserRoleUserAwareRequest) o;
 
         return new EqualsBuilder()
                 .append(userUuid, that.userUuid)

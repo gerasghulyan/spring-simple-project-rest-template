@@ -1,7 +1,7 @@
 package com.vntana.core.rest.facade.user.role.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
-import com.vntana.core.domain.user.AbstractUserRole;
+import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.UserOrganizationAdminRole;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
@@ -11,7 +11,10 @@ import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
 import com.vntana.core.service.token.auth.AuthTokenService;
 import com.vntana.core.service.user.role.UserRoleService;
-import com.vntana.core.service.user.role.dto.*;
+import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto;
+import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
+import com.vntana.core.service.user.role.dto.UserRevokeClientRoleDto;
+import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -69,13 +72,13 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
     @Override
     public UserRoleGrantClientOrganizationResponse grantClientRole(final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Granting user client role for request - {}", request);
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkGrantClientAdminRole(request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkGrantClientRole(request);
         if (error.isPresent()) {
             return new UserRoleGrantClientOrganizationResponse(error.getHttpStatus(), error.getError());
         }
-        final AbstractUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(
+        final AbstractClientOrganizationAwareUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(
                 request.getUserUuid(),
-                request.getClientOrganizationUuid(),
+                request.getClientUuid(),
                 UserRole.valueOf(request.getUserRole().name())
         ));
         LOGGER.debug("Successfully granted user organization client role for request - {}", request);
@@ -98,15 +101,15 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
 
     @Transactional
     @Override
-    public UserRoleRevokeClientAdminResponse revokeClientAdminRole(final UserRoleRevokeClientAdminRequest request) {
+    public UserRoleRevokeClientResponse revokeClientRole(final UserRoleRevokeClientRequest request) {
         LOGGER.debug("Revoking user organization client role for request - {}", request);
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkRevokeClientAdminRole(request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkRevokeClientRole(request);
         if (error.isPresent()) {
-            return new UserRoleRevokeClientAdminResponse(error.getHttpStatus(), error.getError());
+            return new UserRoleRevokeClientResponse(error.getHttpStatus(), error.getError());
         }
-        userRoleService.revokeClientRole(new UserRevokeClientRoleDto(request.getUserUuid(), request.getClientOrganizationUuid(), UserRole.CLIENT_ORGANIZATION_ADMIN));
+        userRoleService.revokeClientRole(new UserRevokeClientRoleDto(request.getUserUuid(), request.getClientUuid(), UserRole.valueOf(request.getUserRole().name())));
         authTokenService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user client role for request - {}", request);
-        return new UserRoleRevokeClientAdminResponse(request.getUserUuid());
+        return new UserRoleRevokeClientResponse(request.getUserUuid());
     }
 }

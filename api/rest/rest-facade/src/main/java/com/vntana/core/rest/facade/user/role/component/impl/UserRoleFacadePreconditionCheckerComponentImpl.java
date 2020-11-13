@@ -74,9 +74,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     }
 
     @Override
-    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientAdminRole(final UserRoleGrantClientOrganizationRequest request) {
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientRole(final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Processing checkGrantClientAdminRole for request - {}", request);
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientOrganizationUuid(), request.getUserUuid());
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientUuid(), request.getUserUuid());
         if (error.isPresent()) {
             return error;
         }
@@ -99,9 +99,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     }
 
     @Override
-    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientAdminRole(final UserRoleRevokeClientAdminRequest request) {
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientRole(final UserRoleRevokeClientRequest request) {
         LOGGER.debug("Processing checkRevokeClientAdminRole for request - {}", request);
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientOrganizationUuid(), request.getUserUuid());
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientUuid(), request.getUserUuid());
         if (error.isPresent()) {
             return error;
         }

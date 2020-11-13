@@ -1,7 +1,9 @@
 package com.vntana.core.rest.client.auth;
 
+import com.vntana.core.model.security.request.FindUserByUuidAndClientOrganizationRequest;
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest;
 import com.vntana.core.model.security.response.SecureFindUserByEmailResponse;
+import com.vntana.core.model.security.response.SecureFindUserByUuidAndClientOrganizationResponse;
 import com.vntana.core.model.security.response.SecureFindUserByUuidAndOrganizationResponse;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,4 +22,7 @@ public interface AuthResourceClient {
 
     @PostMapping(path = "/by-user-and-organization")
     SecureFindUserByUuidAndOrganizationResponse findByUserAndOrganization(final FindUserByUuidAndOrganizationRequest request);
+
+    @PostMapping(path = "/by-user-and-client-organization")
+    SecureFindUserByUuidAndClientOrganizationResponse findByUserAndClientOrganization(final FindUserByUuidAndClientOrganizationRequest request);
 }

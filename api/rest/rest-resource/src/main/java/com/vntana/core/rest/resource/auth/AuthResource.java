@@ -1,7 +1,9 @@
 package com.vntana.core.rest.resource.auth;
 
+import com.vntana.core.model.security.request.FindUserByUuidAndClientOrganizationRequest;
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest;
 import com.vntana.core.model.security.response.SecureFindUserByEmailResponse;
+import com.vntana.core.model.security.response.SecureFindUserByUuidAndClientOrganizationResponse;
 import com.vntana.core.model.security.response.SecureFindUserByUuidAndOrganizationResponse;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.rest.facade.auth.AuthFacade;
@@ -45,6 +47,14 @@ public class AuthResource {
     public ResponseEntity<SecureFindUserByUuidAndOrganizationResponse> findByUserAndOrganization(@RequestBody final FindUserByUuidAndOrganizationRequest request) {
         LOGGER.debug("Processing find user by request - {}", request);
         final SecureFindUserByUuidAndOrganizationResponse response = authServiceFacade.findByUserAndOrganization(request);
+        LOGGER.debug("Successfully proceeded find user by request with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(path = "/by-user-and-client-organization")
+    public ResponseEntity<SecureFindUserByUuidAndClientOrganizationResponse> findByUserAndClientOrganization(@RequestBody final FindUserByUuidAndClientOrganizationRequest request) {
+        LOGGER.debug("Processing find user by request - {}", request);
+        final SecureFindUserByUuidAndClientOrganizationResponse response = authServiceFacade.findByUserAndClientOrganization(request);
         LOGGER.debug("Successfully proceeded find user by request with response - {}", response);
         return ResponseEntity.ok(response);
     }

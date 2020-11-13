@@ -17,19 +17,19 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.grantUserOrganizationAdminRole(organizationUuid = null),
+                userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(organizationUuid = null)),
                 UserRoleErrorResponseModel.MISSING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.grantUserOrganizationAdminRole(organizationUuid = emptyString()),
+                userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(organizationUuid = emptyString())),
                 UserRoleErrorResponseModel.MISSING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = null),
+                userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = null)),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = emptyString()),
+                userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = emptyString())),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
     }
@@ -37,14 +37,15 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
     @Test
     fun `test when organization not found`() {
         val userUuid = userResourceTestHelper.persistUser().response().uuid
-        val result = userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = userUuid)
+        val result = userRoleResourceClient.grantUserOrganizationAdminRole(
+                userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = userUuid))
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, result, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND)
     }
 
     @Test
     fun `test when user not found`() {
         val userUuid = userResourceTestHelper.persistUser().response().organizationUuid
-        val result = userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = userUuid)
+        val result = userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = userUuid))
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, result, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND)
     }
 
@@ -53,7 +54,7 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
         val userUuid = userResourceTestHelper.persistUser().response().uuid
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = userUuid, organizationUuid = organizationUuid)
-        assertBasicErrorResultResponse(HttpStatus.CONFLICT, userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = userUuid, organizationUuid = organizationUuid), UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED)
+        assertBasicErrorResultResponse(HttpStatus.CONFLICT, userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = userUuid, organizationUuid = organizationUuid)), UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED)
     }
 
     @Test
@@ -61,7 +62,7 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
         val adminUserUuid = userResourceTestHelper.persistUser().response().uuid
         val ownerUserUuid = userResourceTestHelper.persistUser().response().uuid
         val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = ownerUserUuid).response().uuid
-        userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = adminUserUuid, organizationUuid = organizationUuid).let {
+        userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = adminUserUuid, organizationUuid = organizationUuid)).let {
             assertBasicSuccessResultResponse(it)
             it.body?.response()?.let { response ->
                 assertThat(response.userUuid).isEqualTo(adminUserUuid)

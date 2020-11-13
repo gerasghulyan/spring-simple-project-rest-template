@@ -34,9 +34,18 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
     }
 
     @Test
-    fun `test when not found`() {
+    fun `test when user not found`() {
         assertBasicErrorResultResponse(
                 authResourceClient.findByUserAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest()),
+                UserErrorResponseModel.USER_NOT_FOUND
+        )
+    }
+
+    @Test
+    fun `test when user role not found`() {
+        val userUuid = userResourceTestHelper.persistUser().response().uuid
+        assertBasicErrorResultResponse(
+                authResourceClient.findByUserAndOrganization(userResourceTestHelper.buildFindUserByUuidAndOrganizationRequest(uuid = userUuid)),
                 UserErrorResponseModel.NOT_FOUND_FOR_ROLE
         )
     }

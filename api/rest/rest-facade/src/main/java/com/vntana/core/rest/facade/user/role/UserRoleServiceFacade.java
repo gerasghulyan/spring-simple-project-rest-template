@@ -18,5 +18,5 @@ public interface UserRoleServiceFacade {
 
     UserRoleRevokeOrganizationAdminResponse revokeOrganizationAdminRole(final UserRoleRevokeOrganizationAdminRequest request);
 
-    UserRoleRevokeClientAdminResponse revokeClientAdminRole(final UserRoleRevokeClientAdminRequest request);
+    UserRoleRevokeClientResponse revokeClientRole(final UserRoleRevokeClientRequest request);
 }

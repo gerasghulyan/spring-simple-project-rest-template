@@ -14,16 +14,16 @@ import java.util.List;
  * Date: 11/11/2020
  * Time: 11:05 AM
  */
-public class AbstractUserRoleGrantOrganizationAwareRequest extends AbstractUserRoleGrantUserAwareRequest {
+public class AbstractUserRoleOrganizationAwareRequest extends AbstractUserRoleUserAwareRequest {
 
     @JsonProperty("organizationUuid")
     private String organizationUuid;
 
-    public AbstractUserRoleGrantOrganizationAwareRequest() {
+    public AbstractUserRoleOrganizationAwareRequest() {
         super();
     }
 
-    public AbstractUserRoleGrantOrganizationAwareRequest(final String userUuid, final String organizationUuid) {
+    public AbstractUserRoleOrganizationAwareRequest(final String userUuid, final String organizationUuid) {
         super(userUuid);
         this.organizationUuid = organizationUuid;
     }
@@ -49,9 +49,9 @@ public class AbstractUserRoleGrantOrganizationAwareRequest extends AbstractUserR
     public boolean equals(final Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof AbstractUserRoleGrantOrganizationAwareRequest)) return false;
+        if (!(o instanceof AbstractUserRoleOrganizationAwareRequest)) return false;
 
-        final AbstractUserRoleGrantOrganizationAwareRequest that = (AbstractUserRoleGrantOrganizationAwareRequest) o;
+        final AbstractUserRoleOrganizationAwareRequest that = (AbstractUserRoleOrganizationAwareRequest) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

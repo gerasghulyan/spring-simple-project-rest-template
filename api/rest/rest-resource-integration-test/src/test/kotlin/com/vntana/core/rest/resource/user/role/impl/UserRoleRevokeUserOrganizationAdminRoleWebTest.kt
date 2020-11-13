@@ -17,19 +17,19 @@ class UserRoleRevokeUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest()
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.revokeUserOrganizationAdminRole(organizationUuid = null),
+                userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(organizationUuid = null)),
                 UserRoleErrorResponseModel.MISSING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.revokeUserOrganizationAdminRole(organizationUuid = emptyString()),
+                userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(organizationUuid = emptyString())),
                 UserRoleErrorResponseModel.MISSING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.revokeUserOrganizationAdminRole(userUuid = null),
+                userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(userUuid = null)),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceTestHelper.revokeUserOrganizationAdminRole(userUuid = emptyString()),
+                userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(userUuid = emptyString())),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
     }
@@ -37,14 +37,14 @@ class UserRoleRevokeUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest()
     @Test
     fun `test when organization not found`() {
         val userUuid = userResourceTestHelper.persistUser().response().uuid
-        val result = userRoleResourceTestHelper.revokeUserOrganizationAdminRole(userUuid = userUuid)
+        val result = userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(userUuid = userUuid))
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, result, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND)
     }
 
     @Test
     fun `test when user not found`() {
         val userUuid = userResourceTestHelper.persistUser().response().organizationUuid
-        val result = userRoleResourceTestHelper.revokeUserOrganizationAdminRole(userUuid = userUuid)
+        val result = userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(userUuid = userUuid))
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, result, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND)
     }
 
@@ -53,7 +53,7 @@ class UserRoleRevokeUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest()
         val userCreateResponseModel = userResourceTestHelper.persistUser().response()
         val organizationUuid = userCreateResponseModel.organizationUuid
         val userUuid = userCreateResponseModel.uuid
-        val result = userRoleResourceTestHelper.revokeUserOrganizationAdminRole(userUuid = userUuid, organizationUuid = organizationUuid)
+        val result = userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(userUuid = userUuid, organizationUuid = organizationUuid))
         assertBasicErrorResultResponse(HttpStatus.CONFLICT, result, UserRoleErrorResponseModel.REQUESTED_ROLE_IS_ABSENT)
     }
 
@@ -66,7 +66,7 @@ class UserRoleRevokeUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest()
         authTokenResourceTestHelper.persistToken(userUuid = userUuid, token = token1)
         authTokenResourceTestHelper.persistToken(userUuid = userUuid, token = token2)
         userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = userUuid, organizationUuid = organizationUuid)
-        userRoleResourceTestHelper.revokeUserOrganizationAdminRole(userUuid = userUuid, organizationUuid = organizationUuid).let {
+        userRoleResourceClient.revokeUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationAdminRequest(userUuid = userUuid, organizationUuid = organizationUuid)).let {
             assertBasicSuccessResultResponse(it)
             it.body?.response()?.let { responseModel ->
                 assertThat(responseModel.userUuid).isEqualTo(userUuid)

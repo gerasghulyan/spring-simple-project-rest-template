@@ -46,10 +46,10 @@ public class UserRoleResource {
     }
 
     @PostMapping("client")
-    public ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientAdminRole(@RequestBody final UserRoleGrantClientOrganizationRequest request) {
-        LOGGER.debug("Processing user-roles resource grantUserClientAdminRole for request - {}", request);
+    public ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientRole(@RequestBody final UserRoleGrantClientOrganizationRequest request) {
+        LOGGER.debug("Processing user-roles resource grantUserClientRole for request - {}", request);
         final UserRoleGrantClientOrganizationResponse userRoleGrantClientOrganizationResponse = userRoleServiceFacade.grantClientRole(request);
-        LOGGER.debug("Successfully processing user-roles resource grantUserClientAdminRole for request - {}", request);
+        LOGGER.debug("Successfully processing user-roles resource grantUserClientRole for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantClientOrganizationResponse);
     }
 
@@ -61,11 +61,11 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userRoleRevokeOrganizationAdminResponse);
     }
 
-    @DeleteMapping("client-admin")
-    public ResponseEntity<UserRoleRevokeClientAdminResponse> revokeUserClientAdminRole(@RequestBody final UserRoleRevokeClientAdminRequest request) {
-        LOGGER.debug("Processing user-roles resource revokeUserClientAdminRole for request - {}", request);
-        final UserRoleRevokeClientAdminResponse userRoleRevokeClientAdminResponse = userRoleServiceFacade.revokeClientAdminRole(request);
-        LOGGER.debug("Successfully processing user-roles resource revokeUserClientAdminRole for request - {}", request);
-        return ResponseEntityUtils.okWithStatusInHeader(userRoleRevokeClientAdminResponse);
+    @DeleteMapping("client")
+    public ResponseEntity<UserRoleRevokeClientResponse> revokeUserClientRole(@RequestBody final UserRoleRevokeClientRequest request) {
+        LOGGER.debug("Processing user-roles resource revokeUserClientRole for request - {}", request);
+        final UserRoleRevokeClientResponse userRoleRevokeClientResponse = userRoleServiceFacade.revokeClientRole(request);
+        LOGGER.debug("Successfully processing user-roles resource revokeUserClientRole for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(userRoleRevokeClientResponse);
     }
 }
