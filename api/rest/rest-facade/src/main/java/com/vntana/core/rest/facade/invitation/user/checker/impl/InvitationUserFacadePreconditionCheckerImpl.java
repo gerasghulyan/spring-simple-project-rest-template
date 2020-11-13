@@ -220,7 +220,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     }
 
     private Map<String, UserRoleModel> getClientOrganizationsByUserUuidAndOrganization(final String organizationUuid, final String inviterUserUuid) {
-        final List<AbstractClientOrganizationAwareUserRole> permittedClients = userRoleService.findClientOrganizationRoleByOrganizationAndUser(organizationUuid, inviterUserUuid);
+        final List<AbstractClientOrganizationAwareUserRole> permittedClients = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, inviterUserUuid);
         return permittedClients.stream()
                 .peek(permittedClient -> {
                     Assert.state(permittedClient.getClientOrganization() != null, "clientOrganization cannot be null.");
