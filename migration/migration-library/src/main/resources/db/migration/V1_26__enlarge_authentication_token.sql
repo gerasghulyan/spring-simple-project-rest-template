@@ -1,0 +1,1 @@
+alter table token_authentication alter column token type character varying(550);
