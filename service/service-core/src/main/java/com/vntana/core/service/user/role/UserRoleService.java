@@ -35,7 +35,7 @@ public interface UserRoleService {
 
     UserSuperAdminRole grantSuperAdminRole(final String userUuid);
 
-    AbstractClientOrganizationAwareUserRole grantClientRole(UserGrantClientRoleDto dto);
+    AbstractClientOrganizationAwareUserRole grantClientRole(final UserGrantClientRoleDto dto);
     
     void revokeOrganizationAdminRole(final UserRevokeOrganizationAdminRoleDto dto);
 
