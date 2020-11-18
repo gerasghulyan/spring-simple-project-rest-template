@@ -39,5 +39,5 @@ public interface UserRoleService {
     
     void revokeOrganizationAdminRole(final UserRevokeOrganizationAdminRoleDto dto);
 
-    void revokeClientRole(UserRevokeClientRoleDto dto);
+    void revokeClientRole(final UserRevokeClientRoleDto dto);
 }
