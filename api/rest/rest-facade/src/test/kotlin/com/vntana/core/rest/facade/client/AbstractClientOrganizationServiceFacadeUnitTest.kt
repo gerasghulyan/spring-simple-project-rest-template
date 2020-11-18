@@ -7,7 +7,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.utils.PersistenceUtilityService
 import com.vntana.core.rest.facade.client.impl.ClientOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
-import com.vntana.core.service.client.ClientOrganizationService
+import com.vntana.core.service.client.OrganizationClientService
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator
 import com.vntana.core.service.common.component.SlugValidationComponent
 import com.vntana.core.service.organization.OrganizationService
@@ -31,7 +31,7 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
     protected lateinit var persistenceUtilityService: PersistenceUtilityService
 
     @Mock
-    protected lateinit var clientOrganizationService: ClientOrganizationService
+    protected lateinit var organizationClientService: OrganizationClientService
 
     @Mock
     protected lateinit var userService: UserService
@@ -58,7 +58,7 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
         clientOrganizationServiceFacade = ClientOrganizationServiceFacadeImpl(
                 mapperFacade,
                 persistenceUtilityService,
-                clientOrganizationService,
+                organizationClientService,
                 organizationService,
                 userService,
                 slugValidationComponent,

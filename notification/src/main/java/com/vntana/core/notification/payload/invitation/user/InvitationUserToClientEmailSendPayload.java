@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Manuk Gharslyan.
- * Date: 5/15/2020
- * Time: 11:17 AM
+ * Created by Diana Gevorgyan
+ * Date: 11/18/20
+ * Time: 3:32 PM
  */
-public class InvitationUserEmailSendPayload extends AbstractTemplateEmailSendPayload {
+public class InvitationUserToClientEmailSendPayload extends AbstractTemplateEmailSendPayload {
 
     public static final String PROPERTIES_LINK = "link";
     public static final String PROPERTIES_ORGANIZATION_NAME = "organizationName";
@@ -18,19 +18,19 @@ public class InvitationUserEmailSendPayload extends AbstractTemplateEmailSendPay
 
     private final Map<String, String> propertiesMap;
 
-    public InvitationUserEmailSendPayload(final String templateName,
-                                          final String recipientEmail,
-                                          final String senderEmail,
-                                          final String subject,
-                                          final String verificationLinkAddress,
-                                          final String inviterUserFullName,
-                                          final String organizationName) {
+    public InvitationUserToClientEmailSendPayload(final String templateName,
+                                                        final String recipientEmail,
+                                                        final String senderEmail,
+                                                        final String subject,
+                                                        final String verificationLinkAddress,
+                                                        final String inviterUserFullName,
+                                                        final String clientName) {
 
         super(templateName, recipientEmail, senderEmail, subject);
         propertiesMap = new HashMap<>();
         propertiesMap.put(PROPERTIES_LINK, verificationLinkAddress);
         propertiesMap.put(PROPERTIES_INVITER_USER_FULL_NAME, inviterUserFullName);
-        propertiesMap.put(PROPERTIES_ORGANIZATION_NAME, organizationName);
+        propertiesMap.put(PROPERTIES_ORGANIZATION_NAME, clientName);
     }
 
     @Override

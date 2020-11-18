@@ -5,7 +5,7 @@ import com.vntana.core.model.invitation.user.response.*;
 import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
 import com.vntana.core.model.invitation.user.request.CreateInvitationForOrganizationUserRequest;
 import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.SendInvitationForOrganizationUserRequest;
 import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
 
 /**
@@ -23,7 +23,9 @@ public interface InvitationUserServiceFacade {
 
     UpdateInvitationUserInvitationStatusResultResponse updateStatus(final UpdateInvitationUserInvitationStatusRequest request);
 
-    SendInvitationUserResultResponse sendInvitation(final SendInvitationUserRequest request);
+    SendInvitationUserResultResponse sendInvitationForOrganization(final SendInvitationForOrganizationUserRequest request);
+
+    SendInvitationUserResultResponse sendInvitationForClients(final SendInvitationForClientUserRequest request);
 
     AcceptInvitationUserResultResponse accept(final AcceptInvitationUserRequest request);
 

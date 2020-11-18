@@ -21,7 +21,9 @@ public interface InvitationUserFacadePreconditionChecker {
 
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request);
 
-    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForPossibleErrors(final SendInvitationUserRequest request);
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForOrganizationForPossibleErrors(final SendInvitationForOrganizationUserRequest request);
+
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForClientsForPossibleErrors(final SendInvitationForClientUserRequest request);
 
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetByTokenForPossibleErrors(final String token);
 

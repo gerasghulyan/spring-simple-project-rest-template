@@ -11,7 +11,7 @@ import java.util.Optional;
  * Date: 10/8/19
  * Time: 5:15 PM
  */
-public interface ClientOrganizationService {
+public interface OrganizationClientService {
     ClientOrganization create(final CreateClientOrganizationDto dto);
 
     Optional<ClientOrganization> findByUuid(final String uuid);

@@ -54,5 +54,5 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
             token: String? = uuid(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
-    ): SendInvitationUserRequest = SendInvitationUserRequest(email, token, inviterUserUuid, organizationUuid)
+    ): SendInvitationForOrganizationUserRequest = SendInvitationForOrganizationUserRequest(email, token, inviterUserUuid, organizationUuid)
 }

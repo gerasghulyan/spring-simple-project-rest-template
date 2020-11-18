@@ -4,11 +4,13 @@ import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.template.email.TemplateEmail;
 import com.vntana.core.domain.template.email.TemplateEmailType;
 import com.vntana.core.domain.user.User;
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.SendInvitationForClientUserRequest;
+import com.vntana.core.model.invitation.user.request.SendInvitationForOrganizationUserRequest;
 import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
 import com.vntana.core.model.invitation.user.response.model.SendInvitationUserResponseModel;
 import com.vntana.core.notification.EmailSenderService;
-import com.vntana.core.notification.payload.invitation.user.InvitationUserEmailSendPayload;
+import com.vntana.core.notification.payload.invitation.user.InvitationUserToClientEmailSendPayload;
+import com.vntana.core.notification.payload.invitation.user.InvitationUserToOrganizationEmailSendPayload;
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.template.email.TemplateEmailService;
@@ -17,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 /**
  * Created by Manuk Gharslyan.
@@ -55,12 +59,12 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
     }
 
     @Override
-    public SendInvitationUserResultResponse sendInvitation(final SendInvitationUserRequest request) {
-        LOGGER.debug("Sending user invitation for request - {}", request);
+    public SendInvitationUserResultResponse sendInvitationForOrganization(final SendInvitationForOrganizationUserRequest request) {
+        LOGGER.debug("Sending user invitation for organization for request - {}", request);
         final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_INVITATION);
         final User user = userService.getByUuid(request.getInviterUserUuid());
         final Organization organization = organizationService.getByUuid(request.getOrganizationUuid());
-        final InvitationUserEmailSendPayload payload = new InvitationUserEmailSendPayload(
+        final InvitationUserToOrganizationEmailSendPayload payload = new InvitationUserToOrganizationEmailSendPayload(
                 templateEmail.getTemplateName(),
                 request.getEmail(),
                 senderEmail,
@@ -71,6 +75,26 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
         );
         emailSenderService.sendEmail(payload);
         LOGGER.debug("Successfully sent user invitation for request - {}", request);
+        return new SendInvitationUserResultResponse(new SendInvitationUserResponseModel());
+    }
+
+    @Override
+    public SendInvitationUserResultResponse sendInvitationForClients(final SendInvitationForClientUserRequest request) {
+        LOGGER.debug("Sending user invitation for clients for request - {}", request);
+        final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_INVITATION);
+        final User user = userService.getByUuid(request.getInviterUserUuid());
+        final String token = new ArrayList<>(request.getInvitationTokens().values()).get(0);
+        final Organization organization = organizationService.getByUuid(request.getOrganizationUuid());
+        final InvitationUserToClientEmailSendPayload payload = new InvitationUserToClientEmailSendPayload(
+                templateEmail.getTemplateName(),
+                request.getEmail(),
+                senderEmail,
+                emailSubject,
+                String.format("%s/%s", websiteUrl, token),
+                user.getFullName(),
+                organization.getName()
+        );
+        emailSenderService.sendEmail(payload);
         return new SendInvitationUserResultResponse(new SendInvitationUserResponseModel());
     }
 }

@@ -3,7 +3,7 @@ package com.vntana.core.service.client.impl;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.persistence.client.ClientOrganizationRepository;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
 import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.common.component.SlugValidationComponent;
@@ -24,7 +24,7 @@ import static java.lang.String.format;
  * Time: 5:16 PM
  */
 @Service
-public class ClientOrganizationServiceImpl implements ClientOrganizationService {
+public class ClientOrganizationServiceImpl implements OrganizationClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOrganizationServiceImpl.class);
 

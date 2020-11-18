@@ -20,7 +20,7 @@ class InvitationUserFacadePreconditionCheckerCheckSendInvitationForPossibleError
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(false)
         replayAll()
-        preconditionChecker.checkSendInvitationForPossibleErrors(request).let {
+        preconditionChecker.checkSendInvitationForOrganizationForPossibleErrors(request).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
         }
@@ -34,7 +34,7 @@ class InvitationUserFacadePreconditionCheckerCheckSendInvitationForPossibleError
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(false)
         replayAll()
-        preconditionChecker.checkSendInvitationForPossibleErrors(request).let {
+        preconditionChecker.checkSendInvitationForOrganizationForPossibleErrors(request).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND)
         }
@@ -48,7 +48,7 @@ class InvitationUserFacadePreconditionCheckerCheckSendInvitationForPossibleError
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         replayAll()
-        assertThat(preconditionChecker.checkSendInvitationForPossibleErrors(request).isPresent).isFalse()
+        assertThat(preconditionChecker.checkSendInvitationForOrganizationForPossibleErrors(request).isPresent).isFalse()
         verifyAll()
     }
 }

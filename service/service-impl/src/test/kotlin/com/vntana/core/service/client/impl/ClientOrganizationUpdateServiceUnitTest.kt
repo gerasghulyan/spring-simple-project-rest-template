@@ -21,15 +21,15 @@ class ClientOrganizationUpdateServiceUnitTest : AbstractClientOrganizationServic
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { clientOrganizationService.update(null) }
+        assertThatThrownBy { organizationClientService.update(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.update(helper.buildUpdateClientOrganizationDto(uuid = null)) }
+        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(uuid = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.update(helper.buildUpdateClientOrganizationDto(uuid = "")) }
+        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(uuid = "")) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.update(helper.buildUpdateClientOrganizationDto(name = null)) }
+        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(name = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.update(helper.buildUpdateClientOrganizationDto(name = "")) }
+        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(name = "")) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -47,7 +47,7 @@ class ClientOrganizationUpdateServiceUnitTest : AbstractClientOrganizationServic
                 .andAnswer { getCurrentArguments()[0] as ClientOrganization }
         replayAll()
         // test scenario
-        assertThat(clientOrganizationService.update(dto))
+        assertThat(organizationClientService.update(dto))
                 .hasFieldOrPropertyWithValue("name", dto.name)
                 .hasFieldOrPropertyWithValue("imageBlobId", dto.imageBlobId)
                 .hasFieldOrPropertyWithValue("organization", clientOrganization.organization)

@@ -42,7 +42,7 @@ class TokenAuthenticationCreateWithClientOrganizationServiceUnitTest : AbstractT
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val dto = commonTestHelper.buildTokenAuthenticationCreateWithClientOrganizationDto(userUuid = user.uuid, clientUuid = clientOrganization.uuid)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
-        expect(clientOrganizationService.getByUuid(dto.clientUuid)).andReturn(clientOrganization)
+        expect(organizationClientService.getByUuid(dto.clientUuid)).andReturn(clientOrganization)
         expect(tokenAuthenticationRepository.save(isA(TokenAuthentication::class.java))).andAnswer { getCurrentArguments()[0] as TokenAuthentication }
         replayAll()
         tokenAuthenticationService.createWithClientOrganization(dto).let {

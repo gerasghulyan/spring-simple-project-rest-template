@@ -10,7 +10,7 @@ import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseMo
 import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
@@ -45,7 +45,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     private final OrganizationService organizationService;
     private final InvitationUserService invitationUserService;
     private final TokenInvitationUserService tokenInvitationUserService;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService clientOrganizationService;
     private final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker;
 
     public InvitationUserFacadePreconditionCheckerImpl(
@@ -54,7 +54,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             final OrganizationService organizationService,
             final InvitationUserService invitationUserService,
             final TokenInvitationUserService tokenInvitationUserService,
-            final ClientOrganizationService clientOrganizationService,
+            final OrganizationClientService clientOrganizationService,
             final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker) {
         this.userService = userService;
         this.userRoleService = userRoleService;
@@ -101,7 +101,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
 
-        final Map<String, UserRoleModel> inviterPermissionsMap = 
+        final Map<String, UserRoleModel> inviterPermissionsMap =
                 getClientOrganizationsByUserUuidAndOrganization(request.getOrganizationUuid(), request.getInviterUserUuid());
         final Map<String, UserRoleModel> invitedPermissionsMap = request.getUserRoles();
 
@@ -171,18 +171,15 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     }
 
     @Override
-    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForPossibleErrors(final SendInvitationUserRequest request) {
-        LOGGER.debug("Checking invitation user send invitation precondition for request - {}", request);
-        if (!userService.existsByUuid(request.getInviterUserUuid())) {
-            LOGGER.debug("Checking invitation user send invitation precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
-            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
-        }
-        if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            LOGGER.debug("Checking invitation user send invitation precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
-            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
-        }
-        LOGGER.debug("Successfully checked invitation user send invitation precondition for request - {}", request);
-        return SingleErrorWithStatus.empty();
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForOrganizationForPossibleErrors(final SendInvitationForOrganizationUserRequest request) {
+        LOGGER.debug("Checking invitation user send invitation for organization precondition for request - {}", request);
+        return checkSendInvitationForUserAndOrganizationExistence(request.getOrganizationUuid(), request.getInviterUserUuid());
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForClientsForPossibleErrors(final SendInvitationForClientUserRequest request) {
+        LOGGER.debug("Checking invitation user send invitation for clients precondition for request - {}", request);
+        return checkSendInvitationForUserAndOrganizationExistence(request.getOrganizationUuid(), request.getInviterUserUuid());
     }
 
     @Override
@@ -231,5 +228,18 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
                         permittedClient -> UserRoleModel.valueOf(permittedClient.getUserRole().name())
                 ));
 
+    }
+
+    private SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForUserAndOrganizationExistence(final String organizationUuid, final String inviterUuid) {
+        if (!userService.existsByUuid(inviterUuid)) {
+            LOGGER.debug("Checking invitation user send invitation precondition has been done with error, no inviter user was found by uuid - {}", inviterUuid);
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
+        }
+        if (!organizationService.existsByUuid(organizationUuid)) {
+            LOGGER.debug("Checking invitation user send invitation precondition has been done with error, no organization was found by uuid - {}", organizationUuid);
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
+        }
+        LOGGER.debug("Successfully checked invitation user send invitation precondition for inviter user uuid - {}, organization uuid - {}", inviterUuid, organizationUuid);
+        return SingleErrorWithStatus.empty();
     }
 }

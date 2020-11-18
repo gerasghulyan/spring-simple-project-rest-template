@@ -2,7 +2,7 @@ package com.vntana.core.rest.resource.invitation.user.impl
 
 import com.sflpro.notifier.api.model.common.result.ResultResponseModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
-import com.vntana.core.notification.payload.invitation.user.InvitationUserEmailSendPayload
+import com.vntana.core.notification.payload.invitation.user.InvitationUserToOrganizationEmailSendPayload
 import com.vntana.core.rest.resource.invitation.user.AbstractInvitationUserWebTest
 import org.junit.Test
 import org.mockito.ArgumentMatchers
@@ -85,9 +85,9 @@ class InvitationUserSendInvitationWebTest : AbstractInvitationUserWebTest() {
         verify(emailNotificationResourceClient, times(1))
                 .createEmailNotification(ArgumentMatchers.argThat { argument ->
                     argument.recipientEmail == request.email &&
-                            argument.properties[InvitationUserEmailSendPayload.PROPERTIES_INVITER_USER_FULL_NAME] == inviterUserFullName &&
-                            argument.properties[InvitationUserEmailSendPayload.PROPERTIES_ORGANIZATION_NAME] == organizationName &&
-                            argument.properties[InvitationUserEmailSendPayload.PROPERTIES_LINK]!!.contains(request.token)
+                            argument.properties[InvitationUserToOrganizationEmailSendPayload.PROPERTIES_INVITER_USER_FULL_NAME] == inviterUserFullName &&
+                            argument.properties[InvitationUserToOrganizationEmailSendPayload.PROPERTIES_ORGANIZATION_NAME] == organizationName &&
+                            argument.properties[InvitationUserToOrganizationEmailSendPayload.PROPERTIES_LINK]!!.contains(request.token)
                 })
 
     }

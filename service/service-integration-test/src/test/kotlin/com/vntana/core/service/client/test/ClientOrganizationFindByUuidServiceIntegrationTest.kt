@@ -16,7 +16,7 @@ class ClientOrganizationFindByUuidServiceIntegrationTest : AbstractClientOrganiz
         integrationTestHelper.persistClientOrganization().let { clientOrganization ->
             // when
             flushAndClear()
-            clientOrganizationService.findByUuid(clientOrganization.uuid).let {
+            organizationClientService.findByUuid(clientOrganization.uuid).let {
                 // then
                 assertThat(it).hasValue(clientOrganization)
             }

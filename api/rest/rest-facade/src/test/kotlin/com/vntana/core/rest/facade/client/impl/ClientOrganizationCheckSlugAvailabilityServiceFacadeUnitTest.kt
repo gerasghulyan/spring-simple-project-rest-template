@@ -35,7 +35,7 @@ class ClientOrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractCli
         val request = restHelper.buildCheckAvailableClientOrganizationSlugRequest()
         // expectations
         expect(slugValidationComponent.validate(request.slug)).andReturn(true)
-        expect(clientOrganizationService.findBySlugAndOrganization(request.slug, request.organizationUuid)).andReturn(Optional.empty())
+        expect(organizationClientService.findBySlugAndOrganization(request.slug, request.organizationUuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request)
@@ -54,10 +54,10 @@ class ClientOrganizationCheckSlugAvailabilityServiceFacadeUnitTest : AbstractCli
         val request = restHelper.buildCheckAvailableClientOrganizationSlugRequest(slug = slug)
         // expectations
         expect(slugValidationComponent.validate(slug)).andReturn(true)
-        expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
-        expect(clientOrganizationService.findBySlugAndOrganization("${slug}1", request.organizationUuid)).andReturn(Optional.of(clientOrganization))
-        expect(clientOrganizationService.findBySlugAndOrganization("${slug}2", request.organizationUuid)).andReturn(Optional.of(clientOrganization))
-        expect(clientOrganizationService.findBySlugAndOrganization("${slug}3", request.organizationUuid)).andReturn(Optional.empty())
+        expect(organizationClientService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(organizationClientService.findBySlugAndOrganization("${slug}1", request.organizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(organizationClientService.findBySlugAndOrganization("${slug}2", request.organizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(organizationClientService.findBySlugAndOrganization("${slug}3", request.organizationUuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.checkSlugAvailability(request)

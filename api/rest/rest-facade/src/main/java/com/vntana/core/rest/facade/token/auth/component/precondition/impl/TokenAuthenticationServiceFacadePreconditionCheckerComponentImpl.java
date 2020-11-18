@@ -5,7 +5,7 @@ import com.vntana.core.model.token.auth.error.TokenAuthenticationErrorResponseMo
 import com.vntana.core.model.token.auth.request.TokenAuthenticationPersistWithClientOrganizationRequest;
 import com.vntana.core.model.token.auth.request.TokenAuthenticationPersistWithOrganizationRequest;
 import com.vntana.core.rest.facade.token.auth.component.precondition.TokenAuthenticationServiceFacadePreconditionCheckerComponent;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.apache.http.HttpStatus;
@@ -25,9 +25,9 @@ public class TokenAuthenticationServiceFacadePreconditionCheckerComponentImpl im
 
     private final UserService userService;
     private final OrganizationService organizationService;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService clientOrganizationService;
 
-    public TokenAuthenticationServiceFacadePreconditionCheckerComponentImpl(final UserService userService, final OrganizationService organizationService, final ClientOrganizationService clientOrganizationService) {
+    public TokenAuthenticationServiceFacadePreconditionCheckerComponentImpl(final UserService userService, final OrganizationService organizationService, final OrganizationClientService clientOrganizationService) {
         this.userService = userService;
         this.organizationService = organizationService;
         this.clientOrganizationService = clientOrganizationService;

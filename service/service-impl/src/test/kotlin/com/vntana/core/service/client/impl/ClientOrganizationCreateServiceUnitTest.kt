@@ -21,15 +21,15 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { clientOrganizationService.create(null) }
+        assertThatThrownBy { organizationClientService.create(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(name = null)) }
+        assertThatThrownBy { organizationClientService.create(helper.buildCreateClientOrganizationDto(name = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(name = " ")) }
+        assertThatThrownBy { organizationClientService.create(helper.buildCreateClientOrganizationDto(name = " ")) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(slug = null)) }
+        assertThatThrownBy { organizationClientService.create(helper.buildCreateClientOrganizationDto(slug = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { clientOrganizationService.create(helper.buildCreateClientOrganizationDto(slug = " ")) }
+        assertThatThrownBy { organizationClientService.create(helper.buildCreateClientOrganizationDto(slug = " ")) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -46,7 +46,7 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
         expect(clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organizationUuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
-        assertThatThrownBy { clientOrganizationService.create(dto) }
+        assertThatThrownBy { organizationClientService.create(dto) }
                 .isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
     }
@@ -66,7 +66,7 @@ class ClientOrganizationCreateServiceUnitTest : AbstractClientOrganizationServic
                 .andAnswer { getCurrentArguments()[0] as ClientOrganization }
         replayAll()
         // test scenario
-        assertThat(clientOrganizationService.create(dto))
+        assertThat(organizationClientService.create(dto))
                 .hasFieldOrPropertyWithValue("name", dto.name)
                 .hasFieldOrPropertyWithValue("slug", dto.slug)
                 .hasFieldOrPropertyWithValue("imageBlobId", dto.imageBlobId)

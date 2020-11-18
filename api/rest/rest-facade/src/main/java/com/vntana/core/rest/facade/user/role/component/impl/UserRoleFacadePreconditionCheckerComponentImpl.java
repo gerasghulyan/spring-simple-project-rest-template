@@ -6,7 +6,7 @@ import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
@@ -30,14 +30,14 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleFacadePreconditionCheckerComponentImpl.class);
 
     private final OrganizationService organizationService;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService clientOrganizationService;
     private final UserService userService;
     private final UserRoleService userRoleService;
 
     public UserRoleFacadePreconditionCheckerComponentImpl(final OrganizationService organizationService,
                                                           final UserService userService,
                                                           final UserRoleService userRoleService,
-                                                          final ClientOrganizationService clientOrganizationService) {
+                                                          final OrganizationClientService clientOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.organizationService = organizationService;
         this.userService = userService;

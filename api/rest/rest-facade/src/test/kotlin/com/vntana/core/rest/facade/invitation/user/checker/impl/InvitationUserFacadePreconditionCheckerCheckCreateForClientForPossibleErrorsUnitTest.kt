@@ -5,7 +5,6 @@ import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseMo
 import com.vntana.core.rest.facade.invitation.user.checker.AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions
-import org.easymock.EasyMock.anyString
 import org.easymock.EasyMock.expect
 import org.junit.Test
 
@@ -77,7 +76,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
-        expect(clientOrganizationService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(false).once()
+        expect(organizationClientService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(false).once()
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
@@ -99,7 +98,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
-        expect(clientOrganizationService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
+        expect(organizationClientService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
@@ -122,7 +121,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
-        expect(clientOrganizationService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
+        expect(organizationClientService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
         expect(userRolesPermissionsCheckerComponent.isPermittedToInvite(UserRoleModel.CLIENT_ORGANIZATION_ADMIN, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)).andReturn(true).once()
         replayAll()
         Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()

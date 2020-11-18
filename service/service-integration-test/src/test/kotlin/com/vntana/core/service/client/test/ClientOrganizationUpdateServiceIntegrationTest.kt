@@ -16,7 +16,7 @@ class ClientOrganizationUpdateServiceIntegrationTest : AbstractClientOrganizatio
         val client = integrationTestHelper.persistClientOrganization()
         val dto = commonTestHelper.buildUpdateClientOrganizationDto(uuid = client.uuid)
         flushAndClear()
-        clientOrganizationService.update(dto).let {
+        organizationClientService.update(dto).let {
             assertThat(it.uuid).isEqualTo(client.uuid)
             assertThat(it.name).isEqualTo(dto.name)
             assertThat(it.imageBlobId).isEqualTo(dto.imageBlobId)

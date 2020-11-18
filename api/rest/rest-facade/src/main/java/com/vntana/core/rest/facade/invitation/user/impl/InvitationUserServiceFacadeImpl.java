@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFacade {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(InvitationUserServiceFacadeImpl.class);
 
     private final InvitationUserService invitationUserService;
@@ -142,14 +142,28 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
 
     @Transactional
     @Override
-    public SendInvitationUserResultResponse sendInvitation(final SendInvitationUserRequest request) {
-        LOGGER.debug("Processing invitation user facade sendInvitation for request - {}", request);
-        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkSendInvitationForPossibleErrors(request);
+    public SendInvitationUserResultResponse sendInvitationForOrganization(final SendInvitationForOrganizationUserRequest request) {
+        LOGGER.debug("Processing invitation user facade sendInvitationForOrganization for request - {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker
+                .checkSendInvitationForOrganizationForPossibleErrors(request);
         if (singleErrorWithStatus.isPresent()) {
             return new SendInvitationUserResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        final SendInvitationUserResultResponse resultResponse = invitationUserSenderComponent.sendInvitation(request);
-        LOGGER.debug("Successfully processed invitation user facade sendInvitation for request - {}", request);
+        final SendInvitationUserResultResponse resultResponse = invitationUserSenderComponent.sendInvitationForOrganization(request);
+        LOGGER.debug("Successfully processed invitation user facade sendInvitationForOrganization for request - {}", request);
+        return resultResponse;
+    }
+
+    @Override
+    public SendInvitationUserResultResponse sendInvitationForClients(final SendInvitationForClientUserRequest request) {
+        LOGGER.debug("Processing invitation user facade sendInvitationForClients for request - {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker
+                .checkSendInvitationForClientsForPossibleErrors(request);
+        if (singleErrorWithStatus.isPresent()) {
+            return new SendInvitationUserResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
+        }
+        final SendInvitationUserResultResponse resultResponse = invitationUserSenderComponent.sendInvitationForClients(request);
+        LOGGER.debug("Successfully processed invitation user facade sendInvitationForClients for request - {}", request);
         return resultResponse;
     }
 

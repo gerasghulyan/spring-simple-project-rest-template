@@ -22,7 +22,7 @@ import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsG
 import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsResponseModel;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
 import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator;
@@ -61,7 +61,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     private final MapperFacade mapperFacade;
     private final PersistenceUtilityService persistenceUtilityService;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService clientOrganizationService;
     private final OrganizationService organizationService;
     private final UserService userService;
     private final SlugValidationComponent slugValidationComponent;
@@ -69,7 +69,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
 
     public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade,
                                                final PersistenceUtilityService persistenceUtilityService,
-                                               final ClientOrganizationService clientOrganizationService,
+                                               final OrganizationClientService clientOrganizationService,
                                                final OrganizationService organizationService,
                                                final UserService userService,
                                                final SlugValidationComponent slugValidationComponent,

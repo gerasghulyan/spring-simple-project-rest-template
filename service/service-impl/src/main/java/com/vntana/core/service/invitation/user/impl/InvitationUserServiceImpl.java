@@ -9,7 +9,7 @@ import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.persistence.invitation.user.InvitationOrganizationClientUserRepository;
 import com.vntana.core.persistence.invitation.user.InvitationOrganizationUserRepository;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.invitation.user.InvitationUserService;
 import com.vntana.core.service.invitation.user.dto.*;
 import com.vntana.core.service.invitation.user.exception.IncorrectUserInvitedRoleOnOrganizationException;
@@ -41,14 +41,14 @@ public class InvitationUserServiceImpl implements InvitationUserService {
     private final InvitationOrganizationClientUserRepository invitationOrganizationClientUserRepository;
     private final UserService userService;
     private final OrganizationService organizationService;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService clientOrganizationService;
 
     public InvitationUserServiceImpl(
             final InvitationOrganizationUserRepository invitationOrganizationUserRepository,
             final InvitationOrganizationClientUserRepository invitationOrganizationClientUserRepository,
             final UserService userService,
             final OrganizationService organizationService,
-            final ClientOrganizationService clientOrganizationService) {
+            final OrganizationClientService clientOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.invitationOrganizationUserRepository = invitationOrganizationUserRepository;
         this.invitationOrganizationClientUserRepository = invitationOrganizationClientUserRepository;

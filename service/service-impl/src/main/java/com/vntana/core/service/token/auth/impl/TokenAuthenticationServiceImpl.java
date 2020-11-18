@@ -5,7 +5,7 @@ import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.token.TokenAuthentication;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.persistence.token.auth.TokenAuthenticationRepository;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.token.auth.TokenAuthenticationService;
 import com.vntana.core.service.token.auth.dto.CreateTokenAuthenticationDto;
@@ -36,13 +36,13 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
     private final UserService userService;
     private final TokenAuthenticationRepository tokenAuthenticationRepository;
     private final OrganizationService organizationService;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService clientOrganizationService;
 
     public TokenAuthenticationServiceImpl(
             final UserService userService,
             final TokenAuthenticationRepository tokenAuthenticationRepository,
             final OrganizationService organizationService,
-            final ClientOrganizationService clientOrganizationService) {
+            final OrganizationClientService clientOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.clientOrganizationService = clientOrganizationService;
         this.userService = userService;

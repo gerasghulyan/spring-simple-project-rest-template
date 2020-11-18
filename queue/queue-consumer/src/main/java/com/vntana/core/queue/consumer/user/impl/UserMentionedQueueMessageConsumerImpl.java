@@ -8,7 +8,7 @@ import com.vntana.core.queue.consumer.user.UserMentionedQueueMessageConsumer;
 import com.vntana.core.rest.facade.user.component.UserMentionEmailSenderComponent;
 import com.vntana.core.rest.facade.user.component.dto.SendUserMentionDto;
 import com.vntana.core.rest.facade.user.component.dto.UserMentionedEntityType;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -28,10 +28,10 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
     private static final Logger LOGGER = LoggerFactory.getLogger(UserMentionedQueueMessageConsumerImpl.class);
     private final UserService userService;
     private final OrganizationService organizationService;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService clientOrganizationService;
     private final UserMentionEmailSenderComponent mentionEmailSenderComponent;
 
-    public UserMentionedQueueMessageConsumerImpl(final UserService userService, final OrganizationService organizationService, final ClientOrganizationService clientOrganizationService, final UserMentionEmailSenderComponent mentionEmailSenderComponent) {
+    public UserMentionedQueueMessageConsumerImpl(final UserService userService, final OrganizationService organizationService, final OrganizationClientService clientOrganizationService, final UserMentionEmailSenderComponent mentionEmailSenderComponent) {
         this.userService = userService;
         this.organizationService = organizationService;
         this.clientOrganizationService = clientOrganizationService;

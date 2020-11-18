@@ -19,10 +19,10 @@ class InvitationUserSendInvitationFacadeUnitTest : AbstractInvitationUserFacadeU
     fun `test when precondition check failed`() {
         val request = invitationUserRestTestHelper.buildSendInvitationUserRequest()
         resetAll()
-        expect(preconditionChecker.checkSendInvitationForPossibleErrors(request))
+        expect(preconditionChecker.checkSendInvitationForOrganizationForPossibleErrors(request))
                 .andReturn(SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND))
         replayAll()
-        assertBasicErrorResultResponse(invitationUserServiceFacade.sendInvitation(request), InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
+        assertBasicErrorResultResponse(invitationUserServiceFacade.sendInvitationForOrganization(request), InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
         verifyAll()
     }
     
@@ -31,10 +31,10 @@ class InvitationUserSendInvitationFacadeUnitTest : AbstractInvitationUserFacadeU
         resetAll()
         val request = invitationUserRestTestHelper.buildSendInvitationUserRequest()
         val response = SendInvitationUserResultResponse()
-        expect(preconditionChecker.checkSendInvitationForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(invitationUserSenderComponent.sendInvitation(request)).andReturn(response)
+        expect(preconditionChecker.checkSendInvitationForOrganizationForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(invitationUserSenderComponent.sendInvitationForOrganization(request)).andReturn(response)
         replayAll()
-        assertThat(invitationUserServiceFacade.sendInvitation(request)).isEqualTo(response)
+        assertThat(invitationUserServiceFacade.sendInvitationForOrganization(request)).isEqualTo(response)
         verifyAll()
     }
 }
