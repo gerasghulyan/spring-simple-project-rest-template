@@ -24,7 +24,7 @@ public class ClientOrganizationServiceFacadePreconditionCheckerComponentImpl imp
     private final UserService userService;
     private final OrganizationService organizationService;
 
-    ClientOrganizationServiceFacadePreconditionCheckerComponentImpl(final UserService userService, final OrganizationService organizationService) {
+    public ClientOrganizationServiceFacadePreconditionCheckerComponentImpl(final UserService userService, final OrganizationService organizationService) {
         this.userService = userService;
         this.organizationService = organizationService;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
