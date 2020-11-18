@@ -5,15 +5,41 @@ package com.vntana.core.domain.user;
  * Date: 10/10/19
  * Time: 4:57 PM
  */
-public enum UserRole {
-    SUPER_ADMIN,
-    ORGANIZATION_OWNER,
-    ORGANIZATION_ADMIN,
-    CLIENT_ORGANIZATION_ADMIN,
-    CLIENT_ORGANIZATION_CONTENT_MANAGER,
-    CLIENT_ORGANIZATION_VIEWER;
-    
-    public boolean isClientRelatedRole() {
-        return this.equals(CLIENT_ORGANIZATION_ADMIN) || this.equals(CLIENT_ORGANIZATION_CONTENT_MANAGER) || this.equals(CLIENT_ORGANIZATION_VIEWER);
-    }
+public enum UserRole implements UserRolePredefinedAbility {
+    SUPER_ADMIN {
+        @Override
+        public Boolean hasSuperAdminAbility() {
+            return true;
+        }
+    },
+    ORGANIZATION_OWNER {
+        @Override
+        public Boolean hasOrganizationAbility() {
+            return true;
+        }
+    },
+    ORGANIZATION_ADMIN {
+        @Override
+        public Boolean hasOrganizationAbility() {
+            return true;
+        }
+    },
+    CLIENT_ORGANIZATION_ADMIN {
+        @Override
+        public Boolean hasClientAbility() {
+            return true;
+        }
+    },
+    CLIENT_ORGANIZATION_CONTENT_MANAGER {
+        @Override
+        public Boolean hasClientAbility() {
+            return true;
+        }
+    },
+    CLIENT_ORGANIZATION_VIEWER {
+        @Override
+        public Boolean hasClientAbility() {
+            return true;
+        }
+    };
 }

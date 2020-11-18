@@ -99,7 +99,7 @@ class FindByUserAndOrganizationAuthFacadeImplUnitTest : AbstractAuthFacadeUnitTe
             assertThat(it.response().uuid).isEqualTo(request.uuid)
             assertThat(it.response().organizationUuid).isEqualTo(request.organizationUuid)
             assertThat(it.response().username).isEqualTo(user.email)
-            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_CLIENTS_VIEWER)
+            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_CLIENT_MEMBER)
             assertThat(it.response().superAdmin).isFalse()
         }
         verifyAll()

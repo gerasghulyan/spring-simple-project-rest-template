@@ -24,7 +24,7 @@ public class UserRevokeClientRoleDto implements ServiceDto {
         Assert.hasText(userUuid, "The user uuid should not be null or empty");
         Assert.hasText(clientOrganizationUuid, "The client organization uuid should not be null or empty");
         Assert.notNull(clientRole, "The client role should not be null");
-        Assert.isTrue(clientRole.isClientRelatedRole(), "The UserRole should be client related role");
+        Assert.isTrue(clientRole.hasClientAbility(), "The UserRole should be client related role");
         this.clientRole = clientRole;
         this.userUuid = userUuid;
         this.clientOrganizationUuid = clientOrganizationUuid;

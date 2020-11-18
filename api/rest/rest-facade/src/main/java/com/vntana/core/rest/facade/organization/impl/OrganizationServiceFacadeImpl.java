@@ -286,7 +286,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                                 final Organization organization = clientOrganizationAwareUserRole.getClientOrganization().getOrganization();
                                 return mapOrganizationToGetUserOrganizationsResponseModel(
                                         organization,
-                                        UserRoleModel.ORGANIZATION_CLIENTS_VIEWER
+                                        UserRoleModel.ORGANIZATION_CLIENT_MEMBER
                                 );
                             }
                             throw new IllegalStateException(format("The give role %s had not properly crated", userRole));

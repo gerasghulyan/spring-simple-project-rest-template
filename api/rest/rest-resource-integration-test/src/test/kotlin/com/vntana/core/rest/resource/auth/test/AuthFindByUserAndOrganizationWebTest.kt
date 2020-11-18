@@ -82,7 +82,7 @@ class AuthFindByUserAndOrganizationWebTest : AbstractAuthWebTest() {
         )
         authResourceClient.findByUserAndOrganization(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_CLIENTS_VIEWER)
+            assertThat(it.response().userRole).isEqualTo(UserRoleModel.ORGANIZATION_CLIENT_MEMBER)
             assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
             assertThat(it.response().uuid).isEqualTo(userUuid)
             assertThat(it.response().superAdmin).isFalse()
