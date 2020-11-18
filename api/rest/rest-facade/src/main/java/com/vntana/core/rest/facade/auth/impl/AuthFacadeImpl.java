@@ -136,7 +136,7 @@ public class AuthFacadeImpl implements AuthFacade {
                 .map(theRole -> UserRoleModel.valueOf(theRole.getUserRole().name()))
                 .orElseGet(() -> {
                     if (!CollectionUtils.isEmpty(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid()))) {
-                        return UserRoleModel.ORGANIZATION_CLIENTS_VIEWER;
+                        return UserRoleModel.ORGANIZATION_CLIENT_MEMBER;
                     }
                     return null;
                 }));

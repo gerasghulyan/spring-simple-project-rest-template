@@ -53,7 +53,7 @@ class UserRolesPermissionsCheckerComponentUnitTest : AbstractFacadeUnitTest() {
 
     @Test
     fun `test when inviter - ORGANIZATION_CLIENTS_VIEWER`() {
-        val inviter = UserRoleModel.ORGANIZATION_CLIENTS_VIEWER
+        val inviter = UserRoleModel.ORGANIZATION_CLIENT_MEMBER
         val invited = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
         resetAll()
         replayAll()

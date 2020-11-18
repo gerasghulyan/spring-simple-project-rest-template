@@ -22,14 +22,11 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
 
     @Override
     public boolean isPermittedToInvite(final UserRoleModel inviter, final UserRoleModel invited) {
+        if (!inviter.hasInviterAbility()) {
+            return false;
+        }
         if (inviter == UserRoleModel.ORGANIZATION_OWNER) {
             return invited != UserRoleModel.ORGANIZATION_OWNER;
-        }
-        if (inviter == UserRoleModel.CLIENT_ORGANIZATION_VIEWER) {
-            return false;
-        }
-        if (inviter == UserRoleModel.ORGANIZATION_CLIENTS_VIEWER) {
-            return false;
         }
         return inviter.getPriority() <= invited.getPriority();
     }

@@ -5,37 +5,66 @@ package com.vntana.core.model.auth.response;
  * Date: 10/10/19
  * Time: 4:57 PM
  */
-public enum UserRoleModel {
-    SUPER_ADMIN(1),
-    ORGANIZATION_OWNER(2),
-    ORGANIZATION_ADMIN(3),
-    ORGANIZATION_CLIENTS_VIEWER(10000),
+public enum UserRoleModel implements UserRoleModelPredefinedAbility {
+    SUPER_ADMIN(1) {
+        @Override
+        public Boolean hasSuperAdminAbility() {
+            return true;
+        }
+    },
+    ORGANIZATION_OWNER(2) {
+        @Override
+        public Boolean hasOrganizationAbility() {
+            return true;
+        }
+    },
+    ORGANIZATION_ADMIN(3) {
+        @Override
+        public Boolean hasOrganizationAbility() {
+            return true;
+        }
+    },
+    ORGANIZATION_CLIENT_MEMBER {
+        @Override
+        public Boolean hasNeutralAbility() {
+            return true;
+        }
+
+        @Override
+        public Boolean hasInviterAbility() {
+            return false;
+        }
+    },
     CLIENT_ORGANIZATION_ADMIN(4) {
         @Override
-        public Boolean isClientRelatedRole() {
+        public Boolean hasClientAbility() {
             return true;
         }
     },
     CLIENT_ORGANIZATION_CONTENT_MANAGER(5) {
         @Override
-        public Boolean isClientRelatedRole() {
+        public Boolean hasClientAbility() {
             return true;
         }
     },
     CLIENT_ORGANIZATION_VIEWER(6) {
         @Override
-        public Boolean isClientRelatedRole() {
+        public Boolean hasClientAbility() {
             return true;
+        }
+
+        @Override
+        public Boolean hasInviterAbility() {
+            return false;
         }
     };
 
-    public Boolean isClientRelatedRole() {
-        return false;
+    private int priority;
+
+    UserRoleModel() {
     }
 
-    private final int priority;
-
-    UserRoleModel(int priority) {
+    UserRoleModel(final int priority) {
         this.priority = priority;
     }
 
