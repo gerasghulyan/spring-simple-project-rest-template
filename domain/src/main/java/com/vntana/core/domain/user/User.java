@@ -99,6 +99,12 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .findAny();
     }
 
+    public Optional<UserOrganizationAdminRole> roleOfOrganizationAdmin(final Organization organization) {
+        return immutableOrganizationAdminRoles().stream()
+                .filter(role -> role.getOrganization().equals(organization))
+                .findAny();
+    }
+
     public Optional<UserSuperAdminRole> roleOfSuperAdmin() {
         return immutableRoles().stream()
                 .filter(role -> role.getUserRole().equals(UserRole.SUPER_ADMIN))
@@ -157,6 +163,17 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .map(theRoles -> theRoles.stream()
                         .filter(UserOrganizationOwnerRole.class::isInstance)
                         .map(UserOrganizationOwnerRole.class::cast)
+                        .collect(Collectors.toList())
+                )
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
+    }
+
+    public List<UserOrganizationAdminRole> immutableOrganizationAdminRoles() {
+        return Optional.ofNullable(roles)
+                .map(theRoles -> theRoles.stream()
+                        .filter(UserOrganizationAdminRole.class::isInstance)
+                        .map(UserOrganizationAdminRole.class::cast)
                         .collect(Collectors.toList())
                 )
                 .map(Collections::unmodifiableList)

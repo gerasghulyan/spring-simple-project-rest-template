@@ -5,8 +5,7 @@ import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel
 import com.vntana.core.rest.facade.client.AbstractClientOrganizationServiceFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
-import org.easymock.EasyMock.anyString
-import org.easymock.EasyMock.expect
+import org.easymock.EasyMock.*
 import org.junit.Test
 
 /**
@@ -46,9 +45,60 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         )
         expect(preconditionCheckerComponent.checkGetUserClientOrganizations(anyString(), anyString())).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(anyString())).andReturn(user)
+        expect(organizationService.getByUuid(anyString())).andReturn(organization)
         expect(userRoleService.findAllClientsByOrganization(anyString())).andReturn(listOf(clientContentManagerRole, clientOrganizationAdminRole))
         replayAll()
-        clientOrganizationServiceFacade.getUserClientOrganizations(uuid(), uuid()).let {
+        clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().items().size).isEqualTo(2)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test getUserClientOrganizations for organization owner user`() {
+        resetAll()
+        // Test data
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val organization2 = organizationCommonTestHelper.buildOrganization()
+        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
+        val clientContentManagerRole = userRoleHelper.buildUserClientContentManagerRole(
+                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization)
+        )
+        val clientOrganizationAdminRole = userRoleHelper.buildUserClientAdminRole(
+                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization2)
+        )
+        expect(preconditionCheckerComponent.checkGetUserClientOrganizations(anyString(), anyString())).andReturn(SingleErrorWithStatus.empty())
+        expect(userService.getByUuid(anyString())).andReturn(user)
+        expect(organizationService.getByUuid(anyString())).andReturn(organization)
+        expect(userRoleService.findAllClientsByOrganization(anyString())).andReturn(listOf(clientContentManagerRole, clientOrganizationAdminRole))
+        replayAll()
+        clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().items().size).isEqualTo(2)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test getUserClientOrganizations for organization admin user`() {
+        resetAll()
+        // Test data
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val organization2 = organizationCommonTestHelper.buildOrganization()
+        val user = userHelper.buildUserWithOrganizationAdminRole(organization = organization)
+        val clientContentManagerRole = userRoleHelper.buildUserClientContentManagerRole(
+                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization)
+        )
+        val clientOrganizationAdminRole = userRoleHelper.buildUserClientAdminRole(
+                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization2)
+        )
+        expect(preconditionCheckerComponent.checkGetUserClientOrganizations(anyString(), anyString())).andReturn(SingleErrorWithStatus.empty())
+        expect(userService.getByUuid(anyString())).andReturn(user)
+        expect(organizationService.getByUuid(anyString())).andReturn(organization)
+        expect(userRoleService.findAllClientsByOrganization(anyString())).andReturn(listOf(clientContentManagerRole, clientOrganizationAdminRole))
+        replayAll()
+        clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().items().size).isEqualTo(2)
         }
@@ -60,18 +110,20 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         resetAll()
         // Test data
         val organization = organizationCommonTestHelper.buildOrganization()
-        val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
+        val organization2 = organizationCommonTestHelper.buildOrganization()
+        val user = userHelper.buildUser()
         val clientContentManagerRole = userRoleHelper.buildUserClientContentManagerRole(
                 clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization)
         )
         val clientOrganizationAdminRole = userRoleHelper.buildUserClientAdminRole(
-                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization)
+                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization2)
         )
         expect(preconditionCheckerComponent.checkGetUserClientOrganizations(anyString(), anyString())).andReturn(SingleErrorWithStatus.empty())
+        expect(organizationService.getByUuid(anyString())).andReturn(organization)
         expect(userService.getByUuid(anyString())).andReturn(user)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(anyString(), anyString())).andReturn(listOf(clientContentManagerRole, clientOrganizationAdminRole))
         replayAll()
-        clientOrganizationServiceFacade.getUserClientOrganizations(uuid(), uuid()).let {
+        clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().items().size).isEqualTo(2)
         }

@@ -245,7 +245,9 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     }
 
     private List<AbstractClientOrganizationAwareUserRole> getOrganizationClientOrganization(final String userUuid, final String userOrganizationUuid, final User user) {
-        if (user.roleOfSuperAdmin().isPresent()) {
+        final Organization organization = organizationService.getByUuid(userOrganizationUuid);
+        if (user.roleOfSuperAdmin().isPresent() || user.roleOfOrganizationOwner(organization).isPresent()
+                || user.roleOfOrganizationAdmin(organization).isPresent()) {
             return userRoleService.findAllClientsByOrganization(userOrganizationUuid);
         }
         return userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(userOrganizationUuid, userUuid);
