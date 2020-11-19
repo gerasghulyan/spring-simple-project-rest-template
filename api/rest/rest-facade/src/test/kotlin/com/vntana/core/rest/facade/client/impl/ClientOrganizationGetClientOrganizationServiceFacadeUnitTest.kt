@@ -1,6 +1,7 @@
 package com.vntana.core.rest.facade.client.impl
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus
+import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel
 import com.vntana.core.rest.facade.client.AbstractClientOrganizationServiceFacadeUnitTest
 import org.apache.http.HttpStatus
@@ -34,23 +35,24 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         resetAll()
         // Test data
         val organization = organizationCommonTestHelper.buildOrganization()
-        val organization2 = organizationCommonTestHelper.buildOrganization()
         val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         user.grantSuperAdminRole()
-        val clientContentManagerRole = userRoleHelper.buildUserClientContentManagerRole(
-                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization)
-        )
-        val clientOrganizationAdminRole = userRoleHelper.buildUserClientAdminRole(
-                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization2)
-        )
+        val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
+        organization.grantClientOrganization(clientOrganization)
         expect(preconditionCheckerComponent.checkGetUserClientOrganizations(anyString(), anyString())).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(anyString())).andReturn(user)
         expect(organizationService.getByUuid(anyString())).andReturn(organization)
-        expect(userRoleService.findAllClientsByOrganization(anyString())).andReturn(listOf(clientContentManagerRole, clientOrganizationAdminRole))
         replayAll()
         clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
-            assertBasicSuccessResultResponse(it)
-            assertThat(it.response().items().size).isEqualTo(2)
+            assertThat(it.response())
+            assertThat(it.response().totalCount()).isEqualTo(1)
+            val organizationClientOrganization = it.response().items()[0]
+            assertThat(organizationClientOrganization.name).isEqualTo(clientOrganization.name)
+            assertThat(organizationClientOrganization.slug).isEqualTo(clientOrganization.slug)
+            assertThat(organizationClientOrganization.uuid).isEqualTo(clientOrganization.uuid)
+            assertThat(organizationClientOrganization.imageBlobId).isEqualTo(clientOrganization.imageBlobId)
+            assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.SUPER_ADMIN)
+            assertThat(organizationClientOrganization.created).isEqualTo(clientOrganization.created)
         }
         verifyAll()
     }
@@ -60,22 +62,23 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         resetAll()
         // Test data
         val organization = organizationCommonTestHelper.buildOrganization()
-        val organization2 = organizationCommonTestHelper.buildOrganization()
         val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
-        val clientContentManagerRole = userRoleHelper.buildUserClientContentManagerRole(
-                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization)
-        )
-        val clientOrganizationAdminRole = userRoleHelper.buildUserClientAdminRole(
-                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization2)
-        )
+        val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
+        organization.grantClientOrganization(clientOrganization)
         expect(preconditionCheckerComponent.checkGetUserClientOrganizations(anyString(), anyString())).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(anyString())).andReturn(user)
         expect(organizationService.getByUuid(anyString())).andReturn(organization)
-        expect(userRoleService.findAllClientsByOrganization(anyString())).andReturn(listOf(clientContentManagerRole, clientOrganizationAdminRole))
         replayAll()
         clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
-            assertBasicSuccessResultResponse(it)
-            assertThat(it.response().items().size).isEqualTo(2)
+            assertThat(it.response())
+            assertThat(it.response().totalCount()).isEqualTo(1)
+            val organizationClientOrganization = it.response().items()[0]
+            assertThat(organizationClientOrganization.name).isEqualTo(clientOrganization.name)
+            assertThat(organizationClientOrganization.slug).isEqualTo(clientOrganization.slug)
+            assertThat(organizationClientOrganization.uuid).isEqualTo(clientOrganization.uuid)
+            assertThat(organizationClientOrganization.imageBlobId).isEqualTo(clientOrganization.imageBlobId)
+            assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+            assertThat(organizationClientOrganization.created).isEqualTo(clientOrganization.created)
         }
         verifyAll()
     }
@@ -85,22 +88,23 @@ class ClientOrganizationGetClientOrganizationServiceFacadeUnitTest : AbstractCli
         resetAll()
         // Test data
         val organization = organizationCommonTestHelper.buildOrganization()
-        val organization2 = organizationCommonTestHelper.buildOrganization()
         val user = userHelper.buildUserWithOrganizationAdminRole(organization = organization)
-        val clientContentManagerRole = userRoleHelper.buildUserClientContentManagerRole(
-                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization)
-        )
-        val clientOrganizationAdminRole = userRoleHelper.buildUserClientAdminRole(
-                clientOrganization = clientOrganizationHelper.buildClientOrganization(organization = organization2)
-        )
+        val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
+        organization.grantClientOrganization(clientOrganization)
         expect(preconditionCheckerComponent.checkGetUserClientOrganizations(anyString(), anyString())).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(anyString())).andReturn(user)
         expect(organizationService.getByUuid(anyString())).andReturn(organization)
-        expect(userRoleService.findAllClientsByOrganization(anyString())).andReturn(listOf(clientContentManagerRole, clientOrganizationAdminRole))
         replayAll()
         clientOrganizationServiceFacade.getUserClientOrganizations(user.uuid, organization.uuid).let {
-            assertBasicSuccessResultResponse(it)
-            assertThat(it.response().items().size).isEqualTo(2)
+            assertThat(it.response())
+            assertThat(it.response().totalCount()).isEqualTo(1)
+            val organizationClientOrganization = it.response().items()[0]
+            assertThat(organizationClientOrganization.name).isEqualTo(clientOrganization.name)
+            assertThat(organizationClientOrganization.slug).isEqualTo(clientOrganization.slug)
+            assertThat(organizationClientOrganization.uuid).isEqualTo(clientOrganization.uuid)
+            assertThat(organizationClientOrganization.imageBlobId).isEqualTo(clientOrganization.imageBlobId)
+            assertThat(organizationClientOrganization.role).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
+            assertThat(organizationClientOrganization.created).isEqualTo(clientOrganization.created)
         }
         verifyAll()
     }
