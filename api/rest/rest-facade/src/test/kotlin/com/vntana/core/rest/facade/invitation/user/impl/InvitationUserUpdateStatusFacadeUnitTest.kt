@@ -30,7 +30,7 @@ class InvitationUserUpdateStatusFacadeUnitTest : AbstractInvitationUserFacadeUni
 
     @Test
     fun test() {
-        val invitationUser = invitationUserCommonTestHelper.buildInvitationUser()
+        val invitationUser = invitationUserCommonTestHelper.buildInvitationUserToOrganization()
         val request = invitationUserRestTestHelper.buildUpdateInvitationUserInvitationStatusRequest(
                 uuid = invitationUser.uuid,
                 status = InvitationStatusModel.REJECTED
@@ -42,7 +42,7 @@ class InvitationUserUpdateStatusFacadeUnitTest : AbstractInvitationUserFacadeUni
         resetAll()
         expect(preconditionChecker.checkUpdateStatusForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(mapperFacade.map(request, UpdateInvitationUserStatusDto::class.java)).andReturn(dto)
-        expect(invitationUserService.updateStatus(dto)).andReturn(invitationUser)
+        expect(invitationUserToOrganizationService.updateStatus(dto)).andReturn(invitationUser)
         replayAll()
         val resultResponse = invitationUserServiceFacade.updateStatus(request)
         assertBasicSuccessResultResponse(resultResponse)

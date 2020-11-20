@@ -20,9 +20,9 @@ class TokeFacadePreconditionCheckerCheckCreateTokenInvitationUserUnitTest : Abst
     fun `test when invitation user not found`() {
         resetAll()
         val request = restTestHelper.buildCreateTokenInvitationUserRequest()
-        expect(invitationUserService.existsByUuid(request.invitationUserUuid)).andReturn(false)
+        expect(invitationUserToOrganizationService.existsByUuid(request.userInvitationUuid)).andReturn(false)
         replayAll()
-        preconditionChecker.checkCreateTokenInvitationUser(request).let {
+        preconditionChecker.checkCreateTokenUserInvitationToOrganization(request).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
             assertThat(it.error).isEqualTo(TokenErrorResponseModel.INVITATION_USER_NOT_FOUND)
         }
@@ -33,9 +33,9 @@ class TokeFacadePreconditionCheckerCheckCreateTokenInvitationUserUnitTest : Abst
     fun test() {
         resetAll()
         val request = restTestHelper.buildCreateTokenInvitationUserRequest()
-        expect(invitationUserService.existsByUuid(request.invitationUserUuid)).andReturn(true)
+        expect(invitationUserToOrganizationService.existsByUuid(request.userInvitationUuid)).andReturn(true)
         replayAll()
-        assertThat(preconditionChecker.checkCreateTokenInvitationUser(request)).isEqualTo(SingleErrorWithStatus.empty<ErrorResponseModel>())
+        assertThat(preconditionChecker.checkCreateTokenUserInvitationToOrganization(request)).isEqualTo(SingleErrorWithStatus.empty<ErrorResponseModel>())
         verifyAll()
     }
 }

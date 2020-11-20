@@ -75,7 +75,7 @@ class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
         val newUserFullName = uuid()
         val password = uuid()
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
+        val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
         tokenResourceTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUserUuid)
         val request = resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = token, newUserFullName = newUserFullName, password = password)
         invitationUserResourceClient.acceptAndSignUp(request).let { responseEntity ->

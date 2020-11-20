@@ -29,7 +29,7 @@ class TokenInvitationUserFindByTokenServiceUnitTest : AbstractTokenInvitationUse
     fun `test when not found`() {
         resetAll()
         val token = uuid()
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.empty())
+        expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
         assertThat(tokenInvitationUserService.findByToken(token)).isEmpty
         verifyAll()
@@ -40,7 +40,7 @@ class TokenInvitationUserFindByTokenServiceUnitTest : AbstractTokenInvitationUse
         resetAll()
         val token = uuid()
         val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
+        expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
         assertThat(tokenInvitationUserService.findByToken(token)).hasValue(tokenInvitationUser)
         verifyAll()

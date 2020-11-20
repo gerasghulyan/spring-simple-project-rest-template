@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.invitation.user.checker.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
-import com.vntana.core.domain.token.TokenInvitationUser;
+import com.vntana.core.domain.token.TokenUserInvitationToOrganization;
 import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
@@ -11,7 +11,7 @@ import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent;
 import com.vntana.core.service.client.OrganizationClientService;
-import com.vntana.core.service.invitation.user.InvitationUserService;
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
 import com.vntana.core.service.user.UserService;
@@ -43,7 +43,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     private final UserService userService;
     private final UserRoleService userRoleService;
     private final OrganizationService organizationService;
-    private final InvitationUserService invitationUserService;
+    private final InvitationUserToOrganizationService invitationUserService;
     private final TokenInvitationUserService tokenInvitationUserService;
     private final OrganizationClientService clientOrganizationService;
     private final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker;
@@ -52,7 +52,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             final UserService userService,
             final UserRoleService userRoleService,
             final OrganizationService organizationService,
-            final InvitationUserService invitationUserService,
+            final InvitationUserToOrganizationService invitationUserService,
             final TokenInvitationUserService tokenInvitationUserService,
             final OrganizationClientService clientOrganizationService,
             final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker) {
@@ -136,7 +136,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     @Override
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForPossibleErrors(final AcceptInvitationUserRequest request) {
         LOGGER.debug("Checking invitation user accept precondition for request - {}", request);
-        final Optional<TokenInvitationUser> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
+        final Optional<TokenUserInvitationToOrganization> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
         if (!tokenInvitationUserOptional.isPresent()) {
             LOGGER.debug("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
@@ -155,12 +155,12 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
 
     @Override
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request) {
-        final Optional<TokenInvitationUser> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
+        final Optional<TokenUserInvitationToOrganization> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
         if (!tokenInvitationUserOptional.isPresent()) {
             LOGGER.debug("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }
-        final TokenInvitationUser tokenInvitationUser = tokenInvitationUserOptional.get();
+        final TokenUserInvitationToOrganization tokenInvitationUser = tokenInvitationUserOptional.get();
         if (tokenInvitationUser.isExpired()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
         }

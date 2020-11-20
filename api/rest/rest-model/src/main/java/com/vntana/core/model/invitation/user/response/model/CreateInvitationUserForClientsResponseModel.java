@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class CreateInvitationUserForClientsResponseModel implements ResponseModel {
 
-    @JsonProperty("uuid")
+    @JsonProperty("uuids")
     private List<String> uuids;
 
     public CreateInvitationUserForClientsResponseModel() {

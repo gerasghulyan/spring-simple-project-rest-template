@@ -30,10 +30,10 @@ class TokenResourceTestHelper : TokenRestTestHelper() {
 
     fun persistTokenInvitationUser(
             token: String = uuid(),
-            invitationUserUuid: String = invitationUserResourceTestHelper.persistInvitationUser()
+            invitationUserUuid: String = invitationUserResourceTestHelper.persistInvitationUserToOrganization()
     ): String {
         val request = buildCreateTokenInvitationUserRequest(token = token, invitationUserUuid = invitationUserUuid)
-        return tokenResourceClient.createTokenInvitationUser(request)?.body?.response()?.uuid.toString()
+        return tokenResourceClient.createTokenInvitationUserToOrganization(request)?.body?.response()?.uuid.toString()
     }
 
     fun expire(token: String? = uuid()) {

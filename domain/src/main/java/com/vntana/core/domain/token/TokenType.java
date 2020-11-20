@@ -8,5 +8,6 @@ package com.vntana.core.domain.token;
 public enum TokenType {
     RESET_PASSWORD,
     INVITATION_ORGANIZATION,
-    INVITATION_USER
+    INVITATION_USER_TO_ORGANIZATION,
+    INVITATION_USER_TO_CLIENT
 }

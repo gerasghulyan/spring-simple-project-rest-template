@@ -29,7 +29,7 @@ class TokenInvitationUserIsExistsServiceUnitTest : AbstractTokenInvitationUserSe
     fun `test when does not exist`() {
         resetAll()
         val token = uuid()
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.empty())
+        expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
         assertThat(tokenInvitationUserService.isExists(token)).isFalse()
         verifyAll()
@@ -40,7 +40,7 @@ class TokenInvitationUserIsExistsServiceUnitTest : AbstractTokenInvitationUserSe
         resetAll()
         val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
         val token = tokenInvitationUser.token
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
+        expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
         assertThat(tokenInvitationUserService.isExists(token)).isTrue()
         verifyAll()

@@ -48,7 +48,7 @@ class InvitationUserForClientCreateFacadeUnitTest : AbstractInvitationUserFacade
         resetAll()
         expect(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(mapperFacade.map(request, CreateInvitationForClientsUserDto::class.java)).andReturn(dto)
-        expect(invitationUserService.creteInvitationForClients(dto)).andReturn(invitationOrganizationClientUser)
+        expect(invitationUserToClientService.create(dto)).andReturn(invitationOrganizationClientUser)
         replayAll()
         assertBasicSuccessResultResponse(invitationUserServiceFacade.createInvitationForClient(request))
         verifyAll()

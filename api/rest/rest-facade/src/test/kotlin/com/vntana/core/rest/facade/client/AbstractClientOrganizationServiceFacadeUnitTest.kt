@@ -66,7 +66,7 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
     fun before() {
         clientOrganizationServiceFacade = ClientOrganizationServiceFacadeImpl(
                 mapperFacade,
-                clientOrganizationService,
+                organizationClientService,
                 organizationService,
                 userService,
                 userRoleService,

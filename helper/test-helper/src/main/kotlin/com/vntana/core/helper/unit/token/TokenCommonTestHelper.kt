@@ -3,15 +3,16 @@ package com.vntana.core.helper.unit.token
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.domain.token.TokenInvitationOrganization
-import com.vntana.core.domain.token.TokenInvitationUser
 import com.vntana.core.domain.token.TokenResetPassword
+import com.vntana.core.domain.token.TokenUserInvitationToOrganization
 import com.vntana.core.domain.user.User
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto
-import com.vntana.core.service.token.invitation.user.dto.CreateTokenInvitationUserDto
+import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToOrganizationDto
+import com.vntana.core.service.token.invitation.user.dto.InvitationUuidAndTokenDto
 import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto
 import java.time.LocalDateTime
 
@@ -31,10 +32,15 @@ open class TokenCommonTestHelper : AbstractCommonTestHelper() {
             invitationOrganizationUuid: String? = uuid()
     ): CreateTokenInvitationOrganizationDto = CreateTokenInvitationOrganizationDto(token, invitationOrganizationUuid)
 
-    fun buildCreateTokenInvitationUserDto(
+    fun buildCreateTokenInvitationUserToOrganizationDto(
             token: String? = uuid(),
             invitationUserUuid: String? = uuid()
-    ): CreateTokenInvitationUserDto = CreateTokenInvitationUserDto(token, invitationUserUuid)
+    ): CreateInvitationUserToOrganizationDto = CreateInvitationUserToOrganizationDto(token, invitationUserUuid)
+
+    fun buildInvitationUuidAndTokenDto(
+            token: String? = uuid(),
+            userInvitationUuid: String? = uuid()
+    ): InvitationUuidAndTokenDto = InvitationUuidAndTokenDto(userInvitationUuid, token)
 
     fun buildTokenInvitationOrganization(
             token: String? = uuid(),
@@ -43,8 +49,8 @@ open class TokenCommonTestHelper : AbstractCommonTestHelper() {
 
     fun buildTokenInvitationUser(
             token: String? = uuid(),
-            invitationOrganizationUser: InvitationOrganizationUser? = invitationUserCommonTestHelper.buildInvitationUser()
-    ): TokenInvitationUser = TokenInvitationUser(token, invitationOrganizationUser)
+            invitationOrganizationUser: InvitationOrganizationUser? = invitationUserCommonTestHelper.buildInvitationUserToOrganization()
+    ): TokenUserInvitationToOrganization = TokenUserInvitationToOrganization(token, invitationOrganizationUser)
 
     fun buildCreateTokenResetPasswordDto(
             token: String? = uuid(),

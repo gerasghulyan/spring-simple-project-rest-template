@@ -10,7 +10,7 @@ import com.vntana.core.rest.facade.invitation.user.checker.impl.InvitationUserFa
 import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.client.OrganizationClientService
-import com.vntana.core.service.invitation.user.InvitationUserService
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService
 import com.vntana.core.service.user.UserService
@@ -39,7 +39,7 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
     protected lateinit var organizationClientService: OrganizationClientService
 
     @Mock
-    protected lateinit var invitationUserService: InvitationUserService
+    protected lateinit var invitationUserToOrganizationService: InvitationUserToOrganizationService
 
     @Mock
     protected lateinit var tokenInvitationUserService: TokenInvitationUserService
@@ -64,7 +64,7 @@ abstract class AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest : A
         preconditionChecker = InvitationUserFacadePreconditionCheckerImpl(userService,
                 userRoleService,
                 organizationService,
-                invitationUserService,
+                invitationUserToOrganizationService,
                 tokenInvitationUserService,
                 organizationClientService,
                 userRolesPermissionsCheckerComponent

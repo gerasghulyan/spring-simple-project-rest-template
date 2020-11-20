@@ -11,7 +11,8 @@ import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadeP
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent
 import com.vntana.core.rest.facade.invitation.user.impl.InvitationUserServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
-import com.vntana.core.service.invitation.user.InvitationUserService
+import com.vntana.core.service.invitation.user.InvitationUserToClientService
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService
 import com.vntana.core.service.token.TokenService
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService
 import com.vntana.core.service.user.UserService
@@ -26,6 +27,7 @@ import org.junit.Before
  * Time: 3:35 PM
  */
 abstract class AbstractInvitationUserFacadeUnitTest : AbstractFacadeUnitTest() {
+
     protected lateinit var invitationUserServiceFacade: InvitationUserServiceFacade
 
     @Mock
@@ -41,7 +43,10 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractFacadeUnitTest() {
     protected lateinit var userService: UserService
 
     @Mock
-    protected lateinit var invitationUserService: InvitationUserService
+    protected lateinit var invitationUserToOrganizationService: InvitationUserToOrganizationService
+
+    @Mock
+    protected lateinit var invitationUserToClientService: InvitationUserToClientService
 
     @Mock
     protected lateinit var mapperFacade: MapperFacade
@@ -62,7 +67,9 @@ abstract class AbstractInvitationUserFacadeUnitTest : AbstractFacadeUnitTest() {
 
     @Before
     fun prepare() {
-        invitationUserServiceFacade = InvitationUserServiceFacadeImpl(invitationUserService,
+        invitationUserServiceFacade = InvitationUserServiceFacadeImpl(
+                invitationUserToOrganizationService,
+                invitationUserToClientService,
                 preconditionChecker,
                 tokenInvitationUserService,
                 userRoleService,

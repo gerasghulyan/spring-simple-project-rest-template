@@ -21,7 +21,8 @@ import com.vntana.core.model.invitation.user.response.model.GetByUserInvitationT
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent;
-import com.vntana.core.service.invitation.user.InvitationUserService;
+import com.vntana.core.service.invitation.user.InvitationUserToClientService;
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService;
 import com.vntana.core.service.invitation.user.dto.*;
 import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
@@ -51,7 +52,8 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InvitationUserServiceFacadeImpl.class);
 
-    private final InvitationUserService invitationUserService;
+    private final InvitationUserToOrganizationService invitationUserToOrganizationService;
+    private final InvitationUserToClientService invitationUserToClientService;
     private final InvitationUserFacadePreconditionChecker preconditionChecker;
     private final TokenInvitationUserService tokenInvitationUserService;
     private final UserRoleService userRoleService;
@@ -60,15 +62,18 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
     private final TokenService tokenService;
     private final InvitationUserSenderComponent invitationUserSenderComponent;
 
-    public InvitationUserServiceFacadeImpl(final InvitationUserService invitationUserService,
-                                           final InvitationUserFacadePreconditionChecker preconditionChecker,
-                                           final TokenInvitationUserService tokenInvitationUserService,
-                                           final UserRoleService userRoleService,
-                                           final UserService userService,
-                                           final MapperFacade mapperFacade,
-                                           final TokenService tokenService,
-                                           final InvitationUserSenderComponent invitationUserSenderComponent) {
-        this.invitationUserService = invitationUserService;
+    public InvitationUserServiceFacadeImpl(
+            final InvitationUserToOrganizationService invitationUserToOrganizationService,
+            final InvitationUserToClientService invitationUserToClientService,
+            final InvitationUserFacadePreconditionChecker preconditionChecker,
+            final TokenInvitationUserService tokenInvitationUserService,
+            final UserRoleService userRoleService,
+            final UserService userService,
+            final MapperFacade mapperFacade,
+            final TokenService tokenService,
+            final InvitationUserSenderComponent invitationUserSenderComponent) {
+        this.invitationUserToOrganizationService = invitationUserToOrganizationService;
+        this.invitationUserToClientService = invitationUserToClientService;
         this.preconditionChecker = preconditionChecker;
         this.tokenInvitationUserService = tokenInvitationUserService;
         this.userRoleService = userRoleService;
@@ -89,7 +94,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         }
         final List<String> previouslyInvitedUuids = updatePreviouslyInvitedUserInvitationsStatuses(request.getEmail(), request.getOrganizationUuid());
         expirePreviouslyInvitedUserInvitationsTokens(previouslyInvitedUuids);
-        final InvitationOrganizationUser invitationUser = invitationUserService.createInvitationForOrganization(mapperFacade.map(request, CreateInvitationForOrganizationUserDto.class));
+        final InvitationOrganizationUser invitationUser = invitationUserToOrganizationService.create(mapperFacade.map(request, CreateInvitationForOrganizationUserDto.class));
         LOGGER.debug("Successfully created invitation user for request- {}", request);
         return new CreateInvitationUserForOrganizationResultResponse(invitationUser.getUuid());
     }
@@ -102,7 +107,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         if (singleErrorWithStatus.isPresent()) {
             return new CreateInvitationUserForOrganizationClientsResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        final List<InvitationOrganizationClientUser> invitationUsers = invitationUserService.creteInvitationForClients(mapperFacade.map(request, CreateInvitationForClientsUserDto.class));
+        final List<InvitationOrganizationClientUser> invitationUsers = invitationUserToClientService.create(mapperFacade.map(request, CreateInvitationForClientsUserDto.class));
         LOGGER.debug("Successfully created invitation user for request- {}", request);
         return new CreateInvitationUserForOrganizationClientsResultResponse(collectInvitationUuids(invitationUsers));
     }
@@ -114,7 +119,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         if (singleErrorWithStatus.isPresent()) {
             return new GetAllByStatusUserInvitationsResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        final Page<InvitationOrganizationUser> all = invitationUserService.getAllByOrganizationUuidAndStatus(mapperFacade.map(request, GetAllByOrganizationUuidAndStatusInvitationUsersDto.class));
+        final Page<InvitationOrganizationUser> all = invitationUserToOrganizationService.getAllByOrganizationUuidAndStatus(mapperFacade.map(request, GetAllByOrganizationUuidAndStatusInvitationUsersDto.class));
         final List<GetAllByStatusUserInvitationsResponseModel> responseModels = all.stream()
                 .map(invitationUser -> new GetAllByStatusUserInvitationsResponseModel(
                         invitationUser.getUuid(),
@@ -135,7 +140,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         if (singleErrorWithStatus.isPresent()) {
             return new UpdateInvitationUserInvitationStatusResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
         }
-        final InvitationOrganizationUser invitationUser = invitationUserService.updateStatus(mapperFacade.map(request, UpdateInvitationUserStatusDto.class));
+        final InvitationOrganizationUser invitationUser = invitationUserToOrganizationService.updateStatus(mapperFacade.map(request, UpdateInvitationUserStatusDto.class));
         LOGGER.debug("Successfully invitation user invitation status for request- {}", request);
         return new UpdateInvitationUserInvitationStatusResultResponse(invitationUser.getUuid());
     }
@@ -208,7 +213,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         final UserRole role = invitationUser.getRole();
         if (role == UserRole.ORGANIZATION_ADMIN) {
             userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(userUuid, invitationUser.getOrganization().getUuid()));
-            invitationUserService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.ACCEPTED));
+            invitationUserToOrganizationService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.ACCEPTED));
             tokenService.findByTokenAndExpire(token);
         } else {
             throw new UnsupportedOperationException(String.format("Role %s is not supported yet to grant for user", role.name()));
@@ -223,7 +228,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         if (error.isPresent()) {
             return new GetByUserInvitationTokenResultResponse(error.getHttpStatus(), error.getError());
         }
-        final InvitationOrganizationUser invitationUser = invitationUserService.getByToken(token);
+        final InvitationOrganizationUser invitationUser = invitationUserToOrganizationService.getByToken(token);
         final GetByUserInvitationTokenResultResponse resultResponse = new GetByUserInvitationTokenResultResponse(
                 new GetByUserInvitationTokenResponseModel(
                         invitationUser.getUuid(),
@@ -242,12 +247,12 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         Assert.hasText(email, "The email should not be null or empty");
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
         LOGGER.debug("Updating previously created user invitations for user having email - {} and for organization having uuid -{}", email, organizationUuid);
-        final List<String> previouslyInvitedUuids = invitationUserService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(new GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
+        final List<String> previouslyInvitedUuids = invitationUserToOrganizationService.getAllByEmailAndOrganizationUuidAndStatusOrderByCreatedDesc(new GetAllInvitationUsersByEmailAndOrganizationUuidAndStatusDto(
                 email,
                 organizationUuid,
                 InvitationStatus.INVITED)
         ).parallelStream()
-                .map(invitationUser -> invitationUserService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.NOT_APPLICABLE)))
+                .map(invitationUser -> invitationUserToOrganizationService.updateStatus(new UpdateInvitationUserStatusDto(invitationUser.getUuid(), InvitationStatus.NOT_APPLICABLE)))
                 .map(InvitationOrganizationUser::getUuid)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         LOGGER.debug("Successfully updated previously created user invitations for user having email - {} and for organization having uuid -{}", email, organizationUuid);

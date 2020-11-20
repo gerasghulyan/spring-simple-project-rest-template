@@ -1,7 +1,9 @@
 package com.vntana.core.rest.client.token;
 
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
-import com.vntana.core.model.token.request.CreateTokenInvitationUserRequest;
+import com.vntana.core.model.token.request.CreateTokenInvitationUserToOrganizationRequest;
+import com.vntana.core.model.token.request.CreateTokenUserInvitationToClientRequest;
+import com.vntana.core.model.token.response.TokenBulkCreateResultResponse;
 import com.vntana.core.model.token.response.TokenCreateResultResponse;
 import com.vntana.core.model.token.response.TokenExpireResultResponse;
 import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
@@ -20,12 +22,15 @@ public interface TokenResourceClient {
     @PostMapping(path = "organization-invitations")
     ResponseEntity<TokenCreateResultResponse> createTokenInvitationOrganization(@RequestBody final CreateTokenInvitationOrganizationRequest request);
 
-    @PostMapping(path = "user-invitations")
-    ResponseEntity<TokenCreateResultResponse> createTokenInvitationUser(@RequestBody final CreateTokenInvitationUserRequest request);
+    @PostMapping(path = "user-invitations/organization")
+    ResponseEntity<TokenCreateResultResponse> createTokenInvitationUserToOrganization(@RequestBody final CreateTokenInvitationUserToOrganizationRequest request);
+
+    @PostMapping(path = "user-invitations/organization-client")
+    ResponseEntity<TokenBulkCreateResultResponse> createTokenInvitationUserToClient(@RequestBody final CreateTokenUserInvitationToClientRequest request);
 
     @GetMapping(path = "check-expiration")
     ResponseEntity<TokenIsExpiredResultResponse> isExpire(@RequestParam("token") final String token);
-    
+
     @PutMapping(path = "expire")
     ResponseEntity<TokenExpireResultResponse> expire(@RequestBody final String token);
 }

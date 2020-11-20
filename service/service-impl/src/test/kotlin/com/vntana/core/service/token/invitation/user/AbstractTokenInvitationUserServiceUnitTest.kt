@@ -2,9 +2,11 @@ package com.vntana.core.service.token.invitation.user
 
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
-import com.vntana.core.persistence.token.TokenInvitationUserRepository
+import com.vntana.core.persistence.token.TokenUserInvitationToOrganizationClientRepository
+import com.vntana.core.persistence.token.TokenUserInvitationToOrganizationRepository
 import com.vntana.core.service.AbstractServiceUnitTest
-import com.vntana.core.service.invitation.user.InvitationUserService
+import com.vntana.core.service.invitation.user.InvitationUserToClientService
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService
 import com.vntana.core.service.token.invitation.user.impl.TokenInvitationUserServiceImpl
 import org.easymock.Mock
 import org.junit.Before
@@ -19,10 +21,16 @@ abstract class AbstractTokenInvitationUserServiceUnitTest : AbstractServiceUnitT
     protected lateinit var tokenInvitationUserService: TokenInvitationUserService
 
     @Mock
-    protected lateinit var tokenRepository: TokenInvitationUserRepository
+    protected lateinit var tokenInvitationToOrganizationRepository: TokenUserInvitationToOrganizationRepository
 
     @Mock
-    protected lateinit var invitationUserService: InvitationUserService
+    protected lateinit var tokenUserInvitationToOrganizationClientRepository: TokenUserInvitationToOrganizationClientRepository
+
+    @Mock
+    protected lateinit var invitationUserToOrganizationService: InvitationUserToOrganizationService
+
+    @Mock
+    protected lateinit var invitationUserToClientService: InvitationUserToClientService
 
     protected val commonTestHelper = TokenCommonTestHelper()
 
@@ -31,8 +39,10 @@ abstract class AbstractTokenInvitationUserServiceUnitTest : AbstractServiceUnitT
     @Before
     fun before() {
         tokenInvitationUserService = TokenInvitationUserServiceImpl(
-                tokenRepository,
-                invitationUserService
+                tokenInvitationToOrganizationRepository,
+                tokenUserInvitationToOrganizationClientRepository,
+                invitationUserToOrganizationService,
+                invitationUserToClientService
         )
     }
 

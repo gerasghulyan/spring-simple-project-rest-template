@@ -1,12 +1,16 @@
 package com.vntana.core.rest.facade.token.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
 import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.domain.token.TokenInvitationOrganization;
-import com.vntana.core.domain.token.TokenInvitationUser;
+import com.vntana.core.domain.token.TokenUserInvitationToOrganization;
+import com.vntana.core.domain.token.TokenUserInvitationToOrganizationClient;
 import com.vntana.core.model.token.error.TokenErrorResponseModel;
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
-import com.vntana.core.model.token.request.CreateTokenInvitationUserRequest;
+import com.vntana.core.model.token.request.CreateTokenInvitationUserToOrganizationRequest;
+import com.vntana.core.model.token.request.CreateTokenUserInvitationToClientRequest;
+import com.vntana.core.model.token.response.TokenBulkCreateResultResponse;
 import com.vntana.core.model.token.response.TokenCreateResultResponse;
 import com.vntana.core.model.token.response.TokenExpireResultResponse;
 import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
@@ -16,10 +20,15 @@ import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.invitation.organization.TokenInvitationOrganizationService;
 import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
-import com.vntana.core.service.token.invitation.user.dto.CreateTokenInvitationUserDto;
+import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToClientDto;
+import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToOrganizationDto;
+import com.vntana.core.service.token.invitation.user.dto.InvitationUuidAndTokenDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
@@ -66,19 +75,31 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
     }
 
     @Override
-    public TokenCreateResultResponse createTokenInvitationUser(final CreateTokenInvitationUserRequest request) {
-        LOGGER.debug("Processing token facade createTokenInvitationUser for request - {}", request);
-        final SingleErrorWithStatus<TokenErrorResponseModel> error = preconditionChecker.checkCreateTokenInvitationUser(request);
+    public TokenCreateResultResponse createTokenInvitationUserToOrganization(final CreateTokenInvitationUserToOrganizationRequest request) {
+        LOGGER.debug("Processing token facade createTokenInvitationUserToOrganization for request - {}", request);
+        final SingleErrorWithStatus<TokenErrorResponseModel> error = preconditionChecker.checkCreateTokenUserInvitationToOrganization(request);
         if (error.isPresent()) {
             return new TokenCreateResultResponse(error.getHttpStatus(), error.getError());
         }
-        final CreateTokenInvitationUserDto dto = new CreateTokenInvitationUserDto(
+        final CreateInvitationUserToOrganizationDto dto = new CreateInvitationUserToOrganizationDto(
                 request.getToken(),
-                request.getInvitationUserUuid()
+                request.getUserInvitationUuid()
         );
-        final TokenInvitationUser tokenInvitationUser = tokenInvitationUserService.create(dto);
-        LOGGER.debug("Successfully processed token facade createTokenInvitationUser for request - {}", request);
+        final TokenUserInvitationToOrganization tokenInvitationUser = tokenInvitationUserService.createUserInvitationToOrganization(dto);
+        LOGGER.debug("Successfully processed token facade createTokenInvitationUserToOrganization for request - {}", request);
         return new TokenCreateResultResponse(tokenInvitationUser.getUuid());
+    }
+
+    @Override
+    public TokenBulkCreateResultResponse createTokenInvitationUserToClient(final CreateTokenUserInvitationToClientRequest request) {
+        LOGGER.debug("Processing token facade createTokenInvitationUserToClient for request - {}", request);
+        final SingleErrorWithStatus<TokenErrorResponseModel> error = preconditionChecker.checkCreateTokenUserInvitationToClient(request);
+        if (error.isPresent()) {
+            return new TokenBulkCreateResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final List<TokenUserInvitationToOrganizationClient> invitationTokens = tokenInvitationUserService.createUserInvitationToClients(convert(request));
+        LOGGER.debug("Successfully processed token facade createTokenInvitationUserToClient for request - {}", request);
+        return new TokenBulkCreateResultResponse(invitationTokens.stream().map(AbstractUuidAwareDomainEntity::getUuid).collect(Collectors.toList()));
     }
 
     @Override
@@ -103,5 +124,14 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
         tokenService.findByToken(token).ifPresent(abstractToken -> tokenService.expire(abstractToken.getUuid()));
         LOGGER.debug("Successfully processed token facade expire");
         return new TokenExpireResultResponse();
+    }
+
+    private CreateInvitationUserToClientDto convert(final CreateTokenUserInvitationToClientRequest request) {
+        return new CreateInvitationUserToClientDto(request
+                .getTokens()
+                .stream()
+                .map(it -> new InvitationUuidAndTokenDto(it.getUserInvitationUuid(), it.getToken()))
+                .collect(Collectors.toList())
+        );
     }
 }

@@ -63,7 +63,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetByTokenForPossibleErrorsUni
         resetAll()
         expect(tokenInvitationUserService.isExists(token)).andReturn(true)
         expect(tokenInvitationUserService.isExpired(token)).andReturn(false)
-        expect(invitationUserService.existsByToken(token)).andReturn(false)
+        expect(invitationUserToOrganizationService.existsByToken(token)).andReturn(false)
         replayAll()
         preconditionChecker.checkGetByTokenForPossibleErrors(token).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
@@ -78,7 +78,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetByTokenForPossibleErrorsUni
         resetAll()
         expect(tokenInvitationUserService.isExists(token)).andReturn(true)
         expect(tokenInvitationUserService.isExpired(token)).andReturn(false)
-        expect(invitationUserService.existsByToken(token)).andReturn(true)
+        expect(invitationUserToOrganizationService.existsByToken(token)).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkGetByTokenForPossibleErrors(token).isPresent).isFalse()
         verifyAll()

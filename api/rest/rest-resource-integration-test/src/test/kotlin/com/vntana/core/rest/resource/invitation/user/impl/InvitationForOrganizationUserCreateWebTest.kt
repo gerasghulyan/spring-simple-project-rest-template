@@ -98,7 +98,7 @@ class InvitationForOrganizationUserCreateWebTest : AbstractInvitationUserWebTest
         val email = email()
         val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
+        val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
         tokenResourceTestHelper.persistTokenInvitationUser(invitationUserUuid = invitationUserUuid)
         assertBasicSuccessResultResponse(invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)))
     }

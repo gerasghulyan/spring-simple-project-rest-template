@@ -4,20 +4,24 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.token.AbstractToken;
 import com.vntana.core.model.token.error.TokenErrorResponseModel;
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
-import com.vntana.core.model.token.request.CreateTokenInvitationUserRequest;
+import com.vntana.core.model.token.request.CreateTokenInvitationUserToOrganizationRequest;
+import com.vntana.core.model.token.request.CreateTokenUserInvitationToClientRequest;
+import com.vntana.core.model.token.request.InvitationAndTokenRequestModel;
 import com.vntana.core.rest.facade.token.component.TokenFacadePreconditionChecker;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
-import com.vntana.core.service.invitation.user.InvitationUserService;
+import com.vntana.core.service.invitation.user.InvitationUserToClientService;
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService;
 import com.vntana.core.service.token.TokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.apache.http.HttpStatus.*;
 
 /**
  * Created by Arman Gevorgyan.
@@ -31,15 +35,18 @@ public class TokenFacadePreconditionCheckerImpl implements TokenFacadePreconditi
 
     private final TokenService tokenService;
     private final InvitationOrganizationService invitationOrganizationService;
-    private final InvitationUserService invitationUserService;
+    private final InvitationUserToOrganizationService invitationUserToOrganizationService;
+    private final InvitationUserToClientService invitationUserToClientService;
 
     public TokenFacadePreconditionCheckerImpl(final TokenService tokenService,
                                               final InvitationOrganizationService invitationOrganizationService,
-                                              final InvitationUserService invitationUserService) {
+                                              final InvitationUserToClientService invitationUserToClientService,
+                                              final InvitationUserToOrganizationService invitationUserToOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.tokenService = tokenService;
         this.invitationOrganizationService = invitationOrganizationService;
-        this.invitationUserService = invitationUserService;
+        this.invitationUserToClientService = invitationUserToClientService;
+        this.invitationUserToOrganizationService = invitationUserToOrganizationService;
     }
 
     @Override
@@ -51,9 +58,22 @@ public class TokenFacadePreconditionCheckerImpl implements TokenFacadePreconditi
     }
 
     @Override
-    public SingleErrorWithStatus<TokenErrorResponseModel> checkCreateTokenInvitationUser(final CreateTokenInvitationUserRequest request) {
-        if (!invitationUserService.existsByUuid(request.getInvitationUserUuid())) {
+    public SingleErrorWithStatus<TokenErrorResponseModel> checkCreateTokenUserInvitationToOrganization(final CreateTokenInvitationUserToOrganizationRequest request) {
+        if (!invitationUserToOrganizationService.existsByUuid(request.getUserInvitationUuid())) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, TokenErrorResponseModel.INVITATION_USER_NOT_FOUND);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<TokenErrorResponseModel> checkCreateTokenUserInvitationToClient(final CreateTokenUserInvitationToClientRequest request) {
+        final List<InvitationAndTokenRequestModel> filtered = request.getTokens().stream()
+                .filter(it -> !StringUtils.isEmpty(it.getToken()))
+                .filter(it -> !StringUtils.isEmpty(it.getUserInvitationUuid()))
+                .filter(it -> invitationUserToClientService.existsByUuid(it.getUserInvitationUuid()))
+                .collect(Collectors.toList());
+        if(request.getTokens().size() != filtered.size()) {
+            return SingleErrorWithStatus.of(SC_NOT_ACCEPTABLE, TokenErrorResponseModel.WRONG_REQUEST);
         }
         return SingleErrorWithStatus.empty();
     }

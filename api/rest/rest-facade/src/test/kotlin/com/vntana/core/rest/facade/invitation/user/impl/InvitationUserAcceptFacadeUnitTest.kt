@@ -35,9 +35,9 @@ class InvitationUserAcceptFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
     fun test() {
         resetAll()
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserRequest()
-        val invitationUser = invitationUserCommonTestHelper.buildInvitationUser(userRole = UserRole.ORGANIZATION_ADMIN)
+        val invitationUser = invitationUserCommonTestHelper.buildInvitationUserToOrganization(userRole = UserRole.ORGANIZATION_ADMIN)
         val organization = invitationUser.organization
-        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUser(invitationOrganizationUser = invitationUser)
+        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUserToOrganization(invitationOrganizationUser = invitationUser)
         val user = userCommonTestHelper.buildUser()
         val grantOrganizationRoleDto = userRoleCommonTestHelper.buildUserGrantOrganizationRoleDto(userUuid = user.uuid, organizationUuid = organization.uuid)
         val updateInvitationUserStatusDto = invitationUserCommonTestHelper.buildUpdateInvitationUserStatusDto(
@@ -49,7 +49,7 @@ class InvitationUserAcceptFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
         expect(tokenInvitationUserService.getByToken(request.token)).andReturn(tokenInvitationUser)
         expect(userService.getByEmail(tokenInvitationUser.invitationUser.email)).andReturn(user)
         expect(userRoleService.grantOrganizationAdminRole(grantOrganizationRoleDto)).andReturn(adminRole)
-        expect(invitationUserService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
+        expect(invitationUserToOrganizationService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationUser)
         replayAll()
         invitationUserServiceFacade.accept(request).let {
