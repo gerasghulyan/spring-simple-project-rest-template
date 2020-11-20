@@ -12,3 +12,6 @@ alter table token_user_invitation_to_organization_client add constraint fk_token
     foreign key (user_invitation_id) references invitation_organization_client_user;
 
 alter table token_user_invitation_to_organization_client add constraint fk_token_user_invitation_to_organization_client_token foreign key (id) references token;
+
+insert into template_email (id, created, removed, updated, uuid, template_name, type)
+VALUES (nextval('template_email_seq'), now(), null, now(), public.uuid_generate_v4(), 'user-invitation-to-organization-client', 'INVITATION_USER_TO_CLIENT');
