@@ -3,10 +3,7 @@ package com.vntana.core.rest.facade.client.impl;
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
@@ -18,11 +15,11 @@ import com.vntana.core.model.client.response.CreateClientOrganizationResultRespo
 import com.vntana.core.model.client.response.UpdateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.get.*;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
-import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsGridResponseModel;
 import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsResponseModel;
-import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.rest.facade.client.component.precondition.ClientOrganizationServiceFacadePreconditionCheckerComponent;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
 import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator;
@@ -30,6 +27,7 @@ import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
 import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.role.UserRoleService;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.Mutable;
@@ -43,7 +41,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -60,23 +57,24 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOrganizationServiceFacadeImpl.class);
 
     private final MapperFacade mapperFacade;
-    private final PersistenceUtilityService persistenceUtilityService;
     private final OrganizationClientService clientOrganizationService;
     private final OrganizationService organizationService;
     private final UserService userService;
+    private final UserRoleService userRoleService;
     private final SlugValidationComponent slugValidationComponent;
+    private final ClientOrganizationServiceFacadePreconditionCheckerComponent preconditionCheckerComponent;
     private final ClientOrganizationLifecycleMediator clientOrganizationLifecycleMediator;
 
     public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade,
-                                               final PersistenceUtilityService persistenceUtilityService,
                                                final OrganizationClientService clientOrganizationService,
                                                final OrganizationService organizationService,
                                                final UserService userService,
+                                               final UserRoleService userRoleService,
                                                final SlugValidationComponent slugValidationComponent,
+                                               final ClientOrganizationServiceFacadePreconditionCheckerComponent preconditionCheckerComponent,
                                                final ClientOrganizationLifecycleMediator clientOrganizationLifecycleMediator) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.mapperFacade = mapperFacade;
-        this.persistenceUtilityService = persistenceUtilityService;
         this.clientOrganizationService = clientOrganizationService;
         this.organizationService = organizationService;
         this.userService = userService;
@@ -130,42 +128,26 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 });
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserClientOrganizationResponse getUserClientOrganizations(final String userUuid, final String userOrganizationUuid) {
-        if (StringUtils.isBlank(userUuid)) {
-            return new UserClientOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_USER_UUID);
-        }
-        if (StringUtils.isBlank(userOrganizationUuid)) {
-            return new UserClientOrganizationResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
-        }
         LOGGER.debug("Retrieving user organization's client organizations by user uuid - {} and by user organization uuid - {}", userUuid, userOrganizationUuid);
-        final Mutable<List<GetUserClientOrganizationsResponseModel>> mutableResponseModel = new MutableObject<>();
-        final Mutable<ClientOrganizationErrorResponseModel> mutableErrorResponse = new MutableObject<>();
-        persistenceUtilityService.runInPersistenceSession(() -> {
-            if (!organizationService.existsByUuid(userOrganizationUuid)) {
-                mutableErrorResponse.setValue(ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
-                return;
-            }
-            final Organization organization = organizationService.getByUuid(userOrganizationUuid);
-            final Optional<User> userOptional = userService.findByUuid(userUuid);
-            if (!userOptional.isPresent()) {
-                mutableErrorResponse.setValue(ClientOrganizationErrorResponseModel.USER_NOT_FOUND);
-                return;
-            }
-            final User user = userOptional.get();
-            final List<GetUserClientOrganizationsResponseModel> response;
-            if (user.roleOfSuperAdmin().isPresent()) {
-                response = getClientsForSuperAdmin(user, organization);
-            } else {
-                response = getClientsForOrganizationOwnerAndAdmin(user, organization);
-            }
-            mutableResponseModel.setValue(response);
-        });
-        if (Objects.nonNull(mutableErrorResponse.getValue())) {
-            return new UserClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, mutableErrorResponse.getValue());
+        final SingleErrorWithStatus<ClientOrganizationErrorResponseModel> errors = preconditionCheckerComponent.checkGetUserClientOrganizations(userUuid, userOrganizationUuid);
+        if (errors.isPresent()) {
+            return new UserClientOrganizationResponse(errors.getHttpStatus(), errors.getError());
         }
-        final List<GetUserClientOrganizationsResponseModel> response = mutableResponseModel.getValue();
-        return new UserClientOrganizationResponse(new GetUserClientOrganizationsGridResponseModel(response.size(), response));
+        final User user = userService.getByUuid(userUuid);
+        final Organization organization = organizationService.getByUuid(userOrganizationUuid);
+        final UserClientOrganizationResponse response;
+        if (user.roleOfSuperAdmin().isPresent()) {
+            response = getClientsForSuperAdmin(user, organization);
+        } else if (user.roleOfOrganizationOwner(organization).isPresent() || user.roleOfOrganizationAdmin(organization).isPresent()) {
+            response = getClientsForOrganizationOwnerAndAdmin(user, organization);
+        } else {
+            response = getClientsForAccessibleUser(userUuid, userOrganizationUuid);
+        }
+        LOGGER.debug("Successfully retrieved user organization's client organizations by user uuid - {} and by user organization uuid - {}", userUuid, userOrganizationUuid);
+        return response;
     }
 
     @Transactional(readOnly = true)
@@ -255,32 +237,45 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return SingleErrorWithStatus.empty();
     }
 
-    private List<GetUserClientOrganizationsResponseModel> getClientsForSuperAdmin(
+    private UserClientOrganizationResponse getClientsForSuperAdmin(
             final User user,
             final Organization organization) {
-        return user.roleOfSuperAdmin()
-                .map(role -> buildClients(organization, role.getUserRole()))
-                .orElseThrow(() -> new IllegalStateException(format("Super Admin can't find the clients for organization - %s", organization.getUuid())));
+        return new UserClientOrganizationResponse(
+                user.roleOfSuperAdmin()
+                        .map(theRole -> organization.getClientOrganizations().stream()
+                                .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, theRole.getUserRole()))
+                                .collect(Collectors.toList()))
+                        .orElseThrow(() -> new IllegalStateException(format("Super Admin can't find the clients for organization - %s", organization.getUuid())))
+        );
     }
 
-    private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationOwnerAndAdmin(final User user, final Organization organization) {
-        return user.roles().stream().filter(role -> (role instanceof UserOrganizationAdminRole) || (role instanceof UserOrganizationOwnerRole))
-                .findAny()
-                .map(role -> buildClients(organization, role.getUserRole()))
-                .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"));
-    }
-
-    private List<GetUserClientOrganizationsResponseModel> buildClients(final Organization organization, final UserRole role) {
-        return organization.getClientOrganizations()
+    private UserClientOrganizationResponse getClientsForAccessibleUser(final String userUuid, final String organizationUuid) {
+        return new UserClientOrganizationResponse(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
                 .stream()
-                .map(clientOrganization -> new GetUserClientOrganizationsResponseModel(
-                        clientOrganization.getUuid(),
-                        clientOrganization.getSlug(),
-                        clientOrganization.getName(),
-                        clientOrganization.getImageBlobId(),
-                        UserRoleModel.valueOf(role.name()),
-                        clientOrganization.getCreated()
-                ))
-                .collect(Collectors.toList());
+                .map(theClientRole -> buildGetUserClientOrganizationsResponseModel(theClientRole.getClientOrganization(), theClientRole.getUserRole()))
+                .collect(Collectors.toList()));
+    }
+
+    private UserClientOrganizationResponse getClientsForOrganizationOwnerAndAdmin(final User user, final Organization organization) {
+        return new UserClientOrganizationResponse(
+                user.roles().stream().filter(role -> role instanceof UserOrganizationAdminRole
+                        || role instanceof UserOrganizationOwnerRole)
+                        .findAny()
+                        .map(theRole -> organization.getClientOrganizations().stream()
+                                .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, theRole.getUserRole()))
+                                .collect(Collectors.toList()))
+                        .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"))
+        );
+    }
+
+    private GetUserClientOrganizationsResponseModel buildGetUserClientOrganizationsResponseModel(final ClientOrganization clientOrganization, final UserRole role) {
+        return new GetUserClientOrganizationsResponseModel(
+                clientOrganization.getUuid(),
+                clientOrganization.getSlug(),
+                clientOrganization.getName(),
+                clientOrganization.getImageBlobId(),
+                UserRoleModel.valueOf(role.name()),
+                clientOrganization.getCreated()
+        );
     }
 }

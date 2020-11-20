@@ -4,7 +4,8 @@ import com.vntana.core.helper.client.ClientOrganizationRestTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
-import com.vntana.core.persistence.utils.PersistenceUtilityService
+import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
+import com.vntana.core.rest.facade.client.component.precondition.ClientOrganizationServiceFacadePreconditionCheckerComponent
 import com.vntana.core.rest.facade.client.impl.ClientOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.service.client.OrganizationClientService
@@ -12,6 +13,7 @@ import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediat
 import com.vntana.core.service.common.component.SlugValidationComponent
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
+import com.vntana.core.service.user.role.UserRoleService
 import ma.glasnost.orika.MapperFacade
 import org.easymock.Mock
 import org.junit.Before
@@ -28,9 +30,6 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
     protected lateinit var mapperFacade: MapperFacade
 
     @Mock
-    protected lateinit var persistenceUtilityService: PersistenceUtilityService
-
-    @Mock
     protected lateinit var organizationClientService: OrganizationClientService
 
     @Mock
@@ -39,9 +38,16 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
     @Mock
     protected lateinit var organizationService: OrganizationService
 
+    @Mock
+    protected lateinit var userRoleService: UserRoleService
+
     protected val restHelper = ClientOrganizationRestTestHelper()
 
     protected val userHelper = UserCommonTestHelper()
+
+    protected val userRoleHelper = UserRoleCommonTestHelper()
+
+    protected val clientOrganizationHelper = ClientOrganizationCommonTestHelper()
 
     protected val commonTestHelper = ClientOrganizationCommonTestHelper()
 
@@ -53,15 +59,19 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
     @Mock
     protected lateinit var slugValidationComponent: SlugValidationComponent
 
+    @Mock
+    protected lateinit var preconditionCheckerComponent: ClientOrganizationServiceFacadePreconditionCheckerComponent
+
     @Before
     fun before() {
         clientOrganizationServiceFacade = ClientOrganizationServiceFacadeImpl(
                 mapperFacade,
-                persistenceUtilityService,
-                organizationClientService,
+                clientOrganizationService,
                 organizationService,
                 userService,
+                userRoleService,
                 slugValidationComponent,
+                preconditionCheckerComponent,
                 clientOrganizationLifecycleMediator
         )
     }
