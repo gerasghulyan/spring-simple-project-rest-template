@@ -26,7 +26,6 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
@@ -103,20 +102,19 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
 
         final Map<String, UserRoleModel> inviterPermissionsMap =
                 getClientOrganizationsByUserUuidAndOrganization(request.getOrganizationUuid(), request.getInviterUserUuid());
-        final Map<String, UserRoleModel> invitedPermissionsMap = request.getUserRoles();
+        final List<SingleUserInvitationToClient> invitations = request.getInvitations();
 
-        final Set<String> clientUuids = request.getUserRoles().keySet();
-        final Set<String> filteredClientUuids = clientUuids.stream()
-                .filter(invitedClientUuid -> invitedPermissionsMap.get(invitedClientUuid).getPriority() >= UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority())
-                .filter(clientOrganizationService::existsByUuid)
-                .filter(inviterPermissionsMap::containsKey)
-                .filter(invitedClientUuid -> {
-                    final UserRoleModel inviterRole = inviterPermissionsMap.get(invitedClientUuid);
-                    final UserRoleModel invitedRole = invitedPermissionsMap.get(invitedClientUuid);
+        final List<SingleUserInvitationToClient> filteredInvitations = invitations.stream()
+                .filter(invitation -> invitation.getRole().getPriority() >= UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority())
+                .filter(invitation -> clientOrganizationService.existsByUuid(invitation.getClientUuid()))
+                .filter(invitation -> inviterPermissionsMap.containsKey(invitation.getClientUuid()))
+                .filter(invitation -> {
+                    final UserRoleModel inviterRole = inviterPermissionsMap.get(invitation.getClientUuid());
+                    final UserRoleModel invitedRole = invitation.getRole();
                     return userRolesPermissionsChecker.isPermittedToInvite(inviterRole, invitedRole);
                 })
-                .collect(Collectors.toSet());
-        if (clientUuids.size() != filteredClientUuids.size()) {
+                .collect(Collectors.toList());
+        if (invitations.size() != filteredInvitations.size()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.WRONG_PERMISSIONS);
         }
         return SingleErrorWithStatus.empty();

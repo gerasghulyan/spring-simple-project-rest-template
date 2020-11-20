@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.invitation.user.checker.impl
 
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
+import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClient
 import com.vntana.core.rest.facade.invitation.user.checker.AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions
@@ -49,7 +50,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = mapOf(Pair(inviterPermissions.clientOrganization.uuid, UserRoleModel.ORGANIZATION_ADMIN))
+                userRoles = listOf(SingleUserInvitationToClient(inviterPermissions.clientOrganization.uuid, UserRoleModel.ORGANIZATION_ADMIN))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
@@ -70,13 +71,13 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = mapOf(Pair(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+                userRoles = listOf(SingleUserInvitationToClient(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
-        expect(organizationClientService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(false).once()
+        expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(false).once()
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
@@ -92,13 +93,13 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = mapOf(Pair(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+                userRoles = listOf(SingleUserInvitationToClient(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
-        expect(organizationClientService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
+        expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
@@ -115,13 +116,13 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = mapOf(Pair(inviterPermissions.clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+                userRoles = listOf(SingleUserInvitationToClient(inviterPermissions.clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
-        expect(organizationClientService.existsByUuid(request.userRoles.keys.elementAt(0))).andReturn(true).once()
+        expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
         expect(userRolesPermissionsCheckerComponent.isPermittedToInvite(UserRoleModel.CLIENT_ORGANIZATION_ADMIN, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)).andReturn(true).once()
         replayAll()
         Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()

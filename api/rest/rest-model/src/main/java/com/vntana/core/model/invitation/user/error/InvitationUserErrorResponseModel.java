@@ -29,6 +29,6 @@ public enum InvitationUserErrorResponseModel implements ErrorResponseModel {
     NOT_FOUND_FOR_TOKEN,
     USER_ALREADY_HAS_ROLE_IN_ORGANIZATION,
     USER_ALREADY_EXISTS,
-    MISSING_USER_ROLES,
+    MISSING_INVITATIONS,
     WRONG_PERMISSIONS
 }

@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.invitation.user.impl
 import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
+import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClient
 import com.vntana.core.rest.facade.invitation.user.AbstractInvitationUserFacadeUnitTest
 import com.vntana.core.service.invitation.user.dto.CreateInvitationForClientsUserDto
 import org.easymock.EasyMock.expect
@@ -32,7 +33,7 @@ class InvitationUserForClientCreateFacadeUnitTest : AbstractInvitationUserFacade
         val clientOrganization = organizationClientCommonTestHelper.buildClientOrganization(organization = organization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 organizationUuid = organization.uuid,
-                userRoles = mapOf(Pair(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER))
+                userRoles = listOf(SingleUserInvitationToClient(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER))
         )
         val dto = invitationUserCommonTestHelper.buildCreateInvitationUserForClientsDto(
                 clientUuid = clientOrganization.uuid,

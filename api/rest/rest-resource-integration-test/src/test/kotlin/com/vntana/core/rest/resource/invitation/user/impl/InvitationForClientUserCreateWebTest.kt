@@ -17,7 +17,7 @@ class InvitationForClientUserCreateWebTest : AbstractInvitationUserWebTest() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 invitationUserResourceClient.createInvitationForClient(resourceTestHelper.buildCreateInvitationUserForClientRequest(userRoles = null)),
-                InvitationUserErrorResponseModel.MISSING_USER_ROLES
+                InvitationUserErrorResponseModel.MISSING_INVITATIONS
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
