@@ -3,7 +3,6 @@ package com.vntana.core.rest.resource.invitation.user.impl
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.InvitationStatusModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
-import com.vntana.core.model.user.role.request.UserRoleGrantOrganizationAdminRequest
 import com.vntana.core.rest.resource.invitation.user.AbstractInvitationUserWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -44,7 +43,7 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
         val userEmail = email()
         val userUuid = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = userEmail)).response().uuid
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
+        val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
         tokenResourceTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUserUuid)
         userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid, newOrganizationUuid)
         val request = resourceTestHelper.buildAcceptInvitationUserRequest(token = token)
@@ -57,7 +56,7 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
         val userEmail = email()
         val userUuid = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = userEmail)).response().uuid
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
+        val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
         tokenResourceTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUserUuid)
         val request = resourceTestHelper.buildAcceptInvitationUserRequest(token = token)
         invitationUserResourceClient.accept(request).let { responseEntity ->

@@ -29,10 +29,10 @@ class InvitationUserGetByTokenFacadeUnitTest : AbstractInvitationUserFacadeUnitT
     @Test
     fun test() {
         val token = uuid()
-        val invitationUser = invitationUserCommonTestHelper.buildInvitationUser()
+        val invitationUser = invitationUserCommonTestHelper.buildInvitationUserToOrganization()
         resetAll()
         expect(preconditionChecker.checkGetByTokenForPossibleErrors(token)).andReturn(SingleErrorWithStatus.empty())
-        expect(invitationUserService.getByToken(token)).andReturn(invitationUser)
+        expect(invitationUserToOrganizationService.getByToken(token)).andReturn(invitationUser)
         expect(userService.existsByEmail(invitationUser.email)).andReturn(true)
         replayAll()
         val resultResponse = invitationUserServiceFacade.getByToken(token)

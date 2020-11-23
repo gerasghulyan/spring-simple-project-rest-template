@@ -5,7 +5,8 @@ import com.vntana.core.helper.unit.token.TokenCommonTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.token.component.impl.TokenFacadePreconditionCheckerImpl
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
-import com.vntana.core.service.invitation.user.InvitationUserService
+import com.vntana.core.service.invitation.user.InvitationUserToClientService
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService
 import com.vntana.core.service.token.TokenService
 import org.easymock.Mock
 import org.junit.Before
@@ -26,7 +27,10 @@ abstract class AbstractTokenFacadePreconditionCheckerUnitTest : AbstractFacadeUn
     protected lateinit var invitationOrganizationService: InvitationOrganizationService
 
     @Mock
-    protected lateinit var invitationUserService: InvitationUserService
+    protected lateinit var invitationUserToClientService: InvitationUserToClientService
+
+    @Mock
+    protected lateinit var invitationUserToOrganizationService: InvitationUserToOrganizationService
 
     protected val restTestHelper = TokenRestTestHelper()
 
@@ -36,7 +40,8 @@ abstract class AbstractTokenFacadePreconditionCheckerUnitTest : AbstractFacadeUn
     fun prepare() {
         preconditionChecker = TokenFacadePreconditionCheckerImpl(tokenService,
                 invitationOrganizationService,
-                invitationUserService
+                invitationUserToClientService,
+                invitationUserToOrganizationService
         )
     }
 }

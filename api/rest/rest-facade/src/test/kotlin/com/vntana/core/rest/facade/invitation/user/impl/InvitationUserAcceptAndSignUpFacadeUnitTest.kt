@@ -34,7 +34,7 @@ class InvitationUserAcceptAndSignUpFacadeUnitTest : AbstractInvitationUserFacade
     @Test
     fun test() {
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
-        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUser()
+        val tokenInvitationUser = tokenInvitationUserCommonTestHelper.buildTokenInvitationUserToOrganization()
         val invitationUser = tokenInvitationUser.invitationUser
         val dto = userCommonTestHelper.buildCreateUserDto(request.newUserFullName, invitationUser.email, request.password)
         val user = userCommonTestHelper.buildUser()
@@ -48,7 +48,7 @@ class InvitationUserAcceptAndSignUpFacadeUnitTest : AbstractInvitationUserFacade
         expect(userService.create(dto)).andReturn(user)
         expect(userService.makeVerified(invitationUser.email)).andReturn(user)
         expect(userRoleService.grantOrganizationAdminRole(UserGrantOrganizationRoleDto(user.uuid, invitationUser.organization.uuid))).andReturn(adminRole)
-        expect(invitationUserService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
+        expect(invitationUserToOrganizationService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationUser)
         replayAll()
         invitationUserServiceFacade.acceptAndSignUp(request).let {

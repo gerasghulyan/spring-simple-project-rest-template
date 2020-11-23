@@ -3,9 +3,8 @@ package com.vntana.core.model.invitation.user.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
-import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel.*;
 
@@ -24,8 +22,8 @@ import static com.vntana.core.model.invitation.user.error.InvitationUserErrorRes
  */
 public class CreateInvitationForOrganizationClientUserRequest extends AbstractRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
 
-    @JsonProperty("userRoles")
-    private Map<String, UserRoleModel> userRoles;
+    @JsonProperty("invitations")
+    private List<SingleUserInvitationToClientModel> invitations;
 
     @JsonProperty("email")
     private String email;
@@ -41,11 +39,11 @@ public class CreateInvitationForOrganizationClientUserRequest extends AbstractRe
     }
 
     public CreateInvitationForOrganizationClientUserRequest(
-            final Map<String, UserRoleModel> userRoles,
+            final List<SingleUserInvitationToClientModel> invitations,
             final String email,
             final String inviterUserUuid,
             final String organizationUuid) {
-        this.userRoles = userRoles;
+        this.invitations = invitations;
         this.email = email;
         this.inviterUserUuid = inviterUserUuid;
         this.organizationUuid = organizationUuid;
@@ -53,8 +51,8 @@ public class CreateInvitationForOrganizationClientUserRequest extends AbstractRe
 
     @Override
     public List<InvitationUserErrorResponseModel> validate() {
-        if (MapUtils.isEmpty(userRoles)) {
-            return Collections.singletonList(MISSING_USER_ROLES);
+        if (CollectionUtils.isEmpty(invitations)) {
+            return Collections.singletonList(MISSING_INVITATIONS);
         }
         if (StringUtils.isEmpty(email)) {
             return Collections.singletonList(MISSING_INVITED_USER_EMAIL);
@@ -78,7 +76,7 @@ public class CreateInvitationForOrganizationClientUserRequest extends AbstractRe
         }
         final CreateInvitationForOrganizationClientUserRequest that = (CreateInvitationForOrganizationClientUserRequest) o;
         return new EqualsBuilder()
-                .append(userRoles, that.userRoles)
+                .append(invitations, that.invitations)
                 .append(email, that.email)
                 .append(inviterUserUuid, that.inviterUserUuid)
                 .append(organizationUuid, that.organizationUuid)
@@ -88,7 +86,7 @@ public class CreateInvitationForOrganizationClientUserRequest extends AbstractRe
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(userRoles)
+                .append(invitations)
                 .append(email)
                 .append(inviterUserUuid)
                 .append(organizationUuid)
@@ -99,15 +97,15 @@ public class CreateInvitationForOrganizationClientUserRequest extends AbstractRe
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("userRoles", userRoles)
+                .append("userRoles", invitations)
                 .append("email", email)
                 .append("inviterUserUuid", inviterUserUuid)
                 .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
-    public Map<String, UserRoleModel> getUserRoles() {
-        return userRoles;
+    public List<SingleUserInvitationToClientModel> getInvitations() {
+        return invitations;
     }
 
     public String getEmail() {

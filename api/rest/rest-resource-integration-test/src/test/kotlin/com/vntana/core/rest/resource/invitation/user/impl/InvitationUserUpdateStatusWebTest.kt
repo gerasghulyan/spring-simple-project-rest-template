@@ -46,7 +46,7 @@ class InvitationUserUpdateStatusWebTest : AbstractInvitationUserWebTest() {
     fun test() {
         val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val invitationUuid = resourceTestHelper.persistInvitationUser(
+        val invitationUuid = resourceTestHelper.persistInvitationUserToOrganization(
                 inviterUserUuid = inviterUserUuid,
                 organizationUuid = organizationUuid
         )

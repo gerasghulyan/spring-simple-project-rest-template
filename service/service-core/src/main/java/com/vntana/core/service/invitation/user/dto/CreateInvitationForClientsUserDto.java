@@ -1,13 +1,12 @@
 package com.vntana.core.service.invitation.user.dto;
 
 import com.vntana.commons.service.dto.ServiceDto;
-import com.vntana.core.domain.user.UserRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by Diana Gevorgyan
@@ -16,21 +15,24 @@ import java.util.Map;
  */
 public class CreateInvitationForClientsUserDto implements ServiceDto {
 
-    private final Map<String, UserRole> userRoles;
+    private final List<UserInvitationToClient> invitations;
+    
     private final String email;
+    
     private final String inviterUserUuid;
+    
     private final String organizationUuid;
 
     public CreateInvitationForClientsUserDto(
-            final Map<String, UserRole> userRoles,
+            final List<UserInvitationToClient> invitations,
             final String email,
             final String inviterUserUuid, 
             final String organizationUuid) {
-        Assert.notNull(userRoles, "The user roles should not be null");
+        Assert.notNull(invitations, "The invitations should not be null or empty");
         Assert.hasText(email, "The email should not be null or empty");
         Assert.hasText(inviterUserUuid, "The inviterUserUuid should not be null or empty");
         Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
-        this.userRoles = userRoles;
+        this.invitations = invitations;
         this.email = email;
         this.inviterUserUuid = inviterUserUuid;
         this.organizationUuid = organizationUuid;
@@ -46,7 +48,7 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
         }
         final CreateInvitationForClientsUserDto that = (CreateInvitationForClientsUserDto) o;
         return new EqualsBuilder()
-                .append(userRoles, that.userRoles)
+                .append(invitations, that.invitations)
                 .append(email, that.email)
                 .append(inviterUserUuid, that.inviterUserUuid)
                 .append(organizationUuid, that.organizationUuid)
@@ -56,7 +58,7 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(userRoles)
+                .append(invitations)
                 .append(email)
                 .append(inviterUserUuid)
                 .append(organizationUuid)
@@ -67,15 +69,15 @@ public class CreateInvitationForClientsUserDto implements ServiceDto {
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("userRoles", userRoles)
+                .append("invitations", invitations)
                 .append("email", email)
                 .append("inviterUserUuid", inviterUserUuid)
                 .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
-    public Map<String, UserRole> getUserRoles() {
-        return userRoles;
+    public List<UserInvitationToClient> getInvitations() {
+        return invitations;
     }
 
     public String getEmail() {

@@ -2,7 +2,9 @@ package com.vntana.core.rest.resource.token;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
-import com.vntana.core.model.token.request.CreateTokenInvitationUserRequest;
+import com.vntana.core.model.token.request.CreateTokenUserInvitationToClientRequest;
+import com.vntana.core.model.token.request.CreateTokenInvitationUserToOrganizationRequest;
+import com.vntana.core.model.token.response.TokenBulkCreateResultResponse;
 import com.vntana.core.model.token.response.TokenCreateResultResponse;
 import com.vntana.core.model.token.response.TokenExpireResultResponse;
 import com.vntana.core.model.token.response.TokenIsExpiredResultResponse;
@@ -38,11 +40,19 @@ public class TokenResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping(path = "user-invitations")
-    public ResponseEntity<TokenCreateResultResponse> createTokenInvitationUser(@RequestBody final CreateTokenInvitationUserRequest request) {
-        LOGGER.debug("Processing token resource createTokenInvitationUser for request - {}", request);
-        final TokenCreateResultResponse resultResponse = tokenServiceFacade.createTokenInvitationUser(request);
-        LOGGER.debug("Successfully processed token resource createTokenInvitationUser for request - {}", request);
+    @PostMapping(path = "user-invitations/organization")
+    public ResponseEntity<TokenCreateResultResponse> createTokenInvitationUserToOrganization(@RequestBody final CreateTokenInvitationUserToOrganizationRequest request) {
+        LOGGER.debug("Processing token resource createTokenInvitationUserToOrganization for request - {}", request);
+        final TokenCreateResultResponse resultResponse = tokenServiceFacade.createTokenInvitationUserToOrganization(request);
+        LOGGER.debug("Successfully processed token resource createTokenInvitationUserToOrganization for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+    
+    @PostMapping(path = "user-invitations/organization-client")
+    public ResponseEntity<TokenBulkCreateResultResponse> createTokenInvitationUserToClient(@RequestBody final CreateTokenUserInvitationToClientRequest request) {
+        LOGGER.debug("Processing token resource createTokenInvitationUserToClient for request - {}", request);
+        final TokenBulkCreateResultResponse resultResponse = tokenServiceFacade.createTokenInvitationUserToClient(request);
+        LOGGER.debug("Successfully processed token resource createTokenInvitationUserToClient for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 

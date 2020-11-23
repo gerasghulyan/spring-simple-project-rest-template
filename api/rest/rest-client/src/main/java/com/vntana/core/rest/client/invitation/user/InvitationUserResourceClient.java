@@ -26,8 +26,11 @@ public interface InvitationUserResourceClient {
     @PutMapping("/status")
     ResponseEntity<UpdateInvitationUserInvitationStatusResultResponse> updateStatus(@RequestBody final UpdateInvitationUserInvitationStatusRequest request);
 
-    @PostMapping("/send-invitation")
-    ResponseEntity<SendInvitationUserResultResponse> sendInvitation(@RequestBody SendInvitationUserRequest request);
+    @PostMapping("/send-invitation/organization")
+    ResponseEntity<SendInvitationUserResultResponse> sendInvitationForOrganization(@RequestBody SendInvitationForOrganizationUserRequest request);
+
+    @PostMapping("/send-invitation/organization-client")
+    ResponseEntity<SendInvitationUserResultResponse> sendInvitationForClients(@RequestBody SendInvitationForClientUserRequest request);
 
     @PostMapping(path = "accept")
     ResponseEntity<AcceptInvitationUserResultResponse> accept(@RequestBody final AcceptInvitationUserRequest request);

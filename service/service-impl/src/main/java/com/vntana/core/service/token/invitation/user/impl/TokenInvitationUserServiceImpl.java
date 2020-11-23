@@ -1,11 +1,16 @@
 package com.vntana.core.service.token.invitation.user.impl;
 
+import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
-import com.vntana.core.domain.token.TokenInvitationUser;
-import com.vntana.core.persistence.token.TokenInvitationUserRepository;
-import com.vntana.core.service.invitation.user.InvitationUserService;
+import com.vntana.core.domain.token.TokenUserInvitationToOrganization;
+import com.vntana.core.domain.token.TokenUserInvitationToOrganizationClient;
+import com.vntana.core.persistence.token.TokenUserInvitationToOrganizationClientRepository;
+import com.vntana.core.persistence.token.TokenUserInvitationToOrganizationRepository;
+import com.vntana.core.service.invitation.user.InvitationUserToClientService;
+import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
-import com.vntana.core.service.token.invitation.user.dto.CreateTokenInvitationUserDto;
+import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToClientDto;
+import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToOrganizationDto;
 import com.vntana.core.service.token.invitation.user.exception.TokenInvitationUserNotFoundForTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Arman Gevorgyan.
@@ -25,48 +32,70 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenInvitationUserServiceImpl.class);
 
-    private final TokenInvitationUserRepository tokenRepository;
-    private final InvitationUserService invitationUserService;
+    private final TokenUserInvitationToOrganizationRepository tokenUserInvitationToOrganizationRepository;
+    private final TokenUserInvitationToOrganizationClientRepository tokenUserInvitationToClientRepository;
+    private final InvitationUserToOrganizationService invitationUserToOrganizationService;
+    private final InvitationUserToClientService invitationUserToClientService;
 
-    public TokenInvitationUserServiceImpl(final TokenInvitationUserRepository tokenRepository, final InvitationUserService invitationUserService) {
+    public TokenInvitationUserServiceImpl(
+            final TokenUserInvitationToOrganizationRepository tokenUserInvitationToOrganizationRepository,
+            final TokenUserInvitationToOrganizationClientRepository tokenUserInvitationToClientRepository,
+            final InvitationUserToOrganizationService invitationUserToOrganizationService,
+            final InvitationUserToClientService invitationUserToClientService) {
+        this.tokenUserInvitationToOrganizationRepository = tokenUserInvitationToOrganizationRepository;
+        this.tokenUserInvitationToClientRepository = tokenUserInvitationToClientRepository;
+        this.invitationUserToOrganizationService = invitationUserToOrganizationService;
+        this.invitationUserToClientService = invitationUserToClientService;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
-        this.tokenRepository = tokenRepository;
-        this.invitationUserService = invitationUserService;
     }
 
     @Transactional
     @Override
-    public TokenInvitationUser create(final CreateTokenInvitationUserDto dto) {
-        LOGGER.debug("Creating user invitation token for dto - {}", dto);
-        Assert.notNull(dto, "The CreateTokenInvitationUserDto should not be null");
-        final InvitationOrganizationUser invitationUser = invitationUserService.getByUuid(dto.getInvitationUserUuid());
-        final TokenInvitationUser token = new TokenInvitationUser(dto.getToken(), invitationUser);
-        final TokenInvitationUser savedToken = tokenRepository.save(token);
-        LOGGER.debug("Successfully created user invitation token for dto - {}", dto);
+    public TokenUserInvitationToOrganization createUserInvitationToOrganization(final CreateInvitationUserToOrganizationDto dto) {
+        LOGGER.debug("Creating user invitation for organization token for dto - {}", dto);
+        Assert.notNull(dto, "The CreateInvitationUserToOrganizationDto should not be null");
+        final InvitationOrganizationUser invitationUser = invitationUserToOrganizationService.getByUuid(dto.getInvitationUserUuid());
+        final TokenUserInvitationToOrganization token = new TokenUserInvitationToOrganization(dto.getToken(), invitationUser);
+        final TokenUserInvitationToOrganization savedToken = tokenUserInvitationToOrganizationRepository.save(token);
+        LOGGER.debug("Successfully created user invitation for organization token for dto - {}", dto);
         return savedToken;
+    }
+
+    @Override
+    public List<TokenUserInvitationToOrganizationClient> createUserInvitationToClients(final CreateInvitationUserToClientDto dto) {
+        LOGGER.debug("Creating user invitation for client token for dto - {}", dto);
+        Assert.notNull(dto, "The CreateInvitationUserToClientDto cannot e null");
+        final List<TokenUserInvitationToOrganizationClient> tokens = dto.getInvitationUuidAndTokens().stream().map(it -> {
+            final InvitationOrganizationClientUser userInvitation = invitationUserToClientService.getByUuid(it.getInvitationUuid());
+            return new TokenUserInvitationToOrganizationClient(it.getToken(), userInvitation);
+        })
+                .collect(Collectors.toList());
+        final List<TokenUserInvitationToOrganizationClient> savedTokens = tokenUserInvitationToClientRepository.saveAll(tokens);
+        LOGGER.debug("Successfully created user invitation for client token for dto - {}", dto);
+        return savedTokens;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<TokenInvitationUser> findByToken(final String token) {
+    public Optional<TokenUserInvitationToOrganization> findByToken(final String token) {
         LOGGER.debug("Retrieving TokenInvitationUser by token");
-        Assert.hasText(token, "The token should not be null or empty");
-        final Optional<TokenInvitationUser> result = tokenRepository.findByToken(token);
+        assertToken(token);
+        final Optional<TokenUserInvitationToOrganization> result = tokenUserInvitationToOrganizationRepository.findByToken(token);
         LOGGER.debug("Successfully processed user invitation token findByToken method");
         return result;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public TokenInvitationUser getByToken(final String token) {
+    public TokenUserInvitationToOrganization getByToken(final String token) {
         return findByToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
     }
 
     @Override
-    public Optional<TokenInvitationUser> findByInvitationUserUuid(final String invitationUserUuid) {
+    public Optional<TokenUserInvitationToOrganization> findByInvitationUserUuid(final String invitationUserUuid) {
         Assert.hasText(invitationUserUuid, "The invitationUserUuid should not be null or empty");
         LOGGER.debug("Retrieving TokenInvitationUser by invitation user uuid - {}", invitationUserUuid);
-        final Optional<TokenInvitationUser> tokenInvitationUserOptional = tokenRepository.findByInvitationUserUuid(invitationUserUuid);
+        final Optional<TokenUserInvitationToOrganization> tokenInvitationUserOptional = tokenUserInvitationToOrganizationRepository.findByInvitationUserUuid(invitationUserUuid);
         LOGGER.debug("Successfully retrieved TokenInvitationUser by invitation user uuid - {}", invitationUserUuid);
         return tokenInvitationUserOptional;
     }
@@ -74,9 +103,9 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     @Transactional(readOnly = true)
     @Override
     public boolean isExpired(final String token) {
-        Assert.hasText(token, "The token should not be null or empty");
+        assertToken(token);
         LOGGER.debug("Checking the expiration of user invitation token");
-        final Optional<TokenInvitationUser> tokenOptional = findByToken(token);
+        final Optional<TokenUserInvitationToOrganization> tokenOptional = findByToken(token);
         if (!tokenOptional.isPresent()) {
             LOGGER.error("Checking the expiration of user invitation token has been done with error, token does not exist");
             throw new TokenInvitationUserNotFoundForTokenException(token);
@@ -89,10 +118,14 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     @Transactional(readOnly = true)
     @Override
     public boolean isExists(final String token) {
-        Assert.hasText(token, "The token should not be null or empty");
+        assertToken(token);
         LOGGER.debug("Checking the existence of user invitation token");
         final boolean exists = findByToken(token).isPresent();
         LOGGER.debug("Successfully checked the existence of user invitation token");
         return exists;
+    }
+
+    private void assertToken(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
     }
 }

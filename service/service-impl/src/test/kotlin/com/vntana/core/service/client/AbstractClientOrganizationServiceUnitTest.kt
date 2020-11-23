@@ -24,7 +24,7 @@ abstract class AbstractClientOrganizationServiceUnitTest : AbstractServiceUnitTe
     @Mock
     protected lateinit var clientOrganizationRepository: ClientOrganizationRepository
 
-    protected lateinit var clientOrganizationService: ClientOrganizationService
+    protected lateinit var organizationClientService: OrganizationClientService
 
     protected val slugValidationComponent: SlugValidationComponent = SlugValidationComponentImpl()
 
@@ -34,7 +34,7 @@ abstract class AbstractClientOrganizationServiceUnitTest : AbstractServiceUnitTe
 
     @Before
     fun before() {
-        clientOrganizationService = ClientOrganizationServiceImpl(
+        organizationClientService = ClientOrganizationServiceImpl(
                 organizationService,
                 clientOrganizationRepository,
                 slugValidationComponent

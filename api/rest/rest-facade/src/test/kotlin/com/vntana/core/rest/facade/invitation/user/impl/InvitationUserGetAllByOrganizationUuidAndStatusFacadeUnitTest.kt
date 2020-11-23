@@ -36,14 +36,14 @@ class InvitationUserGetAllByOrganizationUuidAndStatusFacadeUnitTest : AbstractIn
                 request.page, request.size, request.organizationUuid, InvitationStatus.valueOf(request.status.name)
         )
         val invitations = listOf(
-                invitationUserCommonTestHelper.buildInvitationUser(),
-                invitationUserCommonTestHelper.buildInvitationUser(),
-                invitationUserCommonTestHelper.buildInvitationUser()
+                invitationUserCommonTestHelper.buildInvitationUserToOrganization(),
+                invitationUserCommonTestHelper.buildInvitationUserToOrganization(),
+                invitationUserCommonTestHelper.buildInvitationUserToOrganization()
         )
         resetAll()
         expect(preconditionChecker.checkGetAllByOrganizationUuidAndStatusForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(mapperFacade.map(request, GetAllByOrganizationUuidAndStatusInvitationUsersDto::class.java)).andReturn(dto)
-        expect(invitationUserService.getAllByOrganizationUuidAndStatus(dto))
+        expect(invitationUserToOrganizationService.getAllByOrganizationUuidAndStatus(dto))
                 .andReturn(invitationUserCommonTestHelper.buildGetAllByStatusInvitationUsersPage(invitations.size.toLong(), invitations))
         replayAll()
         val resultResponse = invitationUserServiceFacade.getAllByOrganizationUuidAndStatus(request)

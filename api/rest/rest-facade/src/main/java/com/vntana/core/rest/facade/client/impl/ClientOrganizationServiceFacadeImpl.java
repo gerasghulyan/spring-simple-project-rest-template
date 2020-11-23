@@ -3,7 +3,10 @@ package com.vntana.core.rest.facade.client.impl;
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.*;
+import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserOrganizationAdminRole;
+import com.vntana.core.domain.user.UserOrganizationOwnerRole;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
@@ -18,7 +21,7 @@ import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsResponseModel;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.rest.facade.client.component.precondition.ClientOrganizationServiceFacadePreconditionCheckerComponent;
-import com.vntana.core.service.client.ClientOrganizationService;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
 import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator;
@@ -56,7 +59,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOrganizationServiceFacadeImpl.class);
 
     private final MapperFacade mapperFacade;
-    private final ClientOrganizationService clientOrganizationService;
+    private final OrganizationClientService organizationClientService;
     private final OrganizationService organizationService;
     private final UserService userService;
     private final UserRoleService userRoleService;
@@ -65,21 +68,21 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private final ClientOrganizationLifecycleMediator clientOrganizationLifecycleMediator;
 
     public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade,
-                                               final ClientOrganizationService clientOrganizationService,
+                                               final OrganizationClientService organizationClientService,
                                                final OrganizationService organizationService,
                                                final UserService userService,
                                                final UserRoleService userRoleService,
                                                final SlugValidationComponent slugValidationComponent,
                                                final ClientOrganizationServiceFacadePreconditionCheckerComponent preconditionCheckerComponent,
                                                final ClientOrganizationLifecycleMediator clientOrganizationLifecycleMediator) {
-        this.userRoleService = userRoleService;
-        this.preconditionCheckerComponent = preconditionCheckerComponent;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.mapperFacade = mapperFacade;
-        this.clientOrganizationService = clientOrganizationService;
+        this.organizationClientService = organizationClientService;
         this.organizationService = organizationService;
         this.userService = userService;
+        this.userRoleService = userRoleService;
         this.slugValidationComponent = slugValidationComponent;
+        this.preconditionCheckerComponent = preconditionCheckerComponent;
         this.clientOrganizationLifecycleMediator = clientOrganizationLifecycleMediator;
     }
 
@@ -94,7 +97,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         }
         final Mutable<String> mutableSlug = new MutableObject<>(request.getSlug());
         final MutableInt mutableInt = new MutableInt(1);
-        while (clientOrganizationService.findBySlugAndOrganization(mutableSlug.getValue(), request.getOrganizationUuid()).isPresent()) {
+        while (organizationClientService.findBySlugAndOrganization(mutableSlug.getValue(), request.getOrganizationUuid()).isPresent()) {
             LOGGER.debug("Client organization with a slug - {} and organization - {} already exists, trying to generate suggested one",
                     mutableSlug.getValue(), request.getOrganizationUuid());
             mutableSlug.setValue(format("%s%d", request.getSlug(), mutableInt.getAndIncrement()));
@@ -115,7 +118,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         if (errorResponse.isPresent()) {
             return new CreateClientOrganizationResultResponse(errorResponse.getHttpStatus(), errorResponse.getError());
         }
-        return clientOrganizationService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
+        return organizationClientService.findBySlugAndOrganization(request.getSlug(), request.getOrganizationUuid())
                 .map(clientOrganization -> {
                     LOGGER.debug("Client organization already exists for a slug - {}", request.getSlug());
                     return new CreateClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.SLUG_ALREADY_EXISTS);
@@ -123,7 +126,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 .orElseGet(() -> {
                     LOGGER.debug("Creating client organization for request - {}", request);
                     final CreateClientOrganizationDto dto = mapperFacade.map(request, CreateClientOrganizationDto.class);
-                    final ClientOrganization clientOrganization = clientOrganizationService.create(dto);
+                    final ClientOrganization clientOrganization = organizationClientService.create(dto);
                     clientOrganizationLifecycleMediator.onCreated(clientOrganization);
                     return new CreateClientOrganizationResultResponse(clientOrganization.getUuid());
                 });
@@ -158,7 +161,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
             return new GetClientOrganizationResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_UUID);
         }
         LOGGER.debug("Retrieving client organization by uuid - {}", uuid);
-        final Optional<ClientOrganization> clientOptional = clientOrganizationService.findByUuid(uuid);
+        final Optional<ClientOrganization> clientOptional = organizationClientService.findByUuid(uuid);
         if (!clientOptional.isPresent()) {
             return new GetClientOrganizationResultResponse(HttpStatus.SC_NOT_FOUND, ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND);
         }
@@ -186,7 +189,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
             return new GetClientOrganizationBySlugResultResponse(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_SLUG);
         }
         LOGGER.debug("Retrieving client organization by organizationUuid - {} and slug - {}", organizationUuid, slug);
-        return clientOrganizationService.findBySlugAndOrganization(slug, organizationUuid)
+        return organizationClientService.findBySlugAndOrganization(slug, organizationUuid)
                 .map(client -> {
                     LOGGER.debug("Successfully retrieved client organization with result - {}", client);
                     return new GetClientOrganizationBySlugResultResponse(
@@ -225,7 +228,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     public UpdateClientOrganizationResultResponse update(final UpdateClientOrganizationRequest request) {
         LOGGER.debug("Updating client organization for request - {}", request);
         final UpdateClientOrganizationDto dto = mapperFacade.map(request, UpdateClientOrganizationDto.class);
-        final ClientOrganization clientOrganization = clientOrganizationService.update(dto);
+        final ClientOrganization clientOrganization = organizationClientService.update(dto);
         LOGGER.debug("Successfully updated client organization for request - {}", request);
         return new UpdateClientOrganizationResultResponse(clientOrganization.getUuid());
     }

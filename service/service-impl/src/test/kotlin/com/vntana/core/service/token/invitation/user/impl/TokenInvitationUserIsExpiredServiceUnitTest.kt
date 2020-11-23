@@ -30,7 +30,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
     fun `test when does not expired`() {
         resetAll()
         val token = uuid()
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.empty())
+        expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
         assertThatThrownBy { tokenInvitationUserService.isExpired(token) }
                 .isExactlyInstanceOf(TokenInvitationUserNotFoundForTokenException::class.java)
@@ -42,7 +42,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
         resetAll()
         val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
         val token = tokenInvitationUser.token
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
+        expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
         assertThat(tokenInvitationUserService.isExpired(token)).isFalse()
         verifyAll()
@@ -54,7 +54,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
         val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
         tokenInvitationUser.expire()
         val token = tokenInvitationUser.token
-        expect(tokenRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
+        expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
         assertThat(tokenInvitationUserService.isExpired(token)).isTrue()
         verifyAll()

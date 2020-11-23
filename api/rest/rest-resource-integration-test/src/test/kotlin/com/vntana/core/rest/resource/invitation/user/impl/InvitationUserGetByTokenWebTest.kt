@@ -43,7 +43,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization(name = organizationName).response().uuid
         val inviterUserFullName = uuid()
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
+        val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
         tokenResourceTestHelper.persistTokenInvitationUser(invitationUserUuid = invitationUserUuid, token = token)
         val responseEntity = invitationUserResourceClient.getByToken(token)
         assertBasicSuccessResultResponse(responseEntity)
@@ -65,7 +65,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization(name = organizationName).response().uuid
         val inviterUserFullName = uuid()
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
-        val invitationUserUuid = resourceTestHelper.persistInvitationUser(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
+        val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
         tokenResourceTestHelper.persistTokenInvitationUser(invitationUserUuid = invitationUserUuid, token = token)
         val responseEntity = invitationUserResourceClient.getByToken(token)
         assertBasicSuccessResultResponse(responseEntity)

@@ -33,28 +33,28 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             organizationUuid: String? = uuid()
     ) = CreateInvitationForOrganizationUserDto(userRole, email, inviterUserUuid, organizationUuid)
 
-    fun buildCreateInvitationUserForClientsDto(
+    fun buildCreateInvitationUserForClientsWithContentManagerRoleDto(
             clientUuid: String? = uuid(),
             email: String? = uuid(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
-    ) = CreateInvitationForClientsUserDto(mapOf(clientUuid to UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER), email, inviterUserUuid, organizationUuid)
+    ) = CreateInvitationForClientsUserDto(listOf(UserInvitationToClient(clientUuid, UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER)), email, inviterUserUuid, organizationUuid)
 
-    fun buildInvitationUserPage(entities: List<InvitationOrganizationUser> = listOf(buildInvitationUser(), buildInvitationUser()),
+    fun buildInvitationUserPage(entities: List<InvitationOrganizationUser> = listOf(buildInvitationUserToOrganization(), buildInvitationUserToOrganization()),
                                 pageAble: Pageable = buildPageRequest(0, 5),
                                 total: Long = entities.size.toLong()
     ): Page<InvitationOrganizationUser> {
         return PageImpl(entities, pageAble, total)
     }
 
-    fun buildInvitationUser(
+    fun buildInvitationUserToOrganization(
             userRole: UserRole? = UserRole.ORGANIZATION_ADMIN,
             email: String? = uuid(),
             status: InvitationStatus? = InvitationStatus.INVITED,
             invitedByUser: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             organization: Organization? = organizationCommonTestHelper.buildOrganization()
     ) = InvitationOrganizationUser(userRole, email, status, invitedByUser, organization)
-    
+
     fun buildInvitationOrganizationClientUser(
             userRole: UserRole? = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER,
             email: String? = uuid(),
@@ -86,6 +86,6 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
     ): GetAllByOrganizationUuidAndStatusInvitationUsersDto = GetAllByOrganizationUuidAndStatusInvitationUsersDto(page, size, organizationUuid, status)
 
     fun buildGetAllByStatusInvitationUsersPage(totalCount: Long = 0,
-                                               tagGroups: List<InvitationOrganizationUser> = listOf(buildInvitationUser())
+                                               tagGroups: List<InvitationOrganizationUser> = listOf(buildInvitationUserToOrganization())
     ): Page<InvitationOrganizationUser> = PageImpl(tagGroups, Pageable.unpaged(), totalCount)
 }

@@ -27,7 +27,7 @@ class InvitationUserResourceTestHelper : InvitationUserRestTestHelper() {
     @Autowired
     private lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
 
-    fun persistInvitationUser(
+    fun persistInvitationUserToOrganization(
             userRole: UserRoleModel? = UserRoleModel.ORGANIZATION_ADMIN,
             email: String? = uuid(),
             inviterUserUuid: String? = userResourceTestHelper.persistUser().response().uuid,

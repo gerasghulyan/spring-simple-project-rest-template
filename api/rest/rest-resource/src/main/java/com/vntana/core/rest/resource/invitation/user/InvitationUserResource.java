@@ -75,11 +75,19 @@ public class InvitationUserResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping("/send-invitation")
-    public ResponseEntity<SendInvitationUserResultResponse> sendInvitation(@RequestBody final SendInvitationUserRequest request) {
-        LOGGER.debug("Processing InvitationUserResource sendInvitation method for request - {}", request);
-        final SendInvitationUserResultResponse resultResponse = invitationUserServiceFacade.sendInvitation(request);
-        LOGGER.debug("Successfully processed InvitationUserResource sendInvitation method for request - {}", request);
+    @PostMapping("/send-invitation/organization")
+    public ResponseEntity<SendInvitationUserResultResponse> sendInvitationForOrganization(@RequestBody final SendInvitationForOrganizationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource sendInvitationForOrganization method for request - {}", request);
+        final SendInvitationUserResultResponse resultResponse = invitationUserServiceFacade.sendInvitationForOrganization(request);
+        LOGGER.debug("Successfully processed InvitationUserResource sendInvitationForOrganization method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+    
+    @PostMapping(("/send-invitation/organization-client"))
+    public ResponseEntity<SendInvitationUserResultResponse> sendInvitationForClients(@RequestBody SendInvitationForClientUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource sendInvitationForClient method for request - {}", request);
+        final SendInvitationUserResultResponse resultResponse = invitationUserServiceFacade.sendInvitationForClients(request);
+        LOGGER.debug("Successfully processed InvitationUserResource sendInvitationForClient method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 

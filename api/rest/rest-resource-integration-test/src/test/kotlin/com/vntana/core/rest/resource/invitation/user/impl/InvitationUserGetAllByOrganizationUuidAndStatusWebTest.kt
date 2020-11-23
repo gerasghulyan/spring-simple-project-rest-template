@@ -45,10 +45,10 @@ class InvitationUserGetAllByOrganizationUuidAndStatusWebTest : AbstractInvitatio
     @Test
     fun test() {
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val expectedInvitationUuid1 = resourceTestHelper.persistInvitationUser(organizationUuid = organizationUuid)
-        val expectedInvitationUuid2 = resourceTestHelper.persistInvitationUser(organizationUuid = organizationUuid)
-        val unexpectedInvitationUserUuid1 = resourceTestHelper.persistInvitationUser()
-        val unexpectedInvitationUserUuid2 = resourceTestHelper.persistInvitationUser()
+        val expectedInvitationUuid1 = resourceTestHelper.persistInvitationUserToOrganization(organizationUuid = organizationUuid)
+        val expectedInvitationUuid2 = resourceTestHelper.persistInvitationUserToOrganization(organizationUuid = organizationUuid)
+        val unexpectedInvitationUserUuid1 = resourceTestHelper.persistInvitationUserToOrganization()
+        val unexpectedInvitationUserUuid2 = resourceTestHelper.persistInvitationUserToOrganization()
         resourceTestHelper.updateInvitationStatus(uuid = unexpectedInvitationUserUuid1, status = InvitationStatusModel.REJECTED)
         resourceTestHelper.updateInvitationStatus(uuid = expectedInvitationUuid1, status = InvitationStatusModel.ACCEPTED)
         resourceTestHelper.updateInvitationStatus(uuid = expectedInvitationUuid2, status = InvitationStatusModel.ACCEPTED)

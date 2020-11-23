@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
  */
 abstract class AbstractClientOrganizationServiceIntegrationTest : AbstractServiceIntegrationTest() {
     @Autowired
-    protected lateinit var clientOrganizationService: ClientOrganizationService
+    protected lateinit var organizationClientService: OrganizationClientService
 
     @Autowired
     protected lateinit var integrationTestHelper: ClientOrganizationIntegrationTestHelper

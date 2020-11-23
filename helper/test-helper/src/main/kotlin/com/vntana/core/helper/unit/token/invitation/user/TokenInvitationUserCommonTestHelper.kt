@@ -1,10 +1,12 @@
 package com.vntana.core.helper.unit.token.invitation.user
 
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
-import com.vntana.core.domain.token.TokenInvitationUser
+import com.vntana.core.domain.token.TokenUserInvitationToOrganization
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
-import com.vntana.core.service.token.invitation.user.dto.CreateTokenInvitationUserDto
+import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToClientDto
+import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToOrganizationDto
+import com.vntana.core.service.token.invitation.user.dto.InvitationUuidAndTokenDto
 
 /**
  * Created by Arman Gevorgyan.
@@ -15,13 +17,18 @@ open class TokenInvitationUserCommonTestHelper : AbstractCommonTestHelper() {
 
     private val invitationUserCommonTestHelper = InvitationUserCommonTestHelper()
 
-    fun buildCreateTokenInvitationUserDto(
+    fun buildCreateTokenInvitationUserToOrganizationDto(
             token: String? = uuid(),
             invitationUserUuid: String? = uuid()
-    ): CreateTokenInvitationUserDto = CreateTokenInvitationUserDto(token, invitationUserUuid)
-
-    fun buildTokenInvitationUser(
+    ): CreateInvitationUserToOrganizationDto = CreateInvitationUserToOrganizationDto(token, invitationUserUuid)
+    
+    fun buildCreateTokenForUserInvitationToClient(
             token: String? = uuid(),
-            invitationOrganizationUser: InvitationOrganizationUser? = invitationUserCommonTestHelper.buildInvitationUser()
-    ): TokenInvitationUser = TokenInvitationUser(token, invitationOrganizationUser)
+            userInvitationUuid: String? = uuid()
+    ):CreateInvitationUserToClientDto = CreateInvitationUserToClientDto(listOf(InvitationUuidAndTokenDto(userInvitationUuid, token)))
+
+    fun buildTokenInvitationUserToOrganization(
+            token: String? = uuid(),
+            invitationOrganizationUser: InvitationOrganizationUser? = invitationUserCommonTestHelper.buildInvitationUserToOrganization()
+    ): TokenUserInvitationToOrganization = TokenUserInvitationToOrganization(token, invitationOrganizationUser)
 }

@@ -30,6 +30,6 @@ public interface InvitationOrganizationUserRepository extends JpaRepository<Invi
 
     Page<InvitationOrganizationUser> findAllByOrganizationUuidAndStatus(final String organizationUuid, final InvitationStatus status, final Pageable pageable);
 
-    @Query("select invitationUser from InvitationOrganizationUser invitationUser where invitationUser.id = (select tis.invitationUser.id from TokenInvitationUser tis where tis.token = :token)")
+    @Query("select invitationUser from InvitationOrganizationUser invitationUser where invitationUser.id in (select tis.invitationUser.id from TokenUserInvitationToOrganization tis where tis.token = :token)")
     Optional<InvitationOrganizationUser> findByTokenInvitationUser(@Param("token") final String token);
 }

@@ -1,8 +1,11 @@
 package com.vntana.core.helper.user
 
+import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.user.request.CreateUserRequest
 import com.vntana.core.model.user.response.CreateUserResponse
+import com.vntana.core.model.user.role.request.UserRoleGrantClientOrganizationRequest
 import com.vntana.core.rest.client.user.UserResourceClient
+import com.vntana.core.rest.client.user.role.UserRoleResourceClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

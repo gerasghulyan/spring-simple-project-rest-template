@@ -1,6 +1,7 @@
 package com.vntana.core.rest.facade.invitation.user.component;
 
-import com.vntana.core.model.invitation.user.request.SendInvitationUserRequest;
+import com.vntana.core.model.invitation.user.request.SendInvitationForClientUserRequest;
+import com.vntana.core.model.invitation.user.request.SendInvitationForOrganizationUserRequest;
 import com.vntana.core.model.invitation.user.response.SendInvitationUserResultResponse;
 
 /**
@@ -10,5 +11,7 @@ import com.vntana.core.model.invitation.user.response.SendInvitationUserResultRe
  */
 public interface InvitationUserSenderComponent {
 
-    SendInvitationUserResultResponse sendInvitation(final SendInvitationUserRequest request);
+    SendInvitationUserResultResponse sendInvitationForOrganization(final SendInvitationForOrganizationUserRequest request);
+
+    SendInvitationUserResultResponse sendInvitationForClients(final SendInvitationForClientUserRequest request);
 }

@@ -18,7 +18,7 @@ class InvitationUserFacadePreconditionCheckerCheckUpdateStatusForPossibleErrorsU
     fun `test when invitation not found`() {
         val request = invitationUserRestTestHelper.buildUpdateInvitationUserInvitationStatusRequest()
         resetAll()
-        expect(invitationUserService.existsByUuid(request.uuid)).andReturn(false)
+        expect(invitationUserToOrganizationService.existsByUuid(request.uuid)).andReturn(false)
         replayAll()
         preconditionChecker.checkUpdateStatusForPossibleErrors(request).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
@@ -31,7 +31,7 @@ class InvitationUserFacadePreconditionCheckerCheckUpdateStatusForPossibleErrorsU
     fun test() {
         val request = invitationUserRestTestHelper.buildUpdateInvitationUserInvitationStatusRequest()
         resetAll()
-        expect(invitationUserService.existsByUuid(request.uuid)).andReturn(true)
+        expect(invitationUserToOrganizationService.existsByUuid(request.uuid)).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkUpdateStatusForPossibleErrors(request).isPresent).isFalse()
         verifyAll()
