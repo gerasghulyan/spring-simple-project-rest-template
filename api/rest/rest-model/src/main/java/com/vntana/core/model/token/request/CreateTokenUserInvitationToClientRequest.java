@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Diana Gevorgyan
@@ -16,14 +17,14 @@ import java.util.List;
  * Time: 12:10 PM
  */
 public class CreateTokenUserInvitationToClientRequest extends AbstractRequestModel implements ValidatableRequest<TokenErrorResponseModel> {
-    
+
     @JsonProperty("tokens")
-    private List<InvitationAndTokenRequestModel> tokens;
+    private List<InvitationUuidAndTokenRequestModel> tokens;
 
     public CreateTokenUserInvitationToClientRequest() {
     }
 
-    public CreateTokenUserInvitationToClientRequest(final List<InvitationAndTokenRequestModel> tokens) {
+    public CreateTokenUserInvitationToClientRequest(final List<InvitationUuidAndTokenRequestModel> tokens) {
         this.tokens = tokens;
     }
 
@@ -52,11 +53,15 @@ public class CreateTokenUserInvitationToClientRequest extends AbstractRequestMod
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("tokens", tokens)
+                .append(
+                        "tokens", tokens.stream()
+                                .filter(Objects::nonNull)
+                                .map(InvitationUuidAndTokenRequestModel::getUserInvitationUuid)
+                                .toArray())
                 .toString();
     }
 
-    public List<InvitationAndTokenRequestModel> getTokens() {
+    public List<InvitationUuidAndTokenRequestModel> getTokens() {
         return tokens;
     }
 }

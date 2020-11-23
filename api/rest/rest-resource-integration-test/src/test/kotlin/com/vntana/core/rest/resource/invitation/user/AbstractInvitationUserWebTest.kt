@@ -40,7 +40,7 @@ abstract class AbstractInvitationUserWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var clientOrganizationResourceTestHelper: ClientOrganizationResourceTestHelper
-    
+
     @Autowired
     protected lateinit var userResourceTestHelper: UserResourceTestHelper
 

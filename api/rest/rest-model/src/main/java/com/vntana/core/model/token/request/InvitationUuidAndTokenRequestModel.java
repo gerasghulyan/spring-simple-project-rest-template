@@ -9,16 +9,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 11/19/20
  * Time: 12:14 PM
  */
-public class InvitationAndTokenRequestModel {
+public class InvitationUuidAndTokenRequestModel {
     
     private String userInvitationUuid;
     
     private String token;
 
-    public InvitationAndTokenRequestModel() {
+    public InvitationUuidAndTokenRequestModel() {
     }
 
-    public InvitationAndTokenRequestModel(final String userInvitationUuid, final String token) {
+    public InvitationUuidAndTokenRequestModel(final String userInvitationUuid, final String token) {
         this.userInvitationUuid = userInvitationUuid;
         this.token = token;
     }
@@ -28,10 +28,10 @@ public class InvitationAndTokenRequestModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof InvitationAndTokenRequestModel)) {
+        if (!(o instanceof InvitationUuidAndTokenRequestModel)) {
             return false;
         }
-        final InvitationAndTokenRequestModel that = (InvitationAndTokenRequestModel) o;
+        final InvitationUuidAndTokenRequestModel that = (InvitationUuidAndTokenRequestModel) o;
         return new EqualsBuilder()
                 .append(userInvitationUuid, that.userInvitationUuid)
                 .append(token, that.token)
@@ -51,7 +51,6 @@ public class InvitationAndTokenRequestModel {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("userInvitationUuid", userInvitationUuid)
-                .append("token", token)
                 .toString();
     }
 

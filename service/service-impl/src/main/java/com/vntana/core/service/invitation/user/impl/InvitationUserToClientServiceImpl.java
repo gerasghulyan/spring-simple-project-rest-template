@@ -4,7 +4,6 @@ import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
 import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.persistence.invitation.user.InvitationOrganizationClientUserRepository;
 import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.invitation.user.InvitationUserToClientService;
@@ -49,15 +48,12 @@ public class InvitationUserToClientServiceImpl implements InvitationUserToClient
         Assert.notNull(dto, "The CreateInvitationToClientUserDto should not be null");
         LOGGER.debug("Creating user invitation to client for dto - {}", dto);
         final User inviterUser = userService.getByUuid(dto.getInviterUserUuid());
-        final List<InvitationOrganizationClientUser> result = dto.getUserRoles()
-                .entrySet()
+        final List<InvitationOrganizationClientUser> result = dto.getInvitations()
                 .stream()
                 .map(entry -> {
-                    final String clientUuid = entry.getKey();
-                    final UserRole role = entry.getValue();
-                    final ClientOrganization client = clientOrganizationService.getByUuid(clientUuid);
+                    final ClientOrganization client = clientOrganizationService.getByUuid(entry.getClientUuid());
                     return invitationOrganizationClientUserRepository.save(new InvitationOrganizationClientUser(
-                            role,
+                            entry.getRole(),
                             dto.getEmail(),
                             InvitationStatus.INVITED,
                             inviterUser,
@@ -67,6 +63,7 @@ public class InvitationUserToClientServiceImpl implements InvitationUserToClient
         return result;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public InvitationOrganizationClientUser getByUuid(final String uuid) {
         Assert.hasText(uuid, "The uuid should not be null or empty");
@@ -77,6 +74,7 @@ public class InvitationUserToClientServiceImpl implements InvitationUserToClient
         return invitationUser;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean existsByUuid(final String uuid) {
         Assert.hasText(uuid, "The uuid should not be null or empty");

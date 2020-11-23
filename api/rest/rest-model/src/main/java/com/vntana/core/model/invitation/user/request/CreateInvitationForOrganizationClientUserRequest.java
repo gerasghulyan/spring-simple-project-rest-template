@@ -23,7 +23,7 @@ import static com.vntana.core.model.invitation.user.error.InvitationUserErrorRes
 public class CreateInvitationForOrganizationClientUserRequest extends AbstractRequestModel implements ValidatableRequest<InvitationUserErrorResponseModel> {
 
     @JsonProperty("invitations")
-    private List<SingleUserInvitationToClient> invitations;
+    private List<SingleUserInvitationToClientModel> invitations;
 
     @JsonProperty("email")
     private String email;
@@ -39,7 +39,7 @@ public class CreateInvitationForOrganizationClientUserRequest extends AbstractRe
     }
 
     public CreateInvitationForOrganizationClientUserRequest(
-            final List<SingleUserInvitationToClient> invitations,
+            final List<SingleUserInvitationToClientModel> invitations,
             final String email,
             final String inviterUserUuid,
             final String organizationUuid) {
@@ -104,7 +104,7 @@ public class CreateInvitationForOrganizationClientUserRequest extends AbstractRe
                 .toString();
     }
 
-    public List<SingleUserInvitationToClient> getInvitations() {
+    public List<SingleUserInvitationToClientModel> getInvitations() {
         return invitations;
     }
 

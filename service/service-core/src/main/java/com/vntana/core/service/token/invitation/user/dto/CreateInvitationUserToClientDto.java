@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class CreateInvitationUserToClientDto implements ServiceDto {
     private final List<InvitationUuidAndTokenDto> invitationUuidAndTokens;
 
     public CreateInvitationUserToClientDto(final List<InvitationUuidAndTokenDto> invitationUuidAndToken) {
-        Assert.notNull(invitationUuidAndToken, "The invitationUuidAndToken should not be null or empty");
+        Assert.isTrue(!CollectionUtils.isEmpty(invitationUuidAndToken), "The invitationUuidAndTokens should not be null or empty");
         this.invitationUuidAndTokens = invitationUuidAndToken;
     }
 
@@ -47,7 +48,7 @@ public class CreateInvitationUserToClientDto implements ServiceDto {
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("invitationUuidAndToken", invitationUuidAndTokens)
+                .append("invitationUuidAndToken", invitationUuidAndTokens.stream().map(InvitationUuidAndTokenDto::getInvitationUuid).toArray())
                 .toString();
     }
 

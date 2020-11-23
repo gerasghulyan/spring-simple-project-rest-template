@@ -12,8 +12,9 @@ import org.springframework.util.Assert;
  * Time: 1:46 PM
  */
 public class InvitationUuidAndTokenDto implements ServiceDto {
-    
+
     private final String invitationUuid;
+    
     private final String token;
 
     public InvitationUuidAndTokenDto(final String invitationUuid, final String token) {
@@ -51,7 +52,6 @@ public class InvitationUuidAndTokenDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("invitationUuid", invitationUuid)
-                .append("token", token)
                 .toString();
     }
 

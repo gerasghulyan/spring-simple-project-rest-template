@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 11/20/20
  * Time: 4:36 PM
  */
-public class SingleUserInvitationToClient {
+public class SingleUserInvitationToClientModel {
 
     @JsonProperty("clientUuid")
     private String clientUuid;
@@ -19,10 +19,10 @@ public class SingleUserInvitationToClient {
     @JsonProperty("role")
     private UserRoleModel role;
 
-    public SingleUserInvitationToClient() {
+    public SingleUserInvitationToClientModel() {
     }
 
-    public SingleUserInvitationToClient(final String clientUuid, final UserRoleModel role) {
+    public SingleUserInvitationToClientModel(final String clientUuid, final UserRoleModel role) {
         this.clientUuid = clientUuid;
         this.role = role;
     }
@@ -32,10 +32,10 @@ public class SingleUserInvitationToClient {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SingleUserInvitationToClient)) {
+        if (!(o instanceof SingleUserInvitationToClientModel)) {
             return false;
         }
-        final SingleUserInvitationToClient that = (SingleUserInvitationToClient) o;
+        final SingleUserInvitationToClientModel that = (SingleUserInvitationToClientModel) o;
         return new EqualsBuilder()
                 .append(clientUuid, that.clientUuid)
                 .append(role, that.role)

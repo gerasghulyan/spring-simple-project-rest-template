@@ -14,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "token_user_invitation_to_organization")
-@DiscriminatorValue(value = "INVITATION_ORGANIZATION") //should we rename this?
+@DiscriminatorValue(value = "INVITATION_USER_TO_ORGANIZATION")
 public class TokenUserInvitationToOrganization extends AbstractToken {
 
     @ManyToOne

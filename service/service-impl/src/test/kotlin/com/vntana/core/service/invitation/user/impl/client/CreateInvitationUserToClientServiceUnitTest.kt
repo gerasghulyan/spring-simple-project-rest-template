@@ -1,9 +1,10 @@
 package com.vntana.core.service.invitation.user.impl.client
 
 import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser
+import com.vntana.core.domain.user.UserRole
 import com.vntana.core.service.invitation.user.AbstractUserInvitationToClientServiceUnitTest
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.easymock.EasyMock.isA
 import org.junit.Test
@@ -19,12 +20,12 @@ class CreateInvitationUserToClientServiceUnitTest : AbstractUserInvitationToClie
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsDto(email = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsDto(email = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsDto(inviterUserUuid = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsDto(inviterUserUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(email = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(email = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(inviterUserUuid = null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(inviterUserUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { commonTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(organizationUuid = emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { invitationUserToClientService.create(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -35,9 +36,9 @@ class CreateInvitationUserToClientServiceUnitTest : AbstractUserInvitationToClie
         val inviterUser = userCommonTestHelper.buildUserWithOrganizationOwnerRole()
         val organization = organizationCommonTestHelper.buildOrganization()
         val client = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization)
-        val dto = commonTestHelper.buildCreateInvitationUserForClientsDto(inviterUserUuid = inviterUser.uuid, clientUuid = client.uuid)
+        val dto = commonTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(inviterUserUuid = inviterUser.uuid, clientUuid = client.uuid)
         val invitationUser = commonTestHelper.buildInvitationOrganizationClientUser(
-                userRole = dto.userRoles[client.uuid],
+                userRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER,
                 email = dto.email,
                 inviterUser = inviterUser,
                 clientOrganization = client

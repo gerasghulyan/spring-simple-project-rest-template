@@ -141,6 +141,7 @@ public class InvitationUserToOrganizationServiceImpl implements InvitationUserTo
         return invitationUsers;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public InvitationOrganizationUser getByToken(final String token) {
         Assert.hasText(token, "The token should not be null or empty");
@@ -151,6 +152,7 @@ public class InvitationUserToOrganizationServiceImpl implements InvitationUserTo
         return invitationUser;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean existsByToken(final String token) {
         Assert.hasText(token, "The token should not be null or empty");

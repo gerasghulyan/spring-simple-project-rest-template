@@ -6,7 +6,7 @@ import com.vntana.core.model.token.error.TokenErrorResponseModel;
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest;
 import com.vntana.core.model.token.request.CreateTokenInvitationUserToOrganizationRequest;
 import com.vntana.core.model.token.request.CreateTokenUserInvitationToClientRequest;
-import com.vntana.core.model.token.request.InvitationAndTokenRequestModel;
+import com.vntana.core.model.token.request.InvitationUuidAndTokenRequestModel;
 import com.vntana.core.rest.facade.token.component.TokenFacadePreconditionChecker;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.invitation.user.InvitationUserToClientService;
@@ -67,13 +67,16 @@ public class TokenFacadePreconditionCheckerImpl implements TokenFacadePreconditi
 
     @Override
     public SingleErrorWithStatus<TokenErrorResponseModel> checkCreateTokenUserInvitationToClient(final CreateTokenUserInvitationToClientRequest request) {
-        final List<InvitationAndTokenRequestModel> filtered = request.getTokens().stream()
-                .filter(it -> !StringUtils.isEmpty(it.getToken()))
-                .filter(it -> !StringUtils.isEmpty(it.getUserInvitationUuid()))
+        if (request.getTokens().isEmpty()) {
+            return SingleErrorWithStatus.of(SC_NOT_ACCEPTABLE, TokenErrorResponseModel.BAD_REQUEST);
+        }
+        final List<InvitationUuidAndTokenRequestModel> filtered = request.getTokens().stream()
+                .filter(it -> StringUtils.isNotEmpty(it.getToken()))
+                .filter(it -> StringUtils.isNotEmpty(it.getUserInvitationUuid()))
                 .filter(it -> invitationUserToClientService.existsByUuid(it.getUserInvitationUuid()))
                 .collect(Collectors.toList());
-        if(request.getTokens().size() != filtered.size()) {
-            return SingleErrorWithStatus.of(SC_NOT_ACCEPTABLE, TokenErrorResponseModel.WRONG_REQUEST);
+        if (request.getTokens().size() != filtered.size()) {
+            return SingleErrorWithStatus.of(SC_NOT_ACCEPTABLE, TokenErrorResponseModel.BAD_REQUEST);
         }
         return SingleErrorWithStatus.empty();
     }

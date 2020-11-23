@@ -4,7 +4,7 @@ import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest
 import com.vntana.core.model.token.request.CreateTokenInvitationUserToOrganizationRequest
 import com.vntana.core.model.token.request.CreateTokenUserInvitationToClientRequest
-import com.vntana.core.model.token.request.InvitationAndTokenRequestModel
+import com.vntana.core.model.token.request.InvitationUuidAndTokenRequestModel
 
 /**
  * Created by Arman Gevorgyan.
@@ -30,5 +30,5 @@ open class TokenRestTestHelper : AbstractRestTestHelper() {
     private fun buildCreateInvitationUuidAndToken(
             token: String? = uuid(),
             userInvitationUuid: String? = uuid()
-    ): InvitationAndTokenRequestModel = InvitationAndTokenRequestModel(userInvitationUuid, token)
+    ): InvitationUuidAndTokenRequestModel = InvitationUuidAndTokenRequestModel(userInvitationUuid, token)
 }

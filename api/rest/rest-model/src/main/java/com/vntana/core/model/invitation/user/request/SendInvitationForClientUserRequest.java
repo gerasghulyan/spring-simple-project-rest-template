@@ -36,6 +36,7 @@ public class SendInvitationForClientUserRequest extends AbstractRequestModel imp
     private String organizationUuid;
 
     public SendInvitationForClientUserRequest() {
+        super();
     }
 
     public SendInvitationForClientUserRequest(
@@ -98,7 +99,6 @@ public class SendInvitationForClientUserRequest extends AbstractRequestModel imp
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("email", email)
-                .append("invitationTokens", invitationTokens)
                 .append("inviterUserUuid", inviterUserUuid)
                 .append("organizationUuid", organizationUuid)
                 .toString();

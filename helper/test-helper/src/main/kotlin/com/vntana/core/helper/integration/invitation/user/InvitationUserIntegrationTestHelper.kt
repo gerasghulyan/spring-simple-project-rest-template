@@ -51,5 +51,5 @@ class InvitationUserIntegrationTestHelper : InvitationUserCommonTestHelper() {
             email: String? = uuid(),
             inviterUserUuid: String? = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
             organizationUuid: String? = organizationIntegrationTestHelper.persistOrganization().uuid
-    ): InvitationOrganizationClientUser = invitationUserToClientService.create(buildCreateInvitationUserForClientsDto(clientUuid, email, inviterUserUuid, organizationUuid)).get(0)
+    ): InvitationOrganizationClientUser = invitationUserToClientService.create(buildCreateInvitationUserForClientsWithContentManagerRoleDto(clientUuid, email, inviterUserUuid, organizationUuid)).get(0)
 }

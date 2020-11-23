@@ -99,12 +99,9 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
-
         final Map<String, UserRoleModel> inviterPermissionsMap =
                 getClientOrganizationsByUserUuidAndOrganization(request.getOrganizationUuid(), request.getInviterUserUuid());
-        final List<SingleUserInvitationToClient> invitations = request.getInvitations();
-
-        final List<SingleUserInvitationToClient> filteredInvitations = invitations.stream()
+        final List<SingleUserInvitationToClientModel> filteredInvitations = request.getInvitations().stream()
                 .filter(invitation -> invitation.getRole().getPriority() >= UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority())
                 .filter(invitation -> clientOrganizationService.existsByUuid(invitation.getClientUuid()))
                 .filter(invitation -> inviterPermissionsMap.containsKey(invitation.getClientUuid()))
@@ -114,8 +111,8 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
                     return userRolesPermissionsChecker.isPermittedToInvite(inviterRole, invitedRole);
                 })
                 .collect(Collectors.toList());
-        if (invitations.size() != filteredInvitations.size()) {
-            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.WRONG_PERMISSIONS);
+        if (request.getInvitations().size() != filteredInvitations.size()) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
         return SingleErrorWithStatus.empty();
     }

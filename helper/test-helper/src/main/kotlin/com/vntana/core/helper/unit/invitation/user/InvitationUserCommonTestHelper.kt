@@ -33,12 +33,12 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             organizationUuid: String? = uuid()
     ) = CreateInvitationForOrganizationUserDto(userRole, email, inviterUserUuid, organizationUuid)
 
-    fun buildCreateInvitationUserForClientsDto(
+    fun buildCreateInvitationUserForClientsWithContentManagerRoleDto(
             clientUuid: String? = uuid(),
             email: String? = uuid(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
-    ) = CreateInvitationForClientsUserDto(mapOf(clientUuid to UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER), email, inviterUserUuid, organizationUuid)
+    ) = CreateInvitationForClientsUserDto(listOf(UserInvitationToClient(clientUuid, UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER)), email, inviterUserUuid, organizationUuid)
 
     fun buildInvitationUserPage(entities: List<InvitationOrganizationUser> = listOf(buildInvitationUserToOrganization(), buildInvitationUserToOrganization()),
                                 pageAble: Pageable = buildPageRequest(0, 5),
@@ -54,7 +54,7 @@ open class InvitationUserCommonTestHelper : AbstractCommonTestHelper() {
             invitedByUser: User? = userCommonTestHelper.buildUserWithOrganizationOwnerRole(),
             organization: Organization? = organizationCommonTestHelper.buildOrganization()
     ) = InvitationOrganizationUser(userRole, email, status, invitedByUser, organization)
-    
+
     fun buildInvitationOrganizationClientUser(
             userRole: UserRole? = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER,
             email: String? = uuid(),

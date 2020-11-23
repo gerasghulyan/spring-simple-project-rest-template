@@ -9,6 +9,7 @@ import com.vntana.core.notification.EmailSenderService
 import com.vntana.core.notification.payload.invitation.user.InvitationUserToOrganizationEmailSendPayload
 import com.vntana.core.rest.facade.invitation.user.component.impl.InvitationUserSenderComponentImpl
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
+import com.vntana.core.service.invitation.user.InvitationUserToClientService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.template.email.TemplateEmailService
 import com.vntana.core.service.user.UserService
@@ -32,12 +33,15 @@ class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
 
     @Mock
     private lateinit var templateEmailService: TemplateEmailService
-    
+
     @Mock
     private lateinit var userService: UserService
-    
+
     @Mock
     private lateinit var organizationService: OrganizationService
+
+    @Mock
+    private lateinit var invitationUserToClientService: InvitationUserToClientService
 
     private val verificationUrlPrefix: String = uuid()
 
@@ -46,10 +50,10 @@ class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
     private val emailSubject: String = uuid()
 
     private val restTestHelper = InvitationUserRestTestHelper()
-    
+
     private val userCommonTestHelper = UserCommonTestHelper()
-    
-    private val organizationCommonTestHelper =  OrganizationCommonTestHelper()
+
+    private val organizationCommonTestHelper = OrganizationCommonTestHelper()
 
     @Before
     fun prepare() {
@@ -58,6 +62,7 @@ class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
                 templateEmailService,
                 userService,
                 organizationService,
+                invitationUserToClientService,
                 verificationUrlPrefix,
                 senderEmail,
                 emailSubject

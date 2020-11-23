@@ -26,7 +26,7 @@ class ClientOrganizationFindBySlugAndOrganizationServiceUnitTest : AbstractClien
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { organizationClientService.findBySlugAndOrganization(uuid(), null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationClientService.findBySlugAndOrganization(uuid(), "") }
+        assertThatThrownBy { organizationClientService.findBySlugAndOrganization(uuid(), emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }

@@ -2,7 +2,7 @@ package com.vntana.core.rest.facade.invitation.user.checker.impl
 
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
-import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClient
+import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClientModel
 import com.vntana.core.rest.facade.invitation.user.checker.AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions
@@ -50,7 +50,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = listOf(SingleUserInvitationToClient(inviterPermissions.clientOrganization.uuid, UserRoleModel.ORGANIZATION_ADMIN))
+                userRoleModels = listOf(SingleUserInvitationToClientModel(inviterPermissions.clientOrganization.uuid, UserRoleModel.ORGANIZATION_ADMIN))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
@@ -59,7 +59,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.WRONG_PERMISSIONS)
+            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
         }
         verifyAll()
     }
@@ -71,7 +71,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = listOf(SingleUserInvitationToClient(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+                userRoleModels = listOf(SingleUserInvitationToClientModel(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
@@ -81,7 +81,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.WRONG_PERMISSIONS)
+            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
         }
         verifyAll()
     }
@@ -93,7 +93,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = listOf(SingleUserInvitationToClient(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+                userRoleModels = listOf(SingleUserInvitationToClientModel(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
@@ -103,7 +103,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.WRONG_PERMISSIONS)
+            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
         }        
         verifyAll()
     }
@@ -116,7 +116,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
                 inviterUserUuid = inviter.uuid,
-                userRoles = listOf(SingleUserInvitationToClient(inviterPermissions.clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+                userRoleModels = listOf(SingleUserInvitationToClientModel(inviterPermissions.clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)

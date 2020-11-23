@@ -49,7 +49,6 @@ public class CreateInvitationUserToOrganizationDto implements ServiceDto {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("token", token)
                 .append("invitationUserUuid", invitationUserUuid)
                 .toString();
     }

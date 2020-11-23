@@ -15,6 +15,6 @@ public enum TokenErrorResponseModel implements ErrorResponseModel {
     USER_NOT_FOUND,
     TOKEN_NOT_FOUND,
     INVITATION_ORGANIZATION_NOT_FOUND,
-    WRONG_REQUEST, 
+    BAD_REQUEST, 
     INVITATION_USER_NOT_FOUND
 }

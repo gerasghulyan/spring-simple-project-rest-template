@@ -30,5 +30,5 @@ public enum InvitationUserErrorResponseModel implements ErrorResponseModel {
     USER_ALREADY_HAS_ROLE_IN_ORGANIZATION,
     USER_ALREADY_EXISTS,
     MISSING_INVITATIONS,
-    WRONG_PERMISSIONS
+    INCORRECT_PERMISSIONS
 }

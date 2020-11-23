@@ -25,11 +25,11 @@ class ClientOrganizationUpdateServiceUnitTest : AbstractClientOrganizationServic
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(uuid = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(uuid = "")) }
+        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(uuid = emptyString())) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(name = null)) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(name = "")) }
+        assertThatThrownBy { organizationClientService.update(helper.buildUpdateClientOrganizationDto(name = emptyString())) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }

@@ -22,7 +22,7 @@ import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvi
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
 import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToClientDto;
 import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToOrganizationDto;
-import com.vntana.core.service.token.invitation.user.dto.InvitationUuidAndTokenDto;
+import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -46,16 +46,19 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
     private final TokenInvitationOrganizationService tokenInvitationOrganizationService;
     private final TokenInvitationUserService tokenInvitationUserService;
     private final TokenFacadePreconditionChecker preconditionChecker;
+    private final MapperFacade mapperFacade;
 
     public TokenServiceFacadeImpl(final TokenService tokenService,
                                   final TokenInvitationOrganizationService tokenInvitationOrganizationService,
                                   final TokenInvitationUserService tokenInvitationUserService,
-                                  final TokenFacadePreconditionChecker preconditionChecker) {
+                                  final TokenFacadePreconditionChecker preconditionChecker,
+                                  final MapperFacade mapperFacade) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.tokenService = tokenService;
         this.tokenInvitationOrganizationService = tokenInvitationOrganizationService;
         this.tokenInvitationUserService = tokenInvitationUserService;
         this.preconditionChecker = preconditionChecker;
+        this.mapperFacade = mapperFacade;
     }
 
     @Override
@@ -97,7 +100,9 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
         if (error.isPresent()) {
             return new TokenBulkCreateResultResponse(error.getHttpStatus(), error.getError());
         }
-        final List<TokenUserInvitationToOrganizationClient> invitationTokens = tokenInvitationUserService.createUserInvitationToClients(convert(request));
+        final List<TokenUserInvitationToOrganizationClient> invitationTokens = tokenInvitationUserService
+                .createUserInvitationToClients(
+                        mapperFacade.map(request, CreateInvitationUserToClientDto.class));
         LOGGER.debug("Successfully processed token facade createTokenInvitationUserToClient for request - {}", request);
         return new TokenBulkCreateResultResponse(invitationTokens.stream().map(AbstractUuidAwareDomainEntity::getUuid).collect(Collectors.toList()));
     }
@@ -124,14 +129,5 @@ public class TokenServiceFacadeImpl implements TokenServiceFacade {
         tokenService.findByToken(token).ifPresent(abstractToken -> tokenService.expire(abstractToken.getUuid()));
         LOGGER.debug("Successfully processed token facade expire");
         return new TokenExpireResultResponse();
-    }
-
-    private CreateInvitationUserToClientDto convert(final CreateTokenUserInvitationToClientRequest request) {
-        return new CreateInvitationUserToClientDto(request
-                .getTokens()
-                .stream()
-                .map(it -> new InvitationUuidAndTokenDto(it.getUserInvitationUuid(), it.getToken()))
-                .collect(Collectors.toList())
-        );
     }
 }
