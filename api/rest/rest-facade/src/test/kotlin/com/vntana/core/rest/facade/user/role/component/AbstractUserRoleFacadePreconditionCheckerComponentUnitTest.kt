@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.user.role.component
 
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.helper.user.role.UserRoleRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
@@ -21,7 +22,10 @@ abstract class AbstractUserRoleFacadePreconditionCheckerComponentUnitTest : Abst
     protected lateinit var preconditionChecker: UserRoleFacadePreconditionCheckerComponent
 
     protected val restTestHelper = UserRoleRestTestHelper()
+
     protected val commonTestHelper = UserRoleCommonTestHelper()
+
+    protected val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
     @Mock
     protected lateinit var organizationService: OrganizationService

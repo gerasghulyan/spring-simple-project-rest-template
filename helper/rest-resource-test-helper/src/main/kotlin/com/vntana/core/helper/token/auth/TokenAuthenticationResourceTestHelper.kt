@@ -29,7 +29,6 @@ class TokenAuthenticationResourceTestHelper : TokenAuthenticationRestTestHelper(
         return token
     }
 
-    
     fun persistTokenWithOrganization(
             userUuid: String = userResourceTestHelper.persistUser().response().uuid,
             token: String = uuid(),

@@ -4,6 +4,7 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.GetByUuidsAndOrganizationUuidRequest;
 import com.vntana.core.rest.facade.user.component.precondition.UserFacadePreconditionCheckerComponent;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -27,10 +28,14 @@ public class UserFacadePreconditionCheckerComponentImpl implements UserFacadePre
 
     private final UserService userService;
     private final OrganizationService organizationService;
+    private final OrganizationClientService clientService;
 
-    public UserFacadePreconditionCheckerComponentImpl(final UserService userService, final OrganizationService organizationService) {
+    public UserFacadePreconditionCheckerComponentImpl(final UserService userService,
+                                                      final OrganizationService organizationService,
+                                                      final OrganizationClientService clientService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
+        this.clientService = clientService;
         this.organizationService = organizationService;
     }
 
@@ -54,6 +59,18 @@ public class UserFacadePreconditionCheckerComponentImpl implements UserFacadePre
         }
         if (!organizationService.existsByUuid(organizationUuid)) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, NOT_FOUND_FOR_ORGANIZATION);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<UserErrorResponseModel> checkGetByClientOrganizationUuid(final String clientUuid) {
+        LOGGER.debug("Processing precondition check for user facade get by client organization uuid where clientUuid - {}", clientUuid);
+        if (StringUtils.isBlank(clientUuid)) {
+            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, MISSING_CLIENT);
+        }
+        if (!clientService.existsByUuid(clientUuid)) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, NOT_FOUND_FOR_CLIENT_ORGANIZATION);
         }
         return SingleErrorWithStatus.empty();
     }

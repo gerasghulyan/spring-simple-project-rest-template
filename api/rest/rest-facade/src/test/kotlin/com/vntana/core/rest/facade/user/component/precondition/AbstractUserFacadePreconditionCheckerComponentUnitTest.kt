@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user.component.precondition
 import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.precondition.impl.UserFacadePreconditionCheckerComponentImpl
+import com.vntana.core.service.client.OrganizationClientService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
@@ -23,10 +24,13 @@ abstract class AbstractUserFacadePreconditionCheckerComponentUnitTest : Abstract
     @Mock
     protected lateinit var organizationService: OrganizationService
 
+    @Mock
+    protected lateinit var clientService: OrganizationClientService
+
     protected val restTestHelper = UserRestTestHelper()
 
     @Before
     fun prepare() {
-        preconditionChecker = UserFacadePreconditionCheckerComponentImpl(userService, organizationService)
+        preconditionChecker = UserFacadePreconditionCheckerComponentImpl(userService, organizationService, clientService)
     }
 }
