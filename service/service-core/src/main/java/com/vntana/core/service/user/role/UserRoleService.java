@@ -19,6 +19,8 @@ public interface UserRoleService {
 
     List<AbstractOrganizationAwareUserRole> findAllByOrganization(final String organizationUuid);
 
+    List<AbstractClientOrganizationAwareUserRole> findAllByClientOrganization(final String clientOrganizationUuid);
+
     List<AbstractClientOrganizationAwareUserRole> findAllClientsByOrganization(final String organizationUuid);
 
     List<AbstractClientOrganizationAwareUserRole> findAllClientOrganizationRoleByOrganizationAndUser(final String organizationUuid, final String userUuid);

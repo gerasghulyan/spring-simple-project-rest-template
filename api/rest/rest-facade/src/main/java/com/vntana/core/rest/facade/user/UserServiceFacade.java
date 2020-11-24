@@ -40,7 +40,29 @@ public interface UserServiceFacade {
 
     GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid);
 
+    /**
+     * Gets user having acess to give organization (client organization is not included. For this purpose see getClientsByOrganization method)
+     *
+     * @param organizationUuid
+     * @return
+     */
     GetUsersByOrganizationResponse getByOrganizationUuid(final String organizationUuid);
+
+    /**
+     * Gets all users having access to given client
+     *
+     * @param clientUuid
+     * @return
+     */
+    GetUsersByOrganizationResponse getByClientOrganizationUuid(final String clientUuid);
+
+    /**
+     * Gets all users having access to organization's clients
+     *
+     * @param organizationUuid
+     * @return
+     */
+    GetUsersByOrganizationResponse getClientsByOrganization(final String organizationUuid);
 
     ResetUserPasswordResponse checkResetPasswordToken(final String token);
 }

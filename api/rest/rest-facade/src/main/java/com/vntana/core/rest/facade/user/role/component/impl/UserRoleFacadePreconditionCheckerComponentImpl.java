@@ -1,6 +1,7 @@
 package com.vntana.core.rest.facade.user.role.component.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
@@ -13,6 +14,7 @@ import com.vntana.core.service.user.role.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -66,19 +68,30 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (error.isPresent()) {
             return error;
         }
-        if (userRoleService.existsByOrganizationAndUserAndRole(request.getOrganizationUuid(), request.getUserUuid(), UserRole.ORGANIZATION_ADMIN)) {
+        if (userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isPresent()) {
+            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
+        }
+        if(!userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isEmpty()){
             return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
         }
         LOGGER.debug("Successfully processed checkGrantOrganizationAdminRole for request - {}", request);
         return SingleErrorWithStatus.empty();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientRole(final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Processing checkGrantClientAdminRole for request - {}", request);
         final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkClientAndUserExistence(request.getClientUuid(), request.getUserUuid());
         if (error.isPresent()) {
             return error;
+        }
+        if (userRoleService.findByClientOrganizationAndUser(request.getClientUuid(), request.getUserUuid()).isPresent()) {
+            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
+        }
+        final Organization organization = clientOrganizationService.findByUuid(request.getClientUuid()).get().getOrganization();
+        if (userRoleService.findByOrganizationAndUser(organization.getUuid(), request.getUserUuid()).isPresent()) {
+            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
         }
         LOGGER.debug("Successfully processed checkGrantClientAdminRole for request - {}", request);
         return SingleErrorWithStatus.empty();

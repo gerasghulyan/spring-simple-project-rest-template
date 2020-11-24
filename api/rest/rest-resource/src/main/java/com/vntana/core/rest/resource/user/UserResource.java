@@ -100,6 +100,22 @@ public class UserResource {
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
+    @GetMapping(path = "/client-organizations/{clientUuid}")
+    public ResponseEntity<GetUsersByOrganizationResponse> getUsersByClientOrganization(@PathVariable("clientUuid") final String clientUuid) {
+        LOGGER.debug("Processing retrieve client users by organizationUuid - {}", clientUuid);
+        final GetUsersByOrganizationResponse response = userServiceFacade.getByClientOrganizationUuid(clientUuid);
+        LOGGER.debug("Successfully proceeded client retrieve users by clientUuid - {}", clientUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "/clients-organizations/{organizationUuid}")
+    public ResponseEntity<GetUsersByOrganizationResponse> getClientsByOrganization(@PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing retrieve clients related users by organizationUuid - {}", organizationUuid);
+        final GetUsersByOrganizationResponse response = userServiceFacade.getClientsByOrganization(organizationUuid);
+        LOGGER.debug("Successfully proceeded clients related retrieve users by organizationUuid - {}", organizationUuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
     @PutMapping(path = "/verify")
     public ResponseEntity<VerifyUserResponse> verify(@RequestBody final VerifyUserRequest request) {
         LOGGER.debug("Processing user resource verify method for request - {}", request);

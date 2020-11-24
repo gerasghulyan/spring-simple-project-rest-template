@@ -58,6 +58,17 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
     }
 
     @Test
+    fun `test when user already has a role in current organization`() {
+        val response = userResourceTestHelper.persistUser().response()
+        val userUuid = response.uuid
+        assertBasicErrorResultResponse(
+                HttpStatus.CONFLICT,
+                userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(organizationUuid = response.organizationUuid, userUuid = userUuid)),
+                UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED
+        )
+    }
+
+    @Test
     fun test() {
         val adminUserUuid = userResourceTestHelper.persistUser().response().uuid
         val ownerUserUuid = userResourceTestHelper.persistUser().response().uuid

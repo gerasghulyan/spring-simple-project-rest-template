@@ -14,6 +14,8 @@ public interface UserRoleRepositoryCustom {
 
     List<AbstractUserRole> findAllByOrganization(final String organizationUuid);
 
+    List<AbstractUserRole> findAllByClientOrganization(final String clientOrganizationUuid);
+
     Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid);
 
     List<AbstractUserRole> findAllOrganizationClientsByOrganization(final String organizationUuid);

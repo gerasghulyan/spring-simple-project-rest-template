@@ -41,6 +41,20 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
     }
 
     @Override
+    public List<AbstractUserRole> findAllByClientOrganization(final String clientOrganizationUuid) {
+        return entityManager.createQuery(
+                "select role from AbstractUserRole role where role.id in " +
+                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid = :clientOrganizationUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.uuid = :clientOrganizationUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid = :clientOrganizationUuid)",
+                AbstractUserRole.class)
+                .setParameter("clientOrganizationUuid", clientOrganizationUuid)
+                .getResultList();
+    }
+
+    @Override
     public Optional<AbstractUserRole> findByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         return find(() ->
                 entityManager.createQuery(

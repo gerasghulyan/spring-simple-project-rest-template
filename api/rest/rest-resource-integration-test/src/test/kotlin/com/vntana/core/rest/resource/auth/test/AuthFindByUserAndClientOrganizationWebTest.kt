@@ -51,32 +51,10 @@ class AuthFindByUserAndClientOrganizationWebTest : AbstractAuthWebTest() {
     }
 
     @Test
-    fun `test when is also super admin`() {
-        val userCreateResponse = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response()
-        val userUuid = userCreateResponse.uuid
-        val organizationUuid = userCreateResponse.organizationUuid
-        val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
-        val request = userResourceTestHelper.buildFindUserByUuidAndClientOrganizationRequest(
-                uuid = userUuid,
-                clientUuid = clientUuid
-        )
-        userRoleResourceTestHelper.grantSuperAdmin(userUuid)
-        userRoleResourceTestHelper.grantUserClientRole(userUuid, clientUuid)
-        authResourceClient.findByUserAndClientOrganization(request).let {
-            assertBasicSuccessResultResponse(it)
-            assertThat(it.response().userRole).isEqualTo(UserRoleModel.SUPER_ADMIN)
-            assertThat(it.response().clientUuid).isEqualTo(clientUuid)
-            assertThat(it.response().organizationUuid).isEqualTo(organizationUuid)
-            assertThat(it.response().uuid).isEqualTo(userUuid)
-            assertThat(it.response().superAdmin).isTrue()
-        }
-    }
-
-    @Test
     fun `test with client organization role`() {
         val userCreateResponse = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response()
         val userUuid = userCreateResponse.uuid
-        val organizationUuid = userCreateResponse.organizationUuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
         userRoleResourceTestHelper.grantUserClientRole(userUuid, clientUuid)
         val request = userResourceTestHelper.buildFindUserByUuidAndClientOrganizationRequest(
