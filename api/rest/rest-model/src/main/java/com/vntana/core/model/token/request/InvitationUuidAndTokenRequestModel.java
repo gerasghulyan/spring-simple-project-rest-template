@@ -11,15 +11,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class InvitationUuidAndTokenRequestModel {
     
-    private String userInvitationUuid;
+    private String invitationUuid;
     
     private String token;
 
     public InvitationUuidAndTokenRequestModel() {
     }
 
-    public InvitationUuidAndTokenRequestModel(final String userInvitationUuid, final String token) {
-        this.userInvitationUuid = userInvitationUuid;
+    public InvitationUuidAndTokenRequestModel(final String invitationUuid, final String token) {
+        this.invitationUuid = invitationUuid;
         this.token = token;
     }
 
@@ -33,7 +33,7 @@ public class InvitationUuidAndTokenRequestModel {
         }
         final InvitationUuidAndTokenRequestModel that = (InvitationUuidAndTokenRequestModel) o;
         return new EqualsBuilder()
-                .append(userInvitationUuid, that.userInvitationUuid)
+                .append(invitationUuid, that.invitationUuid)
                 .append(token, that.token)
                 .isEquals();
     }
@@ -41,7 +41,7 @@ public class InvitationUuidAndTokenRequestModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(userInvitationUuid)
+                .append(invitationUuid)
                 .append(token)
                 .toHashCode();
     }
@@ -50,12 +50,12 @@ public class InvitationUuidAndTokenRequestModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("userInvitationUuid", userInvitationUuid)
+                .append("invitationUuid", invitationUuid)
                 .toString();
     }
 
-    public String getUserInvitationUuid() {
-        return userInvitationUuid;
+    public String getInvitationUuid() {
+        return invitationUuid;
     }
 
     public String getToken() {

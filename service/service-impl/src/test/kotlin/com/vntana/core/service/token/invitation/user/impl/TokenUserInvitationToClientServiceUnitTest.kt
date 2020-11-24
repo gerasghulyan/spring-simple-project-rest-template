@@ -36,14 +36,14 @@ class TokenUserInvitationToClientServiceUnitTest : AbstractTokenInvitationUserSe
         val token1 = TokenUserInvitationToOrganizationClient(invitationUuidAndToken1.token, invitationUser1)
         val token2 = TokenUserInvitationToOrganizationClient(invitationUuidAndToken2.token, invitationUser2)
         resetAll()
-        expect(invitationUserToClientService.getByUuid(dto.invitationUuidAndTokens[0].invitationUuid)).andReturn(invitationUser1)
-        expect(invitationUserToClientService.getByUuid(dto.invitationUuidAndTokens[1].invitationUuid)).andReturn(invitationUser2)
+        expect(invitationUserToClientService.getByUuid(dto.tokens[0].invitationUuid)).andReturn(invitationUser1)
+        expect(invitationUserToClientService.getByUuid(dto.tokens[1].invitationUuid)).andReturn(invitationUser2)
         expect(tokenUserInvitationToOrganizationClientRepository
                 .saveAll(anyObject<List<TokenUserInvitationToOrganizationClient>>()))
                 .andAnswer { listOf(token1, token2) }
         replayAll()
         tokenInvitationUserService.createUserInvitationToClients(dto).let {
-            Assertions.assertThat(it.size).isEqualTo(dto.invitationUuidAndTokens.size)
+            Assertions.assertThat(it.size).isEqualTo(dto.tokens.size)
             Assertions.assertThat(it).containsExactlyElementsOf(listOf(token1, token2))
         }
         verifyAll()

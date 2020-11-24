@@ -72,8 +72,8 @@ public class TokenFacadePreconditionCheckerImpl implements TokenFacadePreconditi
         }
         final List<InvitationUuidAndTokenRequestModel> filtered = request.getTokens().stream()
                 .filter(it -> StringUtils.isNotEmpty(it.getToken()))
-                .filter(it -> StringUtils.isNotEmpty(it.getUserInvitationUuid()))
-                .filter(it -> invitationUserToClientService.existsByUuid(it.getUserInvitationUuid()))
+                .filter(it -> StringUtils.isNotEmpty(it.getInvitationUuid()))
+                .filter(it -> invitationUserToClientService.existsByUuid(it.getInvitationUuid()))
                 .collect(Collectors.toList());
         if (request.getTokens().size() != filtered.size()) {
             return SingleErrorWithStatus.of(SC_NOT_ACCEPTABLE, TokenErrorResponseModel.BAD_REQUEST);

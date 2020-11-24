@@ -3,7 +3,7 @@ package com.vntana.core.rest.resource.invitation.user.impl
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.model.invitation.user.request.CreateInvitationForOrganizationClientUserRequest
-import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClientModel
+import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClientRequestModel
 import com.vntana.core.rest.resource.invitation.user.AbstractInvitationUserWebTest
 import org.junit.Test
 import org.springframework.http.HttpStatus
@@ -19,7 +19,7 @@ class InvitationForClientUserCreateWebTest : AbstractInvitationUserWebTest() {
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.createInvitationForClient(resourceTestHelper.buildCreateInvitationUserForClientRequest(userRoleModels = null)),
+                invitationUserResourceClient.createInvitationForClient(resourceTestHelper.buildCreateInvitationUserForClientRequest(userRoleRequestModels = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITATIONS
         )
         assertBasicErrorResultResponse(
@@ -93,7 +93,7 @@ class InvitationForClientUserCreateWebTest : AbstractInvitationUserWebTest() {
         val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
         userRoleResourceTestHelper.grantUserClientRole(inviterUserUuid, clientUuid, UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
         assertBasicSuccessResultResponse(invitationUserResourceClient.createInvitationForClient(CreateInvitationForOrganizationClientUserRequest(
-                listOf(SingleUserInvitationToClientModel(clientUuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
+                listOf(SingleUserInvitationToClientRequestModel(clientUuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
                 email(),
                 inviterUserUuid,
                 organizationUuid

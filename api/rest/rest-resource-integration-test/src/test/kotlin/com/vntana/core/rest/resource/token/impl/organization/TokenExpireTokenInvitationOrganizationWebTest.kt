@@ -1,4 +1,4 @@
-package com.vntana.core.rest.resource.token.impl
+package com.vntana.core.rest.resource.token.impl.organization
 
 import com.vntana.core.model.token.error.TokenErrorResponseModel
 import com.vntana.core.rest.resource.token.AbstractTokenWebTest
@@ -11,22 +11,22 @@ import org.springframework.http.HttpStatus
  * Date: 4/8/2020
  * Time: 11:34 AM
  */
-class TokenIsExpiredTokenInvitationOrganizationWebTest : AbstractTokenWebTest() {
+class TokenExpireTokenInvitationOrganizationWebTest : AbstractTokenWebTest() {
 
     @Test
     fun `test when token not found`() {
-        assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, tokenResourceClient.isExpire(uuid()), TokenErrorResponseModel.TOKEN_NOT_FOUND)
+        assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, tokenResourceClient.expire(uuid()), TokenErrorResponseModel.TOKEN_NOT_FOUND)
     }
 
     @Test
-    fun `test is expired`() {
+    fun `test expire`() {
         val invitationOrganizationUuid = invitationOrganizationResourceTestHelper.persistInvitationOrganization()
         val token = uuid()
-        tokenResourceTestHelper.persistTokenInvitationOrganization(request = tokenResourceTestHelper.buildCreateTokenInvitationOrganizationRequest(
+        tokenResourceTestHelper.persistTokenInvitationOrganization(
                 invitationOrganizationUuid = invitationOrganizationUuid,
                 token = token
-        ))
-        tokenResourceTestHelper.expire(token)
+        )
+        assertBasicSuccessResultResponse(tokenResourceClient.expire(token))
         tokenResourceClient.isExpire(token).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.expired).isTrue()

@@ -1,4 +1,4 @@
-package com.vntana.core.rest.resource.token.impl
+package com.vntana.core.rest.resource.token.impl.organization
 
 import com.vntana.core.model.token.error.TokenErrorResponseModel
 import com.vntana.core.rest.resource.token.AbstractTokenWebTest

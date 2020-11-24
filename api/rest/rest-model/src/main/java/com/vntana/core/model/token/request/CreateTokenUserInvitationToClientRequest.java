@@ -56,7 +56,7 @@ public class CreateTokenUserInvitationToClientRequest extends AbstractRequestMod
                 .append(
                         "tokens", tokens.stream()
                                 .filter(Objects::nonNull)
-                                .map(InvitationUuidAndTokenRequestModel::getUserInvitationUuid)
+                                .map(InvitationUuidAndTokenRequestModel::getInvitationUuid)
                                 .toArray())
                 .toString();
     }

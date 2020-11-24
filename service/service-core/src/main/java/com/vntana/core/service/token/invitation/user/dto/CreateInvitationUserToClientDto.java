@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class CreateInvitationUserToClientDto implements ServiceDto {
 
-    private final List<InvitationUuidAndTokenDto> invitationUuidAndTokens;
+    private final List<InvitationUuidAndTokenDto> tokens;
 
     public CreateInvitationUserToClientDto(final List<InvitationUuidAndTokenDto> invitationUuidAndToken) {
         Assert.isTrue(!CollectionUtils.isEmpty(invitationUuidAndToken), "The invitationUuidAndTokens should not be null or empty");
-        this.invitationUuidAndTokens = invitationUuidAndToken;
+        this.tokens = invitationUuidAndToken;
     }
 
     @Override
@@ -33,14 +33,14 @@ public class CreateInvitationUserToClientDto implements ServiceDto {
         }
         final CreateInvitationUserToClientDto that = (CreateInvitationUserToClientDto) o;
         return new EqualsBuilder()
-                .append(invitationUuidAndTokens, that.invitationUuidAndTokens)
+                .append(tokens, that.tokens)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(invitationUuidAndTokens)
+                .append(tokens)
                 .toHashCode();
     }
 
@@ -48,11 +48,11 @@ public class CreateInvitationUserToClientDto implements ServiceDto {
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("invitationUuidAndToken", invitationUuidAndTokens.stream().map(InvitationUuidAndTokenDto::getInvitationUuid).toArray())
+                .append("tokens", tokens.stream().map(InvitationUuidAndTokenDto::getInvitationUuid).toArray())
                 .toString();
     }
 
-    public List<InvitationUuidAndTokenDto> getInvitationUuidAndTokens() {
-        return invitationUuidAndTokens;
+    public List<InvitationUuidAndTokenDto> getTokens() {
+        return tokens;
     }
 }

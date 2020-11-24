@@ -21,11 +21,11 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
     ): CreateInvitationForOrganizationUserRequest = CreateInvitationForOrganizationUserRequest(userRole, email, inviterUserUuid, organizationUuid)
 
     fun buildCreateInvitationUserForClientRequest(
-            userRoleModels: List<SingleUserInvitationToClientModel>? = listOf(SingleUserInvitationToClientModel(uuid(), UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)),
+            userRoleRequestModels: List<SingleUserInvitationToClientRequestModel>? = listOf(SingleUserInvitationToClientRequestModel(uuid(), UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)),
             email: String? = email(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
-    ): CreateInvitationForOrganizationClientUserRequest = CreateInvitationForOrganizationClientUserRequest(userRoleModels, email, inviterUserUuid, organizationUuid)
+    ): CreateInvitationForOrganizationClientUserRequest = CreateInvitationForOrganizationClientUserRequest(userRoleRequestModels, email, inviterUserUuid, organizationUuid)
 
     fun buildGetAllByStatusInvitationUserRequest(
             page: Int = 0,

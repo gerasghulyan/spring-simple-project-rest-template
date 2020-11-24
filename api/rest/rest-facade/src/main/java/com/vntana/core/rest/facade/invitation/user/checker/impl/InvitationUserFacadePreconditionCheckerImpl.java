@@ -100,7 +100,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         // Checking if invitations client uuids and user roles are valid
-        final List<SingleUserInvitationToClientModel> firstLevelFilteredInvitations = request.getInvitations().stream()
+        final List<SingleUserInvitationToClientRequestModel> firstLevelFilteredInvitations = request.getInvitations().stream()
                 .filter(invitation -> invitation.getRole().getPriority() >= UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority())
                 .filter(invitation -> clientOrganizationService.existsByUuid(invitation.getClientUuid()))
                 .collect(Collectors.toList());
@@ -122,7 +122,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         // Checking if inviter user has valid client level permissions to invite a new user 
         final Map<String, UserRoleModel> inviterClientLevelPermissionsMap =
                 getClientOrganizationsByUserUuidAndOrganization(request.getOrganizationUuid(), request.getInviterUserUuid());
-        final List<SingleUserInvitationToClientModel> secondLevelFilteredinvitations = request.getInvitations().stream()
+        final List<SingleUserInvitationToClientRequestModel> secondLevelFilteredInvitations = request.getInvitations().stream()
                 .filter(invitation -> inviterClientLevelPermissionsMap.containsKey(invitation.getClientUuid()))
                 .filter(invitation -> {
                     final UserRoleModel inviterRole = inviterClientLevelPermissionsMap.get(invitation.getClientUuid());
@@ -130,7 +130,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
                     return userRolesPermissionsChecker.isPermittedToInvite(inviterRole, invitedRole);
                 })
                 .collect(Collectors.toList());
-        if (request.getInvitations().size() != secondLevelFilteredinvitations.size()) {
+        if (request.getInvitations().size() != secondLevelFilteredInvitations.size()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
         return SingleErrorWithStatus.empty();

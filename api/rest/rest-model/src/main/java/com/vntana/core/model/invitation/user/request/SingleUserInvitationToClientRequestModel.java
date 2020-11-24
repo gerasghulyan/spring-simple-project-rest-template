@@ -1,6 +1,7 @@
 package com.vntana.core.model.invitation.user.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 11/20/20
  * Time: 4:36 PM
  */
-public class SingleUserInvitationToClientModel {
+public class SingleUserInvitationToClientRequestModel extends AbstractRequestModel {
 
     @JsonProperty("clientUuid")
     private String clientUuid;
@@ -19,10 +20,10 @@ public class SingleUserInvitationToClientModel {
     @JsonProperty("role")
     private UserRoleModel role;
 
-    public SingleUserInvitationToClientModel() {
+    public SingleUserInvitationToClientRequestModel() {
     }
 
-    public SingleUserInvitationToClientModel(final String clientUuid, final UserRoleModel role) {
+    public SingleUserInvitationToClientRequestModel(final String clientUuid, final UserRoleModel role) {
         this.clientUuid = clientUuid;
         this.role = role;
     }
@@ -32,10 +33,10 @@ public class SingleUserInvitationToClientModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SingleUserInvitationToClientModel)) {
+        if (!(o instanceof SingleUserInvitationToClientRequestModel)) {
             return false;
         }
-        final SingleUserInvitationToClientModel that = (SingleUserInvitationToClientModel) o;
+        final SingleUserInvitationToClientRequestModel that = (SingleUserInvitationToClientRequestModel) o;
         return new EqualsBuilder()
                 .append(clientUuid, that.clientUuid)
                 .append(role, that.role)

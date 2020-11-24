@@ -6,7 +6,6 @@ import com.vntana.core.service.token.invitation.user.dto.InvitationUuidAndTokenD
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.metadata.Type;
-import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
@@ -15,9 +14,8 @@ import java.util.stream.Collectors;
  * Date: 11/23/20
  * Time: 2:27 PM
  */
-@Component
 public class UserInvitationToClientRequestToDtoMapper extends CustomConverter<CreateTokenUserInvitationToClientRequest, CreateInvitationUserToClientDto> {
-    
+
     @Override
     public CreateInvitationUserToClientDto convert(
             final CreateTokenUserInvitationToClientRequest request,
@@ -27,7 +25,7 @@ public class UserInvitationToClientRequestToDtoMapper extends CustomConverter<Cr
                 request
                         .getTokens()
                         .stream()
-                        .map(it -> new InvitationUuidAndTokenDto(it.getUserInvitationUuid(), it.getToken()))
+                        .map(it -> new InvitationUuidAndTokenDto(it.getInvitationUuid(), it.getToken()))
                         .collect(Collectors.toList())
         );
     }
