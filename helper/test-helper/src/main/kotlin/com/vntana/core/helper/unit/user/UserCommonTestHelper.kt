@@ -5,6 +5,7 @@ import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.user.User
 import com.vntana.core.domain.user.UserClientOrganizationAdminRole
 import com.vntana.core.domain.user.UserOrganizationAdminRole
+import com.vntana.core.domain.user.UserSuperAdminRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
@@ -22,7 +23,7 @@ import java.time.LocalDateTime
 open class UserCommonTestHelper : AbstractCommonTestHelper() {
 
     private val organizationCommonTestHelper = OrganizationCommonTestHelper()
-    
+
     private val clientOrganizationCommonTestHelper = ClientOrganizationCommonTestHelper()
 
     fun buildCreateUserWithOwnerRoleDto(
@@ -37,6 +38,17 @@ open class UserCommonTestHelper : AbstractCommonTestHelper() {
             email: String? = uuid(),
             password: String? = uuid()
     ): CreateUserDto = CreateUserDto(fullName, email, password)
+
+    fun buildUserWithWithSuperAdminRole(
+            fullName: String? = uuid(),
+            email: String? = uuid(),
+            password: String? = uuid()
+    ): User {
+        val user = User(fullName, email, password)
+        val userSuperAdminRole = UserSuperAdminRole(user)
+        user.setRoles(listOf(userSuperAdminRole))
+        return user
+    }
 
     fun buildUserWithOrganizationOwnerRole(
             fullName: String? = uuid(),
