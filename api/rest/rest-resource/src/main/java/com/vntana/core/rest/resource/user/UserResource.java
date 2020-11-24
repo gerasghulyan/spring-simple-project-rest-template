@@ -109,7 +109,7 @@ public class UserResource {
     }
 
     @GetMapping(path = "/clients-organizations/{organizationUuid}")
-    public ResponseEntity<GetUsersByOrganizationResponse> getClientsByOrganization(@PathVariable("organizationUuid") final String organizationUuid) {
+    public ResponseEntity<GetUsersByOrganizationResponse> getUsersOfClientsByOrganization(@PathVariable("organizationUuid") final String organizationUuid) {
         LOGGER.debug("Processing retrieve clients related users by organizationUuid - {}", organizationUuid);
         final GetUsersByOrganizationResponse response = userServiceFacade.getClientsByOrganization(organizationUuid);
         LOGGER.debug("Successfully proceeded clients related retrieve users by organizationUuid - {}", organizationUuid);

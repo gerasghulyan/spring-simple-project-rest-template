@@ -404,9 +404,9 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                             theUser.getFullName(),
                             theUser.getEmail(),
                             theUser.getImageBlobId(),
-                            UserRoleModel.valueOf(theUserRole.getUserRole().name())
+                            UserRoleModel.ORGANIZATION_CLIENT_MEMBER
                     );
-                }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
+                }).distinct().collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
         LOGGER.debug("Successfully processed user facade getClientsByOrganization for clientUuid - {}", organizationUuid);
         return new GetUsersByOrganizationResponse(responseModel);
     }

@@ -26,13 +26,16 @@ class UserGetClientsByOrganizationWebTest : AbstractUserWebTest() {
         val createUserResponse3 = resourceHelper.persistUser().response()
         val userUuid2 = createUserResponse2.uuid
         val userUuid3 = createUserResponse3.uuid
-        val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userUuid3, clientUuid = clientUuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userUuid2, clientUuid = clientUuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        val clientUuid1 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        val clientUuid2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = userUuid3, clientUuid = clientUuid1, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = userUuid2, clientUuid = clientUuid1, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = userUuid2, clientUuid = clientUuid2, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
         userResourceClient.getUsersOfClientsByOrganization(organizationUuid).let { responseEntity ->
             assertBasicSuccessResultResponse(responseEntity)
             responseEntity?.body?.response()?.let {
                 assertThat(it.totalCount()).isEqualTo(2)
+                it.items().forEach{userModel -> assertThat(userModel.userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_CLIENT_MEMBER)}
             }
         }
     }

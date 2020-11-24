@@ -44,15 +44,14 @@ public class GetUsersByOrganizationResponseModel extends AbstractUuidAwareRespon
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof GetUsersByOrganizationResponseModel)) {
-            return false;
-        }
+        if (this == o) return true;
+
+        if (!(o instanceof GetUsersByOrganizationResponseModel)) return false;
+
         final GetUsersByOrganizationResponseModel that = (GetUsersByOrganizationResponseModel) o;
+
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
+                .append(getUuid(), that.getUuid())
                 .append(fullName, that.fullName)
                 .append(email, that.email)
                 .append(imageBlobId, that.imageBlobId)
@@ -63,7 +62,7 @@ public class GetUsersByOrganizationResponseModel extends AbstractUuidAwareRespon
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
+                .append(getUuid())
                 .append(fullName)
                 .append(email)
                 .append(imageBlobId)
