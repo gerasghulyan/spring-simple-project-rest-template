@@ -1,6 +1,5 @@
 package com.vntana.core.rest.facade.invitation.user.checker.impl
 
-import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole
 import com.vntana.core.domain.user.UserOrganizationOwnerRole
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
@@ -85,6 +84,26 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         }
         verifyAll()
     }
+    
+    @Test
+    fun `test when inviter is super admin`() {
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization)
+        val inviter = userCommonTestHelper.buildUserWithWithSuperAdminRole()
+        val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
+                organizationUuid = organization.uuid,
+                inviterUserUuid = inviter.uuid,
+                userRoleModels = listOf(SingleUserInvitationToClientModel(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+        )
+        resetAll()
+        expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
+        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
+        expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
+        expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
+        replayAll()
+        Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
+        verifyAll()
+    }
 
     @Test
     fun `test when inviter is organization level user`() {
@@ -100,6 +119,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
+        expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
         expect(userRoleService.findByOrganizationAndUser(eq(organization.uuid), eq(inviter.uuid))).andReturn(Optional.of(UserOrganizationOwnerRole(inviter, organization)))
         replayAll()
         Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
@@ -122,6 +142,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
         expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
+        expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
         expect(userRoleService.findByOrganizationAndUser(eq(organization.uuid), eq(inviter.uuid))).andReturn(Optional.empty())
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
@@ -148,6 +169,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
         expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
         expect(userRoleService.findByOrganizationAndUser(eq(organization.uuid), eq(inviter.uuid))).andReturn(Optional.empty())
+        expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
         expect(userRolesPermissionsCheckerComponent.isPermittedToInvite(UserRoleModel.CLIENT_ORGANIZATION_ADMIN, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)).andReturn(true).once()
         replayAll()
         Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()

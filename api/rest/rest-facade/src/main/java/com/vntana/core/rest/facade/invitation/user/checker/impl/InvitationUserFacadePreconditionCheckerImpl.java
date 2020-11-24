@@ -107,10 +107,15 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         if (request.getInvitations().size() != firstLevelFilteredInvitations.size()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
-        // Checking if inviter user has organization level or Super admin level permissions
+        // Checking if inviter user has super admin level permissions
+        final User user = userService.getByUuid(request.getInviterUserUuid());
+        if (user.roleOfSuperAdmin().isPresent()) {
+            return SingleErrorWithStatus.empty();
+        }
+        // Checking if inviter user has organization level permissions
         final boolean isInviterOrganizationLevelUser = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getInviterUserUuid())
-                .map(role -> role.getUserRole().hasOrganizationAbility() || role.getUserRole().hasSuperAdminAbility())
-                .orElse(false);
+                .filter(role -> role.getUserRole().hasOrganizationAbility())
+                .isPresent();
         if (isInviterOrganizationLevelUser) {
             return SingleErrorWithStatus.empty();
         }
