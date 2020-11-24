@@ -67,6 +67,30 @@ class UserRoleGrantClientOrganizationRoleWebTest : AbstractUserRoleWebTest() {
     }
 
     @Test
+    fun `test when user already has a role in current organization`() {
+        val response = userResourceTestHelper.persistUser().response()
+        val userUuid = response.uuid
+        val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = response.organizationUuid).response().uuid
+        assertBasicErrorResultResponse(
+                HttpStatus.CONFLICT,
+                userRoleResourceClient.grantUserClientRole(userRoleResourceTestHelper.buildUserRoleGrantClientRequest(clientUuid = clientUuid, userUuid = userUuid)),
+                UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED
+        )
+    }
+
+    @Test
+    fun `test when requested role client already granted`() {
+        val userUuid = userResourceTestHelper.persistUser().response().uuid
+        val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization().response().uuid
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = userUuid, clientUuid = clientUuid)
+        assertBasicErrorResultResponse(
+                HttpStatus.CONFLICT,
+                userRoleResourceClient.grantUserClientRole(userRoleResourceTestHelper.buildUserRoleGrantClientRequest(clientUuid = clientUuid, userUuid = userUuid)),
+                UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED
+        )
+    }
+
+    @Test
     fun test() {
         val userUuid = userResourceTestHelper.persistUser().response().uuid
         val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization().response().uuid

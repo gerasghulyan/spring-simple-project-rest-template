@@ -109,21 +109,18 @@ public class AuthFacadeImpl implements AuthFacade {
     public SecureFindUserByUuidAndClientOrganizationResponse findByUserAndClientOrganization(final FindUserByUuidAndClientOrganizationRequest request) {
         LOGGER.debug("Processing auth facade findByUserAndClientOrganization for request - {}", request);
         final SecureFindUserByUuidAndClientOrganizationResponse result = userService.findByUuid(request.getUuid())
-                .map(theUser -> {
-                    final boolean isSuperAdminRole = theUser.roleOfSuperAdmin().isPresent();
-                    return userRoleService.findByClientOrganizationAndUser(request.getClientUuid(), request.getUuid())
-                            .map(AbstractClientOrganizationAwareUserRole.class::cast)
-                            .map(theClientOrganizationRole -> new SecureFindUserByUuidAndClientOrganizationResponse(
-                                    new SecureUserClientOrganizationAwareResponseModel(
-                                            theUser.getUuid(),
-                                            theUser.getEmail(),
-                                            isSuperAdminRole ? UserRoleModel.SUPER_ADMIN : UserRoleModel.valueOf(theClientOrganizationRole.getUserRole().name()),
-                                            isSuperAdminRole,
-                                            theClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),
-                                            theClientOrganizationRole.getClientOrganization().getUuid()
-                                    )
-                            )).orElse(new SecureFindUserByUuidAndClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, NOT_FOUND_FOR_ROLE));
-                }).orElse(new SecureFindUserByUuidAndClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, USER_NOT_FOUND));
+                .map(theUser -> userRoleService.findByClientOrganizationAndUser(request.getClientUuid(), request.getUuid())
+                        .map(AbstractClientOrganizationAwareUserRole.class::cast)
+                        .map(theClientOrganizationRole -> new SecureFindUserByUuidAndClientOrganizationResponse(
+                                new SecureUserClientOrganizationAwareResponseModel(
+                                        theUser.getUuid(),
+                                        theUser.getEmail(),
+                                        UserRoleModel.valueOf(theClientOrganizationRole.getUserRole().name()),
+                                        false,
+                                        theClientOrganizationRole.getClientOrganization().getOrganization().getUuid(),
+                                        theClientOrganizationRole.getClientOrganization().getUuid()
+                                )
+                        )).orElse(new SecureFindUserByUuidAndClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, NOT_FOUND_FOR_ROLE))).orElse(new SecureFindUserByUuidAndClientOrganizationResponse(HttpStatus.SC_NOT_FOUND, USER_NOT_FOUND));
         LOGGER.debug("Successfully processed auth facade findByUserAndClientOrganization for request - {}", request);
         return result;
     }

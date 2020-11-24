@@ -37,12 +37,16 @@ public interface UserResourceClient {
     ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid);
 
     @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
-    ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(
-            @PathVariable("role") final UserRoleModel role,
-            @PathVariable("organizationUuid") final String organizationUuid);
+    ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(@PathVariable("role") final UserRoleModel role, @PathVariable("organizationUuid") final String organizationUuid);
 
     @GetMapping(path = "/organizations/{organizationUuid}")
     ResponseEntity<GetUsersByOrganizationResponse> getUsersByOrganization(@PathVariable("organizationUuid") final String organizationUuid);
+
+    @GetMapping(path = "/client-organizations/{clientUuid}")
+    ResponseEntity<GetUsersByOrganizationResponse> getUsersByClientOrganization(@PathVariable("clientUuid") final String clientUuid);
+
+    @GetMapping(path = "/clients-organizations/{organizationUuid}")
+    ResponseEntity<GetUsersByOrganizationResponse> getUsersOfClientsByOrganization(@PathVariable("organizationUuid") final String organizationUuid);
 
     @PutMapping(path = "/verify")
     VerifyUserResponse verify(@RequestBody final VerifyUserRequest request);

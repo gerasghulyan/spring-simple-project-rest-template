@@ -69,6 +69,19 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<AbstractClientOrganizationAwareUserRole> findAllByClientOrganization(final String clientOrganizationUuid) {
+        LOGGER.debug("Retrieving userRoles belonging to client organization - {}", clientOrganizationUuid);
+        Assert.hasText(clientOrganizationUuid, "The client organization uuid should not be null or empty");
+        final List<AbstractClientOrganizationAwareUserRole> userRoles = userRoleRepository.findAllByClientOrganization(clientOrganizationUuid)
+                .stream()
+                .map(AbstractClientOrganizationAwareUserRole.class::cast)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+        LOGGER.debug("Successfully userRoles users belonging to client organization - {}", clientOrganizationUuid);
+        return userRoles;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<AbstractClientOrganizationAwareUserRole> findAllClientsByOrganization(final String organizationUuid) {
         LOGGER.debug("Retrieving user client roles belonging to organization - {}", organizationUuid);
         assertOrganizationUuid(organizationUuid);

@@ -339,7 +339,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         ));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public GetUsersByOrganizationResponse getByOrganizationUuid(final String organizationUuid) {
         LOGGER.debug("Processing user facade getByOrganizationUuid for organizationUuid - {}", organizationUuid);
@@ -347,19 +347,67 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (error.isPresent()) {
             return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
         }
-        // TODO: 12.11.2020 Vardan: in the future add fetching by organization for client roles also
-        final List<AbstractOrganizationAwareUserRole> userRoles = userRoleService.findAllByOrganization(organizationUuid);
-        final GetUsersByOrganizationGridResponseModel responseModel = userRoles.stream().map(userRole -> {
-            final User user = userRole.getUser();
-            return new GetUsersByOrganizationResponseModel(
-                    user.getUuid(),
-                    user.getFullName(),
-                    user.getEmail(),
-                    user.getImageBlobId(),
-                    UserRoleModel.valueOf(userRole.getUserRole().name())
-            );
-        }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
+        final GetUsersByOrganizationGridResponseModel responseModel = userRoleService.findAllByOrganization(organizationUuid)
+                .stream()
+                .map(userRole -> {
+                    final User user = userRole.getUser();
+                    return new GetUsersByOrganizationResponseModel(
+                            user.getUuid(),
+                            user.getFullName(),
+                            user.getEmail(),
+                            user.getImageBlobId(),
+                            UserRoleModel.valueOf(userRole.getUserRole().name())
+                    );
+                }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
         LOGGER.debug("Successfully processed user facade getByOrganizationUuid for organizationUuid - {}", organizationUuid);
+        return new GetUsersByOrganizationResponse(responseModel);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetUsersByOrganizationResponse getByClientOrganizationUuid(final String clientUuid) {
+        LOGGER.debug("Processing user facade getByClientOrganizationUuid for clientUuid - {}", clientUuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkGetByClientOrganizationUuid(clientUuid);
+        if (error.isPresent()) {
+            return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
+        }
+        final GetUsersByOrganizationGridResponseModel responseModel = userRoleService.findAllByClientOrganization(clientUuid)
+                .stream()
+                .map(theUserRole -> {
+                    final User theUser = theUserRole.getUser();
+                    return new GetUsersByOrganizationResponseModel(
+                            theUser.getUuid(),
+                            theUser.getFullName(),
+                            theUser.getEmail(),
+                            theUser.getImageBlobId(),
+                            UserRoleModel.valueOf(theUserRole.getUserRole().name())
+                    );
+                }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
+        LOGGER.debug("Successfully processed user facade getByClientOrganizationUuid for clientUuid - {}", clientUuid);
+        return new GetUsersByOrganizationResponse(responseModel);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetUsersByOrganizationResponse getClientsByOrganization(final String organizationUuid) {
+        LOGGER.debug("Processing user facade getClientsByOrganization for organizationUuid - {}", organizationUuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkGetByOrganizationUuid(organizationUuid);
+        if (error.isPresent()) {
+            return new GetUsersByOrganizationResponse(error.getHttpStatus(), error.getError());
+        }
+        final GetUsersByOrganizationGridResponseModel responseModel = userRoleService.findAllClientsByOrganization(organizationUuid)
+                .stream()
+                .map(theUserRole -> {
+                    final User theUser = theUserRole.getUser();
+                    return new GetUsersByOrganizationResponseModel(
+                            theUser.getUuid(),
+                            theUser.getFullName(),
+                            theUser.getEmail(),
+                            theUser.getImageBlobId(),
+                            UserRoleModel.valueOf(theUserRole.getUserRole().name())
+                    );
+                }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
+        LOGGER.debug("Successfully processed user facade getClientsByOrganization for clientUuid - {}", organizationUuid);
         return new GetUsersByOrganizationResponse(responseModel);
     }
 
