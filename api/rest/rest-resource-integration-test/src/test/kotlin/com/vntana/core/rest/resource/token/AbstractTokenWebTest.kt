@@ -7,6 +7,7 @@ import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.helper.token.TokenResourceTestHelper
 import com.vntana.core.helper.token.TokenRestTestHelper
 import com.vntana.core.helper.user.UserResourceTestHelper
+import com.vntana.core.helper.user.role.UserRoleResourceTestHelper
 import com.vntana.core.rest.client.token.TokenResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,4 +42,7 @@ abstract class AbstractTokenWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var clientOrganizationResourceTestHelper: ClientOrganizationResourceTestHelper
+    
+    @Autowired
+    protected lateinit var userRoleResourceTestHelper: UserRoleResourceTestHelper
 }

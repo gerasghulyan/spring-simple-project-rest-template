@@ -65,7 +65,7 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     public List<TokenUserInvitationToOrganizationClient> createUserInvitationToClients(final CreateInvitationUserToClientDto dto) {
         LOGGER.debug("Creating user invitation for client token for dto - {}", dto);
         Assert.notNull(dto, "The CreateInvitationUserToClientDto cannot e null");
-        final List<TokenUserInvitationToOrganizationClient> tokens = dto.getInvitationUuidAndTokens().stream().map(it -> {
+        final List<TokenUserInvitationToOrganizationClient> tokens = dto.getTokens().stream().map(it -> {
             final InvitationOrganizationClientUser userInvitation = invitationUserToClientService.getByUuid(it.getInvitationUuid());
             return new TokenUserInvitationToOrganizationClient(it.getToken(), userInvitation);
         })

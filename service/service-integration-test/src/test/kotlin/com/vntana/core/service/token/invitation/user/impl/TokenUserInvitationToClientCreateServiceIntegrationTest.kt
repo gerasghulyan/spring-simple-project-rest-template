@@ -26,9 +26,9 @@ class TokenUserInvitationToClientCreateServiceIntegrationTest : AbstractTokenInv
         flushAndClear()
         tokenInvitationUserService.createUserInvitationToClients(dto).let { 
             flushAndClear()
-            Assertions.assertThat(it.size).isEqualTo(dto.invitationUuidAndTokens.size)
-            Assertions.assertThat(it[0].token).isEqualTo(dto.invitationUuidAndTokens[0].token)
-            Assertions.assertThat(it[0].userInvitation.uuid).isEqualTo(dto.invitationUuidAndTokens[0].invitationUuid)
+            Assertions.assertThat(it.size).isEqualTo(dto.tokens.size)
+            Assertions.assertThat(it[0].token).isEqualTo(dto.tokens[0].token)
+            Assertions.assertThat(it[0].userInvitation.uuid).isEqualTo(dto.tokens[0].invitationUuid)
         }
     }
 }

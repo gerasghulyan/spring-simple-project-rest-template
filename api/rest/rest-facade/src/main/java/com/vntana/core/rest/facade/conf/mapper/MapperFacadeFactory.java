@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.conf.mapper;
 
 import com.vntana.core.domain.whitelist.WhitelistIp;
 import com.vntana.core.model.whitelist.response.model.GetWhitelistIpResponseModel;
+import com.vntana.core.rest.facade.mapper.invitation.user.UserInvitationToClientRequestToDtoMapper;
 import ma.glasnost.orika.MapperFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 import org.springframework.stereotype.Component;
@@ -24,5 +25,7 @@ public class MapperFacadeFactory implements OrikaMapperFactoryConfigurer {
                 .field("organization.uuid", "organizationUuid")
                 .byDefault()
                 .register();
+        
+        mapperFactory.getConverterFactory().registerConverter(new UserInvitationToClientRequestToDtoMapper());
     }
 }

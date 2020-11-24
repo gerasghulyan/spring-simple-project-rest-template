@@ -34,7 +34,7 @@ class TokenCreateUserInvitationToClientUnitTest : AbstractTokenFacadeUnitTest() 
         val request = restTestHelper.buildCreateTokenUserInvitationToClientRequest(1)
         val invitationAndTokenRequestModel = request.tokens[0]
         val dto = CreateInvitationUserToClientDto(
-                listOf(InvitationUuidAndTokenDto(invitationAndTokenRequestModel.userInvitationUuid, invitationAndTokenRequestModel.token)))
+                listOf(InvitationUuidAndTokenDto(invitationAndTokenRequestModel.invitationUuid, invitationAndTokenRequestModel.token)))
         val savedTokens = listOf(TokenUserInvitationToOrganizationClient(invitationAndTokenRequestModel.token, userInvitation))
         resetAll()
         expect(preconditionChecker.checkCreateTokenUserInvitationToClient(request)).andReturn(SingleErrorWithStatus.empty())
