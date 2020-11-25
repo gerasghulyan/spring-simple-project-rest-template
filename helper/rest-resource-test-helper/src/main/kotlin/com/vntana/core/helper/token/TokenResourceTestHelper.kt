@@ -2,6 +2,8 @@ package com.vntana.core.helper.token
 
 import com.vntana.core.helper.invitation.user.InvitationUserResourceTestHelper
 import com.vntana.core.model.token.request.CreateTokenInvitationOrganizationRequest
+import com.vntana.core.model.token.request.CreateTokenUserInvitationToClientRequest
+import com.vntana.core.model.token.request.InvitationUuidAndTokenRequestModel
 import com.vntana.core.model.token.response.TokenCreateResultResponse
 import com.vntana.core.rest.client.token.TokenResourceClient
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,12 +30,20 @@ class TokenResourceTestHelper : TokenRestTestHelper() {
             request: CreateTokenInvitationOrganizationRequest? = buildCreateTokenInvitationOrganizationRequest(token, invitationOrganizationUuid)
     ): ResponseEntity<TokenCreateResultResponse> = tokenResourceClient.createTokenInvitationOrganization(request)
 
-    fun persistTokenInvitationUser(
+    fun persistTokenInvitationUserToOrganization(
             token: String = uuid(),
             invitationUserUuid: String = invitationUserResourceTestHelper.persistInvitationUserToOrganization()
     ): String {
         val request = buildCreateTokenInvitationUserRequest(token = token, invitationUserUuid = invitationUserUuid)
         return tokenResourceClient.createTokenInvitationUserToOrganization(request)?.body?.response()?.uuid.toString()
+    }
+
+    fun persistTokenInvitationUserToClient(
+            token: String = "Some token",
+            invitationUserUuid: String = uuid()
+    ): String {
+        val request = CreateTokenUserInvitationToClientRequest(listOf(InvitationUuidAndTokenRequestModel(invitationUserUuid, token)))
+        return tokenResourceClient.createTokenInvitationUserToClient(request)?.body?.response()?.uuids?.get(0).toString()
     }
 
     fun expire(token: String? = uuid()) {

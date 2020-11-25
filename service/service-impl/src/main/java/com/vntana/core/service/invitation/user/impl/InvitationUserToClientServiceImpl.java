@@ -8,6 +8,7 @@ import com.vntana.core.persistence.invitation.user.InvitationOrganizationClientU
 import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.invitation.user.InvitationUserToClientService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationForClientsUserDto;
+import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 import com.vntana.core.service.invitation.user.exception.InvitationUserNotFoundForUuidException;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -82,5 +83,10 @@ public class InvitationUserToClientServiceImpl implements InvitationUserToClient
         final boolean existence = invitationOrganizationClientUserRepository.existsByUuid(uuid);
         LOGGER.debug("Successfully checked existence of user invitation by uuid - {}", uuid);
         return existence;
+    }
+
+    @Override
+    public void updateStatus(final UpdateInvitationUserStatusDto updateInvitationUserStatusDto) {
+        
     }
 }

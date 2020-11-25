@@ -26,7 +26,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
     @Test
     fun `test token has been expired`() {
         val token = uuid()
-        tokenResourceTestHelper.persistTokenInvitationUser(token = token)
+        tokenResourceTestHelper.persistTokenInvitationUserToOrganization(token = token)
         tokenResourceTestHelper.expire(token)
         assertBasicErrorResultResponse(
                 HttpStatus.BAD_REQUEST,
@@ -44,7 +44,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
         val inviterUserFullName = uuid()
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
-        tokenResourceTestHelper.persistTokenInvitationUser(invitationUserUuid = invitationUserUuid, token = token)
+        tokenResourceTestHelper.persistTokenInvitationUserToOrganization(invitationUserUuid = invitationUserUuid, token = token)
         val responseEntity = invitationUserResourceClient.getByToken(token)
         assertBasicSuccessResultResponse(responseEntity)
         val response = responseEntity?.body?.response()
@@ -66,7 +66,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
         val inviterUserFullName = uuid()
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
-        tokenResourceTestHelper.persistTokenInvitationUser(invitationUserUuid = invitationUserUuid, token = token)
+        tokenResourceTestHelper.persistTokenInvitationUserToOrganization(invitationUserUuid = invitationUserUuid, token = token)
         val responseEntity = invitationUserResourceClient.getByToken(token)
         assertBasicSuccessResultResponse(responseEntity)
         val response = responseEntity?.body?.response()

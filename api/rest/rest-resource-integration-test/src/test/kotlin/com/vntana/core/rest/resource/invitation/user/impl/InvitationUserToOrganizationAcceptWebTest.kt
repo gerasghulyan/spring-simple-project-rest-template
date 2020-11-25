@@ -13,18 +13,18 @@ import org.springframework.http.HttpStatus
  * Date: 5/14/20
  * Time: 5:37 PM
  */
-class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
+class InvitationUserToOrganizationAcceptWebTest : AbstractInvitationUserWebTest() {
 
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.accept(resourceTestHelper.buildAcceptInvitationUserRequest(token = null)),
+                invitationUserResourceClient.acceptInvitationForOrganization(resourceTestHelper.buildAcceptInvitationUserRequest(token = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.accept(resourceTestHelper.buildAcceptInvitationUserRequest(token = null)),
+                invitationUserResourceClient.acceptInvitationForOrganization(resourceTestHelper.buildAcceptInvitationUserRequest(token = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
     }
@@ -32,7 +32,7 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
     @Test
     fun `test when token not found`() {
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.accept(resourceTestHelper.buildAcceptInvitationUserRequest()),
+                invitationUserResourceClient.acceptInvitationForOrganization(resourceTestHelper.buildAcceptInvitationUserRequest()),
                 InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN
         )
     }
@@ -44,10 +44,10 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
         val userUuid = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = userEmail)).response().uuid
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
-        tokenResourceTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUserUuid)
+        tokenResourceTestHelper.persistTokenInvitationUserToOrganization(token = token, invitationUserUuid = invitationUserUuid)
         userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid, newOrganizationUuid)
         val request = resourceTestHelper.buildAcceptInvitationUserRequest(token = token)
-        assertBasicErrorResultResponse(HttpStatus.CONFLICT, invitationUserResourceClient.accept(request), InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION)
+        assertBasicErrorResultResponse(HttpStatus.CONFLICT, invitationUserResourceClient.acceptInvitationForOrganization(request), InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION)
     }
 
     @Test
@@ -57,9 +57,9 @@ class InvitationUserAcceptWebTest : AbstractInvitationUserWebTest() {
         val userUuid = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = userEmail)).response().uuid
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
-        tokenResourceTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUserUuid)
+        tokenResourceTestHelper.persistTokenInvitationUserToOrganization(token = token, invitationUserUuid = invitationUserUuid)
         val request = resourceTestHelper.buildAcceptInvitationUserRequest(token = token)
-        invitationUserResourceClient.accept(request).let { responseEntity ->
+        invitationUserResourceClient.acceptInvitationForOrganization(request).let { responseEntity ->
             assertBasicSuccessResultResponse(responseEntity)
             responseEntity?.body?.response()?.let {
                 assertThat(it.organizationUuid).isEqualTo(newOrganizationUuid)

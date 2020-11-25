@@ -9,19 +9,19 @@ import org.junit.Test
 import java.util.*
 
 /**
- * Created by Arman Gevorgyan.
- * Date: 5/15/20
+ * Created by Diana Gevorgyan
+ * Date: 11/25/20
  * Time: 5:17 PM
  */
-class InvitationUserFacadePreconditionCheckerCheckAcceptAndSignUpForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
+class InvitationUserToClientFacadePreconditionCheckerCheckAcceptAndSignUpForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
 
     @Test
     fun `test when invitation not found for token`() {
         resetAll()
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
-        expect(tokenInvitationUserService.findByToken(request.token)).andReturn(Optional.empty())
+        expect(tokenInvitationUserService.findByClientInvitationToken(request.token)).andReturn(Optional.empty())
         replayAll()
-        preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request).let {
+        preconditionChecker.checkAcceptAndSignInvitationToClientUpForPossibleErrors(request).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN)
@@ -33,11 +33,11 @@ class InvitationUserFacadePreconditionCheckerCheckAcceptAndSignUpForPossibleErro
     fun `test when expired`() {
         resetAll()
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
-        val tokenInvitationUser = tokenCommonTestHelper.buildTokenInvitationUser()
-        tokenInvitationUser.expire()
-        expect(tokenInvitationUserService.findByToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
+        val userInvitationToken = tokenCommonTestHelper.buildTokenInvitationUserToClient()
+        userInvitationToken.expire()
+        expect(tokenInvitationUserService.findByClientInvitationToken(request.token)).andReturn(Optional.of(userInvitationToken))
         replayAll()
-        preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request).let {
+        preconditionChecker.checkAcceptAndSignInvitationToClientUpForPossibleErrors(request).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_ACCEPTABLE)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED)
@@ -49,12 +49,12 @@ class InvitationUserFacadePreconditionCheckerCheckAcceptAndSignUpForPossibleErro
     fun `test when role already granted`() {
         resetAll()
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
-        val tokenInvitationUser = tokenCommonTestHelper.buildTokenInvitationUser()
-        val invitationUser = tokenInvitationUser.invitationUser
-        expect(tokenInvitationUserService.findByToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
-        expect(userService.existsByEmail(invitationUser.email)).andReturn(true)
+        val userInvitationToken = tokenCommonTestHelper.buildTokenInvitationUserToClient()
+        val userInvitation = userInvitationToken.userInvitation
+        expect(tokenInvitationUserService.findByClientInvitationToken(request.token)).andReturn(Optional.of(userInvitationToken))
+        expect(userService.existsByEmail(userInvitation.email)).andReturn(true)
         replayAll()
-        preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request).let {
+        preconditionChecker.checkAcceptAndSignInvitationToClientUpForPossibleErrors(request).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_EXISTS)
@@ -66,13 +66,12 @@ class InvitationUserFacadePreconditionCheckerCheckAcceptAndSignUpForPossibleErro
     fun test() {
         resetAll()
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserAndSignUpRequest()
-        val tokenInvitationUser = tokenCommonTestHelper.buildTokenInvitationUser()
-        val invitationUser = tokenInvitationUser.invitationUser
-        expect(tokenInvitationUserService.findByToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
-        expect(userService.existsByEmail(invitationUser.email)).andReturn(false)
-
+        val userInvitationToken = tokenCommonTestHelper.buildTokenInvitationUserToClient()
+        val userInvitation = userInvitationToken.userInvitation
+        expect(tokenInvitationUserService.findByClientInvitationToken(request.token)).andReturn(Optional.of(userInvitationToken))
+        expect(userService.existsByEmail(userInvitation.email)).andReturn(false)
         replayAll()
-        assertThat(preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request).isPresent).isFalse()
+        assertThat(preconditionChecker.checkAcceptAndSignInvitationToClientUpForPossibleErrors(request).isPresent).isFalse()
         verifyAll()
     }
 }

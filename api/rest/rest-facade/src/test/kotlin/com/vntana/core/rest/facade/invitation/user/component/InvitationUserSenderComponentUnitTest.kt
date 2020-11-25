@@ -48,6 +48,8 @@ class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
     private val senderEmail: String = uuid()
 
     private val emailSubject: String = uuid()
+    
+    private val isClientInvitation: String = uuid()
 
     private val restTestHelper = InvitationUserRestTestHelper()
 
@@ -65,13 +67,14 @@ class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
                 invitationUserToClientService,
                 verificationUrlPrefix,
                 senderEmail,
-                emailSubject
+                emailSubject,
+                isClientInvitation
         )
     }
 
     @Test
     fun `test sendVerificationEmail`() {
-        val request = restTestHelper.buildSendInvitationUserRequest()
+        val request = restTestHelper.buildSendInvitationUserToOrganizationRequest()
         val user = userCommonTestHelper.buildUser()
         val organization = organizationCommonTestHelper.buildOrganization()
         val templateName = uuid()

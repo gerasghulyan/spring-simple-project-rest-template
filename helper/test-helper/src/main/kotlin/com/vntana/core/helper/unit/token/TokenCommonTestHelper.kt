@@ -1,10 +1,12 @@
 package com.vntana.core.helper.unit.token
 
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
+import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
 import com.vntana.core.domain.token.TokenInvitationOrganization
 import com.vntana.core.domain.token.TokenResetPassword
 import com.vntana.core.domain.token.TokenUserInvitationToOrganization
+import com.vntana.core.domain.token.TokenUserInvitationToOrganizationClient
 import com.vntana.core.domain.user.User
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
@@ -47,10 +49,15 @@ open class TokenCommonTestHelper : AbstractCommonTestHelper() {
             invitationOrganization: InvitationOrganization? = invitationOrganizationCommonTestHelper.buildInvitationOrganization()
     ): TokenInvitationOrganization = TokenInvitationOrganization(token, invitationOrganization)
 
-    fun buildTokenInvitationUser(
+    fun buildTokenInvitationUserToOrganization(
             token: String? = uuid(),
             invitationOrganizationUser: InvitationOrganizationUser? = invitationUserCommonTestHelper.buildInvitationUserToOrganization()
     ): TokenUserInvitationToOrganization = TokenUserInvitationToOrganization(token, invitationOrganizationUser)
+
+    fun buildTokenInvitationUserToClient(
+            token: String? = uuid(),
+            userInvitation: InvitationOrganizationClientUser? = invitationUserCommonTestHelper.buildInvitationOrganizationClientUser()
+    ): TokenUserInvitationToOrganizationClient = TokenUserInvitationToOrganizationClient(token, userInvitation)
 
     fun buildCreateTokenResetPasswordDto(
             token: String? = uuid(),

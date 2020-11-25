@@ -2,6 +2,7 @@ package com.vntana.core.rest.facade.invitation.user.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.commons.persistence.domain.AbstractUuidAwareDomainEntity;
+import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
@@ -14,10 +15,7 @@ import com.vntana.core.model.invitation.InvitationStatusModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
 import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.model.invitation.user.response.*;
-import com.vntana.core.model.invitation.user.response.model.AcceptInvitationUserResponseModel;
-import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsGridResponseModel;
-import com.vntana.core.model.invitation.user.response.model.GetAllByStatusUserInvitationsResponseModel;
-import com.vntana.core.model.invitation.user.response.model.GetByUserInvitationTokenResponseModel;
+import com.vntana.core.model.invitation.user.response.model.*;
 import com.vntana.core.rest.facade.invitation.user.InvitationUserServiceFacade;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.user.component.InvitationUserSenderComponent;
@@ -29,6 +27,7 @@ import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.role.UserRoleService;
+import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto;
 import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
@@ -174,39 +173,80 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
 
     @Transactional
     @Override
-    public AcceptInvitationUserResultResponse accept(final AcceptInvitationUserRequest request) {
-        LOGGER.debug("Accepting invitation user for request- {}", request);
-        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptForPossibleErrors(request);
+    public AcceptInvitationUserToOrganizationResultResponse acceptInvitationToOrganization(final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Accepting invitation user for organization for request- {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptForOrganizationForPossibleErrors(request);
         if (error.isPresent()) {
-            return new AcceptInvitationUserResultResponse(error.getHttpStatus(), error.getError());
+            return new AcceptInvitationUserToOrganizationResultResponse(error.getHttpStatus(), error.getError());
         }
-        final InvitationOrganizationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
+        final InvitationOrganizationUser invitationUser = tokenInvitationUserService.getByOrganizationInvitationToken(request.getToken()).getInvitationUser();
         final Organization organization = invitationUser.getOrganization();
         final User user = userService.getByEmail(invitationUser.getEmail());
         grantUserRoleFromInvitationAndMakeAccepted(invitationUser, user.getUuid(), request.getToken());
-        LOGGER.debug("Successfully accepted invitation user for request- {}", request);
-        return new AcceptInvitationUserResultResponse(
-                new AcceptInvitationUserResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(invitationUser.getRole().name()))
+        LOGGER.debug("Successfully accepted invitation user for organization for request- {}", request);
+        return new AcceptInvitationUserToOrganizationResultResponse(
+                new AcceptInvitationUserToOrganizationResponseModel(organization.getUuid(), user.getUuid(), UserRoleModel.valueOf(invitationUser.getRole().name()))
         );
     }
 
     @Transactional
     @Override
-    public AcceptInvitationUserResultResponse acceptAndSignUp(final AcceptInvitationUserAndSignUpRequest request) {
-        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptAndSignUpForPossibleErrors(request);
+    public AcceptInvitationUserToClientResultResponse acceptInvitationToClient(final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Accepting invitation user for client for request- {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptForClientForPossibleErrors(request);
         if (error.isPresent()) {
-            return new AcceptInvitationUserResultResponse(error.getHttpStatus(), error.getError());
+            return new AcceptInvitationUserToClientResultResponse(error.getHttpStatus(), error.getError());
         }
-        final InvitationOrganizationUser invitationUser = tokenInvitationUserService.getByToken(request.getToken()).getInvitationUser();
+        final InvitationOrganizationClientUser userInvitation = tokenInvitationUserService.getByClientInvitationToken(request.getToken()).getUserInvitation();
+        final ClientOrganization client = userInvitation.getClientOrganization();
+        final User user = userService.getByEmail(userInvitation.getEmail());
+        userRoleService.grantClientRole(new UserGrantClientRoleDto(user.getUuid(), client.getUuid(), userInvitation.getRole()));
+        expireToken(userInvitation, request.getToken());
+        LOGGER.debug("Successfully accepted invitation for client user for request- {}", request);
+        return new AcceptInvitationUserToClientResultResponse(
+                new AcceptInvitationUserToClientResponseModel(client.getUuid(), user.getUuid(), UserRoleModel.valueOf(userInvitation.getRole().name()))
+        );
+    }
+
+    @Transactional
+    @Override
+    public AcceptInvitationUserToOrganizationResultResponse acceptInvitationToOrganizationAndSignUp(final AcceptInvitationUserAndSignUpRequest request) {
+        LOGGER.debug("Accepting user invitation for organization and signing up for request - {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptAndSignInvitationToOrganizationUpForPossibleErrors(request);
+        if (error.isPresent()) {
+            return new AcceptInvitationUserToOrganizationResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final InvitationOrganizationUser invitationUser = tokenInvitationUserService.getByOrganizationInvitationToken(request.getToken()).getInvitationUser();
         final User user = userService.create(new CreateUserDto(request.getNewUserFullName(), invitationUser.getEmail(), request.getPassword()));
         userService.makeVerified(invitationUser.getEmail());
         grantUserRoleFromInvitationAndMakeAccepted(invitationUser, user.getUuid(), request.getToken());
-        return new AcceptInvitationUserResultResponse(
-                new AcceptInvitationUserResponseModel(invitationUser.getOrganization().getUuid(),
+        LOGGER.debug("Successfully accepted user invitation for organization and signed up for request - {}", request);
+        return new AcceptInvitationUserToOrganizationResultResponse(
+                new AcceptInvitationUserToOrganizationResponseModel(invitationUser.getOrganization().getUuid(),
                         user.getUuid(),
                         UserRoleModel.valueOf(invitationUser.getRole().name())
                 )
         );
+    }
+    
+    @Transactional
+    @Override
+    public AcceptInvitationUserToClientResultResponse acceptInvitationToClientAndSignUp(final AcceptInvitationUserAndSignUpRequest request) {
+        LOGGER.debug("Accepting user invitation for client and signing up for request - {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkAcceptAndSignInvitationToClientUpForPossibleErrors(request);
+        if (error.isPresent()) {
+            return new AcceptInvitationUserToClientResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final InvitationOrganizationClientUser userInvitation = tokenInvitationUserService.getByClientInvitationToken(request.getToken()).getUserInvitation();
+        final ClientOrganization client = userInvitation.getClientOrganization();
+        final User user = userService.create(new CreateUserDto(request.getNewUserFullName(), userInvitation.getEmail(), request.getPassword()));
+        userService.makeVerified(userInvitation.getEmail());
+        userRoleService.grantClientRole(new UserGrantClientRoleDto(user.getUuid(), client.getUuid(), userInvitation.getRole()));
+        expireToken(userInvitation, request.getToken());
+        LOGGER.debug("Successfully accepted user invitation for client and signed up for request - {}", request);
+        return new AcceptInvitationUserToClientResultResponse(
+                new AcceptInvitationUserToClientResponseModel(client.getUuid(), user.getUuid(), UserRoleModel.valueOf(userInvitation.getRole().name()))
+        ); 
     }
 
     private void grantUserRoleFromInvitationAndMakeAccepted(final InvitationOrganizationUser invitationUser, final String userUuid, final String token) {
@@ -270,5 +310,10 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
 
     private List<String> collectInvitationUuids(final List<InvitationOrganizationClientUser> invitationUsers) {
         return invitationUsers.stream().map(AbstractUuidAwareDomainEntity::getUuid).collect(Collectors.toList());
+    }
+
+    private void expireToken(final InvitationOrganizationClientUser userInvitation, final String token) {
+        invitationUserToClientService.updateStatus(new UpdateInvitationUserStatusDto(userInvitation.getUuid(), InvitationStatus.ACCEPTED));
+        tokenService.findByTokenAndExpire(token);
     }
 }

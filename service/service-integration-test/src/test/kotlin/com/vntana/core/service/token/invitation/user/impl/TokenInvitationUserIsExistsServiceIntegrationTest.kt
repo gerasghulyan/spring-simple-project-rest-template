@@ -18,7 +18,7 @@ class TokenInvitationUserIsExistsServiceIntegrationTest : AbstractTokenInvitatio
 
     @Test
     fun test() {
-        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUser()
+        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUserToOrganization()
         flushAndClear()
         assertThat(tokenInvitationUserService.isExists(tokenInvitationUser.token)).isTrue()
     }

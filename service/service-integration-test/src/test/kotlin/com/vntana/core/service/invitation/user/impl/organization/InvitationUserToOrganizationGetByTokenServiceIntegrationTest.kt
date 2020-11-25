@@ -22,7 +22,7 @@ class InvitationUserToOrganizationGetByTokenServiceIntegrationTest : AbstractInv
     @Test
     fun test() {
         val invitationUser = integrationInvitationUserTestHelper.persistInvitationUserToOrganization()
-        val token = tokenInvitationUserIntegrationTestHelper.persistTokenInvitationUser(invitationUserUuid = invitationUser.uuid).token
+        val token = tokenInvitationUserIntegrationTestHelper.persistTokenInvitationUserToOrganization(invitationUserUuid = invitationUser.uuid).token
         flushAndClear()
         invitationUserToOrganizationService.getByToken(token).let {
             assertThat(it).isNotNull

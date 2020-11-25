@@ -16,7 +16,7 @@ class InvitationUserFacadePreconditionCheckerCheckSendInvitationForPossibleError
 
     @Test
     fun `test when inviter user does not exist`() {
-        val request = invitationUserRestTestHelper.buildSendInvitationUserRequest()
+        val request = invitationUserRestTestHelper.buildSendInvitationUserToOrganizationRequest()
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(false)
         replayAll()
@@ -29,7 +29,7 @@ class InvitationUserFacadePreconditionCheckerCheckSendInvitationForPossibleError
 
     @Test
     fun `test when inviting organization does not exist`() {
-        val request = invitationUserRestTestHelper.buildSendInvitationUserRequest()
+        val request = invitationUserRestTestHelper.buildSendInvitationUserToOrganizationRequest()
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(false)
@@ -43,7 +43,7 @@ class InvitationUserFacadePreconditionCheckerCheckSendInvitationForPossibleError
 
     @Test
     fun test() {
-        val request = invitationUserRestTestHelper.buildSendInvitationUserRequest()
+        val request = invitationUserRestTestHelper.buildSendInvitationUserToOrganizationRequest()
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)

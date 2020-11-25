@@ -13,7 +13,7 @@ import java.util.*
  * Date: 5/14/20
  * Time: 6:17 PM
  */
-class TokenInvitationUserGetByTokenServiceUnitTest : AbstractTokenInvitationUserServiceUnitTest() {
+class TokenInvitationUserToOrganizationGetByTokenServiceUnitTest : AbstractTokenInvitationUserServiceUnitTest() {
 
     @Test
     fun `test when not found`() {
@@ -21,7 +21,7 @@ class TokenInvitationUserGetByTokenServiceUnitTest : AbstractTokenInvitationUser
         val token = uuid()
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
-        assertThatThrownBy { tokenInvitationUserService.getByToken(token) }
+        assertThatThrownBy { tokenInvitationUserService.getByOrganizationInvitationToken(token) }
                 .isExactlyInstanceOf(TokenInvitationUserNotFoundForTokenException::class.java)
         verifyAll()
     }
@@ -29,11 +29,11 @@ class TokenInvitationUserGetByTokenServiceUnitTest : AbstractTokenInvitationUser
     @Test
     fun test() {
         resetAll()
-        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
+        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUserToOrganization()
         val token = tokenInvitationUser.token
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
-        assertThat(tokenInvitationUserService.getByToken(token)).isEqualTo(tokenInvitationUser)
+        assertThat(tokenInvitationUserService.getByOrganizationInvitationToken(token)).isEqualTo(tokenInvitationUser)
         verifyAll()
     }
 }

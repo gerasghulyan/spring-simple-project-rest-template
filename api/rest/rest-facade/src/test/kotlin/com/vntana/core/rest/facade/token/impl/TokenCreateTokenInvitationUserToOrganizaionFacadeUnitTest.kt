@@ -32,7 +32,7 @@ class TokenCreateTokenInvitationUserToOrganizaionFacadeUnitTest : AbstractTokenF
                 token = request.token,
                 invitationUserUuid = request.userInvitationUuid
         )
-        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
+        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUserToOrganization()
         expect(preconditionChecker.checkCreateTokenUserInvitationToOrganization(request)).andReturn(SingleErrorWithStatus.empty())
         expect(tokenInvitationUserService.createUserInvitationToOrganization(dto)).andReturn(tokenInvitationUser)
         replayAll()

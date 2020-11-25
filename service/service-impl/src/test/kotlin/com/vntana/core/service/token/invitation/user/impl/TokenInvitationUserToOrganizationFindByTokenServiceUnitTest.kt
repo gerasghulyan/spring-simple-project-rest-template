@@ -12,14 +12,14 @@ import java.util.*
  * Date: 5/14/20
  * Time: 2:24 PM
  */
-class TokenInvitationUserFindByTokenServiceUnitTest : AbstractTokenInvitationUserServiceUnitTest() {
+class TokenInvitationUserToOrganizationFindByTokenServiceUnitTest : AbstractTokenInvitationUserServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         resetAll()
-        assertThatThrownBy { tokenInvitationUserService.findByToken(null) }
+        assertThatThrownBy { tokenInvitationUserService.findByOrganizationInvitationToken(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { tokenInvitationUserService.findByToken(emptyString()) }
+        assertThatThrownBy { tokenInvitationUserService.findByOrganizationInvitationToken(emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         replayAll()
         verifyAll()
@@ -31,7 +31,7 @@ class TokenInvitationUserFindByTokenServiceUnitTest : AbstractTokenInvitationUse
         val token = uuid()
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
-        assertThat(tokenInvitationUserService.findByToken(token)).isEmpty
+        assertThat(tokenInvitationUserService.findByOrganizationInvitationToken(token)).isEmpty
         verifyAll()
     }
 
@@ -39,10 +39,10 @@ class TokenInvitationUserFindByTokenServiceUnitTest : AbstractTokenInvitationUse
     fun `test when found`() {
         resetAll()
         val token = uuid()
-        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
+        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUserToOrganization()
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
-        assertThat(tokenInvitationUserService.findByToken(token)).hasValue(tokenInvitationUser)
+        assertThat(tokenInvitationUserService.findByOrganizationInvitationToken(token)).hasValue(tokenInvitationUser)
         verifyAll()
     }
 }

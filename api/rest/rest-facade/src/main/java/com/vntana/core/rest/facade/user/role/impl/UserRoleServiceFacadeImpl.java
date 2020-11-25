@@ -69,6 +69,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         return new UserRoleGrantOrganizationAdminResponse(adminRole.getUser().getUuid());
     }
 
+    @Transactional
     @Override
     public UserRoleGrantClientOrganizationResponse grantClientRole(final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Granting user client role for request - {}", request);

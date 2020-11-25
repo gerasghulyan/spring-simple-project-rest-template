@@ -1,8 +1,10 @@
 package com.vntana.core.rest.facade.invitation.user.checker.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
 import com.vntana.core.domain.token.TokenUserInvitationToOrganization;
+import com.vntana.core.domain.token.TokenUserInvitationToOrganizationClient;
 import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
@@ -148,11 +150,11 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     }
 
     @Override
-    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForPossibleErrors(final AcceptInvitationUserRequest request) {
-        LOGGER.debug("Checking invitation user accept precondition for request - {}", request);
-        final Optional<TokenUserInvitationToOrganization> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForOrganizationForPossibleErrors(final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Checking invitation user for organization accept precondition for request - {}", request);
+        final Optional<TokenUserInvitationToOrganization> tokenInvitationUserOptional = tokenInvitationUserService.findByOrganizationInvitationToken(request.getToken());
         if (!tokenInvitationUserOptional.isPresent()) {
-            LOGGER.debug("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
+            LOGGER.debug("Checking invitation user accept for organization precondition for request - {} has been done with error, token not found", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }
         final InvitationOrganizationUser invitationUser = tokenInvitationUserOptional.get().getInvitationUser();
@@ -163,13 +165,35 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         if (tokenInvitationUserOptional.get().isExpired()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
         }
-        LOGGER.debug("Successfully checked invitation user accept precondition for request - {}", request);
+        LOGGER.debug("Successfully checked invitation user for organization accept precondition for request - {}", request);
         return SingleErrorWithStatus.empty();
     }
 
     @Override
-    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request) {
-        final Optional<TokenUserInvitationToOrganization> tokenInvitationUserOptional = tokenInvitationUserService.findByToken(request.getToken());
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForClientForPossibleErrors(final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Checking invitation user for client accept precondition for request - {}", request);
+        final Optional<TokenUserInvitationToOrganizationClient> userInvitationTokenOptional = tokenInvitationUserService.findByClientInvitationToken(request.getToken());
+        if (!userInvitationTokenOptional.isPresent()) {
+            LOGGER.debug("Checking invitation user accept for client precondition for request - {} has been done with error, token not found", request);
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
+        }
+        final InvitationOrganizationClientUser userInvitation = userInvitationTokenOptional.get().getUserInvitation();
+        final User user = userService.getByEmail(userInvitation.getEmail());
+        if (userRoleService.findByClientOrganizationAndUser(userInvitation.getClientOrganization().getUuid(), user.getUuid()).isPresent()) {
+            LOGGER.debug("Checking invitation user accept for client precondition for request - {} has been done with error, user already has role in client", request);
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
+        }
+        if (userInvitationTokenOptional.get().isExpired()) {
+            LOGGER.debug("Checking invitation user accept for client precondition for request - {} has been done with error, token is expired", request);
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
+        }
+        LOGGER.debug("Successfully checked invitation user for client accept precondition for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignInvitationToOrganizationUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request) {
+        final Optional<TokenUserInvitationToOrganization> tokenInvitationUserOptional = tokenInvitationUserService.findByOrganizationInvitationToken(request.getToken());
         if (!tokenInvitationUserOptional.isPresent()) {
             LOGGER.debug("Checking invitation user accept precondition for request - {} has been done with error, token not found", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
@@ -179,6 +203,23 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
         }
         if (userService.existsByEmail(tokenInvitationUser.getInvitationUser().getEmail())) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_EXISTS);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignInvitationToClientUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request) {
+        final Optional<TokenUserInvitationToOrganizationClient> userInvitationTokenOptional = tokenInvitationUserService.findByClientInvitationToken(request.getToken());
+        if (!userInvitationTokenOptional.isPresent()) {
+            LOGGER.debug("Checking invitation user accept for client precondition for request - {} has been done with error, token not found", request);
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
+        }
+        final TokenUserInvitationToOrganizationClient userInvitationToken = userInvitationTokenOptional.get();
+        if (userInvitationToken.isExpired()) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
+        }
+        if (userService.existsByEmail(userInvitationToken.getUserInvitation().getEmail())) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_EXISTS);
         }
         return SingleErrorWithStatus.empty();

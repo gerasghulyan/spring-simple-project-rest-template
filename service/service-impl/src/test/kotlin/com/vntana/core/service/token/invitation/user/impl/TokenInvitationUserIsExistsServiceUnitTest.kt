@@ -38,7 +38,7 @@ class TokenInvitationUserIsExistsServiceUnitTest : AbstractTokenInvitationUserSe
     @Test
     fun test() {
         resetAll()
-        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
+        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUserToOrganization()
         val token = tokenInvitationUser.token
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()

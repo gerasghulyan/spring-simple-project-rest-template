@@ -2,11 +2,6 @@ package com.vntana.core.rest.facade.invitation.user;
 
 import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.model.invitation.user.response.*;
-import com.vntana.core.model.invitation.user.request.AcceptInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.CreateInvitationForOrganizationUserRequest;
-import com.vntana.core.model.invitation.user.request.GetAllByStatusInvitationUserRequest;
-import com.vntana.core.model.invitation.user.request.SendInvitationForOrganizationUserRequest;
-import com.vntana.core.model.invitation.user.request.UpdateInvitationUserInvitationStatusRequest;
 
 /**
  * Created by Manuk Gharslyan.
@@ -27,9 +22,13 @@ public interface InvitationUserServiceFacade {
 
     SendInvitationUserResultResponse sendInvitationForClients(final SendInvitationForClientUserRequest request);
 
-    AcceptInvitationUserResultResponse accept(final AcceptInvitationUserRequest request);
+    AcceptInvitationUserToOrganizationResultResponse acceptInvitationToOrganization(final AcceptInvitationUserRequest request);
+
+    AcceptInvitationUserToClientResultResponse acceptInvitationToClient(AcceptInvitationUserRequest request);
 
     GetByUserInvitationTokenResultResponse getByToken(final String token);
 
-    AcceptInvitationUserResultResponse acceptAndSignUp(final AcceptInvitationUserAndSignUpRequest request);
+    AcceptInvitationUserToOrganizationResultResponse acceptInvitationToOrganizationAndSignUp(final AcceptInvitationUserAndSignUpRequest request);
+
+    AcceptInvitationUserToClientResultResponse acceptInvitationToClientAndSignUp(AcceptInvitationUserAndSignUpRequest request);
 }

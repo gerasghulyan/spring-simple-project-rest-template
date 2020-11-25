@@ -19,9 +19,13 @@ public interface TokenInvitationUserService {
     
     List<TokenUserInvitationToOrganizationClient> createUserInvitationToClients(final CreateInvitationUserToClientDto dto);
 
-    Optional<TokenUserInvitationToOrganization> findByToken(final String token);
+    Optional<TokenUserInvitationToOrganization> findByOrganizationInvitationToken(final String token);
+    
+    Optional<TokenUserInvitationToOrganizationClient> findByClientInvitationToken(final String token);
 
-    TokenUserInvitationToOrganization getByToken(final String token);
+    TokenUserInvitationToOrganization getByOrganizationInvitationToken(final String token);
+
+    TokenUserInvitationToOrganizationClient getByClientInvitationToken(final String token);
 
     Optional<TokenUserInvitationToOrganization> findByInvitationUserUuid(final String invitationUserUuid);
 

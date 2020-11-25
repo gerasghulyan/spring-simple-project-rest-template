@@ -77,18 +77,36 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<TokenUserInvitationToOrganization> findByToken(final String token) {
-        LOGGER.debug("Retrieving TokenInvitationUser by token");
+    public Optional<TokenUserInvitationToOrganization> findByOrganizationInvitationToken(final String token) {
+        LOGGER.debug("Retrieving TokenUserInvitationToOrganization by token");
         assertToken(token);
         final Optional<TokenUserInvitationToOrganization> result = tokenUserInvitationToOrganizationRepository.findByToken(token);
-        LOGGER.debug("Successfully processed user invitation token findByToken method");
+        LOGGER.debug("Successfully processed user invitation to organization token findByOrganizationInvitationToken method");
         return result;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public TokenUserInvitationToOrganization getByToken(final String token) {
-        return findByToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
+    public Optional<TokenUserInvitationToOrganizationClient> findByClientInvitationToken(final String token) {
+        LOGGER.debug("Retrieving TokenUserInvitationToOrganizationClient by token");
+        assertToken(token);
+        final Optional<TokenUserInvitationToOrganizationClient> result = tokenUserInvitationToClientRepository.findByToken(token);
+        LOGGER.debug("Successfully processed user invitation to client token findByClientInvitationToken method");
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public TokenUserInvitationToOrganization getByOrganizationInvitationToken(final String token) {
+        assertToken(token);
+        return findByOrganizationInvitationToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
+    }
+    
+    @Transactional(readOnly = true)
+    @Override
+    public TokenUserInvitationToOrganizationClient getByClientInvitationToken(final String token) {
+        assertToken(token);
+        return findByClientInvitationToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
     }
 
     @Override
@@ -105,7 +123,7 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     public boolean isExpired(final String token) {
         assertToken(token);
         LOGGER.debug("Checking the expiration of user invitation token");
-        final Optional<TokenUserInvitationToOrganization> tokenOptional = findByToken(token);
+        final Optional<TokenUserInvitationToOrganization> tokenOptional = findByOrganizationInvitationToken(token);
         if (!tokenOptional.isPresent()) {
             LOGGER.error("Checking the expiration of user invitation token has been done with error, token does not exist");
             throw new TokenInvitationUserNotFoundForTokenException(token);
@@ -120,7 +138,7 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     public boolean isExists(final String token) {
         assertToken(token);
         LOGGER.debug("Checking the existence of user invitation token");
-        final boolean exists = findByToken(token).isPresent();
+        final boolean exists = findByOrganizationInvitationToken(token).isPresent();
         LOGGER.debug("Successfully checked the existence of user invitation token");
         return exists;
     }
