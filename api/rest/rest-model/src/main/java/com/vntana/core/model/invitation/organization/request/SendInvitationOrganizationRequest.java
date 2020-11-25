@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
+
 /**
  * Created by Arman Gevorgyan.
  * Date: 3/27/20
@@ -33,7 +35,7 @@ public class SendInvitationOrganizationRequest extends AbstractRequestModel impl
     }
 
     public SendInvitationOrganizationRequest(final String email, final String token, final String organizationName) {
-        this.email = email;
+        this.email = sanitize(email);
         this.token = token;
         this.organizationName = organizationName;
     }
@@ -91,7 +93,7 @@ public class SendInvitationOrganizationRequest extends AbstractRequestModel impl
     }
 
     public void setEmail(final String email) {
-        this.email = email;
+        this.email = sanitize(email);
     }
 
     public String getToken() {

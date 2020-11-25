@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel.*;
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
 
 /**
  * Created by Manuk Gharslyan.
@@ -38,7 +39,7 @@ public class SendInvitationForOrganizationUserRequest extends AbstractRequestMod
     }
 
     public SendInvitationForOrganizationUserRequest(final String email, final String token, final String inviterUserUuid, final String organizationUuid) {
-        this.email = email;
+        this.email = sanitize(email);
         this.token = token;
         this.inviterUserUuid = inviterUserUuid;
         this.organizationUuid = organizationUuid;

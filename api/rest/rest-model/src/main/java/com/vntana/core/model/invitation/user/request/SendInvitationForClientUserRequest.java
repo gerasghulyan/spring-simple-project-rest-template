@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel.*;
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
 
 /**
  * Created by Diana Gevorgyan
@@ -44,7 +45,7 @@ public class SendInvitationForClientUserRequest extends AbstractRequestModel imp
             final Map<String, String> invitationTokens,
             final String inviterUserUuid,
             final String organizationUuid) {
-        this.email = email;
+        this.email = sanitize(email);
         this.invitationTokens = invitationTokens;
         this.inviterUserUuid = inviterUserUuid;
         this.organizationUuid = organizationUuid;
