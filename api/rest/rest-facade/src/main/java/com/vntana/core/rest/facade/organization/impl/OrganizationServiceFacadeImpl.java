@@ -294,6 +294,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                             throw new IllegalStateException(format("Unknown user role %s", userRole.toString()));
                     }
                 })
+                .distinct()
                 .collect(Collectors.toList());
     }
 
