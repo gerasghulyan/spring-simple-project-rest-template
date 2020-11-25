@@ -98,12 +98,14 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     @Transactional(readOnly = true)
     @Override
     public TokenUserInvitationToOrganization getByOrganizationInvitationToken(final String token) {
+        assertToken(token);
         return findByOrganizationInvitationToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
     }
     
     @Transactional(readOnly = true)
     @Override
     public TokenUserInvitationToOrganizationClient getByClientInvitationToken(final String token) {
+        assertToken(token);
         return findByClientInvitationToken(token).orElseThrow(() -> new TokenInvitationUserNotFoundForTokenException(token));
     }
 
