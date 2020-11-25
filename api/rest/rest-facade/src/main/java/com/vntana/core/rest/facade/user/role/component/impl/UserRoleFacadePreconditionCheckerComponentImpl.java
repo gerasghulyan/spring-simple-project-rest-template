@@ -14,7 +14,6 @@ import com.vntana.core.service.user.role.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -78,7 +77,6 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         return SingleErrorWithStatus.empty();
     }
 
-    @Transactional(readOnly = true)
     @Override
     public SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantClientRole(final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Processing checkGrantClientAdminRole for request - {}", request);
