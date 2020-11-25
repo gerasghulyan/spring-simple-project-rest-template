@@ -26,4 +26,8 @@ public interface UserRoleModelPredefinedAbility {
     default Boolean hasInviterAbility() {
         return true;
     }
+
+    default Boolean hasSubscriptionAbility() {
+        return true;
+    }
 }
