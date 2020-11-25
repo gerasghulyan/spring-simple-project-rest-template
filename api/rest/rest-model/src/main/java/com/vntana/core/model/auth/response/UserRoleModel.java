@@ -34,32 +34,17 @@ public enum UserRoleModel implements UserRoleModelPredefinedAbility {
         public Boolean hasInviterAbility() {
             return false;
         }
-
-        @Override
-        public Boolean hasSubscriptionAbility() {
-            return false;
-        }
     },
     CLIENT_ORGANIZATION_ADMIN(4) {
         @Override
         public Boolean hasClientAbility() {
             return true;
         }
-
-        @Override
-        public Boolean hasSubscriptionAbility() {
-            return false;
-        }
     },
     CLIENT_ORGANIZATION_CONTENT_MANAGER(5) {
         @Override
         public Boolean hasClientAbility() {
             return true;
-        }
-
-        @Override
-        public Boolean hasSubscriptionAbility() {
-            return false;
         }
     },
     CLIENT_ORGANIZATION_VIEWER(6) {
@@ -70,11 +55,6 @@ public enum UserRoleModel implements UserRoleModelPredefinedAbility {
 
         @Override
         public Boolean hasInviterAbility() {
-            return false;
-        }
-
-        @Override
-        public Boolean hasSubscriptionAbility() {
             return false;
         }
     };
