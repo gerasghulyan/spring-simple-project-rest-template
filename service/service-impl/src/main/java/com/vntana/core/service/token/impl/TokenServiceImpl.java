@@ -33,7 +33,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional(readOnly = true)
     @Override
     public Optional<AbstractToken> findByToken(final String token) {
-        Assert.hasText(token, "The token should not be null");
+        assertToken(token);
         LOGGER.debug("Trying to find token entity for token - {}", token);
         return tokenRepository.findByToken(token);
     }
@@ -41,7 +41,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional(readOnly = true)
     @Override
     public AbstractToken getByToken(final String token) {
-        Assert.hasText(token, "The token should not be null or empty");
+        assertToken(token);
         LOGGER.debug("Trying to retrieve abstract token");
         final AbstractToken abstractToken = findByToken(token).orElseThrow(() -> new TokenNotFoundException("Unable to find token"));
         LOGGER.debug("Successfully retrieved abstract token");
@@ -68,7 +68,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional
     @Override
     public AbstractToken findByTokenAndExpire(final String token) {
-        Assert.hasText(token, "The token should not be null or empty");
+        assertToken(token);
         LOGGER.debug("Try to find and expire token");
         final AbstractToken expiredToken = getByToken(token);
         expiredToken.expire();
@@ -79,7 +79,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional
     @Override
     public AbstractToken expire(final String tokenUuid) {
-        Assert.hasText(tokenUuid, "The token uuid should not be null or empty");
+        assertToken(tokenUuid);
         LOGGER.debug("Expiring token having uuid - {}", tokenUuid);
         final AbstractToken token = getByUuid(tokenUuid);
         token.expire();
@@ -90,10 +90,14 @@ public class TokenServiceImpl implements TokenService {
     @Transactional(readOnly = true)
     @Override
     public boolean existsByToken(final String token) {
-        Assert.hasText(token, "The token should not be null or empty");
+        assertToken(token);
         LOGGER.debug("Checking existence of AbstractToken");
         final boolean existence = findByToken(token).isPresent();
         LOGGER.debug("Successfully checked existence of AbstractToken");
         return existence;
+    }
+
+    private void assertToken(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
     }
 }

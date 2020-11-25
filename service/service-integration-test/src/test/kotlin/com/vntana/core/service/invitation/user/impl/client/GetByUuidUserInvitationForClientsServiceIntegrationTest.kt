@@ -16,7 +16,7 @@ class GetByUuidUserInvitationForClientsServiceIntegrationTest : AbstractInvitati
     @Test
     fun test() {
         val organizationUuid = organizationIntegrationTestHelper.persistOrganization().uuid;
-        val clientUuid = clientOrganizationIntegrationTestHelper.persistClientOrganization(uuid(), CreateClientOrganizationDto(uuid(), uuid(), uuid(), organizationUuid)).uuid
+        val clientUuid = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organizationUuid).uuid
         val invitation = integrationInvitationUserTestHelper.persistInvitationUserToClient(clientUuid = clientUuid, organizationUuid = organizationUuid)
         flushAndClear()
 

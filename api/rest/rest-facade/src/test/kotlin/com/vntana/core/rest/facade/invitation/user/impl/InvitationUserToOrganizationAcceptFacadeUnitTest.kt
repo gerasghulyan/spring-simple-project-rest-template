@@ -15,16 +15,16 @@ import org.junit.Test
  * Date: 5/14/20
  * Time: 5:49 PM
  */
-class InvitationUserAcceptFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
+class InvitationUserToOrganizationAcceptFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
 
     @Test
     fun `test when precondition failed`() {
         resetAll()
         val request = invitationUserRestTestHelper.buildAcceptInvitationUserRequest()
         val error = SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN)
-        expect(preconditionChecker.checkAcceptForPossibleErrors(request)).andReturn(error)
+        expect(preconditionChecker.checkAcceptForOrganizationForPossibleErrors(request)).andReturn(error)
         replayAll()
-        invitationUserServiceFacade.accept(request).let {
+        invitationUserServiceFacade.acceptInvitationToOrganization(request).let {
             assertBasicErrorResultResponse(it, error.error)
             assertThat(it.httpStatusCode).isEqualTo(error.httpStatus)
         }
@@ -45,14 +45,14 @@ class InvitationUserAcceptFacadeUnitTest : AbstractInvitationUserFacadeUnitTest(
                 status = InvitationStatus.ACCEPTED
         )
         val adminRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole()
-        expect(preconditionChecker.checkAcceptForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(tokenInvitationUserService.getByToken(request.token)).andReturn(tokenInvitationUser)
+        expect(preconditionChecker.checkAcceptForOrganizationForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(tokenInvitationUserService.getByOrganizationInvitationToken(request.token)).andReturn(tokenInvitationUser)
         expect(userService.getByEmail(tokenInvitationUser.invitationUser.email)).andReturn(user)
         expect(userRoleService.grantOrganizationAdminRole(grantOrganizationRoleDto)).andReturn(adminRole)
         expect(invitationUserToOrganizationService.updateStatus(updateInvitationUserStatusDto)).andReturn(invitationUser)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(tokenInvitationUser)
         replayAll()
-        invitationUserServiceFacade.accept(request).let {
+        invitationUserServiceFacade.acceptInvitationToOrganization(request).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_ADMIN)
             assertThat(it.response().userUuid).isEqualTo(user.uuid)

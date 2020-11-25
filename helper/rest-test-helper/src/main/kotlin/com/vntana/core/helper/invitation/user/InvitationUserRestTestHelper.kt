@@ -49,10 +49,17 @@ open class InvitationUserRestTestHelper : AbstractRestTestHelper() {
             password: String? = uuid()
     ): AcceptInvitationUserAndSignUpRequest = AcceptInvitationUserAndSignUpRequest(token, newUserFullName, password)
 
-    fun buildSendInvitationUserRequest(
+    fun buildSendInvitationUserToOrganizationRequest(
             email: String? = email(),
             token: String? = uuid(),
             inviterUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
     ): SendInvitationForOrganizationUserRequest = SendInvitationForOrganizationUserRequest(email, token, inviterUserUuid, organizationUuid)
+
+    fun buildSendInvitationUserToClientRequest(
+            email: String? = email(),
+            invitationTokens: Map<String, String>? = mapOf(Pair(uuid(), "token1"), Pair(uuid(), "token2")),
+            inviterUserUuid: String? = uuid(),
+            organizationUuid: String? = uuid()
+    ): SendInvitationForClientUserRequest = SendInvitationForClientUserRequest(email, invitationTokens, inviterUserUuid, organizationUuid)
 }

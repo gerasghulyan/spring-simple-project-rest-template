@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Manuk Gharslyan.
@@ -39,6 +40,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
     private final String websiteUrl;
     private final String senderEmail;
     private final String emailSubject;
+    private final String isClientInvitation;
 
     public InvitationUserSenderComponentImpl(
             final EmailSenderService emailSenderService,
@@ -48,7 +50,8 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
             final InvitationUserToClientService invitationUserToClientService,
             @Value("${user.invitation.website.url}") final String websiteUrl,
             @Value("${user.invitation.email.send.from}") final String senderEmail,
-            @Value("${user.invitation.email.subject}") final String emailSubject) {
+            @Value("${user.invitation.email.subject}") final String emailSubject,
+            @Value("isClientInvitation=true") final String isClientInvitation) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.emailSenderService = emailSenderService;
         this.templateEmailService = templateEmailService;
@@ -58,6 +61,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
         this.websiteUrl = websiteUrl;
         this.senderEmail = senderEmail;
         this.emailSubject = emailSubject;
+        this.isClientInvitation = isClientInvitation;
     }
 
     @Override
@@ -80,6 +84,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
         return new SendInvitationUserResultResponse(new SendInvitationUserResponseModel());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public SendInvitationUserResultResponse sendInvitationForClients(final SendInvitationForClientUserRequest request) {
         LOGGER.debug("Sending user invitation for clients for request - {}", request);
@@ -91,7 +96,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
                     request.getEmail(),
                     senderEmail,
                     emailSubject,
-                    String.format("%s/%s", websiteUrl, value),
+                    String.format("%s/%s?%s", websiteUrl, value, isClientInvitation),
                     user.getFullName(),
                     invitationUserToClientService.getByUuid(key).getClientOrganization().getName()
             );

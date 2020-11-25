@@ -9,20 +9,20 @@ import org.junit.Test
  * Date: 5/14/20
  * Time: 2:31 PM
  */
-class TokenInvitationUserFindByTokenServiceIntegrationTest : AbstractTokenInvitationUserServiceIntegrationTest() {
+class TokenInvitationUserToOrganizationFindByTokenServiceIntegrationTest : AbstractTokenInvitationUserServiceIntegrationTest() {
 
     @Test
     fun `test findByToken not found`() {
-        assertThat(tokenInvitationUserService.findByToken(uuid())).isNotPresent
+        assertThat(tokenInvitationUserService.findByOrganizationInvitationToken(uuid())).isNotPresent
     }
 
     @Test
     fun `test findByToken`() {
         val token = uuid()
         val invitationUser = invitationUserIntegrationTestHelper.persistInvitationUserToOrganization()
-        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUser.uuid)
+        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUserToOrganization(token = token, invitationUserUuid = invitationUser.uuid)
         flushAndClear()
-        tokenInvitationUserService.findByToken(token).let {
+        tokenInvitationUserService.findByOrganizationInvitationToken(token).let {
             assertThat(it).isPresent
             assertThat(it.get()).isEqualTo(tokenInvitationUser)
         }

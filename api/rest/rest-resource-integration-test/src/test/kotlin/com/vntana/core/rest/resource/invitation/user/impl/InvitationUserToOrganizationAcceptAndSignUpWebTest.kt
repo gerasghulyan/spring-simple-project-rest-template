@@ -13,38 +13,38 @@ import org.springframework.http.HttpStatus
  * Date: 5/15/20
  * Time: 5:45 PM
  */
-class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
+class InvitationUserToOrganizationAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
 
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = null)),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = emptyString())),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(newUserFullName = null)),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(newUserFullName = null)),
                 InvitationUserErrorResponseModel.MISSING_USER_FULL_NAME
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(newUserFullName = emptyString())),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(newUserFullName = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_USER_FULL_NAME
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(password = null)),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(password = null)),
                 InvitationUserErrorResponseModel.MISSING_PASSWORD
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(password = emptyString())),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(password = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_PASSWORD
         )
     }
@@ -52,7 +52,7 @@ class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
     @Test
     fun `test when token not found`() {
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest()),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest()),
                 InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN
         )
     }
@@ -60,10 +60,10 @@ class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
     @Test
     fun `test when token is expired`() {
         val token = uuid()
-        tokenResourceTestHelper.persistTokenInvitationUser(token = token)
+        tokenResourceTestHelper.persistTokenInvitationUserToOrganization(token = token)
         tokenResourceTestHelper.expire(token)
         assertBasicErrorResultResponse(HttpStatus.NOT_ACCEPTABLE,
-                invitationUserResourceClient.acceptAndSignUp(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = token)),
+                invitationUserResourceClient.acceptAndSignUpForOrganization(resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = token)),
                 InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED
         )
     }
@@ -76,9 +76,9 @@ class InvitationUserAcceptAndSignUpWebTest : AbstractInvitationUserWebTest() {
         val password = uuid()
         val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(userRole = UserRoleModel.ORGANIZATION_ADMIN, email = userEmail, organizationUuid = newOrganizationUuid)
-        tokenResourceTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUserUuid)
+        tokenResourceTestHelper.persistTokenInvitationUserToOrganization(token = token, invitationUserUuid = invitationUserUuid)
         val request = resourceTestHelper.buildAcceptInvitationUserAndSignUpRequest(token = token, newUserFullName = newUserFullName, password = password)
-        invitationUserResourceClient.acceptAndSignUp(request).let { responseEntity ->
+        invitationUserResourceClient.acceptAndSignUpForOrganization(request).let { responseEntity ->
             assertBasicSuccessResultResponse(responseEntity)
             responseEntity?.body?.response()?.let {
                 assertThat(it.organizationUuid).isEqualTo(newOrganizationUuid)

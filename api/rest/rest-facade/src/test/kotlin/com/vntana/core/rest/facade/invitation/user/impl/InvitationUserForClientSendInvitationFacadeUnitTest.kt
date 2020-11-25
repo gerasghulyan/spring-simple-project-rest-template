@@ -13,28 +13,28 @@ import org.junit.Test
  * Date: 5/15/2020
  * Time: 11:39 AM
  */
-class InvitationUserSendInvitationFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
+class InvitationUserForClientSendInvitationFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
 
     @Test
     fun `test when precondition check failed`() {
-        val request = invitationUserRestTestHelper.buildSendInvitationUserRequest()
+        val request = invitationUserRestTestHelper.buildSendInvitationUserToClientRequest()
         resetAll()
-        expect(preconditionChecker.checkSendInvitationForOrganizationForPossibleErrors(request))
+        expect(preconditionChecker.checkSendInvitationForClientsForPossibleErrors(request))
                 .andReturn(SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND))
         replayAll()
-        assertBasicErrorResultResponse(invitationUserServiceFacade.sendInvitationForOrganization(request), InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
+        assertBasicErrorResultResponse(invitationUserServiceFacade.sendInvitationForClients(request), InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
         verifyAll()
     }
     
     @Test
     fun test() {
         resetAll()
-        val request = invitationUserRestTestHelper.buildSendInvitationUserRequest()
+        val request = invitationUserRestTestHelper.buildSendInvitationUserToClientRequest()
         val response = SendInvitationUserResultResponse()
-        expect(preconditionChecker.checkSendInvitationForOrganizationForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(invitationUserSenderComponent.sendInvitationForOrganization(request)).andReturn(response)
+        expect(preconditionChecker.checkSendInvitationForClientsForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(invitationUserSenderComponent.sendInvitationForClients(request)).andReturn(response)
         replayAll()
-        assertThat(invitationUserServiceFacade.sendInvitationForOrganization(request)).isEqualTo(response)
+        assertThat(invitationUserServiceFacade.sendInvitationForClients(request)).isEqualTo(response)
         verifyAll()
     }
 }

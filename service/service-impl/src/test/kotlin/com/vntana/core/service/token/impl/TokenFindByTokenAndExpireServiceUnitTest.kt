@@ -22,8 +22,8 @@ class TokenFindByTokenAndExpireServiceUnitTest : AbstractTokenServiceUnitTest(){
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { tokenService.findByTokenAndExpire(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { tokenService.findByTokenAndExpire(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { tokenService.findByToken(null) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { tokenService.findByToken(emptyString()) }.isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
 
@@ -36,7 +36,7 @@ class TokenFindByTokenAndExpireServiceUnitTest : AbstractTokenServiceUnitTest(){
         expect(tokenRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
         // test scenario
-        assertThatThrownBy { tokenService.findByTokenAndExpire(token) }.isExactlyInstanceOf(TokenNotFoundException::class.java)
+        assertThatThrownBy { tokenService.findByToken(token) }.isExactlyInstanceOf(TokenNotFoundException::class.java)
         verifyAll()
     }
 
@@ -50,7 +50,7 @@ class TokenFindByTokenAndExpireServiceUnitTest : AbstractTokenServiceUnitTest(){
         expect(tokenService.findByToken(token)).andReturn(Optional.of(abstractToken))
         replayAll()
         // test scenario
-        assertThat(tokenService.findByTokenAndExpire(token)).isEqualTo(abstractToken)
+        assertThat(tokenService.findByToken(token)).isEqualTo(abstractToken)
         verifyAll()
     }
 }

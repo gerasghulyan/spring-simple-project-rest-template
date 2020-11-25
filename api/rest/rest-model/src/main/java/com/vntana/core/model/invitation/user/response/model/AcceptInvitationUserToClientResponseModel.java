@@ -8,14 +8,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Created by Arman Gevorgyan.
- * Date: 5/14/20
- * Time: 5:31 PM
+ * Created by Diana Gevorgyan
+ * Date: 11/24/20
+ * Time: 4:37 PM
  */
-public class AcceptInvitationUserResponseModel implements ResponseModel {
+public class AcceptInvitationUserToClientResponseModel implements ResponseModel {
 
-    @JsonProperty("organizationUuid")
-    private String organizationUuid;
+    @JsonProperty("clientUuid")
+    private String clientUuid;
 
     @JsonProperty("userUuid")
     private String userUuid;
@@ -23,12 +23,15 @@ public class AcceptInvitationUserResponseModel implements ResponseModel {
     @JsonProperty("userRole")
     private UserRoleModel userRoleModel;
 
-    public AcceptInvitationUserResponseModel() {
+    public AcceptInvitationUserToClientResponseModel() {
         super();
     }
 
-    public AcceptInvitationUserResponseModel(final String organizationUuid, final String userUuid, final UserRoleModel userRoleModel) {
-        this.organizationUuid = organizationUuid;
+    public AcceptInvitationUserToClientResponseModel(
+            final String clientUuid,
+            final String userUuid,
+            final UserRoleModel userRoleModel) {
+        this.clientUuid = clientUuid;
         this.userUuid = userUuid;
         this.userRoleModel = userRoleModel;
     }
@@ -38,12 +41,12 @@ public class AcceptInvitationUserResponseModel implements ResponseModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AcceptInvitationUserResponseModel)) {
+        if (!(o instanceof AcceptInvitationUserToClientResponseModel)) {
             return false;
         }
-        final AcceptInvitationUserResponseModel that = (AcceptInvitationUserResponseModel) o;
+        final AcceptInvitationUserToClientResponseModel that = (AcceptInvitationUserToClientResponseModel) o;
         return new EqualsBuilder()
-                .append(organizationUuid, that.organizationUuid)
+                .append(clientUuid, that.clientUuid)
                 .append(userUuid, that.userUuid)
                 .append(userRoleModel, that.userRoleModel)
                 .isEquals();
@@ -52,7 +55,7 @@ public class AcceptInvitationUserResponseModel implements ResponseModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(organizationUuid)
+                .append(clientUuid)
                 .append(userUuid)
                 .append(userRoleModel)
                 .toHashCode();
@@ -61,18 +64,19 @@ public class AcceptInvitationUserResponseModel implements ResponseModel {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("organizationUuid", organizationUuid)
+                .appendSuper(super.toString())
+                .append("clientUuid", clientUuid)
                 .append("userUuid", userUuid)
                 .append("userRoleModel", userRoleModel)
                 .toString();
     }
 
-    public String getOrganizationUuid() {
-        return organizationUuid;
+    public String getClientUuid() {
+        return clientUuid;
     }
 
-    public void setOrganizationUuid(final String organizationUuid) {
-        this.organizationUuid = organizationUuid;
+    public void setClientUuid(final String clientUuid) {
+        this.clientUuid = clientUuid;
     }
 
     public String getUserUuid() {

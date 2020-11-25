@@ -11,11 +11,11 @@ import org.junit.Test
  * Date: 5/14/20
  * Time: 6:25 PM
  */
-class TokenInvitationUserGetByTokenServiceIntegrationTest : AbstractTokenInvitationUserServiceIntegrationTest() {
+class TokenInvitationUserToOrganizationGetByTokenServiceIntegrationTest : AbstractTokenInvitationUserServiceIntegrationTest() {
 
     @Test
     fun `test getByToken not found`() {
-        assertThatThrownBy { tokenInvitationUserService.getByToken(uuid()) }
+        assertThatThrownBy { tokenInvitationUserService.getByOrganizationInvitationToken(uuid()) }
                 .isExactlyInstanceOf(TokenInvitationUserNotFoundForTokenException::class.java)
     }
 
@@ -23,9 +23,9 @@ class TokenInvitationUserGetByTokenServiceIntegrationTest : AbstractTokenInvitat
     fun `test getByToken`() {
         val token = uuid()
         val invitationUser = invitationUserIntegrationTestHelper.persistInvitationUserToOrganization()
-        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUser(token = token, invitationUserUuid = invitationUser.uuid)
+        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUserToOrganization(token = token, invitationUserUuid = invitationUser.uuid)
         flushAndClear()
-        tokenInvitationUserService.getByToken(token).let {
+        tokenInvitationUserService.getByOrganizationInvitationToken(token).let {
             assertThat(it).isEqualTo(tokenInvitationUser)
         }
     }

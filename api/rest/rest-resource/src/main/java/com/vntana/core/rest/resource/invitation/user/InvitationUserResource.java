@@ -59,19 +59,35 @@ public class InvitationUserResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping(path = "accept")
-    public ResponseEntity<AcceptInvitationUserResultResponse> accept(@RequestBody final AcceptInvitationUserRequest request) {
-        LOGGER.debug("Processing InvitationUserResource acceptInvitation method for request - {}", request);
-        final AcceptInvitationUserResultResponse resultResponse = invitationUserServiceFacade.accept(request);
-        LOGGER.debug("Successfully processed InvitationUserResource acceptInvitation method for request - {}", request);
+    @PostMapping(path = "accept/organization")
+    public ResponseEntity<AcceptInvitationUserToOrganizationResultResponse> acceptInvitationForOrganization(@RequestBody final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource acceptInvitationForOrganization method for request - {}", request);
+        final AcceptInvitationUserToOrganizationResultResponse resultResponse = invitationUserServiceFacade.acceptInvitationToOrganization(request);
+        LOGGER.debug("Successfully processed InvitationUserResource acceptInvitationForOrganization method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping(path = "accept-sign-up")
-    public ResponseEntity<AcceptInvitationUserResultResponse> acceptAndSignUp(@RequestBody final AcceptInvitationUserAndSignUpRequest request) {
-        LOGGER.debug("Processing InvitationUserResource acceptAndSignUp method for request - {}", request);
-        final AcceptInvitationUserResultResponse resultResponse = invitationUserServiceFacade.acceptAndSignUp(request);
-        LOGGER.debug("Successfully processed InvitationUserResource acceptAndSignUp method for request - {}", request);
+    @PostMapping(path = "accept/organization-client")
+    public ResponseEntity<AcceptInvitationUserToClientResultResponse> acceptInvitationForClient(@RequestBody final AcceptInvitationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource acceptInvitationForClient method for request - {}", request);
+        final AcceptInvitationUserToClientResultResponse resultResponse = invitationUserServiceFacade.acceptInvitationToClient(request);
+        LOGGER.debug("Successfully processed InvitationUserResource acceptInvitationForClient method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "accept-sign-up/organization")
+    public ResponseEntity<AcceptInvitationUserToOrganizationResultResponse> acceptAndSignUpForOrganization(@RequestBody final AcceptInvitationUserAndSignUpRequest request) {
+        LOGGER.debug("Processing InvitationUserResource acceptAndSignUpForOrganization method for request - {}", request);
+        final AcceptInvitationUserToOrganizationResultResponse resultResponse = invitationUserServiceFacade.acceptInvitationToOrganizationAndSignUp(request);
+        LOGGER.debug("Successfully processed InvitationUserResource acceptAndSignUpForOrganization method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "accept-sign-up/organization-client")
+    public ResponseEntity<AcceptInvitationUserToClientResultResponse> acceptAndSignUpForClient(@RequestBody final AcceptInvitationUserAndSignUpRequest request) {
+        LOGGER.debug("Processing InvitationUserResource acceptAndSignUpForClient method for request - {}", request);
+        final AcceptInvitationUserToClientResultResponse resultResponse = invitationUserServiceFacade.acceptInvitationToClientAndSignUp(request);
+        LOGGER.debug("Successfully processed InvitationUserResource acceptAndSignUpForClient method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
@@ -82,7 +98,7 @@ public class InvitationUserResource {
         LOGGER.debug("Successfully processed InvitationUserResource sendInvitationForOrganization method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
-    
+
     @PostMapping(("/send-invitation/organization-client"))
     public ResponseEntity<SendInvitationUserResultResponse> sendInvitationForClients(@RequestBody SendInvitationForClientUserRequest request) {
         LOGGER.debug("Processing InvitationUserResource sendInvitationForClient method for request - {}", request);

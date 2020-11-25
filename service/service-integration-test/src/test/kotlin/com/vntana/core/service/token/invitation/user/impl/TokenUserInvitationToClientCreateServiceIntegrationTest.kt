@@ -13,7 +13,6 @@ class TokenUserInvitationToClientCreateServiceIntegrationTest : AbstractTokenInv
 
     @Test
     fun test() {
-
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val client = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
 

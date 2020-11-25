@@ -18,7 +18,7 @@ class CreateUserInvitationToClientServiceIntegrationTest : AbstractInvitationUse
         val organization = organizationIntegrationTestHelper.persistOrganization();
         val dto = integrationInvitationUserTestHelper.buildCreateInvitationUserForClientsWithContentManagerRoleDto(
                 inviterUserUuid = userIntegrationTestHelper.persistUserWithOwnerRole().uuid,
-                clientUuid = clientOrganizationIntegrationTestHelper.persistClientOrganization(uuid(), CreateClientOrganizationDto(uuid(), uuid(), uuid(), organization.uuid)).uuid
+                clientUuid = clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid).uuid
         )
         invitationUserToClientService.create(dto).let {
             flushAndClear()

@@ -19,35 +19,35 @@ class InvitationUserSendInvitationWebTest : AbstractInvitationUserWebTest() {
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(email = null)),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(email = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITED_USER_EMAIL
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(email = emptyString())),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(email = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITED_USER_EMAIL
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(token = null)),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(token = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(token = emptyString())),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(token = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(inviterUserUuid = null)),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(inviterUserUuid = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITER_USER_UUID
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(inviterUserUuid = emptyString())),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(inviterUserUuid = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITER_USER_UUID
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(organizationUuid = null)),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(organizationUuid = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(organizationUuid = emptyString())),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(organizationUuid = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
     }
@@ -56,7 +56,7 @@ class InvitationUserSendInvitationWebTest : AbstractInvitationUserWebTest() {
     fun `test when inviter user does not exist`() {
         assertBasicErrorResultResponse(
                 HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest()),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest()),
                 InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND
         )
     }
@@ -66,7 +66,7 @@ class InvitationUserSendInvitationWebTest : AbstractInvitationUserWebTest() {
         val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
         assertBasicErrorResultResponse(
                 HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserRequest(inviterUserUuid = inviterUserUuid)),
+                invitationUserResourceClient.sendInvitationForOrganization(resourceTestHelper.buildSendInvitationUserToOrganizationRequest(inviterUserUuid = inviterUserUuid)),
                 InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND
         )
     }
@@ -80,7 +80,7 @@ class InvitationUserSendInvitationWebTest : AbstractInvitationUserWebTest() {
         val organizationName = uuid()
         val organizationUuid = organizationResourceTestHelper.persistOrganization(name = organizationName).response().uuid
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
-        val request = resourceTestHelper.buildSendInvitationUserRequest(email = email, inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid)
+        val request = resourceTestHelper.buildSendInvitationUserToOrganizationRequest(email = email, inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid)
         assertBasicSuccessResultResponse(invitationUserResourceClient.sendInvitationForOrganization(request))
         verify(emailNotificationResourceClient, times(1))
                 .createEmailNotification(ArgumentMatchers.argThat { argument ->

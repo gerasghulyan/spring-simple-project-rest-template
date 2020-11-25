@@ -17,9 +17,13 @@ public interface InvitationUserFacadePreconditionChecker {
 
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkUpdateStatusForPossibleErrors(final UpdateInvitationUserInvitationStatusRequest request);
 
-    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForPossibleErrors(final AcceptInvitationUserRequest request);
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForOrganizationForPossibleErrors(final AcceptInvitationUserRequest request);
 
-    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request);
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptForClientForPossibleErrors(final AcceptInvitationUserRequest request);
+
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignInvitationToOrganizationUpForPossibleErrors(final AcceptInvitationUserAndSignUpRequest request);
+
+    SingleErrorWithStatus<InvitationUserErrorResponseModel> checkAcceptAndSignInvitationToClientUpForPossibleErrors(AcceptInvitationUserAndSignUpRequest request);
 
     SingleErrorWithStatus<InvitationUserErrorResponseModel> checkSendInvitationForOrganizationForPossibleErrors(final SendInvitationForOrganizationUserRequest request);
 

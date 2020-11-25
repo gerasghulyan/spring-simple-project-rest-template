@@ -40,7 +40,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
     @Test
     fun `test when invitation token does not exist`() {
         resetAll()
-        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
+        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUserToOrganization()
         val token = tokenInvitationUser.token
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
@@ -51,7 +51,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
     @Test
     fun `test when invitation token has been expired`() {
         resetAll()
-        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUser()
+        val tokenInvitationUser = commonTestHelper.buildTokenInvitationUserToOrganization()
         tokenInvitationUser.expire()
         val token = tokenInvitationUser.token
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))

@@ -21,14 +21,14 @@ class TokenInvitationUserIsExpiredServiceIntegrationTest : AbstractTokenInvitati
 
     @Test
     fun `test when invitation token does not expired`() {
-        val token = integrationTestHelper.persistTokenInvitationUser().token
+        val token = integrationTestHelper.persistTokenInvitationUserToOrganization().token
         flushAndClear()
         assertThat(tokenInvitationUserService.isExpired(token)).isFalse()
     }
 
     @Test
     fun `test when invitation token has been expired`() {
-        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUser()
+        val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUserToOrganization()
         tokenInvitationUser.expire()
         flushAndClear()
         assertThat(tokenInvitationUserService.isExpired(tokenInvitationUser.token)).isTrue()
