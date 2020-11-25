@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.Collections;
 import java.util.List;
 
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
+
 /**
  * Created by Arman Gevorgyan.
  * Date: 12/25/19
@@ -32,7 +34,7 @@ public class InvitationToPlatformRequest extends AbstractRequestModel implements
     public InvitationToPlatformRequest(final String token, final String email) {
         super();
         this.token = token;
-        this.email = email;
+        this.email = sanitize(email);
     }
 
     @Override

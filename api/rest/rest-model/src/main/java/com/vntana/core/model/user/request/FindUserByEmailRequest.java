@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/18/19
@@ -25,7 +27,7 @@ public class FindUserByEmailRequest extends AbstractRequestModel implements Vali
     }
 
     public FindUserByEmailRequest(final String email) {
-        this.email = email;
+        this.email = sanitize(email);
     }
 
     @Override
@@ -70,6 +72,6 @@ public class FindUserByEmailRequest extends AbstractRequestModel implements Vali
     }
 
     public void setEmail(final String email) {
-        this.email = email;
+        this.email = sanitize(email);
     }
 }

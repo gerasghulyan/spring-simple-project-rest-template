@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
+
 /**
  * Created by Arman Gevorgyan.
  * Date: 3/26/20
@@ -45,7 +47,7 @@ public class CreateInvitationOrganizationRequest extends AbstractRequestModel im
                                                final String customerSubscriptionDefinitionUuid) {
         super();
         this.ownerFullName = ownerFullName;
-        this.email = email;
+        this.email = sanitize(email);
         this.organizationName = organizationName;
         this.slug = slug;
         this.customerSubscriptionDefinitionUuid = customerSubscriptionDefinitionUuid;

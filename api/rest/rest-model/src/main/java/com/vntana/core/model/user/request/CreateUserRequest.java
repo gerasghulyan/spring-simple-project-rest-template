@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/1/19
@@ -40,7 +42,7 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
         this.organizationName = organizationName;
         this.organizationSlug = organizationSlug;
         this.fullName = fullName;
-        this.email = email;
+        this.email = sanitize(email);
         this.password = password;
     }
 
@@ -133,7 +135,7 @@ public class CreateUserRequest extends AbstractRequestModel implements Validatab
     }
 
     public void setEmail(final String email) {
-        this.email = email;
+        this.email = sanitize(email);
     }
 
     public String getPassword() {

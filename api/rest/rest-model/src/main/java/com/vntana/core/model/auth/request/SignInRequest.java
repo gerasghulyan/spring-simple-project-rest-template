@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
+
 /**
  * Created by Geras Ghulyan
  * Date: 18/10/2019
@@ -22,7 +24,7 @@ public class SignInRequest {
     }
 
     public SignInRequest(final String email, final String password) {
-        this.email = email;
+        this.email = sanitize(email);
         this.password = password;
     }
 
@@ -62,7 +64,7 @@ public class SignInRequest {
     }
 
     public void setEmail(final String email) {
-        this.email = email;
+        this.email = sanitize(email);
     }
 
     public String getPassword() {

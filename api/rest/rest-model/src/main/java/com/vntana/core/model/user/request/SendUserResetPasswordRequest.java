@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.Collections;
 import java.util.List;
 
+import static com.vntana.core.model.utils.EmailSanitizerUtility.sanitize;
+
 /**
  * Created by Arman Gevorgyan.
  * Date: 12/12/19
@@ -31,7 +33,7 @@ public class SendUserResetPasswordRequest extends AbstractRequestModel implement
 
     public SendUserResetPasswordRequest(final String email, final String token) {
         super();
-        this.email = email;
+        this.email = sanitize(email);
         this.token = token;
     }
 
@@ -81,7 +83,6 @@ public class SendUserResetPasswordRequest extends AbstractRequestModel implement
     public String toString() {
         return new ToStringBuilder(this)
                 .append("email", email)
-                .append("token", token)
                 .toString();
     }
 }
