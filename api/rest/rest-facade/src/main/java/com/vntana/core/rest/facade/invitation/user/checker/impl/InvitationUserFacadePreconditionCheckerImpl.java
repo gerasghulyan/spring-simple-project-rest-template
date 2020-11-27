@@ -97,16 +97,12 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     @Override
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateInvitationForClientsForPossibleErrors(final CreateInvitationForOrganizationClientUserRequest request) {
         LOGGER.debug("Checking invitation user for clients creation precondition for request - {}", request);
-        if (userService.findByEmailAndOrganizationUuid(request.getEmail(), request.getOrganizationUuid()).isPresent()) {
-            LOGGER.debug("Checking invitation user creation for client for request - {} has been done with error, invited user was found in organization - {}", request, request.getOrganizationUuid());
-            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INVITED_USER_ALREADY_EXISTS_IN_ORGANIZATION);
-        }
         if (!userService.existsByUuid(request.getInviterUserUuid())) {
-            LOGGER.debug("Checking invitation user creation for client precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
+            LOGGER.debug("Checking invitation user creation for organization precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
         }
         if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            LOGGER.debug("Checking invitation user creation for client client precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
+            LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         // Checking if invitations client uuids and user roles are valid
@@ -143,7 +139,6 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         if (request.getInvitations().size() != secondLevelFilteredInvitations.size()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
-        LOGGER.debug("Successfully checked invitation user creation for client precondition for request - {}", request);
         return SingleErrorWithStatus.empty();
     }
 
