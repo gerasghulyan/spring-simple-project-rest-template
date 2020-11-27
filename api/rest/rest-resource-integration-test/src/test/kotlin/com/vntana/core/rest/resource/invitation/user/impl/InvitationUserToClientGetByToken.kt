@@ -24,24 +24,12 @@ class InvitationUserToClientGetByToken : AbstractInvitationUserWebTest() {
                 InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN
         )
     }
-
-    @Test
-    fun `test token has been expired`() {
-        val token = uuid()
-        tokenResourceTestHelper.persistTokenInvitationUserToClient(token = token)
-        tokenResourceTestHelper.expire(token)
-        assertBasicErrorResultResponse(
-                HttpStatus.BAD_REQUEST,
-                invitationUserResourceClient.getByTokenInvitationToOrganization(token),
-                InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN
-        )
-    }
-
+    
     @Test
     fun `test when invited user does not exist`() {
         val token = uuid()
         val email = email()
-        
+
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
 
