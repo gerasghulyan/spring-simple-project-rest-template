@@ -12,13 +12,13 @@ import org.springframework.http.HttpStatus
  * Date: 5/15/2020
  * Time: 9:11 PM
  */
-class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
+class InvitationUserToOrganizationGetByTokenWebTest : AbstractInvitationUserWebTest() {
 
     @Test
     fun `test token not found`() {
         assertBasicErrorResultResponse(
                 HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.getByToken(uuid()),
+                invitationUserResourceClient.getByTokenInvitationToOrganization(uuid()),
                 InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN
         )
     }
@@ -30,7 +30,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
         tokenResourceTestHelper.expire(token)
         assertBasicErrorResultResponse(
                 HttpStatus.BAD_REQUEST,
-                invitationUserResourceClient.getByToken(token),
+                invitationUserResourceClient.getByTokenInvitationToOrganization(token),
                 InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN
         )
     }
@@ -45,7 +45,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
         tokenResourceTestHelper.persistTokenInvitationUserToOrganization(invitationUserUuid = invitationUserUuid, token = token)
-        val responseEntity = invitationUserResourceClient.getByToken(token)
+        val responseEntity = invitationUserResourceClient.getByTokenInvitationToOrganization(token)
         assertBasicSuccessResultResponse(responseEntity)
         val response = responseEntity?.body?.response()
         assertThat(response?.uuid).isNotBlank()
@@ -67,7 +67,7 @@ class InvitationUserGetByTokenWebTest : AbstractInvitationUserWebTest() {
         val inviterUserUuid = userResourceTestHelper.persistUser(createUserRequest = userResourceTestHelper.buildCreateUserRequest(fullName = inviterUserFullName)).response().uuid
         val invitationUserUuid = resourceTestHelper.persistInvitationUserToOrganization(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)
         tokenResourceTestHelper.persistTokenInvitationUserToOrganization(invitationUserUuid = invitationUserUuid, token = token)
-        val responseEntity = invitationUserResourceClient.getByToken(token)
+        val responseEntity = invitationUserResourceClient.getByTokenInvitationToOrganization(token)
         assertBasicSuccessResultResponse(responseEntity)
         val response = responseEntity?.body?.response()
         assertThat(response?.uuid).isNotBlank()

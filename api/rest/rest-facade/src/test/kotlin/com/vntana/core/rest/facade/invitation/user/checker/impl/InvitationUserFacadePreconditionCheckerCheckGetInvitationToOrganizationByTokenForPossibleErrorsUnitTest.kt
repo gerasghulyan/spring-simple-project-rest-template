@@ -12,17 +12,17 @@ import org.junit.Test
  * Date: 5/15/2020
  * Time: 7:39 PM
  */
-class InvitationUserFacadePreconditionCheckerCheckGetByTokenForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
+class InvitationUserFacadePreconditionCheckerCheckGetInvitationToOrganizationByTokenForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
 
     @Test
     fun `test with missing invitation token`() {
         resetAll()
         replayAll()
-        preconditionChecker.checkGetByTokenForPossibleErrors(null).let {
+        preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(null).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_UNPROCESSABLE_ENTITY)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN)
         }
-        preconditionChecker.checkGetByTokenForPossibleErrors(emptyString()).let {
+        preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(emptyString()).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_UNPROCESSABLE_ENTITY)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN)
         }
@@ -34,9 +34,9 @@ class InvitationUserFacadePreconditionCheckerCheckGetByTokenForPossibleErrorsUni
     fun `test when invitation token does not exist`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.isExists(token)).andReturn(false)
+        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(false)
         replayAll()
-        preconditionChecker.checkGetByTokenForPossibleErrors(token).let {
+        preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN)
         }
@@ -47,10 +47,10 @@ class InvitationUserFacadePreconditionCheckerCheckGetByTokenForPossibleErrorsUni
     fun `test when invitation token has been expired`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.isExists(token)).andReturn(true)
-        expect(tokenInvitationUserService.isExpired(token)).andReturn(true)
+        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).andReturn(true)
         replayAll()
-        preconditionChecker.checkGetByTokenForPossibleErrors(token).let {
+        preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_BAD_REQUEST)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN)
         }
@@ -61,11 +61,11 @@ class InvitationUserFacadePreconditionCheckerCheckGetByTokenForPossibleErrorsUni
     fun `test when invitation user does not exist`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.isExists(token)).andReturn(true)
-        expect(tokenInvitationUserService.isExpired(token)).andReturn(false)
+        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).andReturn(false)
         expect(invitationUserToOrganizationService.existsByToken(token)).andReturn(false)
         replayAll()
-        preconditionChecker.checkGetByTokenForPossibleErrors(token).let {
+        preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITATION_NOT_FOUND)
         }
@@ -76,11 +76,11 @@ class InvitationUserFacadePreconditionCheckerCheckGetByTokenForPossibleErrorsUni
     fun test() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.isExists(token)).andReturn(true)
-        expect(tokenInvitationUserService.isExpired(token)).andReturn(false)
+        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).andReturn(false)
         expect(invitationUserToOrganizationService.existsByToken(token)).andReturn(true)
         replayAll()
-        assertThat(preconditionChecker.checkGetByTokenForPossibleErrors(token).isPresent).isFalse()
+        assertThat(preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token).isPresent).isFalse()
         verifyAll()
     }
 }

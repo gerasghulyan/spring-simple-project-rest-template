@@ -8,6 +8,7 @@ import com.vntana.core.persistence.invitation.user.InvitationOrganizationClientU
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.client.OrganizationClientService
 import com.vntana.core.service.invitation.user.impl.InvitationUserToClientServiceImpl
+import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before
@@ -30,6 +31,9 @@ abstract class AbstractUserInvitationToClientServiceUnitTest : AbstractServiceUn
     @Mock
     protected lateinit var invitationOrganizationClientUserRepository: InvitationOrganizationClientUserRepository
 
+    @Mock
+    protected lateinit var organizationService: OrganizationService
+
     protected val commonTestHelper = InvitationUserCommonTestHelper()
 
     protected val userCommonTestHelper = UserCommonTestHelper()
@@ -42,6 +46,6 @@ abstract class AbstractUserInvitationToClientServiceUnitTest : AbstractServiceUn
     @Before
     fun prepare() {
         invitationUserToClientService =
-                InvitationUserToClientServiceImpl(userService, organizationClientService, invitationOrganizationClientUserRepository)
+                InvitationUserToClientServiceImpl(userService, organizationClientService, invitationOrganizationClientUserRepository, organizationService)
     }
 }

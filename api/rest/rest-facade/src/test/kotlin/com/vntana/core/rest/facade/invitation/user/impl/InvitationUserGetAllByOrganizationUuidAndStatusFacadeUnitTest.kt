@@ -25,7 +25,7 @@ class InvitationUserGetAllByOrganizationUuidAndStatusFacadeUnitTest : AbstractIn
         expect(preconditionChecker.checkGetAllByOrganizationUuidAndStatusForPossibleErrors(request))
                 .andReturn(SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND))
         replayAll()
-        assertBasicErrorResultResponse(invitationUserServiceFacade.getAllByOrganizationUuidAndStatus(request), InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND)
+        assertBasicErrorResultResponse(invitationUserServiceFacade.getAllInvitationsToOrganizationByOrganizationUuidAndStatus(request), InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND)
         verifyAll()
     }
 
@@ -46,7 +46,7 @@ class InvitationUserGetAllByOrganizationUuidAndStatusFacadeUnitTest : AbstractIn
         expect(invitationUserToOrganizationService.getAllByOrganizationUuidAndStatus(dto))
                 .andReturn(invitationUserCommonTestHelper.buildGetAllByStatusInvitationUsersPage(invitations.size.toLong(), invitations))
         replayAll()
-        val resultResponse = invitationUserServiceFacade.getAllByOrganizationUuidAndStatus(request)
+        val resultResponse = invitationUserServiceFacade.getAllInvitationsToOrganizationByOrganizationUuidAndStatus(request)
         assertBasicSuccessResultResponse(resultResponse)
         assertThat(resultResponse.response().totalCount()).isEqualTo(3)
         assertThat(resultResponse.response().items()).containsOnlyElementsOf(invitations.map { invitationUser ->

@@ -13,16 +13,16 @@ import org.junit.Test
  * Date: 5/15/2020
  * Time: 8:55 PM
  */
-class InvitationUserGetByTokenFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
+class InvitationUserToOrganizationGetByTokenFacadeUnitTest : AbstractInvitationUserFacadeUnitTest() {
 
     @Test
     fun `test when precondition check failed`() {
         val token = uuid()
         resetAll()
-        expect(preconditionChecker.checkGetByTokenForPossibleErrors(token))
+        expect(preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token))
                 .andReturn(SingleErrorWithStatus.of(404, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN))
         replayAll()
-        assertBasicErrorResultResponse(invitationUserServiceFacade.getByToken(token), InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN)
+        assertBasicErrorResultResponse(invitationUserServiceFacade.getByTokenInvitationToOrganization(token), InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN)
         verifyAll()
     }
 
@@ -31,11 +31,11 @@ class InvitationUserGetByTokenFacadeUnitTest : AbstractInvitationUserFacadeUnitT
         val token = uuid()
         val invitationUser = invitationUserCommonTestHelper.buildInvitationUserToOrganization()
         resetAll()
-        expect(preconditionChecker.checkGetByTokenForPossibleErrors(token)).andReturn(SingleErrorWithStatus.empty())
+        expect(preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token)).andReturn(SingleErrorWithStatus.empty())
         expect(invitationUserToOrganizationService.getByToken(token)).andReturn(invitationUser)
         expect(userService.existsByEmail(invitationUser.email)).andReturn(true)
         replayAll()
-        val resultResponse = invitationUserServiceFacade.getByToken(token)
+        val resultResponse = invitationUserServiceFacade.getByTokenInvitationToOrganization(token)
         assertBasicSuccessResultResponse(resultResponse)
         val response = resultResponse.response()
         assertThat(response.uuid).isEqualTo(invitationUser.uuid)

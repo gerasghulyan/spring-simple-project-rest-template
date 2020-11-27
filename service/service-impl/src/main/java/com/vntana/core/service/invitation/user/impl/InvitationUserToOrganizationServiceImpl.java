@@ -144,7 +144,7 @@ public class InvitationUserToOrganizationServiceImpl implements InvitationUserTo
     @Transactional(readOnly = true)
     @Override
     public InvitationOrganizationUser getByToken(final String token) {
-        Assert.hasText(token, "The token should not be null or empty");
+        assertToken(token);
         LOGGER.debug("Retrieving user invitation by user invitation token");
         final InvitationOrganizationUser invitationUser = invitationOrganizationUserRepository.findByTokenInvitationUser(token)
                 .orElseThrow(() -> new InvitationUserNotFoundForTokenException(token));
@@ -155,10 +155,14 @@ public class InvitationUserToOrganizationServiceImpl implements InvitationUserTo
     @Transactional(readOnly = true)
     @Override
     public boolean existsByToken(final String token) {
-        Assert.hasText(token, "The token should not be null or empty");
+        assertToken(token);
         LOGGER.debug("Checking user invitation existence by user invitation token");
         final boolean exists = invitationOrganizationUserRepository.findByTokenInvitationUser(token).isPresent();
         LOGGER.debug("Successfully checked user invitation existence by user invitation token");
         return exists;
+    }
+
+    private void assertToken(final String token) {
+        Assert.hasText(token, "The token should not be null or empty");
     }
 }

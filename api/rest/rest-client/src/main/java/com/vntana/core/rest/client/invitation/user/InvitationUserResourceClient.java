@@ -44,6 +44,9 @@ public interface InvitationUserResourceClient {
     @PostMapping(path = "accept-sign-up/organization-client")
     ResponseEntity<AcceptInvitationUserToClientResultResponse> acceptAndSignUpForClient(@RequestBody final AcceptInvitationUserAndSignUpRequest request);
 
-    @GetMapping(path = "/by-token")
-    ResponseEntity<GetByUserInvitationTokenResultResponse> getByToken(@RequestParam("token") final String token);
+    @GetMapping(path = "/by-token/organization")
+    ResponseEntity<GetByUserInvitationTokenResultResponse> getByTokenInvitationToOrganization(@RequestParam("token") final String token);
+
+    @GetMapping(path = "/by-token/organization-client")
+    ResponseEntity<GetByUserInvitationTokenResultResponse> getByTokenInvitationToClient(@RequestParam("token") final String token);
 }

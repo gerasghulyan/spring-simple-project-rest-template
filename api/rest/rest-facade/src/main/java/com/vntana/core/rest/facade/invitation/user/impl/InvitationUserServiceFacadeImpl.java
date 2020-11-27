@@ -112,8 +112,8 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
     }
 
     @Override
-    public GetAllByStatusUserInvitationsResultResponse getAllByOrganizationUuidAndStatus(final GetAllByStatusInvitationUserRequest request) {
-        LOGGER.debug("Retrieving all user invitations by invitation status for request- {}", request);
+    public GetAllByStatusUserInvitationsResultResponse getAllInvitationsToOrganizationByOrganizationUuidAndStatus(final GetAllByStatusInvitationUserRequest request) {
+        LOGGER.debug("Retrieving all user invitations to organization by invitation status for request- {}", request);
         final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkGetAllByOrganizationUuidAndStatusForPossibleErrors(request);
         if (singleErrorWithStatus.isPresent()) {
             return new GetAllByStatusUserInvitationsResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
@@ -127,7 +127,27 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
                 )
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         final GetAllByStatusUserInvitationsGridResponseModel gridResponseModel = new GetAllByStatusUserInvitationsGridResponseModel(responseModels.size(), responseModels);
-        LOGGER.debug("Successfully retrieved all user invitations by invitation status for request- {}", request);
+        LOGGER.debug("Successfully retrieved all user invitations to organization  by invitation status for request- {}", request);
+        return new GetAllByStatusUserInvitationsResultResponse(gridResponseModel);
+    }
+
+    @Override
+    public GetAllByStatusUserInvitationsResultResponse getAllInvitationsToClientByOrganizationUuidAndStatus(final GetAllByStatusInvitationUserRequest request) {
+        LOGGER.debug("Retrieving all user invitations to client by invitation status for request- {}", request);
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> singleErrorWithStatus = preconditionChecker.checkGetAllByOrganizationUuidAndStatusForPossibleErrors(request);
+        if (singleErrorWithStatus.isPresent()) {
+            return new GetAllByStatusUserInvitationsResultResponse(singleErrorWithStatus.getHttpStatus(), singleErrorWithStatus.getError());
+        }
+        final List<InvitationOrganizationClientUser> all = invitationUserToClientService.getAllByOrganizationUuidAndStatus(mapperFacade.map(request, GetAllByOrganizationUuidAndStatusInvitationUsersDto.class));
+        final List<GetAllByStatusUserInvitationsResponseModel> responseModels = all.stream()
+                .map(invitationUser -> new GetAllByStatusUserInvitationsResponseModel(
+                        invitationUser.getUuid(),
+                        UserRoleModel.valueOf(invitationUser.getRole().name()),
+                        invitationUser.getEmail())
+                )
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+        final GetAllByStatusUserInvitationsGridResponseModel gridResponseModel = new GetAllByStatusUserInvitationsGridResponseModel(responseModels.size(), responseModels);
+        LOGGER.debug("Successfully retrieved all user invitations to client by invitation status for request- {}", request);
         return new GetAllByStatusUserInvitationsResultResponse(gridResponseModel);
     }
 
@@ -228,7 +248,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
                 )
         );
     }
-    
+
     @Transactional
     @Override
     public AcceptInvitationUserToClientResultResponse acceptInvitationToClientAndSignUp(final AcceptInvitationUserAndSignUpRequest request) {
@@ -246,7 +266,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         LOGGER.debug("Successfully accepted user invitation for client and signed up for request - {}", request);
         return new AcceptInvitationUserToClientResultResponse(
                 new AcceptInvitationUserToClientResponseModel(client.getUuid(), user.getUuid(), UserRoleModel.valueOf(userInvitation.getRole().name()))
-        ); 
+        );
     }
 
     private void grantUserRoleFromInvitationAndMakeAccepted(final InvitationOrganizationUser invitationUser, final String userUuid, final String token) {
@@ -262,9 +282,9 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
 
     @Transactional(readOnly = true)
     @Override
-    public GetByUserInvitationTokenResultResponse getByToken(final String token) {
-        LOGGER.debug("Retrieving invitation user by token");
-        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkGetByTokenForPossibleErrors(token);
+    public GetByUserInvitationTokenResultResponse getByTokenInvitationToOrganization(final String token) {
+        LOGGER.debug("Retrieving invitation user to organization by token");
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token);
         if (error.isPresent()) {
             return new GetByUserInvitationTokenResultResponse(error.getHttpStatus(), error.getError());
         }
@@ -279,7 +299,30 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
                         InvitationStatusModel.valueOf(invitationUser.getStatus().name())
                 )
         );
-        LOGGER.debug("Successfully retrieved the invitation user by token");
+        LOGGER.debug("Successfully retrieved the invitation user to organization by token");
+        return resultResponse;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetByUserInvitationTokenResultResponse getByTokenInvitationToClient(final String token) {
+        LOGGER.debug("Retrieving invitation user to client by token");
+        final SingleErrorWithStatus<InvitationUserErrorResponseModel> error = preconditionChecker.checkGetByTokenInvitationToClientForPossibleErrors(token);
+        if (error.isPresent()) {
+            return new GetByUserInvitationTokenResultResponse(error.getHttpStatus(), error.getError());
+        }
+        final InvitationOrganizationClientUser userInvitation = invitationUserToClientService.getByToken(token);
+        final GetByUserInvitationTokenResultResponse resultResponse = new GetByUserInvitationTokenResultResponse(
+                new GetByUserInvitationTokenResponseModel(
+                        userInvitation.getUuid(),
+                        userInvitation.getEmail(),
+                        userService.existsByEmail(userInvitation.getEmail()),
+                        userInvitation.getClientOrganization().getOrganization().getName(),
+                        userInvitation.getInviterUser().getFullName(),
+                        InvitationStatusModel.valueOf(userInvitation.getStatus().name())
+                )
+        );
+        LOGGER.debug("Successfully retrieved the invitation user to client by token");
         return resultResponse;
     }
 

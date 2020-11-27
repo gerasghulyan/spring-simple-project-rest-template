@@ -13,6 +13,7 @@ import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent;
 import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.service.invitation.user.InvitationUserToClientService;
 import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.token.invitation.user.TokenInvitationUserService;
@@ -44,7 +45,8 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     private final UserService userService;
     private final UserRoleService userRoleService;
     private final OrganizationService organizationService;
-    private final InvitationUserToOrganizationService invitationUserService;
+    private final InvitationUserToOrganizationService invitationUserToOrganizationService;
+    private final InvitationUserToClientService invitationUserToClientService;
     private final TokenInvitationUserService tokenInvitationUserService;
     private final OrganizationClientService clientOrganizationService;
     private final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker;
@@ -53,14 +55,16 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             final UserService userService,
             final UserRoleService userRoleService,
             final OrganizationService organizationService,
-            final InvitationUserToOrganizationService invitationUserService,
+            final InvitationUserToOrganizationService invitationUserToOrganizationService,
+            final InvitationUserToClientService invitationUserToClientService,
             final TokenInvitationUserService tokenInvitationUserService,
             final OrganizationClientService clientOrganizationService,
             final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker) {
         this.userService = userService;
         this.userRoleService = userRoleService;
         this.organizationService = organizationService;
-        this.invitationUserService = invitationUserService;
+        this.invitationUserToOrganizationService = invitationUserToOrganizationService;
+        this.invitationUserToClientService = invitationUserToClientService;
         this.tokenInvitationUserService = tokenInvitationUserService;
         this.clientOrganizationService = clientOrganizationService;
         this.userRolesPermissionsChecker = userRolesPermissionsChecker;
@@ -141,7 +145,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     @Override
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkUpdateStatusForPossibleErrors(final UpdateInvitationUserInvitationStatusRequest request) {
         LOGGER.debug("Checking invitation user update status precondition for request - {}", request);
-        if (!invitationUserService.existsByUuid(request.getUuid())) {
+        if (!invitationUserToOrganizationService.existsByUuid(request.getUuid())) {
             LOGGER.debug("Checking invitation user update status precondition for request - {} has been done with error, no invitation was found by uuid - {}", request, request.getUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITATION_NOT_FOUND);
         }
@@ -238,25 +242,48 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     }
 
     @Override
-    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetByTokenForPossibleErrors(final String token) {
-        LOGGER.debug("Checking invitation user get by token precondition");
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetByTokenInvitationToOrganizationForPossibleErrors(final String token) {
+        LOGGER.debug("Checking invitation user to organization get by token precondition");
         if (StringUtils.isEmpty(token)) {
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is missing");
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
         }
-        if (!tokenInvitationUserService.isExists(token)) {
+        if (!tokenInvitationUserService.doesInvitationToOrganizationExist(token)) {
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is not found");
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }
-        if (tokenInvitationUserService.isExpired(token)) {
+        if (tokenInvitationUserService.isInvitationToOrganizationExpired(token)) {
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token has been expired");
             return SingleErrorWithStatus.of(HttpStatus.SC_BAD_REQUEST, InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN);
         }
-        if (!invitationUserService.existsByToken(token)) {
+        if (!invitationUserToOrganizationService.existsByToken(token)) {
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, no invitation user found by token");
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITATION_NOT_FOUND);
         }
-        LOGGER.debug("Successfully checked invitation user get by token precondition");
+        LOGGER.debug("Successfully checked invitation user to organization get by token precondition");
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkGetByTokenInvitationToClientForPossibleErrors(final String token) {
+        LOGGER.debug("Checking invitation user to client get by token precondition");
+        if (StringUtils.isEmpty(token)) {
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is missing");
+            return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
+        }
+        if (!tokenInvitationUserService.doesInvitationToClientExist(token)) {
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is not found");
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
+        }
+        if (tokenInvitationUserService.isInvitationToClientExpired(token)) {
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token has been expired");
+            return SingleErrorWithStatus.of(HttpStatus.SC_BAD_REQUEST, InvitationUserErrorResponseModel.INVALID_INVITATION_TOKEN);
+        }
+        if (!invitationUserToClientService.existsByToken(token)) {
+            LOGGER.debug("Checking invitation user get by token precondition has been done with error, no invitation user found by token");
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITATION_NOT_FOUND);
+        }
+        LOGGER.debug("Successfully checked invitation user to client get by token precondition");
         return SingleErrorWithStatus.empty();
     }
 

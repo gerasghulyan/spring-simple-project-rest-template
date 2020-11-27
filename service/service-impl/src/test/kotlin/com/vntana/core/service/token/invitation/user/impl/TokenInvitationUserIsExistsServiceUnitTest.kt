@@ -18,9 +18,9 @@ class TokenInvitationUserIsExistsServiceUnitTest : AbstractTokenInvitationUserSe
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { tokenInvitationUserService.isExists(null) }
+        assertThatThrownBy { tokenInvitationUserService.doesInvitationToOrganizationExist(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { tokenInvitationUserService.isExists(emptyString()) }
+        assertThatThrownBy { tokenInvitationUserService.doesInvitationToOrganizationExist(emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -31,7 +31,7 @@ class TokenInvitationUserIsExistsServiceUnitTest : AbstractTokenInvitationUserSe
         val token = uuid()
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
-        assertThat(tokenInvitationUserService.isExists(token)).isFalse()
+        assertThat(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).isFalse()
         verifyAll()
     }
 
@@ -42,7 +42,7 @@ class TokenInvitationUserIsExistsServiceUnitTest : AbstractTokenInvitationUserSe
         val token = tokenInvitationUser.token
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
-        assertThat(tokenInvitationUserService.isExists(token)).isTrue()
+        assertThat(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).isTrue()
         verifyAll()
     }
 }
