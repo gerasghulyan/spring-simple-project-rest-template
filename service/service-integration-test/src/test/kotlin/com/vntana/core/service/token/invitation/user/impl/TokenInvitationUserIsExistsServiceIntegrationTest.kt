@@ -13,13 +13,13 @@ class TokenInvitationUserIsExistsServiceIntegrationTest : AbstractTokenInvitatio
 
     @Test
     fun `test when does not exist`() {
-        assertThat(tokenInvitationUserService.isExists(uuid())).isFalse()
+        assertThat(tokenInvitationUserService.existsInvitationToOrganizationByToken(uuid())).isFalse()
     }
 
     @Test
     fun test() {
         val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUserToOrganization()
         flushAndClear()
-        assertThat(tokenInvitationUserService.isExists(tokenInvitationUser.token)).isTrue()
+        assertThat(tokenInvitationUserService.existsInvitationToOrganizationByToken(tokenInvitationUser.token)).isTrue()
     }
 }

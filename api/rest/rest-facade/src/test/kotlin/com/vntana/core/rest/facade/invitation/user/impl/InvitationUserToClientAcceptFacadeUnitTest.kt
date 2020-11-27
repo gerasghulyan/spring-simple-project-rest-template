@@ -45,12 +45,21 @@ class InvitationUserToClientAcceptFacadeUnitTest : AbstractInvitationUserFacadeU
                 uuid = userInvitation.uuid,
                 status = InvitationStatus.ACCEPTED
         )
+
+        val userInvitationWithUpdatedStatus = invitationUserCommonTestHelper.buildInvitationOrganizationClientUser(
+                email = userInvitation.email,
+                status = InvitationStatus.ACCEPTED,
+                inviterUser = userInvitation.inviterUser,
+                userRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER,
+                clientOrganization = userInvitation.clientOrganization
+        )
+
         val clientAdminRole = userRoleCommonTestHelper.buildUserClientAdminRole()
         expect(preconditionChecker.checkAcceptForClientForPossibleErrors(request)).andReturn(SingleErrorWithStatus.empty())
         expect(tokenInvitationUserService.getByClientInvitationToken(request.token)).andReturn(userInvitationToken)
         expect(userService.getByEmail(userInvitationToken.userInvitation.email)).andReturn(user)
         expect(userRoleService.grantClientRole(isA(UserGrantClientRoleDto::class.java))).andReturn(clientAdminRole)
-        expect(invitationUserToClientService.updateStatus(updateUserInvitationStatusDto))
+        expect(invitationUserToClientService.updateStatus(updateUserInvitationStatusDto)).andReturn(userInvitationWithUpdatedStatus)
         expect(tokenService.findByTokenAndExpire(request.token)).andReturn(userInvitationToken)
         replayAll()
         invitationUserServiceFacade.acceptInvitationToClient(request).let {

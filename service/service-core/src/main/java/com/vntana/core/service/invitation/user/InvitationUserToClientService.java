@@ -2,6 +2,7 @@ package com.vntana.core.service.invitation.user;
 
 import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationForClientsUserDto;
+import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto;
 import com.vntana.core.service.invitation.user.dto.UpdateInvitationUserStatusDto;
 
 import java.util.List;
@@ -19,5 +20,11 @@ public interface InvitationUserToClientService {
 
     boolean existsByUuid(final String uuid);
 
-    void updateStatus(final UpdateInvitationUserStatusDto updateInvitationUserStatusDto);
+    List<InvitationOrganizationClientUser> getAllByOrganizationUuidAndStatus(final GetAllByOrganizationUuidAndStatusInvitationUsersDto dto);
+
+    InvitationOrganizationClientUser updateStatus(final UpdateInvitationUserStatusDto updateInvitationUserStatusDto);
+
+    InvitationOrganizationClientUser getByToken(final String token);
+
+    boolean existsByToken(String token);
 }

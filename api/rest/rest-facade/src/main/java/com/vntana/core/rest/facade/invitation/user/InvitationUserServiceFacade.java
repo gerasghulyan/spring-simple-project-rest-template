@@ -14,7 +14,9 @@ public interface InvitationUserServiceFacade {
 
     CreateInvitationUserForOrganizationClientsResultResponse createInvitationForClient(final CreateInvitationForOrganizationClientUserRequest request);
 
-    GetAllByStatusUserInvitationsResultResponse getAllByOrganizationUuidAndStatus(final GetAllByStatusInvitationUserRequest request);
+    GetAllByStatusUserInvitationsResultResponse getAllInvitationsToOrganizationByOrganizationUuidAndStatus(final GetAllByStatusInvitationUserRequest request);
+
+    GetAllByStatusUserInvitationsResultResponse getAllInvitationsToClientByOrganizationUuidAndStatus(GetAllByStatusInvitationUserRequest request);
 
     UpdateInvitationUserInvitationStatusResultResponse updateStatus(final UpdateInvitationUserInvitationStatusRequest request);
 
@@ -26,7 +28,9 @@ public interface InvitationUserServiceFacade {
 
     AcceptInvitationUserToClientResultResponse acceptInvitationToClient(AcceptInvitationUserRequest request);
 
-    GetByUserInvitationTokenResultResponse getByToken(final String token);
+    GetByUserInvitationTokenResultResponse getByTokenInvitationToOrganization(final String token);
+
+    GetByUserInvitationTokenResultResponse getByTokenInvitationToClient(final String token);
 
     AcceptInvitationUserToOrganizationResultResponse acceptInvitationToOrganizationAndSignUp(final AcceptInvitationUserAndSignUpRequest request);
 

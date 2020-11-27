@@ -19,9 +19,9 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { tokenInvitationUserService.isExists(null) }
+        assertThatThrownBy { tokenInvitationUserService.isInvitationToOrganizationExpired(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { tokenInvitationUserService.isExists(emptyString()) }
+        assertThatThrownBy { tokenInvitationUserService.isInvitationToOrganizationExpired(emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -32,7 +32,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
         val token = uuid()
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.empty())
         replayAll()
-        assertThatThrownBy { tokenInvitationUserService.isExpired(token) }
+        assertThatThrownBy { tokenInvitationUserService.isInvitationToOrganizationExpired(token) }
                 .isExactlyInstanceOf(TokenInvitationUserNotFoundForTokenException::class.java)
         verifyAll()
     }
@@ -44,7 +44,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
         val token = tokenInvitationUser.token
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
-        assertThat(tokenInvitationUserService.isExpired(token)).isFalse()
+        assertThat(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).isFalse()
         verifyAll()
     }
 
@@ -56,7 +56,7 @@ class TokenInvitationUserIsExpiredServiceUnitTest : AbstractTokenInvitationUserS
         val token = tokenInvitationUser.token
         expect(tokenInvitationToOrganizationRepository.findByToken(token)).andReturn(Optional.of(tokenInvitationUser))
         replayAll()
-        assertThat(tokenInvitationUserService.isExpired(token)).isTrue()
+        assertThat(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).isTrue()
         verifyAll()
     }
 }

@@ -15,7 +15,7 @@ class TokenInvitationUserIsExpiredServiceIntegrationTest : AbstractTokenInvitati
 
     @Test
     fun `test when does not exist`() {
-        assertThatThrownBy { tokenInvitationUserService.isExpired(uuid()) }
+        assertThatThrownBy { tokenInvitationUserService.isInvitationToOrganizationExpired(uuid()) }
                 .isExactlyInstanceOf(TokenInvitationUserNotFoundForTokenException::class.java)
     }
 
@@ -23,7 +23,7 @@ class TokenInvitationUserIsExpiredServiceIntegrationTest : AbstractTokenInvitati
     fun `test when invitation token does not expired`() {
         val token = integrationTestHelper.persistTokenInvitationUserToOrganization().token
         flushAndClear()
-        assertThat(tokenInvitationUserService.isExpired(token)).isFalse()
+        assertThat(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).isFalse()
     }
 
     @Test
@@ -31,6 +31,6 @@ class TokenInvitationUserIsExpiredServiceIntegrationTest : AbstractTokenInvitati
         val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUserToOrganization()
         tokenInvitationUser.expire()
         flushAndClear()
-        assertThat(tokenInvitationUserService.isExpired(tokenInvitationUser.token)).isTrue()
+        assertThat(tokenInvitationUserService.isInvitationToOrganizationExpired(tokenInvitationUser.token)).isTrue()
     }
 }

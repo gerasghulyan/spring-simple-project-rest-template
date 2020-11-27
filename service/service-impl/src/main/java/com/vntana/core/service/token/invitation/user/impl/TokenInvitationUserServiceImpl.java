@@ -120,26 +120,51 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
 
     @Transactional(readOnly = true)
     @Override
-    public boolean isExpired(final String token) {
+    public boolean isInvitationToOrganizationExpired(final String token) {
         assertToken(token);
-        LOGGER.debug("Checking the expiration of user invitation token");
+        LOGGER.debug("Checking the expiration of user invitation to organization token");
         final Optional<TokenUserInvitationToOrganization> tokenOptional = findByOrganizationInvitationToken(token);
         if (!tokenOptional.isPresent()) {
-            LOGGER.error("Checking the expiration of user invitation token has been done with error, token does not exist");
+            LOGGER.error("Checking the expiration of user invitation to organization token has been done with error, token does not exist");
             throw new TokenInvitationUserNotFoundForTokenException(token);
         }
         final boolean expired = tokenOptional.get().isExpired();
-        LOGGER.debug("Successfully checked the expiration of user invitation token");
+        LOGGER.debug("Successfully checked the expiration of user invitation to organization token");
         return expired;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public boolean isExists(final String token) {
+    public boolean isInvitationToClientExpired(final String token) {
         assertToken(token);
-        LOGGER.debug("Checking the existence of user invitation token");
+        LOGGER.debug("Checking the expiration of user invitation to client token");
+        final Optional<TokenUserInvitationToOrganizationClient> tokenOptional = findByClientInvitationToken(token);
+        if (!tokenOptional.isPresent()) {
+            LOGGER.error("Checking the expiration of user invitation to client token has been done with error, token does not exist");
+            throw new TokenInvitationUserNotFoundForTokenException(token);
+        }
+        final boolean expired = tokenOptional.get().isExpired();
+        LOGGER.debug("Successfully checked the expiration of user invitation to client token");
+        return expired;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsInvitationToOrganizationByToken(final String token) {
+        assertToken(token);
+        LOGGER.debug("Checking the existence of user invitation to organization token");
         final boolean exists = findByOrganizationInvitationToken(token).isPresent();
-        LOGGER.debug("Successfully checked the existence of user invitation token");
+        LOGGER.debug("Successfully checked the existence of user invitation to organization token");
+        return exists;
+    }
+    
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsInvitationToClientByToken(final String token) {
+        assertToken(token);
+        LOGGER.debug("Checking the existence of user invitation to client token");
+        final boolean exists = findByClientInvitationToken(token).isPresent();
+        LOGGER.debug("Successfully checked the existence of user invitation to client token");
         return exists;
     }
 

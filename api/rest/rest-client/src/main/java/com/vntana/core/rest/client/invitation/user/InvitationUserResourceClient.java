@@ -29,21 +29,24 @@ public interface InvitationUserResourceClient {
     @PostMapping("/send-invitation/organization")
     ResponseEntity<SendInvitationUserResultResponse> sendInvitationForOrganization(@RequestBody SendInvitationForOrganizationUserRequest request);
 
-    @PostMapping("/send-invitation/organization-client")
+    @PostMapping("/send-invitation/client-organization")
     ResponseEntity<SendInvitationUserResultResponse> sendInvitationForClients(@RequestBody SendInvitationForClientUserRequest request);
 
     @PostMapping(path = "accept/organization")
     ResponseEntity<AcceptInvitationUserToOrganizationResultResponse> acceptInvitationForOrganization(@RequestBody final AcceptInvitationUserRequest request);
 
-    @PostMapping(path = "accept/organization-client")
+    @PostMapping(path = "accept/client-organization")
     ResponseEntity<AcceptInvitationUserToClientResultResponse> acceptInvitationForClient(@RequestBody final AcceptInvitationUserRequest request);
 
     @PostMapping(path = "accept-sign-up/organization")
     ResponseEntity<AcceptInvitationUserToOrganizationResultResponse> acceptAndSignUpForOrganization(@RequestBody final AcceptInvitationUserAndSignUpRequest request);
 
-    @PostMapping(path = "accept-sign-up/organization-client")
+    @PostMapping(path = "accept-sign-up/client-organization")
     ResponseEntity<AcceptInvitationUserToClientResultResponse> acceptAndSignUpForClient(@RequestBody final AcceptInvitationUserAndSignUpRequest request);
 
-    @GetMapping(path = "/by-token")
-    ResponseEntity<GetByUserInvitationTokenResultResponse> getByToken(@RequestParam("token") final String token);
+    @GetMapping(path = "/by-token/organization")
+    ResponseEntity<GetByUserInvitationTokenResultResponse> getByTokenInvitationToOrganization(@RequestParam("token") final String token);
+
+    @GetMapping(path = "/by-token/client-organization")
+    ResponseEntity<GetByUserInvitationTokenResultResponse> getByTokenInvitationToClient(@RequestParam("token") final String token);
 }

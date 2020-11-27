@@ -16,11 +16,11 @@ import java.util.Optional;
 public interface TokenInvitationUserService {
 
     TokenUserInvitationToOrganization createUserInvitationToOrganization(final CreateInvitationUserToOrganizationDto dto);
-    
+
     List<TokenUserInvitationToOrganizationClient> createUserInvitationToClients(final CreateInvitationUserToClientDto dto);
 
     Optional<TokenUserInvitationToOrganization> findByOrganizationInvitationToken(final String token);
-    
+
     Optional<TokenUserInvitationToOrganizationClient> findByClientInvitationToken(final String token);
 
     TokenUserInvitationToOrganization getByOrganizationInvitationToken(final String token);
@@ -29,7 +29,11 @@ public interface TokenInvitationUserService {
 
     Optional<TokenUserInvitationToOrganization> findByInvitationUserUuid(final String invitationUserUuid);
 
-    boolean isExpired(final String token);
+    boolean isInvitationToOrganizationExpired(final String token);
 
-    boolean isExists(final String token);
+    boolean isInvitationToClientExpired(String token);
+
+    boolean existsInvitationToOrganizationByToken(final String token);
+
+    boolean existsInvitationToClientByToken(final String token);
 }

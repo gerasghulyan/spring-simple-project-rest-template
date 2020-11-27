@@ -1,7 +1,12 @@
 package com.vntana.core.persistence.invitation.user;
 
+import com.vntana.core.domain.invitation.InvitationStatus;
 import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,4 +22,9 @@ public interface InvitationOrganizationClientUserRepository extends JpaRepositor
     Optional<InvitationOrganizationClientUser> findByUuid(final String uuid);
 
     boolean existsByUuid(final String uuid);
+
+    @Query("select invitationUser from InvitationOrganizationClientUser invitationUser where invitationUser.id in (select tis.userInvitation.id from TokenUserInvitationToOrganizationClient tis where tis.token = :token and invitationUser.status != 'EXPIRED')")
+    Optional<InvitationOrganizationClientUser> findUserInvitationByToken(@Param("token") String token);
+
+    Page<InvitationOrganizationClientUser> findAllByClientOrganizationUuidAndStatus(final String clientUuid, final InvitationStatus status, final Pageable pageable);
 }
