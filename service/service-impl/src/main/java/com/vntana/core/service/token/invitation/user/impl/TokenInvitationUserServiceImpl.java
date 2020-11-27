@@ -150,7 +150,7 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
 
     @Transactional(readOnly = true)
     @Override
-    public boolean doesInvitationToOrganizationExist(final String token) {
+    public boolean existsInvitationToOrganizationByToken(final String token) {
         assertToken(token);
         LOGGER.debug("Checking the existence of user invitation to organization token");
         final boolean exists = findByOrganizationInvitationToken(token).isPresent();
@@ -160,7 +160,7 @@ public class TokenInvitationUserServiceImpl implements TokenInvitationUserServic
     
     @Transactional(readOnly = true)
     @Override
-    public boolean doesInvitationToClientExist(final String token) {
+    public boolean existsInvitationToClientByToken(final String token) {
         assertToken(token);
         LOGGER.debug("Checking the existence of user invitation to client token");
         final boolean exists = findByClientInvitationToken(token).isPresent();

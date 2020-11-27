@@ -34,7 +34,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToOrganizationByT
     fun `test when invitation token does not exist`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(false)
+        expect(tokenInvitationUserService.existsInvitationToOrganizationByToken(token)).andReturn(false)
         replayAll()
         preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
@@ -47,7 +47,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToOrganizationByT
     fun `test when invitation token has been expired`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.existsInvitationToOrganizationByToken(token)).andReturn(true)
         expect(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).andReturn(true)
         replayAll()
         preconditionChecker.checkGetByTokenInvitationToOrganizationForPossibleErrors(token).let {
@@ -61,7 +61,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToOrganizationByT
     fun `test when invitation user does not exist`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.existsInvitationToOrganizationByToken(token)).andReturn(true)
         expect(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).andReturn(false)
         expect(invitationUserToOrganizationService.existsByToken(token)).andReturn(false)
         replayAll()
@@ -76,7 +76,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToOrganizationByT
     fun test() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToOrganizationExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.existsInvitationToOrganizationByToken(token)).andReturn(true)
         expect(tokenInvitationUserService.isInvitationToOrganizationExpired(token)).andReturn(false)
         expect(invitationUserToOrganizationService.existsByToken(token)).andReturn(true)
         replayAll()

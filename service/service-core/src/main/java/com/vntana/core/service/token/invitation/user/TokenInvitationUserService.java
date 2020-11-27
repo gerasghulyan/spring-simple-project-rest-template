@@ -33,7 +33,7 @@ public interface TokenInvitationUserService {
 
     boolean isInvitationToClientExpired(String token);
 
-    boolean doesInvitationToOrganizationExist(final String token);
+    boolean existsInvitationToOrganizationByToken(final String token);
 
-    boolean doesInvitationToClientExist(final String token);
+    boolean existsInvitationToClientByToken(final String token);
 }

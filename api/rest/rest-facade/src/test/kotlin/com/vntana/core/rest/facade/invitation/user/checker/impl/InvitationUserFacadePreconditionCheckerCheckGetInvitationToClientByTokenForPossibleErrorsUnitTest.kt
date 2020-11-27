@@ -34,7 +34,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToClientByTokenFo
     fun `test when invitation token does not exist`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToClientExist(token)).andReturn(false)
+        expect(tokenInvitationUserService.existsInvitationToClientByToken(token)).andReturn(false)
         replayAll()
         preconditionChecker.checkGetByTokenInvitationToClientForPossibleErrors(token).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
@@ -47,7 +47,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToClientByTokenFo
     fun `test when invitation token has been expired`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToClientExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.existsInvitationToClientByToken(token)).andReturn(true)
         expect(tokenInvitationUserService.isInvitationToClientExpired(token)).andReturn(true)
         replayAll()
         preconditionChecker.checkGetByTokenInvitationToClientForPossibleErrors(token).let {
@@ -61,7 +61,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToClientByTokenFo
     fun `test when invitation user does not exist`() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToClientExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.existsInvitationToClientByToken(token)).andReturn(true)
         expect(tokenInvitationUserService.isInvitationToClientExpired(token)).andReturn(false)
         expect(invitationUserToClientService.existsByToken(token)).andReturn(false)
         replayAll()
@@ -76,7 +76,7 @@ class InvitationUserFacadePreconditionCheckerCheckGetInvitationToClientByTokenFo
     fun test() {
         val token = uuid()
         resetAll()
-        expect(tokenInvitationUserService.doesInvitationToClientExist(token)).andReturn(true)
+        expect(tokenInvitationUserService.existsInvitationToClientByToken(token)).andReturn(true)
         expect(tokenInvitationUserService.isInvitationToClientExpired(token)).andReturn(false)
         expect(invitationUserToClientService.existsByToken(token)).andReturn(true)
         replayAll()

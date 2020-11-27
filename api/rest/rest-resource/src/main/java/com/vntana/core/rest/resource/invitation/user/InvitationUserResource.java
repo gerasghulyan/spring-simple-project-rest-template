@@ -67,7 +67,7 @@ public class InvitationUserResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping(path = "accept/organization-client")
+    @PostMapping(path = "accept/client-organization")
     public ResponseEntity<AcceptInvitationUserToClientResultResponse> acceptInvitationForClient(@RequestBody final AcceptInvitationUserRequest request) {
         LOGGER.debug("Processing InvitationUserResource acceptInvitationForClient method for request - {}", request);
         final AcceptInvitationUserToClientResultResponse resultResponse = invitationUserServiceFacade.acceptInvitationToClient(request);
@@ -83,7 +83,7 @@ public class InvitationUserResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping(path = "accept-sign-up/organization-client")
+    @PostMapping(path = "accept-sign-up/client-organization")
     public ResponseEntity<AcceptInvitationUserToClientResultResponse> acceptAndSignUpForClient(@RequestBody final AcceptInvitationUserAndSignUpRequest request) {
         LOGGER.debug("Processing InvitationUserResource acceptAndSignUpForClient method for request - {}", request);
         final AcceptInvitationUserToClientResultResponse resultResponse = invitationUserServiceFacade.acceptInvitationToClientAndSignUp(request);
@@ -99,7 +99,7 @@ public class InvitationUserResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping(("/send-invitation/organization-client"))
+    @PostMapping(("/send-invitation/client-organization"))
     public ResponseEntity<SendInvitationUserResultResponse> sendInvitationForClients(@RequestBody SendInvitationForClientUserRequest request) {
         LOGGER.debug("Processing InvitationUserResource sendInvitationForClient method for request - {}", request);
         final SendInvitationUserResultResponse resultResponse = invitationUserServiceFacade.sendInvitationForClients(request);
@@ -115,7 +115,7 @@ public class InvitationUserResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @GetMapping(path = "/by-token/organization-client")
+    @GetMapping(path = "/by-token/client-organization")
     public ResponseEntity<GetByUserInvitationTokenResultResponse> getByTokenInvitationToClient(@RequestParam("token") final String token) {
         LOGGER.debug("Processing InvitationUserResource getByTokenInvitationToClient method");
         final GetByUserInvitationTokenResultResponse resultResponse = invitationUserServiceFacade.getByTokenInvitationToClient(token);

@@ -248,7 +248,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is missing");
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
         }
-        if (!tokenInvitationUserService.doesInvitationToOrganizationExist(token)) {
+        if (!tokenInvitationUserService.existsInvitationToOrganizationByToken(token)) {
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is not found");
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }
@@ -271,7 +271,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is missing");
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, InvitationUserErrorResponseModel.MISSING_INVITATION_TOKEN);
         }
-        if (!tokenInvitationUserService.doesInvitationToClientExist(token)) {
+        if (!tokenInvitationUserService.existsInvitationToClientByToken(token)) {
             LOGGER.debug("Checking invitation user get by token precondition has been done with error, user invitation token is not found");
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN);
         }

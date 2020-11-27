@@ -13,13 +13,13 @@ class TokenDoesUSerInvitationExistIntegrationTest : AbstractTokenInvitationUserS
 
     @Test
     fun `test when does not exist`() {
-        Assertions.assertThat(tokenInvitationUserService.doesInvitationToClientExist(uuid())).isFalse()
+        Assertions.assertThat(tokenInvitationUserService.existsInvitationToClientByToken(uuid())).isFalse()
     }
 
     @Test
     fun test() {
         val tokenInvitationUser = integrationTestHelper.persistTokenInvitationUserToClient()
         flushAndClear()
-        Assertions.assertThat(tokenInvitationUserService.doesInvitationToClientExist(tokenInvitationUser.token)).isTrue()
+        Assertions.assertThat(tokenInvitationUserService.existsInvitationToClientByToken(tokenInvitationUser.token)).isTrue()
     }
 }

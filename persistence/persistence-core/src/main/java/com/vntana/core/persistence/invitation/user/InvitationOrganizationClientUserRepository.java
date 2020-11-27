@@ -23,7 +23,7 @@ public interface InvitationOrganizationClientUserRepository extends JpaRepositor
 
     boolean existsByUuid(final String uuid);
 
-    @Query("select invitationUser from InvitationOrganizationClientUser invitationUser where invitationUser.id in (select tis.userInvitation.id from TokenUserInvitationToOrganizationClient tis where tis.token = :token)")
+    @Query("select invitationUser from InvitationOrganizationClientUser invitationUser where invitationUser.id in (select tis.userInvitation.id from TokenUserInvitationToOrganizationClient tis where tis.token = :token and invitationUser.status != 'EXPIRED')")
     Optional<InvitationOrganizationClientUser> findUserInvitationByToken(@Param("token") String token);
 
     Page<InvitationOrganizationClientUser> findAllByClientOrganizationUuidAndStatus(final String clientUuid, final InvitationStatus status, final Pageable pageable);
