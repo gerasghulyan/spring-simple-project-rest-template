@@ -5,7 +5,7 @@ import com.vntana.core.domain.template.email.TemplateEmailType;
 import com.vntana.core.notification.EmailSenderService;
 import com.vntana.core.notification.payload.mention.user.MentionUserEmailSendPayload;
 import com.vntana.core.rest.facade.user.component.UserMentionEmailSenderComponent;
-import com.vntana.core.rest.facade.user.component.dto.SendUserMentionDto;
+import com.vntana.core.model.user.request.SendUserMentionRequest;
 import com.vntana.core.service.template.email.TemplateEmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class UserMentionEmailSenderComponentImpl implements UserMentionEmailSend
     }
 
     @Override
-    public void sendMentionedUsersEmails(final SendUserMentionDto dto) {
+    public void sendMentionedUsersEmails(final SendUserMentionRequest dto) {
         LOGGER.debug("Sending email to mentioned users for dto - {}", dto);
         Assert.notNull(dto, "The SendUserMentionDto should not be null");
         final MentionUserEmailSendPayload payload = createMentionUserEmailSendPayload(dto);
@@ -50,7 +50,7 @@ public class UserMentionEmailSenderComponentImpl implements UserMentionEmailSend
         LOGGER.debug("Successfully sent email to mentioned users for dto - {}", dto);
     }
 
-    private MentionUserEmailSendPayload createMentionUserEmailSendPayload(final SendUserMentionDto dto) {
+    private MentionUserEmailSendPayload createMentionUserEmailSendPayload(final SendUserMentionRequest dto) {
         final TemplateEmail templateEmail = templateEmailService.getByType(TemplateEmailType.USER_MENTION);
         return new MentionUserEmailSendPayload(
                 templateEmail.getTemplateName(),

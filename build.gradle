@@ -227,6 +227,7 @@ project(':queue:queue-consumer') {
 
     dependencies {
         api project(":api:rest:rest-facade")
+        implementation project(":api:rest:rest-model")
         implementation project(":service:service-core")
         runtimeOnly project(":service:service-impl")
         implementation project(":domain")

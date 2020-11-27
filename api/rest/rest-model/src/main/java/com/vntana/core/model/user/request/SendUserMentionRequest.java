@@ -1,45 +1,36 @@
-package com.vntana.core.rest.facade.user.component.dto;
+package com.vntana.core.model.user.request;
 
+import com.vntana.core.model.user.enums.UserMentionedEntityTypeModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.util.Assert;
 
 /**
  * Created by Vardan Aivazian
  * Date: 07.10.2020
  * Time: 11:36
  */
-public class SendUserMentionDto {
+public class SendUserMentionRequest {
 
     private final String email;
     private final String promptingUserName;
     private final String mentionedUserName;
-    private final UserMentionedEntityType entityType;
+    private final UserMentionedEntityTypeModel entityType;
     private final String entityUuid;
     private final String productUuid;
     private final String productName;
     private final String clientSlug;
     private final String organizationSlug;
 
-    public SendUserMentionDto(final String email,
-                              final String promptingUserName,
-                              final String mentionedUserName,
-                              final UserMentionedEntityType entityType,
-                              final String entityUuid,
-                              final String productUuid,
-                              final String productName,
-                              final String clientSlug,
-                              final String organizationSlug) {
-        Assert.hasText(email, "The email should not be null or empty");
-        Assert.hasText(promptingUserName, "The prompting user full name should not be null or empty");
-        Assert.hasText(mentionedUserName, "The mentioned user full name should not be null or empty");
-        Assert.notNull(entityType, "The UserMentionedEntityType should not be null");
-        Assert.hasText(entityUuid, "The entityUuid should not be null or empty");
-        Assert.hasText(productUuid, "The productUuid should not be null or empty");
-        Assert.hasText(productName, "The productName should not be null or empty");
-        Assert.hasText(clientSlug, "The clientSlug should not be null or empty");
-        Assert.hasText(organizationSlug, "The organizationSlug should not be null or empty");
+    public SendUserMentionRequest(final String email,
+                                  final String promptingUserName,
+                                  final String mentionedUserName,
+                                  final UserMentionedEntityTypeModel entityType,
+                                  final String entityUuid,
+                                  final String productUuid,
+                                  final String productName,
+                                  final String clientSlug,
+                                  final String organizationSlug) {
         this.email = email;
         this.promptingUserName = promptingUserName;
         this.mentionedUserName = mentionedUserName;
@@ -56,10 +47,10 @@ public class SendUserMentionDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SendUserMentionDto)) {
+        if (!(o instanceof SendUserMentionRequest)) {
             return false;
         }
-        final SendUserMentionDto that = (SendUserMentionDto) o;
+        final SendUserMentionRequest that = (SendUserMentionRequest) o;
         return new EqualsBuilder()
                 .append(email, that.email)
                 .append(promptingUserName, that.promptingUserName)
@@ -116,7 +107,7 @@ public class SendUserMentionDto {
         return mentionedUserName;
     }
 
-    public UserMentionedEntityType getEntityType() {
+    public UserMentionedEntityTypeModel getEntityType() {
         return entityType;
     }
 

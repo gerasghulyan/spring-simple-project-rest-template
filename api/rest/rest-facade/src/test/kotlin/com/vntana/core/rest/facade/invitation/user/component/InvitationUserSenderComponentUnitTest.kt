@@ -49,7 +49,7 @@ class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
 
     private val emailSubject: String = uuid()
     
-    private val isClientInvitation: String = uuid()
+    private val type: String = uuid()
 
     private val restTestHelper = InvitationUserRestTestHelper()
 
@@ -68,7 +68,7 @@ class InvitationUserSenderComponentUnitTest : AbstractFacadeUnitTest() {
                 verificationUrlPrefix,
                 senderEmail,
                 emailSubject,
-                isClientInvitation
+                type
         )
     }
 

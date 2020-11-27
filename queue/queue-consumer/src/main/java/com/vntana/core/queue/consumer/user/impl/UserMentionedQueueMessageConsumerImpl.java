@@ -4,10 +4,10 @@ import com.vntana.asset.queue.message.user.UserMentionedQueueMessage;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.model.user.enums.UserMentionedEntityTypeModel;
+import com.vntana.core.model.user.request.SendUserMentionRequest;
 import com.vntana.core.queue.consumer.user.UserMentionedQueueMessageConsumer;
 import com.vntana.core.rest.facade.user.component.UserMentionEmailSenderComponent;
-import com.vntana.core.rest.facade.user.component.dto.SendUserMentionDto;
-import com.vntana.core.rest.facade.user.component.dto.UserMentionedEntityType;
 import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -51,25 +51,34 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
         final User user = userService.getByUuid(message.getMentionedByUserUuid());
         final Organization organization = organizationService.getByUuid(message.getOrganizationUuid());
         final ClientOrganization client = clientOrganizationService.getByUuid(message.getClientUuid());
-        final UserMentionedEntityType userMentionedEntityType = UserMentionedEntityType.valueOf(message.getUserMentionedInType().name());
+        final UserMentionedEntityTypeModel userMentionedEntityType = UserMentionedEntityTypeModel.valueOf(message.getUserMentionedInType().name());
         message.getMentionedUserUuids().forEach(mentionedUserUuid -> {
-            final SendUserMentionDto sendUserMentionDto = createSendUserMentionDto(mentionedUserUuid, user.getFullName(), userMentionedEntityType, message, client.getSlug(), organization.getSlug());
-            LOGGER.debug("Created sendUserMentionDto - {}", sendUserMentionDto);
-            mentionEmailSenderComponent.sendMentionedUsersEmails(sendUserMentionDto);
-            LOGGER.debug("Successfully sent email to mentioned users for dto - {}", sendUserMentionDto);
+            final SendUserMentionRequest sendUserMentionRequest = createSendUserMentionRequest(mentionedUserUuid, user.getFullName(), userMentionedEntityType, message, client.getSlug(), organization.getSlug());
+            LOGGER.debug("Created sendUserMentionRequest - {}", sendUserMentionRequest);
+            mentionEmailSenderComponent.sendMentionedUsersEmails(sendUserMentionRequest);
+            LOGGER.debug("Successfully sent email to mentioned users for request - {}", sendUserMentionRequest);
         });
         LOGGER.debug("Successfully processed consumption of user mentioned queue message - {}", message);
     }
 
-    private SendUserMentionDto createSendUserMentionDto(final String mentionedUserUuid,
-                                                        final String promptingUserName,
-                                                        final UserMentionedEntityType userMentionedEntityType,
-                                                        final UserMentionedQueueMessage message,
-                                                        final String clientSlug,
-                                                        final String organizationSlug
+    private SendUserMentionRequest createSendUserMentionRequest(final String mentionedUserUuid,
+                                                                final String promptingUserName,
+                                                                final UserMentionedEntityTypeModel userMentionedEntityType,
+                                                                final UserMentionedQueueMessage message,
+                                                                final String clientSlug,
+                                                                final String organizationSlug
     ) {
         final User mentionedUser = userService.getByUuid(mentionedUserUuid);
-        return new SendUserMentionDto(
+        Assert.hasText(mentionedUser.getEmail(), "The email should not be null or empty");
+        Assert.hasText(promptingUserName, "The prompting user full name should not be null or empty");
+        Assert.hasText(mentionedUser.getFullName(), "The mentioned user full name should not be null or empty");
+        Assert.notNull(userMentionedEntityType, "The UserMentionedEntityType should not be null");
+        Assert.hasText(message.getMentionedInEntityUuid(), "The entityUuid should not be null or empty");
+        Assert.hasText(message.getProductUuid(), "The productUuid should not be null or empty");
+        Assert.hasText(message.getProductName(), "The productName should not be null or empty");
+        Assert.hasText(clientSlug, "The clientSlug should not be null or empty");
+        Assert.hasText(organizationSlug, "The organizationSlug should not be null or empty");
+        return new SendUserMentionRequest(
                 mentionedUser.getEmail(),
                 promptingUserName,
                 mentionedUser.getFullName(),
