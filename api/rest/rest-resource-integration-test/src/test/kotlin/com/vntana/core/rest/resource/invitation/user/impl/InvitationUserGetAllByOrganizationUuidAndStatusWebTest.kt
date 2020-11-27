@@ -18,17 +18,17 @@ class InvitationUserGetAllByOrganizationUuidAndStatusWebTest : AbstractInvitatio
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = null)),
+                invitationUserResourceClient.getAllInvitationsToOrganizationByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = emptyString())),
+                invitationUserResourceClient.getAllInvitationsToOrganizationByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = emptyString())),
                 InvitationUserErrorResponseModel.MISSING_INVITING_ORGANIZATION_UUID
         )
         assertBasicErrorResultResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(invitationStatus = null)),
+                invitationUserResourceClient.getAllInvitationsToOrganizationByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(invitationStatus = null)),
                 InvitationUserErrorResponseModel.MISSING_INVITATION_STATUS
         )
     }
@@ -37,7 +37,7 @@ class InvitationUserGetAllByOrganizationUuidAndStatusWebTest : AbstractInvitatio
     fun `test when inviting organization not found`() {
         assertBasicErrorResultResponse(
                 HttpStatus.NOT_FOUND,
-                invitationUserResourceClient.getAllByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = uuid())),
+                invitationUserResourceClient.getAllInvitationsToOrganizationByStatus(resourceTestHelper.buildGetAllByStatusInvitationUserRequest(organizationUuid = uuid())),
                 InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND
         )
     }
@@ -56,7 +56,7 @@ class InvitationUserGetAllByOrganizationUuidAndStatusWebTest : AbstractInvitatio
                 invitationStatus = InvitationStatusModel.ACCEPTED,
                 organizationUuid = organizationUuid
         )
-        val responseEntity = invitationUserResourceClient.getAllByStatus(request)
+        val responseEntity = invitationUserResourceClient.getAllInvitationsToOrganizationByStatus(request)
         assertBasicSuccessResultResponse(responseEntity)
         responseEntity?.body?.response()?.let {
             val uuids = it.items().map { model -> model.uuid }.toList()

@@ -70,7 +70,7 @@ class InvitationUserToOrganizationAcceptWebTest : AbstractInvitationUserWebTest(
         assertThat(userResourceClient.getUsersByRoleAndOrganizationUuid(UserRoleModel.ORGANIZATION_ADMIN, newOrganizationUuid)
                 ?.body?.response()?.items()?.map { model -> model.email }
         ).contains(userEmail)
-        val acceptedInvitations = invitationUserResourceClient.getAllByStatus(invitationUserResourceTestHelper.buildGetAllByStatusInvitationUserRequest(
+        val acceptedInvitations = invitationUserResourceClient.getAllInvitationsToOrganizationByStatus(invitationUserResourceTestHelper.buildGetAllByStatusInvitationUserRequest(
                 size = Int.MAX_VALUE,
                 organizationUuid = newOrganizationUuid,
                 invitationStatus = InvitationStatusModel.ACCEPTED

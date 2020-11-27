@@ -20,8 +20,11 @@ public interface InvitationUserResourceClient {
     @PostMapping("/client-organization")
     ResponseEntity<CreateInvitationUserForOrganizationClientsResultResponse> createInvitationForClient(@RequestBody final CreateInvitationForOrganizationClientUserRequest request);
 
-    @PostMapping("/by-status")
-    ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request);
+    @PostMapping("/by-status/organization")
+    ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllInvitationsToOrganizationByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request);
+
+    @PostMapping("/by-status/client-organization")
+    ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllInvitationsToClientsByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request);
 
     @PutMapping("/status")
     ResponseEntity<UpdateInvitationUserInvitationStatusResultResponse> updateStatus(@RequestBody final UpdateInvitationUserInvitationStatusRequest request);
