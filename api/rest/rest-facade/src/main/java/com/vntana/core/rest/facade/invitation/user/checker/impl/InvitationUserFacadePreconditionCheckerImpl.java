@@ -97,39 +97,37 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     @Override
     public SingleErrorWithStatus<InvitationUserErrorResponseModel> checkCreateInvitationForClientsForPossibleErrors(final CreateInvitationForOrganizationClientUserRequest request) {
         LOGGER.debug("Checking invitation user for clients creation precondition for request - {}", request);
-        if (userService.findByEmailAndOrganizationUuid(request.getEmail(), request.getOrganizationUuid()).isPresent()) {
-            LOGGER.debug("Checking invitation user creation for client for request - {} has been done with error, invited user was found in organization - {}", request, request.getOrganizationUuid());
-            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INVITED_USER_ALREADY_EXISTS_IN_ORGANIZATION);
-        }
         if (!userService.existsByUuid(request.getInviterUserUuid())) {
-            LOGGER.debug("Checking invitation user creation for client precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
+            LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, no inviter user was found by uuid - {}", request, request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND);
         }
         if (!organizationService.existsByUuid(request.getOrganizationUuid())) {
-            LOGGER.debug("Checking invitation user creation for client client precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
+            LOGGER.debug("Checking invitation user creation for organization client precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
-        // Checking if invitations client uuids and user roles are valid
+        LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {}", request);
         final List<SingleUserInvitationToClientRequestModel> firstLevelFilteredInvitations = request.getInvitations().stream()
                 .filter(invitation -> invitation.getRole().getPriority() >= UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority())
                 .filter(invitation -> clientOrganizationService.existsByUuid(invitation.getClientUuid()))
                 .collect(Collectors.toList());
         if (request.getInvitations().size() != firstLevelFilteredInvitations.size()) {
+            LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {} has been done with error", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
-        // Checking if inviter user has super admin level permissions
         final User user = userService.getByUuid(request.getInviterUserUuid());
         if (user.roleOfSuperAdmin().isPresent()) {
+            LOGGER.debug("Checking if inviter user for uuid - {} has super admin level permissions has been done with successfully", request.getInviterUserUuid());
             return SingleErrorWithStatus.empty();
         }
-        // Checking if inviter user has organization level permissions
+        LOGGER.debug("Checking if inviter user for uuid - {} has organization level permissions", request.getInviterUserUuid());
         final boolean isInviterOrganizationLevelUser = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getInviterUserUuid())
                 .filter(role -> role.getUserRole().hasOrganizationAbility())
                 .isPresent();
         if (isInviterOrganizationLevelUser) {
+            LOGGER.debug("Checking if inviter user for uuid - {} has organization level permissions has been done successfully", request.getInviterUserUuid());
             return SingleErrorWithStatus.empty();
         }
-        // Checking if inviter user has valid client level permissions to invite a new user 
+        LOGGER.debug("Checking if inviter user for uuid - {} has valid client level permissions to invite a new user", request.getInviterUserUuid());
         final Map<String, UserRoleModel> inviterClientLevelPermissionsMap =
                 getClientOrganizationsByUserUuidAndOrganization(request.getOrganizationUuid(), request.getInviterUserUuid());
         final List<SingleUserInvitationToClientRequestModel> secondLevelFilteredInvitations = request.getInvitations().stream()
@@ -141,9 +139,10 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
                 })
                 .collect(Collectors.toList());
         if (request.getInvitations().size() != secondLevelFilteredInvitations.size()) {
+            LOGGER.debug("Checking if inviter user for uuid - {} has valid client level permissions to invite a new user has been done with error", request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
-        LOGGER.debug("Successfully checked invitation user creation for client precondition for request - {}", request);
+        LOGGER.debug("Successfully checked invitation user creation for organization client precondition for request - {}", request);
         return SingleErrorWithStatus.empty();
     }
 

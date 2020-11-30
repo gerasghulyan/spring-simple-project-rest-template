@@ -43,11 +43,19 @@ public class InvitationUserResource {
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 
-    @PostMapping(path = "/by-status")
-    public ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request) {
-        LOGGER.debug("Processing InvitationUserResource getAllByStatus method for request - {}", request);
+    @PostMapping(path = "/by-status/organization")
+    public ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllInvitationsToOrganizationByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource getAllInvitationsToOrganizationByStatus method for request - {}", request);
         final GetAllByStatusUserInvitationsResultResponse resultResponse = invitationUserServiceFacade.getAllInvitationsToOrganizationByOrganizationUuidAndStatus(request);
-        LOGGER.debug("Successfully processed InvitationUserResource getAllByStatus method for request - {}", request);
+        LOGGER.debug("Successfully processed InvitationUserResource getAllInvitationsToOrganizationByStatus method for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "/by-status/client-organization")
+    public ResponseEntity<GetAllByStatusUserInvitationsResultResponse> getAllInvitationsToClientsByStatus(@RequestBody final GetAllByStatusInvitationUserRequest request) {
+        LOGGER.debug("Processing InvitationUserResource getAllInvitationsToClientByStatus method for request - {}", request);
+        final GetAllByStatusUserInvitationsResultResponse resultResponse = invitationUserServiceFacade.getAllInvitationsToClientByOrganizationUuidAndStatus(request);
+        LOGGER.debug("Successfully processed InvitationUserResource getAllInvitationsToClientByStatus method for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
 

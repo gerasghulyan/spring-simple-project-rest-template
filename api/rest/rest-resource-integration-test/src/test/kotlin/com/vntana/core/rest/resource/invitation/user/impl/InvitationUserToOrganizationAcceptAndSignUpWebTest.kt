@@ -93,7 +93,7 @@ class InvitationUserToOrganizationAcceptAndSignUpWebTest : AbstractInvitationUse
             assertThat(it.items()[0].fullName).isEqualTo(newUserFullName)
             assertThat(it.items()[0].email).isEqualTo(userEmail)
         }
-        val acceptedInvitations = invitationUserResourceClient.getAllByStatus(invitationUserResourceTestHelper.buildGetAllByStatusInvitationUserRequest(
+        val acceptedInvitations = invitationUserResourceClient.getAllInvitationsToOrganizationByStatus(invitationUserResourceTestHelper.buildGetAllByStatusInvitationUserRequest(
                 size = Int.MAX_VALUE,
                 organizationUuid = newOrganizationUuid,
                 invitationStatus = InvitationStatusModel.ACCEPTED
