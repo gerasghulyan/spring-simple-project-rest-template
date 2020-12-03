@@ -1,8 +1,7 @@
 package com.vntana.core.rest.facade.user.impl
 
-import com.vntana.core.domain.token.TokenResetPassword
 import com.vntana.core.rest.facade.user.AbstractUserServiceFacadeUnitTest
-import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto
+import com.vntana.core.service.token.reset.password.dto.CreateTokenResetPasswordDto
 import org.easymock.EasyMock.expect
 import org.easymock.EasyMock.isA
 import org.junit.Test

@@ -32,8 +32,8 @@ import com.vntana.core.service.organization.dto.GetUserOrganizationsByUserUuidAn
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.token.TokenService;
 import com.vntana.core.service.token.auth.TokenAuthenticationService;
-import com.vntana.core.service.token.reset_password.TokenResetPasswordService;
-import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto;
+import com.vntana.core.service.token.reset.password.TokenResetPasswordService;
+import com.vntana.core.service.token.reset.password.dto.CreateTokenResetPasswordDto;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;

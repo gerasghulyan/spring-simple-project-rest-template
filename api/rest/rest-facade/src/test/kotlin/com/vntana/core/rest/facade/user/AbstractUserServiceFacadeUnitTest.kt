@@ -17,7 +17,7 @@ import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator
 import com.vntana.core.service.token.TokenService
 import com.vntana.core.service.token.auth.TokenAuthenticationService
-import com.vntana.core.service.token.reset_password.TokenResetPasswordService
+import com.vntana.core.service.token.reset.password.TokenResetPasswordService
 import com.vntana.core.service.user.UserService
 import com.vntana.core.service.user.role.UserRoleService
 import org.easymock.Mock

@@ -1,4 +1,4 @@
-package com.vntana.core.service.token.reset_password
+package com.vntana.core.service.token.reset.password
 
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper

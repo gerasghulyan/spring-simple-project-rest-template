@@ -1,7 +1,7 @@
-package com.vntana.core.service.token.reset_password.impl
+package com.vntana.core.service.token.reset.password.impl
 
 import com.vntana.core.domain.token.TokenResetPassword
-import com.vntana.core.service.token.reset_password.AbstractTokenResetPasswordServiceUnitTest
+import com.vntana.core.service.token.reset.password.AbstractTokenResetPasswordServiceUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.*

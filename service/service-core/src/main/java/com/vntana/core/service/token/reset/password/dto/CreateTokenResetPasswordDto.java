@@ -1,4 +1,4 @@
-package com.vntana.core.service.token.reset_password.dto;
+package com.vntana.core.service.token.reset.password.dto;
 
 import com.vntana.commons.service.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;

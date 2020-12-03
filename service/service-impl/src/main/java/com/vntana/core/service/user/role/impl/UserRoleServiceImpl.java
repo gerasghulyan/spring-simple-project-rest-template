@@ -8,11 +8,9 @@ import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
-import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto;
-import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
-import com.vntana.core.service.user.role.dto.UserRevokeClientRoleDto;
-import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
+import com.vntana.core.service.user.role.dto.*;
 import com.vntana.core.service.user.role.exception.UserClientRoleNotFoundException;
+import com.vntana.core.service.user.role.exception.UserClientsIncorrectRolesRevokeException;
 import com.vntana.core.service.user.role.exception.UserOrganizationAdminRoleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,6 +222,18 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
         roleOptional.ifPresent(userRoleRepository::delete);
         LOGGER.debug("Successfully revoked client role using dto - {}", dto);
+    }
+
+    @Transactional
+    @Override
+    public void revokeUserClientsRoles(final UserRevokeClientsRolesDto dto) {
+        LOGGER.debug("Revoking clients roles using dto - {}", dto);
+        Assert.notNull(dto, "The UserRevokeClientsRolesDto should not be null");
+        final int deletedRoles = userRoleRepository.deleteAllForUserAndClientOrganizations(dto.getUserUuid(), dto.getClientUuids());
+        if (deletedRoles != dto.getClientUuids().size()) {
+            throw new UserClientsIncorrectRolesRevokeException(dto.getUserUuid(), dto.getClientUuids());
+        }
+        LOGGER.debug("Successfully revoked clients roles using dto - {}", dto);
     }
 
     private Optional<AbstractUserRole> findClientRoleByUserAndOrganization(final UserRevokeClientRoleDto dto) {
