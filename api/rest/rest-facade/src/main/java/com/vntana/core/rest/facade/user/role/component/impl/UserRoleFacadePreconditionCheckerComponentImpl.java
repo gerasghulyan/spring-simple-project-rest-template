@@ -70,9 +70,6 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isPresent()) {
             return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
         }
-        if(!userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isEmpty()){
-            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
-        }
         LOGGER.debug("Successfully processed checkGrantOrganizationAdminRole for request - {}", request);
         return SingleErrorWithStatus.empty();
     }

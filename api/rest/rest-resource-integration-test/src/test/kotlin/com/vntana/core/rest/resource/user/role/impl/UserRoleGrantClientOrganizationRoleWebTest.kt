@@ -3,6 +3,7 @@ package com.vntana.core.rest.resource.user.role.impl
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel
 import com.vntana.core.rest.resource.user.role.AbstractUserRoleWebTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.springframework.http.HttpStatus
 
@@ -90,6 +91,31 @@ class UserRoleGrantClientOrganizationRoleWebTest : AbstractUserRoleWebTest() {
         )
     }
 
+    @Test
+    fun `test with multi client roles`() {
+        val userUuid = userResourceTestHelper.persistUser().response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
+        val client1Uuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        val client2Uuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        assertBasicSuccessResultResponse(userRoleResourceClient.grantUserClientRole(userRoleResourceTestHelper.buildUserRoleGrantClientRequest(userUuid = userUuid, clientUuid = client1Uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)))
+        userRoleResourceClient.grantUserClientRole(userRoleResourceTestHelper.buildUserRoleGrantClientRequest(userUuid = userUuid, clientUuid = client2Uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)).let {
+            assertBasicSuccessResultResponse(it)
+            it.body?.response()?.let { response ->
+                assertThat(response.userUuid).isEqualTo(userUuid)
+                userResourceClient.getUsersByClientOrganization(client1Uuid)?.body?.response()?.run {
+                    assertThat(this.totalCount()).isEqualTo(1)
+                    assertThat(this.items()[0].userRoleModel).isEqualTo(UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+                    assertThat(this.items()[0].uuid).isEqualTo(userUuid)
+                }
+                userResourceClient.getUsersByClientOrganization(client2Uuid)?.body?.response()?.run {
+                    assertThat(this.totalCount()).isEqualTo(1)
+                    assertThat(this.items()[0].userRoleModel).isEqualTo(UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+                    assertThat(this.items()[0].uuid).isEqualTo(userUuid)
+                }
+            }
+        }
+    }
+    
     @Test
     fun test() {
         val userUuid = userResourceTestHelper.persistUser().response().uuid

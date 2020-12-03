@@ -26,7 +26,7 @@ class UserRoleGrantOrganizationAdminRoleFacadeUnitTest : AbstractUserRoleService
     }
 
     @Test
-    fun test() {
+    fun `test without client roles`() {
         resetAll()
         val request = restTestHelper.buildUserRoleGrantOrganizationAdminRequest()
         val dto = commonTestHelper.buildUserGrantOrganizationRoleDto(
@@ -35,7 +35,35 @@ class UserRoleGrantOrganizationAdminRoleFacadeUnitTest : AbstractUserRoleService
         )
         val adminRole = commonTestHelper.buildUserOrganizationAdminRole()
         expect(preconditionChecker.checkGrantOrganizationAdminRole(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(emptyList())
         expect(userRoleService.grantOrganizationAdminRole(dto)).andReturn(adminRole)
+        replayAll()
+        userRoleServiceFacade.grantOrganizationAdminRole(request).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.response().userUuid).isEqualTo(adminRole.user.uuid)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test with client roles`() {
+        resetAll()
+        val request = restTestHelper.buildUserRoleGrantOrganizationAdminRequest()
+        val dto = commonTestHelper.buildUserGrantOrganizationRoleDto(
+                userUuid = request.userUuid,
+                organizationUuid = request.organizationUuid
+        )
+        val adminRole = commonTestHelper.buildUserOrganizationAdminRole()
+        val clientAdminRole = commonTestHelper.buildUserClientAdminRole()
+        val clientContentManagerRole = commonTestHelper.buildUserClientContentManagerRole()
+        val revokeClientsRolesDto = commonTestHelper.buildUserRevokeClientsRolesDto(
+                userUuid = dto.userUuid,
+                clientUuids = listOf(clientAdminRole.clientOrganization.uuid, clientContentManagerRole.clientOrganization.uuid)
+        )
+        expect(preconditionChecker.checkGrantOrganizationAdminRole(request)).andReturn(SingleErrorWithStatus.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(listOf(clientAdminRole, clientContentManagerRole))
+        expect(userRoleService.grantOrganizationAdminRole(dto)).andReturn(adminRole)
+        expect(userRoleService.revokeUserClientsRoles(revokeClientsRolesDto))
         replayAll()
         userRoleServiceFacade.grantOrganizationAdminRole(request).let {
             assertBasicSuccessResultResponse(it)
