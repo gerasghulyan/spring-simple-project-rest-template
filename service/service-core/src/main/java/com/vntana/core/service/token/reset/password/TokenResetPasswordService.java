@@ -1,7 +1,7 @@
-package com.vntana.core.service.token.reset_password;
+package com.vntana.core.service.token.reset.password;
 
 import com.vntana.core.domain.token.TokenResetPassword;
-import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto;
+import com.vntana.core.service.token.reset.password.dto.CreateTokenResetPasswordDto;
 
 /**
  * Created by Geras Ghulyan

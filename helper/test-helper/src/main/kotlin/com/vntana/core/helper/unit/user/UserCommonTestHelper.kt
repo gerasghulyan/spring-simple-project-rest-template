@@ -9,7 +9,7 @@ import com.vntana.core.domain.user.UserSuperAdminRole
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
-import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto
+import com.vntana.core.service.token.reset.password.dto.CreateTokenResetPasswordDto
 import com.vntana.core.service.user.dto.CreateUserDto
 import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto
 import com.vntana.core.service.user.dto.UpdateUserDto

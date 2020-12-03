@@ -15,7 +15,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto
 import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToOrganizationDto
 import com.vntana.core.service.token.invitation.user.dto.InvitationUuidAndTokenDto
-import com.vntana.core.service.token.reset_password.dto.CreateTokenResetPasswordDto
+import com.vntana.core.service.token.reset.password.dto.CreateTokenResetPasswordDto
 import java.time.LocalDateTime
 
 /**
