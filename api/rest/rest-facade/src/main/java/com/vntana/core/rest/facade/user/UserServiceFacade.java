@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserInOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
@@ -25,6 +26,8 @@ public interface UserServiceFacade {
     GetUsersByUuidsAndOrganizationUuidResponse getByUuidsAndOrganizationUuid(final GetByUuidsAndOrganizationUuidRequest request);
 
     AccountUserResponse accountDetails(final String uuid);
+
+    AccountUserInOrganizationResponse accountDetails(final String organizationUuid, final String uuid);
 
     VerifyUserResponse verify(final String uuid);
 

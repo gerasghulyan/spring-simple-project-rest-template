@@ -3,6 +3,7 @@ package com.vntana.core.rest.client.user;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserInOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
@@ -35,6 +36,9 @@ public interface UserResourceClient {
 
     @GetMapping(path = "/{uuid}/account-details")
     ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid);
+
+    @GetMapping(path = "/{organizationUuid}/{uuid}/account-details")
+    ResponseEntity<AccountUserInOrganizationResponse> accountDetails(@PathVariable("organizationUuid") final String organizationUuid, @PathVariable("uuid") final String uuid);
 
     @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
     ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(@PathVariable("role") final UserRoleModel role, @PathVariable("organizationUuid") final String organizationUuid);
