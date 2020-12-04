@@ -13,7 +13,7 @@ public interface UserFacadePreconditionCheckerComponent {
 
     SingleErrorWithStatus<UserErrorResponseModel> checkAccountDetails(final String userUuid);
 
-    SingleErrorWithStatus<UserErrorResponseModel> checkAccountDetails(final String organizationUuid, final String userUuid);
+    SingleErrorWithStatus<UserErrorResponseModel> checkGetUserByOrganization(final String userUuid, final String organizationUuid);
 
     SingleErrorWithStatus<UserErrorResponseModel> checkGetByOrganizationUuid(final String organizationUuid);
 

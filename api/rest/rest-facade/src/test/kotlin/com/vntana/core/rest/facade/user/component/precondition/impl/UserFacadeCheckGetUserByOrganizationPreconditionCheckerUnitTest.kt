@@ -12,28 +12,28 @@ import org.junit.Test
  * Date: 04.12.2020
  * Time: 14:02
  */
-class UserFacadeCheckAccountDetailsInOrganizationPreconditionCheckerUnitTest : AbstractUserFacadePreconditionCheckerComponentUnitTest() {
+class UserFacadeCheckGetUserByOrganizationPreconditionCheckerUnitTest : AbstractUserFacadePreconditionCheckerComponentUnitTest() {
 
     @Test
     fun `test invalid arguments`() {
         resetAll()
         replayAll()
-        preconditionChecker.checkAccountDetails(uuid(), null).let {
+        preconditionChecker.checkGetUserByOrganization(null, uuid()).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.error).isEqualTo(UserErrorResponseModel.MISSING_UUID)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_UNPROCESSABLE_ENTITY)
         }
-        preconditionChecker.checkAccountDetails(uuid(), emptyString()).let {
+        preconditionChecker.checkGetUserByOrganization(emptyString(), uuid()).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.error).isEqualTo(UserErrorResponseModel.MISSING_UUID)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_UNPROCESSABLE_ENTITY)
         }
-        preconditionChecker.checkAccountDetails(emptyString(), uuid()).let {
+        preconditionChecker.checkGetUserByOrganization(uuid(), emptyString()).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.error).isEqualTo(UserErrorResponseModel.MISSING_ORGANIZATION)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_UNPROCESSABLE_ENTITY)
         }
-        preconditionChecker.checkAccountDetails(null, uuid()).let {
+        preconditionChecker.checkGetUserByOrganization(uuid(), null).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.error).isEqualTo(UserErrorResponseModel.MISSING_ORGANIZATION)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_UNPROCESSABLE_ENTITY)
@@ -48,7 +48,7 @@ class UserFacadeCheckAccountDetailsInOrganizationPreconditionCheckerUnitTest : A
         val organizationUuid = uuid()
         expect(userService.existsByUuid(userUuid)).andReturn(false)
         replayAll()
-        preconditionChecker.checkAccountDetails(organizationUuid, userUuid).let {
+        preconditionChecker.checkGetUserByOrganization(userUuid, organizationUuid).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.error).isEqualTo(UserErrorResponseModel.NOT_FOUND_FOR_UUID)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
@@ -64,7 +64,7 @@ class UserFacadeCheckAccountDetailsInOrganizationPreconditionCheckerUnitTest : A
         expect(userService.existsByUuid(userUuid)).andReturn(true)
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(false)
         replayAll()
-        preconditionChecker.checkAccountDetails(organizationUuid, userUuid).let {
+        preconditionChecker.checkGetUserByOrganization(userUuid, organizationUuid).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.error).isEqualTo(UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
@@ -80,7 +80,7 @@ class UserFacadeCheckAccountDetailsInOrganizationPreconditionCheckerUnitTest : A
         expect(userService.existsByUuid(userUuid)).andReturn(true)
         expect(organizationService.existsByUuid(organizationUuid)).andReturn(true)
         replayAll()
-        preconditionChecker.checkAccountDetails(organizationUuid, userUuid).let {
+        preconditionChecker.checkGetUserByOrganization(userUuid, organizationUuid).let {
             assertThat(it.isPresent).isFalse()
         }
         verifyAll()

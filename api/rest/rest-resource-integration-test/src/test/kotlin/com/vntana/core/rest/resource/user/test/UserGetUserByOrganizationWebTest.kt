@@ -11,25 +11,25 @@ import org.junit.Test
  * Date: 04.12.2020
  * Time: 14:07
  */
-class UserAccountDetailsInOrganizationWebTest : AbstractUserWebTest() {
+class UserGetUserByOrganizationWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test when user not found`() {
-        assertBasicErrorResultResponse(userResourceClient.accountDetails(uuid(), uuid()), UserErrorResponseModel.NOT_FOUND_FOR_UUID)
+        assertBasicErrorResultResponse(userResourceClient.getUserByOrganization(uuid(), uuid()), UserErrorResponseModel.NOT_FOUND_FOR_UUID)
     }
 
     @Test
     fun `test when organization not found`() {
         val createRequest = resourceHelper.buildCreateUserRequest()
         val user = resourceHelper.persistUser(createRequest).response()
-        assertBasicErrorResultResponse(userResourceClient.accountDetails(uuid(), user.uuid), UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)
+        assertBasicErrorResultResponse(userResourceClient.getUserByOrganization(user.uuid, uuid()), UserErrorResponseModel.NOT_FOUND_FOR_ORGANIZATION)
     }
     
     @Test
     fun test() {
         val createRequest = resourceHelper.buildCreateUserRequest()
         val user = resourceHelper.persistUser(createRequest).response()
-        userResourceClient.accountDetails(user.organizationUuid, user.uuid).let {
+        userResourceClient.getUserByOrganization(user.uuid, user.organizationUuid).let {
             assertBasicSuccessResultResponse(it)
             it?.body?.response()?.run {
                 assertThat(this.uuid).isEqualTo(user.uuid)

@@ -14,7 +14,7 @@ import org.junit.Test
  * Date: 04.12.2020
  * Time: 14:04
  */
-class UserAccountDetailsInOrganizationServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
+class UserGetUserByOrganizationServiceFacadeUnitTest : AbstractUserServiceFacadeUnitTest() {
 
     @Test
     fun `test when precondition failed`() {
@@ -23,9 +23,9 @@ class UserAccountDetailsInOrganizationServiceFacadeUnitTest : AbstractUserServic
         val organizationUuid = uuid()
         val httpStatusCode = randomInt()
         val errorModel = UserErrorResponseModel.MISSING_UUID
-        expect(preconditionCheckerComponent.checkAccountDetails(organizationUuid, userUuid)).andReturn(SingleErrorWithStatus.of(httpStatusCode, errorModel))
+        expect(preconditionCheckerComponent.checkGetUserByOrganization(userUuid, organizationUuid)).andReturn(SingleErrorWithStatus.of(httpStatusCode, errorModel))
         replayAll()
-        assertBasicErrorResultResponse(userServiceFacade.accountDetails(organizationUuid, userUuid), errorModel)
+        assertBasicErrorResultResponse(userServiceFacade.getUserByOrganization(userUuid, organizationUuid), errorModel)
         verifyAll()
     }
 
@@ -36,10 +36,10 @@ class UserAccountDetailsInOrganizationServiceFacadeUnitTest : AbstractUserServic
         val organization = organizationHelper.buildOrganization()
         val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         user.grantSuperAdminRole()
-        expect(preconditionCheckerComponent.checkAccountDetails(organization.uuid, userUuid)).andReturn(SingleErrorWithStatus.empty())
+        expect(preconditionCheckerComponent.checkGetUserByOrganization(userUuid, organization.uuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
         replayAll()
-        userServiceFacade.accountDetails(organization.uuid, userUuid).let {
+        userServiceFacade.getUserByOrganization(userUuid, organization.uuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().uuid).isEqualTo(user.uuid)
             assertThat(it.response().fullName).isEqualTo(user.fullName)
@@ -57,10 +57,10 @@ class UserAccountDetailsInOrganizationServiceFacadeUnitTest : AbstractUserServic
         val userUuid = uuid()
         val organization = organizationHelper.buildOrganization()
         val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
-        expect(preconditionCheckerComponent.checkAccountDetails(organization.uuid, userUuid)).andReturn(SingleErrorWithStatus.empty())
+        expect(preconditionCheckerComponent.checkGetUserByOrganization(userUuid, organization.uuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
         replayAll()
-        userServiceFacade.accountDetails(organization.uuid, userUuid).let {
+        userServiceFacade.getUserByOrganization(userUuid, organization.uuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().uuid).isEqualTo(user.uuid)
             assertThat(it.response().fullName).isEqualTo(user.fullName)
@@ -82,10 +82,10 @@ class UserAccountDetailsInOrganizationServiceFacadeUnitTest : AbstractUserServic
         val clientOrganization2 = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization)
         user.grantClientRole(clientOrganization1, UserRole.CLIENT_ORGANIZATION_ADMIN)
         user.grantClientRole(clientOrganization2, UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER)
-        expect(preconditionCheckerComponent.checkAccountDetails(organization.uuid, userUuid)).andReturn(SingleErrorWithStatus.empty())
+        expect(preconditionCheckerComponent.checkGetUserByOrganization(userUuid, organization.uuid)).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(userUuid)).andReturn(user)
         replayAll()
-        userServiceFacade.accountDetails(organization.uuid, userUuid).let {
+        userServiceFacade.getUserByOrganization(userUuid, organization.uuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().uuid).isEqualTo(user.uuid)
             assertThat(it.response().fullName).isEqualTo(user.fullName)

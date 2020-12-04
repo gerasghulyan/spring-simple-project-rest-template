@@ -37,8 +37,8 @@ public interface UserResourceClient {
     @GetMapping(path = "/{uuid}/account-details")
     ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid);
 
-    @GetMapping(path = "/{organizationUuid}/{uuid}/account-details")
-    ResponseEntity<AccountUserInOrganizationResponse> accountDetails(@PathVariable("organizationUuid") final String organizationUuid, @PathVariable("uuid") final String uuid);
+    @GetMapping(path = "/{userUuid}/organizations/{organizationUuid}")
+    ResponseEntity<AccountUserInOrganizationResponse> getUserByOrganization(@PathVariable("userUuid") final String userUuid, @PathVariable("organizationUuid") final String organizationUuid);
 
     @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
     ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(@PathVariable("role") final UserRoleModel role, @PathVariable("organizationUuid") final String organizationUuid);

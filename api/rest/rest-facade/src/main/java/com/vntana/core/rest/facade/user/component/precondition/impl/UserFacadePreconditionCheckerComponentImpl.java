@@ -52,7 +52,7 @@ public class UserFacadePreconditionCheckerComponentImpl implements UserFacadePre
     }
 
     @Override
-    public SingleErrorWithStatus<UserErrorResponseModel> checkAccountDetails(final String organizationUuid, final String userUuid) {
+    public SingleErrorWithStatus<UserErrorResponseModel> checkGetUserByOrganization(final String userUuid, final String organizationUuid) {
         LOGGER.debug("Processing precondition check for user facade account details where userUuid - {}", userUuid);
         if (StringUtils.isBlank(userUuid)) {
             return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, MISSING_UUID);

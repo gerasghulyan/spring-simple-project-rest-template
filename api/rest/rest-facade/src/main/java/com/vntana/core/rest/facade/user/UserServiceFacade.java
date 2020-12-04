@@ -27,7 +27,7 @@ public interface UserServiceFacade {
 
     AccountUserResponse accountDetails(final String uuid);
 
-    AccountUserInOrganizationResponse accountDetails(final String organizationUuid, final String uuid);
+    AccountUserInOrganizationResponse getUserByOrganization(final String userUuid, final String organizationUuid);
 
     VerifyUserResponse verify(final String uuid);
 

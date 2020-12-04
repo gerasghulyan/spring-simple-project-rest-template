@@ -231,21 +231,21 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     @Transactional
     @Override
-    public AccountUserInOrganizationResponse accountDetails(final String organizationUuid, final String uuid) {
-        LOGGER.debug("Processing user facade accountDetails for uuid - {}", uuid);
-        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkAccountDetails(organizationUuid, uuid);
+    public AccountUserInOrganizationResponse getUserByOrganization(final String userUuid, final String organizationUuid) {
+        LOGGER.debug("Processing user facade accountDetails for uuid - {}", userUuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkGetUserByOrganization(userUuid, organizationUuid);
         if (error.isPresent()) {
             return new AccountUserInOrganizationResponse(error.getHttpStatus(), error.getError());
         }
-        final User user = userService.getByUuid(uuid);
-        final UserRoleModel userRoleModel = getNotSuperAdminUserRoleInOrganization(user, organizationUuid);
-        final AccountUserInOrganizationResponseModel responseModel = new AccountUserInOrganizationResponseModel();
-        responseModel.setUserRoleModel(userRoleModel);
-        responseModel.setUuid(user.getUuid());
-        responseModel.setFullName(user.getFullName());
-        responseModel.setEmail(user.getEmail());
-        responseModel.setEmailVerified(user.getVerified());
-        responseModel.setImageBlobId(user.getImageBlobId());
+        final User user = userService.getByUuid(userUuid);
+        final AccountUserInOrganizationResponseModel responseModel = new AccountUserInOrganizationResponseModel(
+                user.getUuid(),
+                user.getFullName(),
+                user.getEmail(),
+                getNotSuperAdminUserRoleInOrganization(user, organizationUuid),
+                user.getVerified(),
+                user.getImageBlobId()                
+        );
         return new AccountUserInOrganizationResponse(responseModel);
     }
 

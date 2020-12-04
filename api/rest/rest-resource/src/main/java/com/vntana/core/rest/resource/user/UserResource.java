@@ -83,11 +83,11 @@ public class UserResource {
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
-    @GetMapping(path = "/{organizationUuid}/{uuid}/account-details")
-    public ResponseEntity<AccountUserInOrganizationResponse> accountDetails(@PathVariable("organizationUuid") final String organizationUuid, @PathVariable("uuid") final String uuid) {
-        LOGGER.debug("Processing user facade accountDetails method by uuid - {}", uuid);
-        final AccountUserInOrganizationResponse response = userServiceFacade.accountDetails(organizationUuid, uuid);
-        LOGGER.debug("Successfully processed user facade accountDetails method by uuid - {}", uuid);
+    @GetMapping(path = "/{userUuid}/organizations/{organizationUuid}")
+    public ResponseEntity<AccountUserInOrganizationResponse> getUserByOrganization(@PathVariable("userUuid") final String userUuid, @PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing user facade getUserByOrganization method by userUuid - {} and organizationUuid - {}", userUuid, organizationUuid);
+        final AccountUserInOrganizationResponse response = userServiceFacade.getUserByOrganization(userUuid, organizationUuid);
+        LOGGER.debug("Successfully processed user facade getUserByOrganization method by userUuid - {} and organizationUuid - {}", userUuid, organizationUuid);
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 
