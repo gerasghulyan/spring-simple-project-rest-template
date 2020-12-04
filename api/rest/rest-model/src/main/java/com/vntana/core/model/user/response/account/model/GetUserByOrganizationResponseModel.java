@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 04.12.2020
  * Time: 13:57
  */
-public class AccountUserInOrganizationResponseModel implements ResponseModel {
+public class GetUserByOrganizationResponseModel implements ResponseModel {
 
     @JsonProperty("uuid")
     private String uuid;
@@ -32,11 +32,11 @@ public class AccountUserInOrganizationResponseModel implements ResponseModel {
     @JsonProperty("imageBlobId")
     private String imageBlobId;
 
-    public AccountUserInOrganizationResponseModel() {
+    public GetUserByOrganizationResponseModel() {
         super();
     }
 
-    public AccountUserInOrganizationResponseModel(
+    public GetUserByOrganizationResponseModel(
             final String uuid,
             final String fullName,
             final String email,
@@ -57,10 +57,10 @@ public class AccountUserInOrganizationResponseModel implements ResponseModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AccountUserInOrganizationResponseModel)) {
+        if (!(o instanceof GetUserByOrganizationResponseModel)) {
             return false;
         }
-        final AccountUserInOrganizationResponseModel that = (AccountUserInOrganizationResponseModel) o;
+        final GetUserByOrganizationResponseModel that = (GetUserByOrganizationResponseModel) o;
         return new EqualsBuilder()
                 .append(emailVerified, that.emailVerified)
                 .append(uuid, that.uuid)
