@@ -4,6 +4,7 @@ import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserInOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
@@ -79,6 +80,14 @@ public class UserResource {
         LOGGER.debug("Processing user facade accountDetails method by uuid - {}", uuid);
         final AccountUserResponse response = userServiceFacade.accountDetails(uuid);
         LOGGER.debug("Successfully processed user facade accountDetails method by uuid - {}", uuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "/{userUuid}/organizations/{organizationUuid}")
+    public ResponseEntity<AccountUserInOrganizationResponse> getUserByOrganization(@PathVariable("userUuid") final String userUuid, @PathVariable("organizationUuid") final String organizationUuid) {
+        LOGGER.debug("Processing user facade getUserByOrganization method by userUuid - {} and organizationUuid - {}", userUuid, organizationUuid);
+        final AccountUserInOrganizationResponse response = userServiceFacade.getUserByOrganization(userUuid, organizationUuid);
+        LOGGER.debug("Successfully processed user facade getUserByOrganization method by userUuid - {} and organizationUuid - {}", userUuid, organizationUuid);
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 

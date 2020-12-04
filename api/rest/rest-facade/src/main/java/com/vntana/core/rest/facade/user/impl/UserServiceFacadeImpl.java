@@ -9,7 +9,9 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
+import com.vntana.core.model.user.response.account.AccountUserInOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.account.model.AccountUserInOrganizationResponseModel;
 import com.vntana.core.model.user.response.account.model.AccountUserResponseModel;
 import com.vntana.core.model.user.response.account.model.AccountUserRolesModel;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
@@ -54,6 +56,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.vntana.core.model.user.error.UserErrorResponseModel.*;
+import static java.lang.String.format;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 
 /**
@@ -224,6 +227,26 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         responseModel.setEmailVerified(user.getVerified());
         responseModel.setImageBlobId(user.getImageBlobId());
         return new AccountUserResponse(responseModel);
+    }
+
+    @Transactional
+    @Override
+    public AccountUserInOrganizationResponse getUserByOrganization(final String userUuid, final String organizationUuid) {
+        LOGGER.debug("Processing user facade accountDetails for uuid - {}", userUuid);
+        final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkGetUserByOrganization(userUuid, organizationUuid);
+        if (error.isPresent()) {
+            return new AccountUserInOrganizationResponse(error.getHttpStatus(), error.getError());
+        }
+        final User user = userService.getByUuid(userUuid);
+        final AccountUserInOrganizationResponseModel responseModel = new AccountUserInOrganizationResponseModel(
+                user.getUuid(),
+                user.getFullName(),
+                user.getEmail(),
+                getNotSuperAdminUserRoleInOrganization(user, organizationUuid),
+                user.getVerified(),
+                user.getImageBlobId()                
+        );
+        return new AccountUserInOrganizationResponse(responseModel);
     }
 
     @Override
@@ -463,5 +486,38 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 .filter(abstractToken -> Objects.nonNull(abstractToken.getExpiration()))
                 .filter(abstractToken -> !LocalDateTime.now().isAfter(abstractToken.getExpiration()))
                 .map(TokenResetPassword.class::cast);
+    }
+
+    private UserRoleModel getNotSuperAdminUserRoleInOrganization(final User user, final String organizationUuid) {
+        LOGGER.debug("Retrieving user client and organization role in given organization - {} for not system admin user with uuid - {}", organizationUuid, user.getUuid());
+        return user.roles()
+                .stream()
+                .filter(userRole -> !userRole.getUserRole().equals(UserRole.SUPER_ADMIN))
+                .filter(userRole -> {
+                    if (userRole instanceof AbstractClientOrganizationAwareUserRole) {
+                        final AbstractClientOrganizationAwareUserRole clientOrganizationAwareUserRole = (AbstractClientOrganizationAwareUserRole) userRole;
+                        return organizationUuid.equals(clientOrganizationAwareUserRole.getClientOrganization().getOrganization().getUuid());
+                    } else if (userRole instanceof AbstractOrganizationAwareUserRole) {
+                        final AbstractOrganizationAwareUserRole organizationAwareUserRole = (AbstractOrganizationAwareUserRole) userRole;
+                        return organizationUuid.equals(organizationAwareUserRole.getOrganization().getUuid());
+                    } else {
+                        throw new IllegalStateException(format("Unknown user role %s", userRole.toString()));
+                    }
+                })
+                .map(userRole -> {
+                    LOGGER.debug("Retrieving user role for not super admin user with uuid - {} and role - {}", user.getUuid(), userRole.getUserRole().name());
+                    switch (userRole.getUserRole()) {
+                        case ORGANIZATION_OWNER:
+                        case ORGANIZATION_ADMIN:
+                            return UserRoleModel.valueOf(userRole.getUserRole().name());
+                        case CLIENT_ORGANIZATION_ADMIN:
+                        case CLIENT_ORGANIZATION_CONTENT_MANAGER:
+                        case CLIENT_ORGANIZATION_VIEWER:
+                            return UserRoleModel.ORGANIZATION_CLIENT_MEMBER;
+                        default:
+                            throw new IllegalStateException(format("Unknown user role %s", userRole.toString()));
+                    }
+                })
+                .findFirst().orElseThrow(() -> new IllegalStateException(format("User role not found for user - %s and organization - %s", user, organizationUuid)));
     }
 }

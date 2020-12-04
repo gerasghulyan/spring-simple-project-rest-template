@@ -52,6 +52,24 @@ public class UserFacadePreconditionCheckerComponentImpl implements UserFacadePre
     }
 
     @Override
+    public SingleErrorWithStatus<UserErrorResponseModel> checkGetUserByOrganization(final String userUuid, final String organizationUuid) {
+        LOGGER.debug("Processing precondition check for user facade account details where userUuid - {}", userUuid);
+        if (StringUtils.isBlank(userUuid)) {
+            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, MISSING_UUID);
+        }
+        if (StringUtils.isBlank(organizationUuid)) {
+            return SingleErrorWithStatus.of(SC_UNPROCESSABLE_ENTITY, MISSING_ORGANIZATION);
+        }
+        if (!userService.existsByUuid(userUuid)) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, NOT_FOUND_FOR_UUID);
+        }
+        if (!organizationService.existsByUuid(organizationUuid)) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, NOT_FOUND_FOR_ORGANIZATION);
+        }
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
     public SingleErrorWithStatus<UserErrorResponseModel> checkGetByOrganizationUuid(final String organizationUuid) {
         LOGGER.debug("Processing precondition check for user facade get by organization uui where organizationUuid - {}", organizationUuid);
         if (StringUtils.isBlank(organizationUuid)) {
