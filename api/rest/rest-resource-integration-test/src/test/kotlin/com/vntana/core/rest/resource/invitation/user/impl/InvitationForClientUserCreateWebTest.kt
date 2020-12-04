@@ -4,7 +4,6 @@ import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel
 import com.vntana.core.model.invitation.user.request.CreateInvitationForOrganizationClientUserRequest
 import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClientRequestModel
-import com.vntana.core.model.user.request.CreateUserRequest
 import com.vntana.core.rest.resource.invitation.user.AbstractInvitationUserWebTest
 import org.junit.Test
 import org.springframework.http.HttpStatus
