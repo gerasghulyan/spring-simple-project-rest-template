@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findByRoleAndOrganizationUuid(final UserRole userRole, final String organizationUuid) {
         Assert.notNull(userRole, "The userRole should not be null");
-        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        assertOrganizationUuid(organizationUuid);
         LOGGER.debug("Retrieving the users having given role - {} on organization having uuid - {}", userRole, organizationUuid);
         final List<User> users = userRepository.findByRoleAndOrganizationUuid(userRole, organizationUuid);
         LOGGER.debug("Successfully retrieved the users having given role - {} on organization having uuid - {}", userRole, organizationUuid);
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid) {
         assertEmail(email);
-        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        assertOrganizationUuid(organizationUuid);
         LOGGER.debug("Retrieving the user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
         final Optional<User> userOptional = userRepository.findByEmailAndOrganizationUuid(email, organizationUuid);
         LOGGER.debug("Successfully retrieved user having email - {} and having a role on organization having uuid - {}", email, organizationUuid);
@@ -219,5 +219,9 @@ public class UserServiceImpl implements UserService {
 
     private void assertEmail(final String email) {
         Assert.hasText(email, "The email should not be null or empty");
+    }
+
+    private void assertOrganizationUuid(final String organizationUuid) {
+        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
     }
 }

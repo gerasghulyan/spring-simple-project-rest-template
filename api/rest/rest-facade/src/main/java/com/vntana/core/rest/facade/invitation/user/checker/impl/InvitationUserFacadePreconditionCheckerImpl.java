@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -113,6 +114,26 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         if (request.getInvitations().size() != firstLevelFilteredInvitations.size()) {
             LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {} has been done with error", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
+        }
+        final Optional<User> invitedUser = userService.findByEmailAndOrganizationUuid(request.getEmail(), request.getOrganizationUuid());
+        if (invitedUser.isPresent()) {
+            LOGGER.debug("Checking if invited user for email - {} has organization level permissions", request.getEmail());
+            final boolean isInvitedOrganizationLevelUser = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.get().getUuid())
+                    .filter(role -> role.getUserRole().hasOrganizationAbility())
+                    .isPresent();
+            if (isInvitedOrganizationLevelUser) {
+                LOGGER.debug("Checking if invited user for email - {} has organization level permissions has been done successfully", request.getEmail());
+                return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
+            }
+            LOGGER.debug("Checking if invited user with email - {} is already in organization clients - {}", request.getEmail(), request.getInvitations());
+            final List<SingleUserInvitationToClientRequestModel> filteredInvitations = request.getInvitations().stream()
+                    .filter(invitation ->
+                            userRoleService.findByClientOrganizationAndUser(invitation.getClientUuid(), invitedUser.get().getUuid()).isPresent())
+                    .collect(toList());
+            if (!filteredInvitations.isEmpty()) {
+                LOGGER.debug("Invited user with email - {} is already in one of organization clients - {}", request.getEmail(), request.getInvitations());
+                return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
+            }
         }
         final User user = userService.getByUuid(request.getInviterUserUuid());
         if (user.roleOfSuperAdmin().isPresent()) {
