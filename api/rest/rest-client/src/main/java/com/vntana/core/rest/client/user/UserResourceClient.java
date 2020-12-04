@@ -3,7 +3,7 @@ package com.vntana.core.rest.client.user;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
-import com.vntana.core.model.user.response.account.AccountUserInOrganizationResponse;
+import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
@@ -38,7 +38,7 @@ public interface UserResourceClient {
     ResponseEntity<AccountUserResponse> accountDetails(@PathVariable("uuid") final String uuid);
 
     @GetMapping(path = "/{userUuid}/organizations/{organizationUuid}")
-    ResponseEntity<AccountUserInOrganizationResponse> getUserByOrganization(@PathVariable("userUuid") final String userUuid, @PathVariable("organizationUuid") final String organizationUuid);
+    ResponseEntity<GetUserByOrganizationResponse> getUserByOrganization(@PathVariable("userUuid") final String userUuid, @PathVariable("organizationUuid") final String organizationUuid);
 
     @GetMapping(path = "/userRoles/{role}/organizations/{organizationUuid}")
     ResponseEntity<GetUsersByRoleAndOrganizationUuidResponse> getUsersByRoleAndOrganizationUuid(@PathVariable("role") final UserRoleModel role, @PathVariable("organizationUuid") final String organizationUuid);

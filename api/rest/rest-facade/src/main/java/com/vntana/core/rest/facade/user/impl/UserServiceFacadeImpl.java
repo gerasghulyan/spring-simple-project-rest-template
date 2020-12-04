@@ -9,9 +9,9 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
-import com.vntana.core.model.user.response.account.AccountUserInOrganizationResponse;
+import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
-import com.vntana.core.model.user.response.account.model.AccountUserInOrganizationResponseModel;
+import com.vntana.core.model.user.response.account.model.GetUserByOrganizationResponseModel;
 import com.vntana.core.model.user.response.account.model.AccountUserResponseModel;
 import com.vntana.core.model.user.response.account.model.AccountUserRolesModel;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
@@ -231,14 +231,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     @Transactional
     @Override
-    public AccountUserInOrganizationResponse getUserByOrganization(final String userUuid, final String organizationUuid) {
+    public GetUserByOrganizationResponse getUserByOrganization(final String userUuid, final String organizationUuid) {
         LOGGER.debug("Processing user facade accountDetails for uuid - {}", userUuid);
         final SingleErrorWithStatus<UserErrorResponseModel> error = preconditionCheckerComponent.checkGetUserByOrganization(userUuid, organizationUuid);
         if (error.isPresent()) {
-            return new AccountUserInOrganizationResponse(error.getHttpStatus(), error.getError());
+            return new GetUserByOrganizationResponse(error.getHttpStatus(), error.getError());
         }
         final User user = userService.getByUuid(userUuid);
-        final AccountUserInOrganizationResponseModel responseModel = new AccountUserInOrganizationResponseModel(
+        final GetUserByOrganizationResponseModel responseModel = new GetUserByOrganizationResponseModel(
                 user.getUuid(),
                 user.getFullName(),
                 user.getEmail(),
@@ -246,7 +246,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 user.getVerified(),
                 user.getImageBlobId()                
         );
-        return new AccountUserInOrganizationResponse(responseModel);
+        return new GetUserByOrganizationResponse(responseModel);
     }
 
     @Override
