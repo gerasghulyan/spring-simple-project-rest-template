@@ -166,4 +166,18 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
                         .getSingleResult()
         );
     }
+
+    @Override
+    public int deleteAllForUserAndClientOrganizations(final String userUuid, final List<String> clientOrganizationUuids) {
+        return entityManager.createQuery(
+                "delete from AbstractUserRole role where role.id in " +
+                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid in :clientOrganizationUuids and ucar.user.uuid = :userUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.uuid in :clientOrganizationUuids and uccmr.user.uuid = :userUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid in :clientOrganizationUuids and ucvr.user.uuid = :userUuid)")
+                .setParameter("clientOrganizationUuids", clientOrganizationUuids)
+                .setParameter("userUuid", userUuid)
+                .executeUpdate();
+    }
 }

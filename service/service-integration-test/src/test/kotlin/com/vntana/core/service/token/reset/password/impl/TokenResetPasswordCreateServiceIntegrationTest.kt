@@ -1,6 +1,6 @@
-package com.vntana.core.service.token.reset_password.impl
+package com.vntana.core.service.token.reset.password.impl
 
-import com.vntana.core.service.token.reset_password.AbstractTokenResetPasswordServiceIntegrationTest
+import com.vntana.core.service.token.reset.password.AbstractTokenResetPasswordServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
