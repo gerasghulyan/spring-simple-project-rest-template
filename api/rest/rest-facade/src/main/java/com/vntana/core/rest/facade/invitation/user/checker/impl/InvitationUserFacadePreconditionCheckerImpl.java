@@ -107,7 +107,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {}", request);
-        if (areInvitationsClientsValid(request)) {
+        if (!areInvitationsClientsValid(request)) {
             LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {} has been done with error", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
