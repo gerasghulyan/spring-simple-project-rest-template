@@ -6,7 +6,7 @@ import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseMo
 import com.vntana.core.model.invitation.user.request.SingleUserInvitationToClientRequestModel
 import com.vntana.core.rest.facade.invitation.user.checker.AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest
 import org.apache.http.HttpStatus
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.eq
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -17,7 +17,8 @@ import java.util.*
  * Date: 11/11/20
  * Time: 10:13 AM
  */
-class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErrorsUnitTest : AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
+class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErrorsUnitTest :
+    AbstractInvitationUserFacadePreconditionCheckerFacadeUnitTest() {
 
     @Test
     fun `test when inviter user does not exist`() {
@@ -26,8 +27,8 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(false)
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITER_USER_NOT_FOUND)
         }
         verifyAll()
     }
@@ -40,27 +41,8 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(false)
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND)
-        }
-        verifyAll()
-    }
-
-    @Test
-    fun `test when sending wrong user role`() {
-        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
-        val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
-        val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(clientOrganization.uuid, UserRoleModel.ORGANIZATION_ADMIN))
-        )
-        resetAll()
-        expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
-        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        replayAll()
-        preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND)
         }
         verifyAll()
     }
@@ -70,8 +52,13 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    uuid(),
+                    UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+                )
+            )
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
@@ -79,8 +66,8 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(false).once()
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
         }
         verifyAll()
     }
@@ -91,23 +78,33 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
         val invited = userCommonTestHelper.buildUserWithOrganizationAdminRole(organization = organization)
-        val invitedUserOrganizationLevelRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole(user = invited, organization = organization)
+        val invitedUserOrganizationLevelRole =
+            userRoleCommonTestHelper.buildUserOrganizationAdminRole(user = invited, organization = organization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                organizationUuid = organization.uuid,
-                email = invited.email,
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+            organizationUuid = organization.uuid,
+            email = invited.email,
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    clientOrganization.uuid,
+                    UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+                )
+            )
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(Optional.of(invited))
-        expect(userRoleService.findByOrganizationAndUser(eq(request.organizationUuid), eq(invited.uuid))).andReturn(Optional.of(invitedUserOrganizationLevelRole))
+        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+            Optional.of(invited)
+        )
+        expect(userRoleService.findByOrganizationAndUser(eq(request.organizationUuid), eq(invited.uuid))).andReturn(
+            Optional.of(invitedUserOrganizationLevelRole)
+        )
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION)
         }
         verifyAll()
     }
@@ -118,24 +115,85 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
         val invited = userCommonTestHelper.buildUserWithOrganizationAdminRole(organization = organization)
-        val invitedUserClientLevelRole = userRoleCommonTestHelper.buildUserClientContentManagerRole(user = invited, clientOrganization = clientOrganization)
+        val invitedUserClientLevelRole = userRoleCommonTestHelper.buildUserClientContentManagerRole(
+            user = invited,
+            clientOrganization = clientOrganization
+        )
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                organizationUuid = organization.uuid,
-                email = invited.email,
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+            organizationUuid = organization.uuid,
+            email = invited.email,
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    clientOrganization.uuid,
+                    UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+                )
+            )
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(Optional.of(invited))
-        expect(userRoleService.findByOrganizationAndUser(eq(request.organizationUuid), eq(invited.uuid))).andReturn(Optional.empty())
-        expect(userRoleService.findByClientOrganizationAndUser(eq(clientOrganization.uuid), eq(invited.uuid))).andReturn(Optional.of(invitedUserClientLevelRole))
+        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+            Optional.of(invited)
+        )
+        expect(userRoleService.findByOrganizationAndUser(eq(request.organizationUuid), eq(invited.uuid))).andReturn(
+            Optional.empty()
+        )
+        expect(
+            userRoleService.findByClientOrganizationAndUser(
+                eq(clientOrganization.uuid),
+                eq(invited.uuid)
+            )
+        ).andReturn(Optional.of(invitedUserClientLevelRole))
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test when inviting with wrong user role`() {
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
+        val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
+        val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
+            organizationUuid = organization.uuid,
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    clientOrganization.uuid,
+                    UserRoleModel.ORGANIZATION_ADMIN
+                )
+            )
+        )
+        val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
+        resetAll()
+        expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
+        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
+        expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
+        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+            Optional.empty()
+        )
+        expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
+        expect(
+            userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(
+                request.organizationUuid,
+                request.inviterUserUuid
+            )
+        ).andReturn(listOf(inviterPermissions))
+        expect(
+            userRoleService.findByOrganizationAndUser(
+                eq(organization.uuid),
+                eq(inviter.uuid)
+            )
+        ).andReturn(Optional.empty())
+        replayAll()
+        preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
         }
         verifyAll()
     }
@@ -146,18 +204,25 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization)
         val inviter = userCommonTestHelper.buildUserWithWithSuperAdminRole()
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                organizationUuid = organization.uuid,
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+            organizationUuid = organization.uuid,
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    clientOrganization.uuid,
+                    UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+                )
+            )
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(Optional.empty())
+        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+            Optional.empty()
+        )
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
         replayAll()
-        Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
+        assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
         verifyAll()
     }
 
@@ -167,19 +232,31 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization)
         val inviter = userCommonTestHelper.buildUserWithOrganizationAdminRole(organization = organization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                organizationUuid = organization.uuid,
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+            organizationUuid = organization.uuid,
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    clientOrganization.uuid,
+                    UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+                )
+            )
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(Optional.empty())
+        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+            Optional.empty()
+        )
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
-        expect(userRoleService.findByOrganizationAndUser(eq(organization.uuid), eq(inviter.uuid))).andReturn(Optional.of(UserOrganizationOwnerRole(inviter, organization)))
+        expect(
+            userRoleService.findByOrganizationAndUser(
+                eq(organization.uuid),
+                eq(inviter.uuid)
+            )
+        ).andReturn(Optional.of(UserOrganizationOwnerRole(inviter, organization)))
         replayAll()
-        Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
+        assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
         verifyAll()
     }
 
@@ -190,22 +267,39 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                organizationUuid = organization.uuid,
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(uuid(), UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+            organizationUuid = organization.uuid,
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    uuid(),
+                    UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+                )
+            )
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
+        expect(
+            userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(
+                request.organizationUuid,
+                request.inviterUserUuid
+            )
+        ).andReturn(listOf(inviterPermissions))
         expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(Optional.empty())
+        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+            Optional.empty()
+        )
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
-        expect(userRoleService.findByOrganizationAndUser(eq(organization.uuid), eq(inviter.uuid))).andReturn(Optional.empty())
+        expect(
+            userRoleService.findByOrganizationAndUser(
+                eq(organization.uuid),
+                eq(inviter.uuid)
+            )
+        ).andReturn(Optional.empty())
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
-            Assertions.assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            Assertions.assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS)
         }
         verifyAll()
     }
@@ -217,21 +311,43 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         val inviter = userCommonTestHelper.buildUserWithClientAdminRole(clientOrganization = clientOrganization)
         val inviterPermissions = userRoleCommonTestHelper.buildUserClientAdminRole(inviter, clientOrganization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForClientRequest(
-                organizationUuid = organization.uuid,
-                inviterUserUuid = inviter.uuid,
-                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(inviterPermissions.clientOrganization.uuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+            organizationUuid = organization.uuid,
+            inviterUserUuid = inviter.uuid,
+            userRoleRequestModels = listOf(
+                SingleUserInvitationToClientRequestModel(
+                    inviterPermissions.clientOrganization.uuid,
+                    UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+                )
+            )
         )
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.inviterUserUuid)).andReturn(listOf(inviterPermissions))
+        expect(
+            userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(
+                request.organizationUuid,
+                request.inviterUserUuid
+            )
+        ).andReturn(listOf(inviterPermissions))
         expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(Optional.empty())
-        expect(userRoleService.findByOrganizationAndUser(eq(organization.uuid), eq(inviter.uuid))).andReturn(Optional.empty())
+        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+            Optional.empty()
+        )
+        expect(
+            userRoleService.findByOrganizationAndUser(
+                eq(organization.uuid),
+                eq(inviter.uuid)
+            )
+        ).andReturn(Optional.empty())
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
-        expect(userRolesPermissionsCheckerComponent.isPermittedToInvite(UserRoleModel.CLIENT_ORGANIZATION_ADMIN, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)).andReturn(true).once()
+        expect(
+            userRolesPermissionsCheckerComponent.isPermittedToInvite(
+                UserRoleModel.CLIENT_ORGANIZATION_ADMIN,
+                UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+            )
+        ).andReturn(true).once()
         replayAll()
-        Assertions.assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
+        assertThat(preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).isPresent).isFalse()
         verifyAll()
     }
 }
