@@ -107,30 +107,20 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {}", request);
-        final List<SingleUserInvitationToClientRequestModel> firstLevelFilteredInvitations = request.getInvitations().stream()
-                .filter(invitation -> invitation.getRole().getPriority() >= UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority())
-                .filter(invitation -> clientOrganizationService.existsByUuid(invitation.getClientUuid()))
-                .collect(Collectors.toList());
-        if (request.getInvitations().size() != firstLevelFilteredInvitations.size()) {
+        if (areInvitationsClientsValid(request)) {
             LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {} has been done with error", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
         final Optional<User> invitedUser = userService.findByEmailAndOrganizationUuid(request.getEmail(), request.getOrganizationUuid());
         if (invitedUser.isPresent()) {
             LOGGER.debug("Checking if invited user for email - {} has organization level permissions", request.getEmail());
-            final boolean isInvitedOrganizationLevelUser = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.get().getUuid())
-                    .filter(role -> role.getUserRole().hasOrganizationAbility())
-                    .isPresent();
-            if (isInvitedOrganizationLevelUser) {
+            if (isInvitedUserExistsInOrganization(request, invitedUser.get())) {
                 LOGGER.debug("Checking if invited user for email - {} has organization level permissions has been done successfully", request.getEmail());
                 return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
             }
             LOGGER.debug("Checking if invited user with email - {} is already in organization clients - {}", request.getEmail(), request.getInvitations());
-            final List<SingleUserInvitationToClientRequestModel> filteredInvitations = request.getInvitations().stream()
-                    .filter(invitation ->
-                            userRoleService.findByClientOrganizationAndUser(invitation.getClientUuid(), invitedUser.get().getUuid()).isPresent())
-                    .collect(toList());
-            if (!filteredInvitations.isEmpty()) {
+
+            if (isInvitedUserExistsInClients(request, invitedUser.get())) {
                 LOGGER.debug("Invited user with email - {} is already in one of organization clients - {}", request.getEmail(), request.getInvitations());
                 return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
             }
@@ -149,17 +139,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             return SingleErrorWithStatus.empty();
         }
         LOGGER.debug("Checking if inviter user for uuid - {} has valid client level permissions to invite a new user", request.getInviterUserUuid());
-        final Map<String, UserRoleModel> inviterClientLevelPermissionsMap =
-                getClientOrganizationsByUserUuidAndOrganization(request.getOrganizationUuid(), request.getInviterUserUuid());
-        final List<SingleUserInvitationToClientRequestModel> secondLevelFilteredInvitations = request.getInvitations().stream()
-                .filter(invitation -> inviterClientLevelPermissionsMap.containsKey(invitation.getClientUuid()))
-                .filter(invitation -> {
-                    final UserRoleModel inviterRole = inviterClientLevelPermissionsMap.get(invitation.getClientUuid());
-                    final UserRoleModel invitedRole = invitation.getRole();
-                    return userRolesPermissionsChecker.isPermittedToInvite(inviterRole, invitedRole);
-                })
-                .collect(Collectors.toList());
-        if (request.getInvitations().size() != secondLevelFilteredInvitations.size()) {
+        if (isInvitedRolesPermitted(request)) {
             LOGGER.debug("Checking if inviter user for uuid - {} has valid client level permissions to invite a new user has been done with error", request.getInviterUserUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
@@ -347,5 +327,41 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         }
         LOGGER.debug("Successfully checked invitation user send invitation precondition for inviter user uuid - {}, organization uuid - {}", inviterUuid, organizationUuid);
         return SingleErrorWithStatus.empty();
+    }
+
+    private boolean areInvitationsClientsValid(final CreateInvitationForOrganizationClientUserRequest request) {
+        final List<SingleUserInvitationToClientRequestModel> filtered = request.getInvitations().stream()
+                .filter(invitation -> clientOrganizationService.existsByUuid(invitation.getClientUuid()))
+                .collect(Collectors.toList());
+        return request.getInvitations().size() == filtered.size();
+    }
+
+    private boolean isInvitedUserExistsInOrganization(final CreateInvitationForOrganizationClientUserRequest request, final User invitedUser) {
+        return userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.getUuid())
+                .filter(role -> role.getUserRole().hasOrganizationAbility())
+                .isPresent();
+    }
+
+    private boolean isInvitedUserExistsInClients(final CreateInvitationForOrganizationClientUserRequest request, final User invitedUser) {
+        final List<SingleUserInvitationToClientRequestModel> filtered = request.getInvitations().stream()
+                .filter(invitation ->
+                        userRoleService.findByClientOrganizationAndUser(invitation.getClientUuid(), invitedUser.getUuid()).isPresent())
+                .collect(toList());
+        return !filtered.isEmpty();
+    }
+
+    private boolean isInvitedRolesPermitted(final CreateInvitationForOrganizationClientUserRequest request) {
+        final Map<String, UserRoleModel> inviterClientLevelPermissionsMap =
+                getClientOrganizationsByUserUuidAndOrganization(request.getOrganizationUuid(), request.getInviterUserUuid());
+        final List<SingleUserInvitationToClientRequestModel> filtered = request.getInvitations().stream()
+                .filter(invitation -> invitation.getRole().getPriority() >= UserRoleModel.CLIENT_ORGANIZATION_ADMIN.getPriority())
+                .filter(invitation -> inviterClientLevelPermissionsMap.containsKey(invitation.getClientUuid()))
+                .filter(invitation -> {
+                    final UserRoleModel inviterRole = inviterClientLevelPermissionsMap.get(invitation.getClientUuid());
+                    final UserRoleModel invitedRole = invitation.getRole();
+                    return userRolesPermissionsChecker.isPermittedToInvite(inviterRole, invitedRole);
+                })
+                .collect(Collectors.toList());
+        return request.getInvitations().size() != filtered.size();
     }
 }
