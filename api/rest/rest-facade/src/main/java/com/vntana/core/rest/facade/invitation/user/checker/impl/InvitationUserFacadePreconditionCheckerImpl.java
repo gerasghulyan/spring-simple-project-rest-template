@@ -119,7 +119,6 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
                 return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
             }
             LOGGER.debug("Checking if invited user with email - {} is already in organization clients - {}", request.getEmail(), request.getInvitations());
-
             if (isInvitedUserExistsInClients(request, invitedUser.get())) {
                 LOGGER.debug("Invited user with email - {} is already in one of organization clients - {}", request.getEmail(), request.getInvitations());
                 return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
