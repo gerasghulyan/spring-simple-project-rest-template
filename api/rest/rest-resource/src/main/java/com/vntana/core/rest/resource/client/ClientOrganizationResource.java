@@ -3,6 +3,7 @@ package com.vntana.core.rest.resource.client;
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
+import com.vntana.core.model.client.request.GetClientsByUserAndBulkOrganizationRequest;
 import com.vntana.core.model.client.request.UpdateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
@@ -10,6 +11,7 @@ import com.vntana.core.model.client.response.UpdateClientOrganizationResultRespo
 import com.vntana.core.model.client.response.get.GetAllOrganizationsResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserClientBulkOrganizationResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import org.slf4j.Logger;
@@ -92,5 +94,15 @@ public class ClientOrganizationResource {
         final UpdateClientOrganizationResultResponse resultResponse = clientOrganizationServiceFacade.update(request);
         LOGGER.debug("Successfully updated client organization with response - {}", resultResponse);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
+    }
+
+    @PostMapping(path = "/users/{userUuid}/organizations")
+    public ResponseEntity<UserClientBulkOrganizationResponse> getByUserAndBulkOrganizations(
+            @PathVariable("userUuid") final String userUuid,
+            @RequestBody final GetClientsByUserAndBulkOrganizationRequest request) {
+        LOGGER.debug("Processing find client organization by user uuid - {} and by request - {}", userUuid, request);
+        final UserClientBulkOrganizationResponse response = clientOrganizationServiceFacade.getByUserAndBulkOrganizations(userUuid, request.getOrganizationsUuids());
+        LOGGER.debug("Successfully proceeded find client organizations by user uuid and by request with response - {}", response);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 }

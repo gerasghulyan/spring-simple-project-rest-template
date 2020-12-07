@@ -10,6 +10,9 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * Created by Manuk Gharslyan.
@@ -46,6 +49,27 @@ public class ClientOrganizationServiceFacadePreconditionCheckerComponentImpl imp
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
         }
         LOGGER.debug("Successfully processed precondition checkGetUserClientOrganizations for userUuid - {} and organizationUuid - {}", userUuid, organizationUuid);
+        return SingleErrorWithStatus.empty();
+    }
+
+    @Override
+    public SingleErrorWithStatus<ClientOrganizationErrorResponseModel> checkGetByUserAndBulkOrganizations(final String userUuid, final List<String> organizationsUuids) {
+        LOGGER.debug("Processing precondition checkGetUserClientOrganizations for userUuid - {} and organizationsUuids - {}", userUuid, organizationsUuids);
+        if (StringUtils.isBlank(userUuid)) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_USER_UUID);
+        }
+        if (CollectionUtils.isEmpty(organizationsUuids)) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, ClientOrganizationErrorResponseModel.MISSING_ORGANIZATION_UUID);
+        }
+        if (!userService.existsByUuid(userUuid)) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, ClientOrganizationErrorResponseModel.USER_NOT_FOUND);
+        }
+        for (final String organizationUuid : organizationsUuids) {
+            if (!organizationService.existsByUuid(organizationUuid)) {
+                return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, ClientOrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
+            }
+        }
+        LOGGER.debug("Successfully processed precondition checkGetUserClientOrganizations for userUuid - {} and organizationsUuids - {}", userUuid, organizationsUuids);
         return SingleErrorWithStatus.empty();
     }
 }

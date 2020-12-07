@@ -17,7 +17,9 @@ import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlu
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.UpdateClientOrganizationResultResponse;
 import com.vntana.core.model.client.response.get.*;
+import com.vntana.core.model.user.response.UserClientBulkOrganizationResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
+import com.vntana.core.model.user.response.get.model.GetUserClientBulkOrganizationsGridResponseModel;
 import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsResponseModel;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.rest.facade.client.component.precondition.ClientOrganizationServiceFacadePreconditionCheckerComponent;
@@ -42,8 +44,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -142,14 +143,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         }
         final User user = userService.getByUuid(userUuid);
         final Organization organization = organizationService.getByUuid(userOrganizationUuid);
-        final UserClientOrganizationResponse response;
-        if (user.roleOfSuperAdmin().isPresent()) {
-            response = getClientsForSuperAdmin(user, organization);
-        } else if (user.roleOfOrganizationOwner(organization).isPresent() || user.roleOfOrganizationAdmin(organization).isPresent()) {
-            response = getClientsForOrganizationOwnerAndAdmin(user, organization);
-        } else {
-            response = getClientsForAccessibleUser(userUuid, userOrganizationUuid);
-        }
+        final UserClientOrganizationResponse response = new UserClientOrganizationResponse(getUserClientOrganizationResponse(user, organization));
         LOGGER.debug("Successfully retrieved user organization's client organizations by user uuid - {} and by user organization uuid - {}", userUuid, userOrganizationUuid);
         return response;
     }
@@ -167,15 +161,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         }
         final ClientOrganization client = clientOptional.get();
         LOGGER.debug("Successfully retrieved client organization with result - {}", client);
-        final GetClientOrganizationResponseModel response = new GetClientOrganizationResponseModel(
-                client.getOrganization().getUuid(),
-                client.getOrganization().getSlug(),
-                client.getUuid(),
-                client.getSlug(),
-                client.getName(),
-                client.getImageBlobId(),
-                client.getCreated()
-        );
+        final GetClientOrganizationResponseModel response = buildGetClientOrganizationResponseModel(client);
         return new GetClientOrganizationResultResponse(response);
     }
 
@@ -192,16 +178,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return organizationClientService.findBySlugAndOrganization(slug, organizationUuid)
                 .map(client -> {
                     LOGGER.debug("Successfully retrieved client organization with result - {}", client);
-                    return new GetClientOrganizationBySlugResultResponse(
-                            new GetClientOrganizationResponseModel(
-                                    client.getOrganization().getUuid(),
-                                    client.getOrganization().getSlug(),
-                                    client.getUuid(),
-                                    client.getSlug(),
-                                    client.getName(),
-                                    client.getImageBlobId(),
-                                    client.getCreated()
-                            ));
+                    return new GetClientOrganizationBySlugResultResponse(buildGetClientOrganizationResponseModel(client));
                 })
                 .orElseGet(() -> new GetClientOrganizationBySlugResultResponse(HttpStatus.SC_NOT_FOUND, ClientOrganizationErrorResponseModel.CLIENT_NOT_FOUND));
     }
@@ -233,6 +210,25 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return new UpdateClientOrganizationResultResponse(clientOrganization.getUuid());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public UserClientBulkOrganizationResponse getByUserAndBulkOrganizations(final String userUuid, final List<String> organizationsUuids) {
+        LOGGER.debug("Retrieving user organization's client organizations by user uuid - {} and by user organizationsUuids - {}", userUuid, organizationsUuids);
+        final SingleErrorWithStatus<ClientOrganizationErrorResponseModel> errors = preconditionCheckerComponent.checkGetByUserAndBulkOrganizations(userUuid, organizationsUuids);
+        if (errors.isPresent()) {
+            return new UserClientBulkOrganizationResponse(errors.getHttpStatus(), errors.getError());
+        }
+        final User user = userService.getByUuid(userUuid);
+        final List<GetUserClientOrganizationsResponseModel> clientsResponse = organizationsUuids.stream()
+                .flatMap(uuid -> {
+                    final Organization organization = organizationService.getByUuid(uuid);
+                    return getUserClientOrganizationResponse(user, organization).stream();
+                })
+                .collect(Collectors.toList());
+        LOGGER.debug("Successfully retrieved user organization's client organizations by user uuid - {} and by user organizationsUuids - {}", userUuid, organizationsUuids);
+        return new UserClientBulkOrganizationResponse(new GetUserClientBulkOrganizationsGridResponseModel(clientsResponse.size(), clientsResponse));
+    }
+
     private SingleErrorWithStatus<ClientOrganizationErrorResponseModel> validateSlugErrors(final String slug) {
         LOGGER.debug("Validating client slug for slug - {}", slug);
         if (!slugValidationComponent.validate(slug)) {
@@ -241,35 +237,31 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         return SingleErrorWithStatus.empty();
     }
 
-    private UserClientOrganizationResponse getClientsForSuperAdmin(
+    private List<GetUserClientOrganizationsResponseModel> getClientsForSuperAdmin(
             final User user,
             final Organization organization) {
-        return new UserClientOrganizationResponse(
-                user.roleOfSuperAdmin()
-                        .map(theRole -> organization.getClientOrganizations().stream()
-                                .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, theRole.getUserRole()))
-                                .collect(Collectors.toList()))
-                        .orElseThrow(() -> new IllegalStateException(format("Super Admin can't find the clients for organization - %s", organization.getUuid())))
-        );
+        return user.roleOfSuperAdmin()
+                .map(theRole -> organization.getClientOrganizations().stream()
+                        .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, theRole.getUserRole()))
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new IllegalStateException(format("Super Admin can't find the clients for organization - %s", organization.getUuid())));
     }
 
-    private UserClientOrganizationResponse getClientsForAccessibleUser(final String userUuid, final String organizationUuid) {
-        return new UserClientOrganizationResponse(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
+    private List<GetUserClientOrganizationsResponseModel> getClientsForAccessibleUser(final String userUuid, final String organizationUuid) {
+        return userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
                 .stream()
                 .map(theClientRole -> buildGetUserClientOrganizationsResponseModel(theClientRole.getClientOrganization(), theClientRole.getUserRole()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
-    private UserClientOrganizationResponse getClientsForOrganizationOwnerAndAdmin(final User user, final Organization organization) {
-        return new UserClientOrganizationResponse(
-                user.roles().stream().filter(role -> role instanceof UserOrganizationAdminRole
-                        || role instanceof UserOrganizationOwnerRole)
-                        .findAny()
-                        .map(theRole -> organization.getClientOrganizations().stream()
-                                .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, theRole.getUserRole()))
-                                .collect(Collectors.toList()))
-                        .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"))
-        );
+    private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationOwnerAndAdmin(final User user, final Organization organization) {
+        return user.roles().stream().filter(role -> role instanceof UserOrganizationAdminRole
+                || role instanceof UserOrganizationOwnerRole)
+                .findAny()
+                .map(theRole -> organization.getClientOrganizations().stream()
+                        .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, theRole.getUserRole()))
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"));
     }
 
     private GetUserClientOrganizationsResponseModel buildGetUserClientOrganizationsResponseModel(final ClientOrganization clientOrganization, final UserRole role) {
@@ -280,6 +272,28 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
                 clientOrganization.getImageBlobId(),
                 UserRoleModel.valueOf(role.name()),
                 clientOrganization.getCreated()
+        );
+    }
+
+    private List<GetUserClientOrganizationsResponseModel> getUserClientOrganizationResponse(final User user, final Organization organization) {
+        if (user.roleOfSuperAdmin().isPresent()) {
+            return getClientsForSuperAdmin(user, organization);
+        } else if (user.roleOfOrganizationOwner(organization).isPresent() || user.roleOfOrganizationAdmin(organization).isPresent()) {
+            return getClientsForOrganizationOwnerAndAdmin(user, organization);
+        } else {
+            return getClientsForAccessibleUser(user.getUuid(), organization.getUuid());
+        }
+    }
+
+    private GetClientOrganizationResponseModel buildGetClientOrganizationResponseModel(final ClientOrganization client) {
+        return new GetClientOrganizationResponseModel(
+                client.getOrganization().getUuid(),
+                client.getOrganization().getSlug(),
+                client.getUuid(),
+                client.getSlug(),
+                client.getName(),
+                client.getImageBlobId(),
+                client.getCreated()
         );
     }
 }

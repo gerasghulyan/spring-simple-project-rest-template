@@ -2,6 +2,7 @@ package com.vntana.core.rest.client.client;
 
 import com.vntana.core.model.client.request.CheckAvailableClientOrganizationSlugRequest;
 import com.vntana.core.model.client.request.CreateClientOrganizationRequest;
+import com.vntana.core.model.client.request.GetClientsByUserAndBulkOrganizationRequest;
 import com.vntana.core.model.client.request.UpdateClientOrganizationRequest;
 import com.vntana.core.model.client.response.CheckAvailableClientOrganizationSlugResultResponse;
 import com.vntana.core.model.client.response.CreateClientOrganizationResultResponse;
@@ -9,6 +10,7 @@ import com.vntana.core.model.client.response.UpdateClientOrganizationResultRespo
 import com.vntana.core.model.client.response.get.GetAllOrganizationsResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserClientBulkOrganizationResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -41,4 +43,9 @@ public interface ClientOrganizationResourceClient {
 
     @PutMapping
     UpdateClientOrganizationResultResponse update(@RequestBody final UpdateClientOrganizationRequest request);
+
+    @PostMapping(path = "/users/{userUuid}/organizations")
+    UserClientBulkOrganizationResponse getByUserAndBulkOrganizations(
+            @PathVariable("userUuid") final String userUuid,
+            @RequestBody final GetClientsByUserAndBulkOrganizationRequest request);
 }

@@ -9,7 +9,10 @@ import com.vntana.core.model.client.response.UpdateClientOrganizationResultRespo
 import com.vntana.core.model.client.response.get.GetAllOrganizationsResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationBySlugResultResponse;
 import com.vntana.core.model.client.response.get.GetClientOrganizationResultResponse;
+import com.vntana.core.model.user.response.UserClientBulkOrganizationResponse;
 import com.vntana.core.model.user.response.UserClientOrganizationResponse;
+
+import java.util.List;
 
 /**
  * Created by Arthur Asatryan.
@@ -30,4 +33,6 @@ public interface ClientOrganizationServiceFacade {
     GetAllOrganizationsResultResponse getAll();
 
     UpdateClientOrganizationResultResponse update(final UpdateClientOrganizationRequest request);
+
+    UserClientBulkOrganizationResponse getByUserAndBulkOrganizations(final String userUuid, final List<String> organizationsUuids);
 }
