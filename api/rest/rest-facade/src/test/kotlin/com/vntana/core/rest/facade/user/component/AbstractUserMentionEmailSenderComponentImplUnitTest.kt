@@ -2,8 +2,8 @@ package com.vntana.core.rest.facade.user.component
 
 import com.vntana.core.notification.EmailSenderService
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
-import com.vntana.core.rest.facade.user.component.dto.SendUserMentionDto
-import com.vntana.core.rest.facade.user.component.dto.UserMentionedEntityType
+import com.vntana.core.model.user.request.SendUserMentionRequest
+import com.vntana.core.model.user.enums.UserMentionedEntityTypeModel
 import com.vntana.core.rest.facade.user.component.impl.UserMentionEmailSenderComponentImpl
 import com.vntana.core.service.template.email.TemplateEmailService
 import org.easymock.Mock
@@ -37,15 +37,15 @@ abstract class AbstractUserMentionEmailSenderComponentImplUnitTest : AbstractFac
         )
     }
 
-    fun buildSendMentionUserEmailDto(
+    fun buildSendUserMentionRequest(
             email: String? = uuid(),
             promptingUserName: String? = uuid(),
             mentionedUserName: String? = uuid(),
-            entityType: UserMentionedEntityType? = UserMentionedEntityType.COMMENT,
+            entityType: UserMentionedEntityTypeModel? = UserMentionedEntityTypeModel.COMMENT,
             entityUuid: String? = uuid(),
             productUuid: String? = uuid(),
             productName: String? = uuid(),
             clientSlug: String? = uuid(),
             organizationSlug: String? = uuid()
-    ): SendUserMentionDto = SendUserMentionDto(email, promptingUserName, mentionedUserName, entityType, entityUuid, productUuid, productName, clientSlug, organizationSlug)
+    ): SendUserMentionRequest = SendUserMentionRequest(email, promptingUserName, mentionedUserName, entityType, entityUuid, productUuid, productName, clientSlug, organizationSlug)
 }

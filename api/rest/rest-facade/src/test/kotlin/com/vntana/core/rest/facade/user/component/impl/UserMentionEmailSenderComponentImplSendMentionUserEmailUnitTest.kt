@@ -22,35 +22,35 @@ class UserMentionEmailSenderComponentImplSendMentionUserEmailUnitTest : Abstract
         replayAll()
         assertThatThrownBy { mentionEmailSenderComponent.sendMentionedUsersEmails(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( email = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( email = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( email = emptyString()) }
+        assertThatThrownBy { buildSendUserMentionRequest( email = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( promptingUserName = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( promptingUserName = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( promptingUserName = emptyString()) }
+        assertThatThrownBy { buildSendUserMentionRequest( promptingUserName = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( mentionedUserName = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( mentionedUserName = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( mentionedUserName = emptyString()) }
+        assertThatThrownBy { buildSendUserMentionRequest( mentionedUserName = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( entityType = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( entityType = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( productUuid = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( productUuid = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( productUuid = emptyString()) }
+        assertThatThrownBy { buildSendUserMentionRequest( productUuid = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( productName = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( productName = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( productName = emptyString()) }
+        assertThatThrownBy { buildSendUserMentionRequest( productName = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( clientSlug = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( clientSlug = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( clientSlug = emptyString()) }
+        assertThatThrownBy { buildSendUserMentionRequest( clientSlug = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( organizationSlug = null) }
+        assertThatThrownBy { buildSendUserMentionRequest( organizationSlug = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendMentionUserEmailDto( organizationSlug = emptyString()) }
+        assertThatThrownBy { buildSendUserMentionRequest( organizationSlug = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -59,7 +59,7 @@ class UserMentionEmailSenderComponentImplSendMentionUserEmailUnitTest : Abstract
     fun test() {
         val templateName = uuid()
         val templateEmail = TemplateEmail(TemplateEmailType.USER_MENTION, templateName)
-        val dto = buildSendMentionUserEmailDto()
+        val dto = buildSendUserMentionRequest()
         resetAll()
         expect(templateEmailService.getByType(TemplateEmailType.USER_MENTION)).andReturn(templateEmail)
         expect(emailSenderService.sendEmail(isA(MentionUserEmailSendPayload::class.java))).andVoid()

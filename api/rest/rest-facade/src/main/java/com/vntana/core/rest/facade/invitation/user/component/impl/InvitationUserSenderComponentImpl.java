@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.lang.String.format;
+
 /**
  * Created by Manuk Gharslyan.
  * Date: 5/15/2020
@@ -40,7 +42,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
     private final String websiteUrl;
     private final String senderEmail;
     private final String emailSubject;
-    private final String isClientInvitation;
+    private final String type;
 
     public InvitationUserSenderComponentImpl(
             final EmailSenderService emailSenderService,
@@ -51,7 +53,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
             @Value("${user.invitation.website.url}") final String websiteUrl,
             @Value("${user.invitation.email.send.from}") final String senderEmail,
             @Value("${user.invitation.email.subject}") final String emailSubject,
-            @Value("isClientInvitation=true") final String isClientInvitation) {
+            @Value("${user.invitation.type}") final String type) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.emailSenderService = emailSenderService;
         this.templateEmailService = templateEmailService;
@@ -61,7 +63,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
         this.websiteUrl = websiteUrl;
         this.senderEmail = senderEmail;
         this.emailSubject = emailSubject;
-        this.isClientInvitation = isClientInvitation;
+        this.type = type;
     }
 
     @Override
@@ -75,7 +77,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
                 request.getEmail(),
                 senderEmail,
                 emailSubject,
-                String.format("%s/%s", websiteUrl, request.getToken()),
+                format("%s/%s", websiteUrl, request.getToken()),
                 user.getFullName(),
                 organization.getName()
         );
@@ -96,7 +98,7 @@ public class InvitationUserSenderComponentImpl implements InvitationUserSenderCo
                     request.getEmail(),
                     senderEmail,
                     emailSubject,
-                    String.format("%s/%s?%s", websiteUrl, value, isClientInvitation),
+                    String.format("%s/%s?%s", websiteUrl, value, format(type, "CLIENT")),
                     user.getFullName(),
                     invitationUserToClientService.getByUuid(key).getClientOrganization().getName()
             );
