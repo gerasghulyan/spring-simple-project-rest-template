@@ -69,6 +69,39 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
     }
 
     @Test
+    fun `test when user has client roles`() {
+        val adminUserUuid = userResourceTestHelper.persistUser().response().uuid
+        val ownerUserUuid = userResourceTestHelper.persistUser().response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = ownerUserUuid).response().uuid
+        val client1Uuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        val client2Uuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        userRoleResourceClient.grantUserClientRole(userRoleResourceTestHelper.buildUserRoleGrantClientRequest(userUuid = adminUserUuid, clientUuid = client1Uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN))
+        userRoleResourceClient.grantUserClientRole(userRoleResourceTestHelper.buildUserRoleGrantClientRequest(userUuid = adminUserUuid, clientUuid = client2Uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER))
+        userRoleResourceClient.grantUserOrganizationAdminRole(userRoleResourceTestHelper.buildUserRoleGrantOrganizationAdminRequest(userUuid = adminUserUuid, organizationUuid = organizationUuid)).let {
+            assertBasicSuccessResultResponse(it)
+            it.body?.response()?.let { response ->
+                assertThat(response.userUuid).isEqualTo(adminUserUuid)
+                userResourceClient.getUsersByOrganization(organizationUuid)?.body?.response()?.run {
+                    assertThat(this.totalCount()).isEqualTo(2)
+                    this.items().forEach { responseModel ->
+                        if (responseModel.userRoleModel == UserRoleModel.ORGANIZATION_ADMIN) {
+                            assertThat(responseModel.uuid).isEqualTo(adminUserUuid)
+                        } else {
+                            assertThat(responseModel.uuid).isEqualTo(ownerUserUuid)
+                        }
+                    }
+                }
+                userResourceClient.getUsersByClientOrganization(client1Uuid)?.body?.response()?.run {
+                    assertThat(this.totalCount()).isEqualTo(0)
+                }
+                userResourceClient.getUsersByClientOrganization(client2Uuid)?.body?.response()?.run {
+                    assertThat(this.totalCount()).isEqualTo(0)
+                }
+            }
+        }
+    }
+
+    @Test
     fun test() {
         val adminUserUuid = userResourceTestHelper.persistUser().response().uuid
         val ownerUserUuid = userResourceTestHelper.persistUser().response().uuid
@@ -80,7 +113,7 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
                 userResourceClient.getUsersByOrganization(organizationUuid)?.body?.response()?.run {
                     assertThat(this.totalCount()).isEqualTo(2)
                     this.items().forEach { responseModel ->
-                        if (responseModel.userRoleModel.equals(UserRoleModel.ORGANIZATION_ADMIN)) {
+                        if (responseModel.userRoleModel == UserRoleModel.ORGANIZATION_ADMIN) {
                             assertThat(responseModel.uuid).isEqualTo(adminUserUuid)
                         } else {
                             assertThat(responseModel.uuid).isEqualTo(ownerUserUuid)
@@ -90,5 +123,4 @@ class UserRoleGrantUserOrganizationAdminRoleWebTest : AbstractUserRoleWebTest() 
             }
         }
     }
-
 }

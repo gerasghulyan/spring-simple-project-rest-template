@@ -1,6 +1,7 @@
 package com.vntana.core.rest.facade.user.role.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.UserOrganizationAdminRole;
 import com.vntana.core.domain.user.UserRole;
@@ -11,14 +12,15 @@ import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
 import com.vntana.core.service.token.auth.TokenAuthenticationService;
 import com.vntana.core.service.user.role.UserRoleService;
-import com.vntana.core.service.user.role.dto.UserGrantClientRoleDto;
-import com.vntana.core.service.user.role.dto.UserGrantOrganizationRoleDto;
-import com.vntana.core.service.user.role.dto.UserRevokeClientRoleDto;
-import com.vntana.core.service.user.role.dto.UserRevokeOrganizationAdminRoleDto;
+import com.vntana.core.service.user.role.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Arman Gevorgyan.
@@ -64,6 +66,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         if (error.isPresent()) {
             return new UserRoleGrantOrganizationAdminResponse(error.getHttpStatus(), error.getError());
         }
+        revokeUserOrganizationClients(request.getOrganizationUuid(), request.getUserUuid());
         final UserOrganizationAdminRole adminRole = userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(request.getUserUuid(), request.getOrganizationUuid()));
         LOGGER.debug("Successfully granted user organization role for request - {}", request);
         return new UserRoleGrantOrganizationAdminResponse(adminRole.getUser().getUuid());
@@ -112,5 +115,16 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         tokenAuthenticationService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user client role for request - {}", request);
         return new UserRoleRevokeClientResponse(request.getUserUuid());
+    }
+    
+    private void revokeUserOrganizationClients(final String organizationUuid, final String userUuid) {
+        final List<String> clientUuids = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
+                .stream()
+                .map(AbstractClientOrganizationAwareUserRole::getClientOrganization)
+                .map(ClientOrganization::getUuid)
+                .collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(clientUuids)) {
+            userRoleService.revokeUserClientsRoles(new UserRevokeClientsRolesDto(userUuid, clientUuids));
+        }
     }
 }
