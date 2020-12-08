@@ -4,8 +4,6 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserOrganizationOwnerRole;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel;
@@ -44,7 +42,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -255,11 +254,9 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     }
 
     private List<GetUserClientOrganizationsResponseModel> getClientsForOrganizationOwnerAndAdmin(final User user, final Organization organization) {
-        return user.roles().stream().filter(role -> role instanceof UserOrganizationAdminRole
-                || role instanceof UserOrganizationOwnerRole)
-                .findAny()
-                .map(theRole -> organization.getClientOrganizations().stream()
-                        .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, theRole.getUserRole()))
+        return userRoleService.findByOrganizationAndUser(organization.getUuid(), user.getUuid())
+                .map(role -> organization.getClientOrganizations().stream()
+                        .map(theClientOrganization -> buildGetUserClientOrganizationsResponseModel(theClientOrganization, role.getUserRole()))
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new UnsupportedOperationException("Unsupported user organization role, should be handled during next sprints"));
     }
