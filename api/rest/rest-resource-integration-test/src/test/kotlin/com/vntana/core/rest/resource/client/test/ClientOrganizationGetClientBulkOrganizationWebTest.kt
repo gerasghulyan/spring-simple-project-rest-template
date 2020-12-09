@@ -38,11 +38,8 @@ class ClientOrganizationGetClientBulkOrganizationWebTest : AbstractClientOrganiz
     fun `test getByUserAndBulkOrganizations for super admin user`() {
         val userCreationResponse = userResourceTestHelper.persistUser().response()
         userRoleResourceTestHelper.grantSuperAdmin(userUuid = userCreationResponse.uuid)
-        val userCreationResponse2 = userResourceTestHelper.persistUser().response()
         val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userCreationResponse.organizationUuid).response().uuid
         val clientUuid2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userCreationResponse.organizationUuid).response().uuid
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userCreationResponse.uuid, clientUuid = clientUuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userCreationResponse2.uuid, clientUuid = clientUuid2, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
         clientOrganizationResourceClient.getByUserAndBulkOrganizations(userCreationResponse.uuid, GetClientsByUserAndBulkOrganizationRequest(listOf(userCreationResponse.organizationUuid))).let {
             assertBasicSuccessResultResponse(it)
             val items = it.response().items()
@@ -54,11 +51,8 @@ class ClientOrganizationGetClientBulkOrganizationWebTest : AbstractClientOrganiz
     @Test
     fun `test getByUserAndBulkOrganizations for organization owner user`() {
         val userCreationResponse = userResourceTestHelper.persistUser().response()
-        val userCreationResponse2 = userResourceTestHelper.persistUser().response()
         val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userCreationResponse.organizationUuid).response().uuid
         val clientUuid2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userCreationResponse.organizationUuid).response().uuid
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userCreationResponse.uuid, clientUuid = clientUuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userCreationResponse2.uuid, clientUuid = clientUuid2, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
         clientOrganizationResourceClient.getByUserAndBulkOrganizations(userCreationResponse.uuid, GetClientsByUserAndBulkOrganizationRequest(listOf(userCreationResponse.organizationUuid))).let {
             assertBasicSuccessResultResponse(it)
             val items = it.response().items()
@@ -74,13 +68,11 @@ class ClientOrganizationGetClientBulkOrganizationWebTest : AbstractClientOrganiz
         userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = userCreationResponse2.uuid, organizationUuid = userCreationResponse.organizationUuid)
         val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userCreationResponse.organizationUuid).response().uuid
         val clientUuid2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userCreationResponse.organizationUuid).response().uuid
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userCreationResponse.uuid, clientUuid = clientUuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userCreationResponse2.uuid, clientUuid = clientUuid2, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
         clientOrganizationResourceClient.getByUserAndBulkOrganizations(userCreationResponse2.uuid, GetClientsByUserAndBulkOrganizationRequest(listOf(userCreationResponse.organizationUuid))).let {
             assertBasicSuccessResultResponse(it)
             val items = it.response().items()
-            assertThat(items.size).isEqualTo(1)
-            assertThat(items.map { item -> item.uuid }.toList()).containsOnly(clientUuid2)
+            assertThat(items.size).isEqualTo(2)
+            assertThat(items.map { item -> item.uuid }.toList()).containsOnly(clientUuid, clientUuid2)
         }
     }
 }

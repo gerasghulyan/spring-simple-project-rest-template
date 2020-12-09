@@ -275,11 +275,11 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private List<GetUserClientOrganizationsResponseModel> getUserClientOrganizationResponse(final User user, final Organization organization) {
         if (user.roleOfSuperAdmin().isPresent()) {
             return getClientsForSuperAdmin(user, organization);
-        } else if (user.roleOfOrganizationOwner(organization).isPresent() || user.roleOfOrganizationAdmin(organization).isPresent()) {
-            return getClientsForOrganizationOwnerAndAdmin(user, organization);
-        } else {
-            return getClientsForAccessibleUser(user.getUuid(), organization.getUuid());
         }
+        if (user.roleOfOrganizationOwner(organization).isPresent() || user.roleOfOrganizationAdmin(organization).isPresent()) {
+            return getClientsForOrganizationOwnerAndAdmin(user, organization);
+        }
+        return getClientsForAccessibleUser(user.getUuid(), organization.getUuid());
     }
 
     private GetClientOrganizationResponseModel buildGetClientOrganizationResponseModel(final ClientOrganization client) {
