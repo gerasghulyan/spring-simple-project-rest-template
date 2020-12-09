@@ -2,14 +2,13 @@ package com.vntana.core.rest.facade.user.role.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
-import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.model.user.role.response.*;
 import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
+import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.token.auth.TokenAuthenticationService;
 import com.vntana.core.service.user.role.UserRoleService;
 import com.vntana.core.service.user.role.dto.*;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -35,13 +35,17 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
     private final UserRoleFacadePreconditionCheckerComponent preconditionChecker;
     private final TokenAuthenticationService tokenAuthenticationService;
     private final UserRoleService userRoleService;
+    private final OrganizationClientService organizationClientService;
 
     public UserRoleServiceFacadeImpl(final UserRoleFacadePreconditionCheckerComponent preconditionChecker,
                                      final TokenAuthenticationService tokenAuthenticationService,
-                                     final UserRoleService userRoleService) {
+                                     final UserRoleService userRoleService,
+                                     final OrganizationClientService organizationClientService
+    ) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.preconditionChecker = preconditionChecker;
         this.tokenAuthenticationService = tokenAuthenticationService;
+        this.organizationClientService = organizationClientService;
         this.userRoleService = userRoleService;
     }
 
@@ -80,6 +84,8 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         if (error.isPresent()) {
             return new UserRoleGrantClientOrganizationResponse(error.getHttpStatus(), error.getError());
         }
+        final String organizationUuid = organizationClientService.getByUuid(request.getClientUuid()).getOrganization().getUuid();
+        revokeIfUserOrganizationRolePresent(organizationUuid, request.getUserUuid());
         final AbstractClientOrganizationAwareUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(
                 request.getUserUuid(),
                 request.getClientUuid(),
@@ -116,7 +122,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         LOGGER.debug("Successfully revoked user client role for request - {}", request);
         return new UserRoleRevokeClientResponse(request.getUserUuid());
     }
-    
+
     private void revokeUserOrganizationClients(final String organizationUuid, final String userUuid) {
         final List<String> clientUuids = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid)
                 .stream()
@@ -126,5 +132,15 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         if (!CollectionUtils.isEmpty(clientUuids)) {
             userRoleService.revokeUserClientsRoles(new UserRevokeClientsRolesDto(userUuid, clientUuids));
         }
+    }
+
+    private void revokeIfUserOrganizationRolePresent(final String organizationUuid, final String userUuid) {
+        final Optional<AbstractOrganizationAwareUserRole> organizationRoleOptional = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
+        organizationRoleOptional.ifPresent(organizationRole -> {
+            if (organizationRole instanceof UserOrganizationAdminRole) {
+                userRoleService.revokeOrganizationAdminRole(
+                        new UserRevokeOrganizationAdminRoleDto(userUuid, organizationUuid));
+            }
+        });
     }
 }

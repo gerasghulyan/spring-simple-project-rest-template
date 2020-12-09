@@ -79,8 +79,8 @@ class ClientOrganizationGetClientBulkOrganizationWebTest : AbstractClientOrganiz
         clientOrganizationResourceClient.getByUserAndBulkOrganizations(userCreationResponse2.uuid, GetClientsByUserAndBulkOrganizationRequest(listOf(userCreationResponse.organizationUuid))).let {
             assertBasicSuccessResultResponse(it)
             val items = it.response().items()
-            assertThat(items.size).isEqualTo(2)
-            assertThat(items.map { item -> item.uuid }.toList()).containsOnly(clientUuid, clientUuid2)
+            assertThat(items.size).isEqualTo(1)
+            assertThat(items.map { item -> item.uuid }.toList()).containsOnly(clientUuid2)
         }
     }
 }

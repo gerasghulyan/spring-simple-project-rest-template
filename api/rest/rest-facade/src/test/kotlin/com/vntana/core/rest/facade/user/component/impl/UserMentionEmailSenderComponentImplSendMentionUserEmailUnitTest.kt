@@ -15,42 +15,12 @@ import org.junit.Test
  * Time: 14:57
  */
 class UserMentionEmailSenderComponentImplSendMentionUserEmailUnitTest : AbstractUserMentionEmailSenderComponentImplUnitTest() {
-    
+
     @Test
     fun `test with invalid argument`() {
         resetAll()
         replayAll()
         assertThatThrownBy { mentionEmailSenderComponent.sendMentionedUsersEmails(null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( email = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( email = emptyString()) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( promptingUserName = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( promptingUserName = emptyString()) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( mentionedUserName = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( mentionedUserName = emptyString()) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( entityType = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( productUuid = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( productUuid = emptyString()) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( productName = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( productName = emptyString()) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( clientSlug = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( clientSlug = emptyString()) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( organizationSlug = null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { buildSendUserMentionRequest( organizationSlug = emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }

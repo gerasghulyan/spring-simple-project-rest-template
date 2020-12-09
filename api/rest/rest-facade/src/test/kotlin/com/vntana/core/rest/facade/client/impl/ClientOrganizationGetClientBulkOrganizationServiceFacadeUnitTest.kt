@@ -1,13 +1,16 @@
 package com.vntana.core.rest.facade.client.impl
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus
+import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.client.error.ClientOrganizationErrorResponseModel
 import com.vntana.core.rest.facade.client.AbstractClientOrganizationServiceFacadeUnitTest
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
-import org.easymock.EasyMock.*
+import org.easymock.EasyMock.anyString
+import org.easymock.EasyMock.expect
 import org.junit.Test
+import java.util.*
 
 /**
  * Created by Manuk Gharslyan.
@@ -64,10 +67,12 @@ class ClientOrganizationGetClientBulkOrganizationServiceFacadeUnitTest : Abstrac
         val organization = organizationCommonTestHelper.buildOrganization()
         val user = userHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
+        val userRole = Optional.of(user.roleOfOrganizationOwner(organization).get() as AbstractOrganizationAwareUserRole)
         organization.grantClientOrganization(clientOrganization)
         expect(preconditionCheckerComponent.checkGetByUserAndBulkOrganizations(anyString(), listOf(anyString()))).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(anyString())).andReturn(user)
         expect(organizationService.getByUuid(anyString())).andReturn(organization)
+        expect(userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(userRole)
         replayAll()
         clientOrganizationServiceFacade.getByUserAndBulkOrganizations(user.uuid, listOf(organization.uuid)).let {
             assertThat(it.response())
@@ -90,10 +95,12 @@ class ClientOrganizationGetClientBulkOrganizationServiceFacadeUnitTest : Abstrac
         val organization = organizationCommonTestHelper.buildOrganization()
         val user = userHelper.buildUserWithOrganizationAdminRole(organization = organization)
         val clientOrganization = commonTestHelper.buildClientOrganization(organization = organization)
+        val userRole = Optional.of(user.roleOfOrganizationAdmin(organization).get() as AbstractOrganizationAwareUserRole)
         organization.grantClientOrganization(clientOrganization)
         expect(preconditionCheckerComponent.checkGetByUserAndBulkOrganizations(anyString(), listOf(anyString()))).andReturn(SingleErrorWithStatus.empty())
         expect(userService.getByUuid(anyString())).andReturn(user)
         expect(organizationService.getByUuid(anyString())).andReturn(organization)
+        expect(userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(userRole)
         replayAll()
         clientOrganizationServiceFacade.getByUserAndBulkOrganizations(user.uuid, listOf(organization.uuid)).let {
             assertThat(it.response())
