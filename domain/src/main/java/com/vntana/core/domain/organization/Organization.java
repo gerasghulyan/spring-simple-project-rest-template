@@ -46,6 +46,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     private InvitationOrganization invitation;
 
     public Organization() {
+        super();
     }
 
     public Organization(final String name, final String slug, final String imageBlobId, final OrganizationStatus status) {

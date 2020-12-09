@@ -1,24 +1,16 @@
 package com.vntana.core.model.user.request;
 
-import com.vntana.commons.api.model.request.ValidatableRequest;
-import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.user.enums.UserMentionedEntityTypeModel;
-import com.vntana.core.model.user.error.UserErrorResponseModel;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Vardan Aivazian
  * Date: 07.10.2020
  * Time: 11:36
  */
-public class SendUserMentionRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
+public class SendUserMentionRequest {
 
     private final String email;
     private final String promptingUserName;
@@ -48,35 +40,6 @@ public class SendUserMentionRequest extends AbstractRequestModel implements Vali
         this.productName = productName;
         this.clientSlug = clientSlug;
         this.organizationSlug = organizationSlug;
-    }
-
-    @Override
-    public List<UserErrorResponseModel> validate() {
-        if (StringUtils.isEmpty(email)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_EMAIL);
-        }
-        if (StringUtils.isEmpty(promptingUserName)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_PROMPTING_USER_NAME);
-        }
-        if (StringUtils.isEmpty(mentionedUserName)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_MENTIONED_USER_NAME);
-        }
-        if (Objects.isNull(entityType)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_ENTITY_TYPE);
-        }
-        if (StringUtils.isEmpty(entityUuid)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_ENTITY_UUID);
-        }
-        if (StringUtils.isEmpty(productName)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_PRODUCT_NAME);
-        }
-        if (StringUtils.isEmpty(clientSlug)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_CLIENT_SLUG);
-        }
-        if (StringUtils.isEmpty(organizationSlug)) {
-            return Collections.singletonList(UserErrorResponseModel.MISSING_ORGANIZATION_SLUG);
-        }
-        return Collections.emptyList();
     }
 
     @Override

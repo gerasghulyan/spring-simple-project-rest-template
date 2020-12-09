@@ -1,7 +1,9 @@
 package com.vntana.core.rest.facade.user.role.component.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
+import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
+import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
@@ -84,12 +86,16 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (userRoleService.findByClientOrganizationAndUser(request.getClientUuid(), request.getUserUuid()).isPresent()) {
             return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
         }
-        final Organization organization = clientOrganizationService.findByUuid(request.getClientUuid()).get().getOrganization();
-        if (userRoleService.findByOrganizationAndUser(organization.getUuid(), request.getUserUuid()).isPresent()) {
-            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED);
-        }
+        final Optional<Optional<AbstractOrganizationAwareUserRole>> matchOwnerRole = Optional.of(clientOrganizationService.getByUuid(request.getClientUuid()))
+                .map(ClientOrganization::getOrganization)
+                .map(Organization::getUuid)
+                .map(organizationUuid -> userRoleService.findByOrganizationAndUser(organizationUuid, request.getUserUuid()))
+                .filter(abstractOrganizationAwareUserRole -> abstractOrganizationAwareUserRole.isPresent()
+                        && UserRole.ORGANIZATION_OWNER == abstractOrganizationAwareUserRole.get().getUserRole());
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> singleErrorWithStatus = matchOwnerRole.isPresent() ? 
+                SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED) : SingleErrorWithStatus.empty();
         LOGGER.debug("Successfully processed checkGrantClientAdminRole for request - {}", request);
-        return SingleErrorWithStatus.empty();
+        return singleErrorWithStatus;
     }
 
     @Override

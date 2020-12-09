@@ -2,10 +2,7 @@ package com.vntana.core.rest.facade.user.role.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
-import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
-import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
-import com.vntana.core.domain.user.UserOrganizationAdminRole;
-import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.*;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.model.user.role.response.*;
@@ -88,7 +85,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
             return new UserRoleGrantClientOrganizationResponse(error.getHttpStatus(), error.getError());
         }
         final String organizationUuid = organizationClientService.getByUuid(request.getClientUuid()).getOrganization().getUuid();
-        revokeUserOrganization(organizationUuid, request.getUserUuid());
+        revokeIfUserOrganizationRolePresent(organizationUuid, request.getUserUuid());
         final AbstractClientOrganizationAwareUserRole clientRole = userRoleService.grantClientRole(new UserGrantClientRoleDto(
                 request.getUserUuid(),
                 request.getClientUuid(),
@@ -137,14 +134,13 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         }
     }
 
-    private void revokeUserOrganization(final String organizationUuid, final String userUuid) {
+    private void revokeIfUserOrganizationRolePresent(final String organizationUuid, final String userUuid) {
         final Optional<AbstractOrganizationAwareUserRole> organizationRoleOptional = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
-        if (organizationRoleOptional.isPresent()) {
-            final AbstractOrganizationAwareUserRole organizationRole = organizationRoleOptional.get();
+        organizationRoleOptional.ifPresent(organizationRole -> {
             if (organizationRole instanceof UserOrganizationAdminRole) {
                 userRoleService.revokeOrganizationAdminRole(
                         new UserRevokeOrganizationAdminRoleDto(userUuid, organizationUuid));
             }
-        }
+        });
     }
 }

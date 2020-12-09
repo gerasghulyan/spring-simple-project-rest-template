@@ -4,6 +4,7 @@ import com.vntana.core.domain.template.email.TemplateEmail
 import com.vntana.core.domain.template.email.TemplateEmailType
 import com.vntana.core.notification.payload.mention.user.MentionUserEmailSendPayload
 import com.vntana.core.rest.facade.user.component.AbstractUserMentionEmailSenderComponentImplUnitTest
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.easymock.EasyMock.isA
 import org.junit.Test
@@ -14,6 +15,15 @@ import org.junit.Test
  * Time: 14:57
  */
 class UserMentionEmailSenderComponentImplSendMentionUserEmailUnitTest : AbstractUserMentionEmailSenderComponentImplUnitTest() {
+
+    @Test
+    fun `test with invalid argument`() {
+        resetAll()
+        replayAll()
+        assertThatThrownBy { mentionEmailSenderComponent.sendMentionedUsersEmails(null) }
+                .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        verifyAll()
+    }
     
     @Test
     fun test() {

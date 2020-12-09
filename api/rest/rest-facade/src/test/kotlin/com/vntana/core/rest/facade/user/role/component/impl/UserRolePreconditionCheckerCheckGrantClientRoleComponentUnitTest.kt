@@ -59,15 +59,15 @@ class UserRolePreconditionCheckerCheckGrantClientRoleComponentUnitTest : Abstrac
     }
 
     @Test
-    fun `test when requested role does not exist but organization level role already exists`() {
+    fun `test when requested role does not exist but organization owner level role already exists`() {
         resetAll()
         val request = restTestHelper.buildUserRoleGrantClientRequest()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         expect(organizationClientService.existsByUuid(request.clientUuid)).andReturn(true)
         expect(userService.existsByUuid(request.userUuid)).andReturn(true)
         expect(userRoleService.findByClientOrganizationAndUser(request.clientUuid, request.userUuid)).andReturn(Optional.empty())
-        expect(organizationClientService.findByUuid(request.clientUuid)).andReturn(Optional.of(clientOrganization))
-        expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.userUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationAdminRole()))
+        expect(organizationClientService.getByUuid(request.clientUuid)).andReturn(clientOrganization)
+        expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.userUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationOwnerRole()))
         replayAll()
         preconditionChecker.checkGrantClientRole(request).let {
             assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED)
@@ -84,7 +84,7 @@ class UserRolePreconditionCheckerCheckGrantClientRoleComponentUnitTest : Abstrac
         expect(organizationClientService.existsByUuid(request.clientUuid)).andReturn(true)
         expect(userService.existsByUuid(request.userUuid)).andReturn(true)
         expect(userRoleService.findByClientOrganizationAndUser(request.clientUuid, request.userUuid)).andReturn(Optional.empty())
-        expect(organizationClientService.findByUuid(request.clientUuid)).andReturn(Optional.of(clientOrganization))
+        expect(organizationClientService.getByUuid(request.clientUuid)).andReturn(clientOrganization)
         expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.userUuid)).andReturn(Optional.empty())
         replayAll()
         assertThat(preconditionChecker.checkGrantClientRole(request)).isEqualTo(SingleErrorWithStatus.empty<UserRoleErrorResponseModel>())
