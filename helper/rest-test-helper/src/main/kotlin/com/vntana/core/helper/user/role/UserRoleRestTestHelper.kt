@@ -34,4 +34,9 @@ open class UserRoleRestTestHelper : AbstractRestTestHelper() {
             clientUuid: String? = uuid(),
             userRole: UserRoleModel? = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
     ): UserRoleRevokeClientRequest = UserRoleRevokeClientRequest(userUuid, clientUuid, userRole)
+
+    fun buildUserRoleRevokeOrganizationClientsRequest(
+            userUuid: String? = uuid(),
+            organizationUuid: String? = uuid()
+    ): UserRoleRevokeOrganizationClientsRequest = UserRoleRevokeOrganizationClientsRequest(userUuid, organizationUuid)
 }

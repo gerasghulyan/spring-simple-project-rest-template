@@ -124,6 +124,23 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         return SingleErrorWithStatus.empty();
     }
 
+    @Override
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientsRolesByUserAndOrganization(final UserRoleRevokeOrganizationClientsRequest request) {
+        LOGGER.debug("Processing checkRevokeClientsRolesByUserAndOrganization for request - {}", request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(request.getOrganizationUuid(), request.getUserUuid());
+        if (error.isPresent()) {
+            return error;
+        }
+        if (userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isPresent()) {
+            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_HAS_ORGANIZATION_ROLE);
+        }
+        if (userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isEmpty()) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.USER_NOT_FOUND_IN_ORGANIZATION_WITH_CLIENT_ROLE);
+        }
+        LOGGER.debug("Successfully processed checkRevokeClientsRolesByUserAndOrganization for request - {}", request);
+        return SingleErrorWithStatus.empty();
+    }
+
     private SingleErrorWithStatus<UserRoleErrorResponseModel> checkOrganizationAndUserExistence(final String organizationUuid,
                                                                                                 final String userUuid) {
         if (!organizationService.existsByUuid(organizationUuid)) {
