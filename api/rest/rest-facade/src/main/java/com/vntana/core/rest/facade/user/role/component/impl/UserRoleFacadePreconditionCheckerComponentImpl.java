@@ -131,16 +131,10 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (error.isPresent()) {
             return error;
         }
-        if (!userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isPresent()) {
-            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.INCORRECT_REVOKER_USER_ROLE);
-        }
-        if (!userService.existsByUuid(request.getRevocableUserUuid())) {
-            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.REVOCABLE_USER_NOT_FOUND);
-        }
-        if (userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getRevocableUserUuid()).isPresent()) {
+        if (userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isPresent()) {
             return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REVOCABLE_USER_HAS_ORGANIZATION_ROLE);
         }
-        if (userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getRevocableUserUuid()).isEmpty()) {
+        if (userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isEmpty()) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.REVOCABLE_USER_DOES_NOT_HAVE_CLIENT_ROLE);
         }
         LOGGER.debug("Successfully processed checkRevokeClientsRolesByUserAndOrganization for request - {}", request);

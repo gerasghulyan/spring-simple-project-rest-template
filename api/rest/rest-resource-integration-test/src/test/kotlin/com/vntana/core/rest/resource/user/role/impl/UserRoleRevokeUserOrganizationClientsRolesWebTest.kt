@@ -32,14 +32,6 @@ class UserRoleRevokeUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
                 userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(userUuid = emptyString())),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
-        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(revocableUserUuid = null)),
-                UserRoleErrorResponseModel.MISSING_REVOCABLE_USER_UUID
-        )
-        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(revocableUserUuid = emptyString())),
-                UserRoleErrorResponseModel.MISSING_REVOCABLE_USER_UUID
-        )
     }
 
     @Test
@@ -57,31 +49,13 @@ class UserRoleRevokeUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
     }
 
     @Test
-    fun `test when revoker does not have organization role`() {
-        val userResponse = userResourceTestHelper.persistUser().response()
-        val newOrganizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
-        val newClientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = newOrganizationUuid).response().uuid
-        userRoleResourceTestHelper.grantUserClientRole(userUuid = userResponse.uuid, clientUuid = newClientUuid)
-        val result = userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(userUuid = userResponse.uuid, organizationUuid = newOrganizationUuid))
-        assertBasicErrorResultResponse(HttpStatus.CONFLICT, result, UserRoleErrorResponseModel.INCORRECT_REVOKER_USER_ROLE)
-    }
-
-    @Test
-    fun `test when revocable user not found`() {
-        val userResponse = userResourceTestHelper.persistUser().response()
-        val result = userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(organizationUuid = userResponse.organizationUuid, userUuid = userResponse.uuid))
-        assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, result, UserRoleErrorResponseModel.REVOCABLE_USER_NOT_FOUND)
-    }
-
-    @Test
     fun `test when user has organization role`() {
         val userResponse = userResourceTestHelper.persistUser().response()
         val revocableUser = userResourceTestHelper.persistUser().response()
         userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = revocableUser.uuid, organizationUuid = userResponse.organizationUuid)
         val result = userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(
                 organizationUuid = userResponse.organizationUuid,
-                userUuid = userResponse.uuid,
-                revocableUserUuid = revocableUser.uuid
+                userUuid = revocableUser.uuid
         ))
         assertBasicErrorResultResponse(HttpStatus.CONFLICT, result, UserRoleErrorResponseModel.REVOCABLE_USER_HAS_ORGANIZATION_ROLE)
     }
@@ -95,8 +69,7 @@ class UserRoleRevokeUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
         userRoleResourceTestHelper.revokeClientRole(userUuid = revocableUserResponse.uuid, clientUuid = clientUuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
         val result = userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(
                 organizationUuid = userResponse.organizationUuid,
-                userUuid = userResponse.uuid,
-                revocableUserUuid = revocableUserResponse.uuid
+                userUuid = revocableUserResponse.uuid
         ))
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, result, UserRoleErrorResponseModel.REVOCABLE_USER_DOES_NOT_HAVE_CLIENT_ROLE)
     }
@@ -111,8 +84,7 @@ class UserRoleRevokeUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
         userRoleResourceTestHelper.grantUserClientRole(userUuid = revocableUserResponse.uuid, clientUuid = clientUuid2, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
         userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(
                 organizationUuid = userResponse.organizationUuid,
-                userUuid = userResponse.uuid,
-                revocableUserUuid = revocableUserResponse.uuid
+                userUuid = revocableUserResponse.uuid
         )).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.userUuid).isEqualTo(revocableUserResponse.uuid)

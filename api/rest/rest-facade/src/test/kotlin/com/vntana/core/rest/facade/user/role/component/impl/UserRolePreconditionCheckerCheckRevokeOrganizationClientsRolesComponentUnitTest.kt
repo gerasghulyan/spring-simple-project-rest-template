@@ -43,45 +43,12 @@ class UserRolePreconditionCheckerCheckRevokeOrganizationClientsRolesComponentUni
     }
 
     @Test
-    fun `test incorrect revoker user role`() {
-        resetAll()
-        val request = restTestHelper.buildUserRoleRevokeOrganizationClientsRequest()
-        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(userService.existsByUuid(request.userUuid)).andReturn(true)
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.empty())
-        replayAll()
-        preconditionChecker.checkRevokeOrganizationClientsRoles(request).let {
-            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.INCORRECT_REVOKER_USER_ROLE)
-            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-        }
-        verifyAll()
-    }
-
-    @Test
-    fun `test when revocable user not found`() {
-        resetAll()
-        val request = restTestHelper.buildUserRoleRevokeOrganizationClientsRequest()
-        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(userService.existsByUuid(request.userUuid)).andReturn(true)
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationAdminRole()))
-        expect(userService.existsByUuid(request.revocableUserUuid)).andReturn(false)
-        replayAll()
-        preconditionChecker.checkRevokeOrganizationClientsRoles(request).let {
-            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.REVOCABLE_USER_NOT_FOUND)
-            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
-        }
-        verifyAll()
-    }
-
-    @Test
     fun `test when user has organization related role`() {
         resetAll()
         val request = restTestHelper.buildUserRoleRevokeOrganizationClientsRequest()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.userUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationAdminRole()))
-        expect(userService.existsByUuid(request.revocableUserUuid)).andReturn(true)
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.revocableUserUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationAdminRole()))
         replayAll()
         preconditionChecker.checkRevokeOrganizationClientsRoles(request).let {
             assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.REVOCABLE_USER_HAS_ORGANIZATION_ROLE)
@@ -96,10 +63,8 @@ class UserRolePreconditionCheckerCheckRevokeOrganizationClientsRolesComponentUni
         val request = restTestHelper.buildUserRoleRevokeOrganizationClientsRequest()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.userUuid)).andReturn(true)
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationAdminRole()))
-        expect(userService.existsByUuid(request.revocableUserUuid)).andReturn(true)
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.revocableUserUuid)).andReturn(Optional.empty())
-        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.revocableUserUuid)).andReturn(listOf())
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(listOf())
         replayAll()
         preconditionChecker.checkRevokeOrganizationClientsRoles(request).let {
             assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.REVOCABLE_USER_DOES_NOT_HAVE_CLIENT_ROLE)
@@ -114,10 +79,8 @@ class UserRolePreconditionCheckerCheckRevokeOrganizationClientsRolesComponentUni
         val request = restTestHelper.buildUserRoleRevokeOrganizationClientsRequest()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.userUuid)).andReturn(true)
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationAdminRole()))
-        expect(userService.existsByUuid(request.revocableUserUuid)).andReturn(true)
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.revocableUserUuid)).andReturn(Optional.empty())
-        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.revocableUserUuid)).andReturn(listOf(commonTestHelper.buildUserClientContentManagerRole()))
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(listOf(commonTestHelper.buildUserClientContentManagerRole()))
         replayAll()
         assertThat(preconditionChecker.checkRevokeOrganizationClientsRoles(request).isPresent).isEqualTo(false)
         verifyAll()
