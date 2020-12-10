@@ -126,23 +126,23 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
 
     @Transactional
     @Override
-    public UserRoleRevokeOrganizationClientsResponse revokeClientsRolesByUserAndOrganization(final UserRoleRevokeOrganizationClientsRequest request) {
+    public UserRoleRevokeOrganizationClientsResponse revokeOrganizationClientsRoles(final UserRoleRevokeOrganizationClientsRequest request) {
         LOGGER.debug("Revoking user organization's clients roles for request - {}", request);
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkRevokeClientsRolesByUserAndOrganization(request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkRevokeOrganizationClientsRoles(request);
         if (error.isPresent()) {
             return new UserRoleRevokeOrganizationClientsResponse(error.getHttpStatus(), error.getError());
         }
         userRoleService.revokeUserClientsRoles(new UserRevokeClientsRolesDto(
-                request.getUserUuid(),
-                userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid())
+                request.getRevocableUserUuid(),
+                userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getRevocableUserUuid())
                         .stream()
                         .map(AbstractClientOrganizationAwareUserRole::getClientOrganization)
                         .map(ClientOrganization::getUuid)
                         .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
         ));
-        tokenAuthenticationService.expireAllByUser(request.getUserUuid());
+        tokenAuthenticationService.expireAllByUser(request.getRevocableUserUuid());
         LOGGER.debug("Successfully revoked user organization's clients roles for request - {}", request);
-        return new UserRoleRevokeOrganizationClientsResponse(request.getUserUuid());
+        return new UserRoleRevokeOrganizationClientsResponse(request.getRevocableUserUuid());
     }
 
     private void revokeUserOrganizationClients(final String organizationUuid, final String userUuid) {

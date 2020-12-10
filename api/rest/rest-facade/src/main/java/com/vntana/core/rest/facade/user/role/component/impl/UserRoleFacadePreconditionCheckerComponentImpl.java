@@ -92,7 +92,7 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
                 .map(organizationUuid -> userRoleService.findByOrganizationAndUser(organizationUuid, request.getUserUuid()))
                 .filter(abstractOrganizationAwareUserRole -> abstractOrganizationAwareUserRole.isPresent()
                         && UserRole.ORGANIZATION_OWNER == abstractOrganizationAwareUserRole.get().getUserRole());
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> singleErrorWithStatus = matchOwnerRole.isPresent() ? 
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> singleErrorWithStatus = matchOwnerRole.isPresent() ?
                 SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_ROLE_ALREADY_GRANTED) : SingleErrorWithStatus.empty();
         LOGGER.debug("Successfully processed checkGrantClientAdminRole for request - {}", request);
         return singleErrorWithStatus;
@@ -125,17 +125,23 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     }
 
     @Override
-    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientsRolesByUserAndOrganization(final UserRoleRevokeOrganizationClientsRequest request) {
+    public SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeOrganizationClientsRoles(final UserRoleRevokeOrganizationClientsRequest request) {
         LOGGER.debug("Processing checkRevokeClientsRolesByUserAndOrganization for request - {}", request);
         final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(request.getOrganizationUuid(), request.getUserUuid());
         if (error.isPresent()) {
             return error;
         }
-        if (userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isPresent()) {
-            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_HAS_ORGANIZATION_ROLE);
+        if (!userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isPresent()) {
+            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.INCORRECT_REVOKER_USER_ROLE);
         }
-        if (userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid()).isEmpty()) {
-            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.USER_NOT_FOUND_IN_ORGANIZATION_WITH_CLIENT_ROLE);
+        if (!userService.existsByUuid(request.getRevocableUserUuid())) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.REVOCABLE_USER_NOT_FOUND);
+        }
+        if (userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getRevocableUserUuid()).isPresent()) {
+            return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REVOCABLE_USER_HAS_ORGANIZATION_ROLE);
+        }
+        if (userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getRevocableUserUuid()).isEmpty()) {
+            return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.REVOCABLE_USER_DOES_NOT_HAVE_CLIENT_ROLE);
         }
         LOGGER.debug("Successfully processed checkRevokeClientsRolesByUserAndOrganization for request - {}", request);
         return SingleErrorWithStatus.empty();
