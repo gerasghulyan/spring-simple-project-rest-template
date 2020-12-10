@@ -28,4 +28,8 @@ public class UserClientOrganizationResponse extends AbstractResultResponseModel<
     public UserClientOrganizationResponse(final int httpStatusCode, final ClientOrganizationErrorResponseModel error) {
         super(httpStatusCode, error);
     }
+
+    public UserClientOrganizationResponse(final int httpStatusCode, final List<ClientOrganizationErrorResponseModel> errors) {
+        super(httpStatusCode, errors);
+    }
 }
