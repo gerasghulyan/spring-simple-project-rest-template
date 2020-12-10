@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -121,6 +122,27 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         tokenAuthenticationService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user client role for request - {}", request);
         return new UserRoleRevokeClientResponse(request.getUserUuid());
+    }
+
+    @Transactional
+    @Override
+    public UserRoleRevokeOrganizationClientsResponse revokeClientsRolesByUserAndOrganization(final UserRoleRevokeOrganizationClientsRequest request) {
+        LOGGER.debug("Revoking user organization's clients roles for request - {}", request);
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = preconditionChecker.checkRevokeClientsRolesByUserAndOrganization(request);
+        if (error.isPresent()) {
+            return new UserRoleRevokeOrganizationClientsResponse(error.getHttpStatus(), error.getError());
+        }
+        userRoleService.revokeUserClientsRoles(new UserRevokeClientsRolesDto(
+                request.getUserUuid(),
+                userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid())
+                        .stream()
+                        .map(AbstractClientOrganizationAwareUserRole::getClientOrganization)
+                        .map(ClientOrganization::getUuid)
+                        .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
+        ));
+        tokenAuthenticationService.expireAllByUser(request.getUserUuid());
+        LOGGER.debug("Successfully revoked user organization's clients roles for request - {}", request);
+        return new UserRoleRevokeOrganizationClientsResponse(request.getUserUuid());
     }
 
     private void revokeUserOrganizationClients(final String organizationUuid, final String userUuid) {

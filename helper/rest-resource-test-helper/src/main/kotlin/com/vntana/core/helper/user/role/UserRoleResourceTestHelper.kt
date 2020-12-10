@@ -27,6 +27,13 @@ class UserRoleResourceTestHelper : UserRoleRestTestHelper() {
         userRoleResourceClient.grantUserClientRole(buildUserRoleGrantClientRequest(userUuid, clientUuid, userRole))
     }
 
+    fun revokeClientRole(
+            userUuid: String? = uuid(),
+            clientUuid: String? = uuid(),
+            userRole: UserRoleModel? = UserRoleModel.CLIENT_ORGANIZATION_ADMIN) {
+        userRoleResourceClient.revokeUserClientRole(buildUserRoleRevokeClientRequest(userUuid, clientUuid, userRole))
+    }
+
     fun grantSuperAdmin(userUuid: String? = uuid()): ResponseEntity<UserRoleGrantSuperAdminResponse> = userRoleResourceClient.grantSuperAdmin(buildUserRoleGrantSuperAdminRequest(userUuid))
 
     fun grantUserOrganizationAdminRole(

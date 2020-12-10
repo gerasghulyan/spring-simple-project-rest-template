@@ -30,4 +30,7 @@ public interface UserRoleResourceClient {
 
     @DeleteMapping("client")
     ResponseEntity<UserRoleRevokeClientResponse> revokeUserClientRole(@RequestBody final UserRoleRevokeClientRequest request);
+
+    @DeleteMapping("organizations/clients")
+    ResponseEntity<UserRoleRevokeOrganizationClientsResponse> revokeUserOrganizationClientsRoles(@RequestBody final UserRoleRevokeOrganizationClientsRequest request);
 }

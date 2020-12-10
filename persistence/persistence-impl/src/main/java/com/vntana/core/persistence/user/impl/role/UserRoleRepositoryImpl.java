@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.vntana.core.persistence.user.impl.util.helper.RepositoryHelper.find;
 
@@ -37,7 +39,10 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
                         "(select aur.id from UserOrganizationAdminRole uoar join AbstractUserRole aur on aur.id = uoar.id where uoar.organization.uuid = :organizationUuid)",
                 AbstractUserRole.class)
                 .setParameter("organizationUuid", organizationUuid)
-                .getResultList();
+                .getResultList()
+                .stream()
+                .distinct()
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
     @Override
@@ -51,7 +56,45 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
                         "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid = :clientOrganizationUuid)",
                 AbstractUserRole.class)
                 .setParameter("clientOrganizationUuid", clientOrganizationUuid)
-                .getResultList();
+                .getResultList()
+                .stream()
+                .distinct()
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+    }
+
+    @Override
+    public List<AbstractUserRole> findAllOrganizationClientsByOrganization(final String organizationUuid) {
+        return entityManager.createQuery(
+                "select role from AbstractUserRole role where role.id in " +
+                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.organization.uuid = :organizationUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.organization.uuid = :organizationUuid)",
+                AbstractUserRole.class)
+                .setParameter("organizationUuid", organizationUuid)
+                .getResultList()
+                .stream()
+                .distinct()
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+    }
+
+    @Override
+    public List<AbstractUserRole> findAllOrganizationClientsRolesByOrganizationAndUser(final String organizationUuid, final String userUuid) {
+        return entityManager.createQuery(
+                "select role from AbstractUserRole role where role.id in " +
+                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid and ucar.user.uuid = :userUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.organization.uuid = :organizationUuid and uccmr.user.uuid = :userUuid)" +
+                        " or role.id in " +
+                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.organization.uuid = :organizationUuid and ucvr.user.uuid = :userUuid)",
+                AbstractUserRole.class)
+                .setParameter("organizationUuid", organizationUuid)
+                .setParameter("userUuid", userUuid)
+                .getResultList()
+                .stream()
+                .distinct()
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
     @Override
@@ -67,35 +110,6 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
                         .setParameter("userUuid", userUuid)
                         .getSingleResult()
         );
-    }
-
-    @Override
-    public List<AbstractUserRole> findAllOrganizationClientsByOrganization(final String organizationUuid) {
-        return entityManager.createQuery(
-                "select role from AbstractUserRole role where role.id in " +
-                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid)" +
-                        " or role.id in " +
-                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.organization.uuid = :organizationUuid)" +
-                        " or role.id in " +
-                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.organization.uuid = :organizationUuid)",
-                AbstractUserRole.class)
-                .setParameter("organizationUuid", organizationUuid)
-                .getResultList();
-    }
-
-    @Override
-    public List<AbstractUserRole> findAllOrganizationClientsRolesByOrganizationAndUser(final String organizationUuid, final String userUuid) {
-        return entityManager.createQuery(
-                "select role from AbstractUserRole role where role.id in " +
-                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid and ucar.user.uuid = :userUuid)" +
-                        " or role.id in " +
-                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.organization.uuid = :organizationUuid and uccmr.user.uuid = :userUuid)" +
-                        " or role.id in " +
-                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.organization.uuid = :organizationUuid and ucvr.user.uuid = :userUuid)",
-                AbstractUserRole.class)
-                .setParameter("organizationUuid", organizationUuid)
-                .setParameter("userUuid", userUuid)
-                .getResultList();
     }
 
     @Override
