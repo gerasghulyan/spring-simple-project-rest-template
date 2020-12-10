@@ -72,7 +72,7 @@ public class UserRoleResource {
     @DeleteMapping("organizations/clients")
     ResponseEntity<UserRoleRevokeOrganizationClientsResponse> revokeUserOrganizationClientsRoles(@RequestBody final UserRoleRevokeOrganizationClientsRequest request) {
         LOGGER.debug("Processing user-roles resource revokeUserOrganizationClientsRoles for request - {}", request);
-        final UserRoleRevokeOrganizationClientsResponse userOrganizationClientsResponse = userRoleServiceFacade.revokeClientsRolesByUserAndOrganization(request);
+        final UserRoleRevokeOrganizationClientsResponse userOrganizationClientsResponse = userRoleServiceFacade.revokeOrganizationClientsRoles(request);
         LOGGER.debug("Successfully processing user-roles resource revokeUserOrganizationClientsRoles for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(userOrganizationClientsResponse);
     }
