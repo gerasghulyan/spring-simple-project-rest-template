@@ -34,17 +34,17 @@ class UserRoleRevokeOrganizationClientsRolesFacadeUnitTest : AbstractUserRoleSer
         val request = restTestHelper.buildUserRoleRevokeOrganizationClientsRequest()
         val clients = listOf(commonTestHelper.buildUserClientAdminRole(), commonTestHelper.buildUserClientContentManagerRole(), commonTestHelper.buildUserClientViewerRole())
         val dto = commonTestHelper.buildUserRevokeClientsRolesDto(
-                userUuid = request.revocableUserUuid,
+                userUuid = request.userUuid,
                 clientUuids = clients.map(AbstractClientOrganizationAwareUserRole::getClientOrganization).map(ClientOrganization::getUuid).toList()
         )
         expect(preconditionChecker.checkRevokeOrganizationClientsRoles(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.revocableUserUuid)).andReturn(clients)
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(clients)
         expect(userRoleService.revokeUserClientsRoles(dto)).andVoid()
-        expect(tokenAuthenticationService.expireAllByUser(request.revocableUserUuid)).andVoid()
+        expect(tokenAuthenticationService.expireAllByUser(request.userUuid)).andVoid()
         replayAll()
         userRoleServiceFacade.revokeOrganizationClientsRoles(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().userUuid).isEqualTo(request.revocableUserUuid)
+            assertThat(it.response().userUuid).isEqualTo(request.userUuid)
         }
         verifyAll()
     }

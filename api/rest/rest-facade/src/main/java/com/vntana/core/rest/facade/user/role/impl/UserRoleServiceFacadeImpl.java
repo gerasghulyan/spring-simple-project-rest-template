@@ -133,16 +133,16 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
             return new UserRoleRevokeOrganizationClientsResponse(error.getHttpStatus(), error.getError());
         }
         userRoleService.revokeUserClientsRoles(new UserRevokeClientsRolesDto(
-                request.getRevocableUserUuid(),
-                userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getRevocableUserUuid())
+                request.getUserUuid(),
+                userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getUserUuid())
                         .stream()
                         .map(AbstractClientOrganizationAwareUserRole::getClientOrganization)
                         .map(ClientOrganization::getUuid)
                         .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
         ));
-        tokenAuthenticationService.expireAllByUser(request.getRevocableUserUuid());
+        tokenAuthenticationService.expireAllByUser(request.getUserUuid());
         LOGGER.debug("Successfully revoked user organization's clients roles for request - {}", request);
-        return new UserRoleRevokeOrganizationClientsResponse(request.getRevocableUserUuid());
+        return new UserRoleRevokeOrganizationClientsResponse(request.getUserUuid());
     }
 
     private void revokeUserOrganizationClients(final String organizationUuid, final String userUuid) {

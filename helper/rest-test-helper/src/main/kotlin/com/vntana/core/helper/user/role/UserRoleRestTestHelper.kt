@@ -37,7 +37,6 @@ open class UserRoleRestTestHelper : AbstractRestTestHelper() {
 
     fun buildUserRoleRevokeOrganizationClientsRequest(
             userUuid: String? = uuid(),
-            organizationUuid: String? = uuid(),
-            revocableUserUuid: String? = uuid()
-    ): UserRoleRevokeOrganizationClientsRequest = UserRoleRevokeOrganizationClientsRequest(userUuid, organizationUuid, revocableUserUuid)
+            organizationUuid: String? = uuid()
+    ): UserRoleRevokeOrganizationClientsRequest = UserRoleRevokeOrganizationClientsRequest(userUuid, organizationUuid)
 }
