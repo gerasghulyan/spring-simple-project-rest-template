@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class GetAllOrganizationsGridResponseModel extends AbstractGridResponseModel<GetAllOrganizationsResponseModel> {
     public GetAllOrganizationsGridResponseModel() {
+        super();
     }
 
     public GetAllOrganizationsGridResponseModel(final int totalCount, final List<GetAllOrganizationsResponseModel> items) {

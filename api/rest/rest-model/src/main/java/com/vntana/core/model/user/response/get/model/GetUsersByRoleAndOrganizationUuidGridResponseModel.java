@@ -12,6 +12,7 @@ import java.util.List;
 public class GetUsersByRoleAndOrganizationUuidGridResponseModel extends AbstractGridResponseModel<GetUsersByRoleAndOrganizationUuidResponseModel> {
 
     public GetUsersByRoleAndOrganizationUuidGridResponseModel() {
+        super();
     }
 
     public GetUsersByRoleAndOrganizationUuidGridResponseModel(final int totalCount, final List<GetUsersByRoleAndOrganizationUuidResponseModel> items) {

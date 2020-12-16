@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class GetUserClientBulkOrganizationsGridResponseModel extends AbstractGridResponseModel<GetUserClientOrganizationsResponseModel> {
     public GetUserClientBulkOrganizationsGridResponseModel() {
+        super();
     }
 
     public GetUserClientBulkOrganizationsGridResponseModel(final int totalCount, final List<GetUserClientOrganizationsResponseModel> items) {
