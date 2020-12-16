@@ -22,4 +22,8 @@ public interface UserRoleFacadePreconditionCheckerComponent {
     SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeClientRole(final UserRoleRevokeClientRequest request);
 
     SingleErrorWithStatus<UserRoleErrorResponseModel> checkRevokeOrganizationClientsRoles(final UserRoleRevokeOrganizationClientsRequest request);
+    
+    SingleErrorWithStatus<UserRoleErrorResponseModel> checkUpdateUserOrganizationRoles(final UserUpdateOrganizationRoleRequest request);
+
+    SingleErrorWithStatus<UserRoleErrorResponseModel> checkUpdateUserOrganizationClientsRoles(final UserUpdateOrganizationClientsRolesRequest request);
 }

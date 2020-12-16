@@ -30,6 +30,8 @@ abstract class AbstractWebIntegrationTest {
 
     fun emptyString(): String = StringUtils.EMPTY
     
+    fun blankString(): String = StringUtils.SPACE
+    
     fun email():String = "${uuid()}@mail.com"
 
     fun assertBasicSuccessResultResponse(resultResponse: ResultResponseModel<*, *>) {

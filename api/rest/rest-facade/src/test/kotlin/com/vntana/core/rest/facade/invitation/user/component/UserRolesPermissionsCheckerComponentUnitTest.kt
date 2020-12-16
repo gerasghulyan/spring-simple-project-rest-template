@@ -3,7 +3,7 @@ package com.vntana.core.rest.facade.invitation.user.component
 import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.rest.facade.invitation.user.component.impl.UserRolesPermissionsCheckerComponentImpl
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
@@ -22,22 +22,22 @@ class UserRolesPermissionsCheckerComponentUnitTest : AbstractFacadeUnitTest() {
     }
 
     @Test
-    fun `test with roles inviter - ORGANIZATION_ADMIN, invited - ORGANIZATION_ADMIN`() {
+    fun `test with roles inviter - ORGANIZATION_OWNER, invited - ORGANIZATION_OWNER`() {
         val inviter = UserRoleModel.ORGANIZATION_OWNER
         val invited = UserRoleModel.ORGANIZATION_OWNER
         resetAll()
         replayAll()
-        Assertions.assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isFalse()
+        assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isFalse()
         verifyAll()
     }
 
     @Test
-    fun `test with roles inviter - ORGANIZATION_ADMIN, invited - ClIENT_ADMIN`() {
+    fun `test with roles inviter - ORGANIZATION_OWNER, invited - ClIENT_ADMIN`() {
         val inviter = UserRoleModel.ORGANIZATION_OWNER
         val invited = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
         resetAll()
         replayAll()
-        Assertions.assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isTrue()
+        assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isTrue()
         verifyAll()
     }
 
@@ -47,7 +47,7 @@ class UserRolesPermissionsCheckerComponentUnitTest : AbstractFacadeUnitTest() {
         val invited = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
         resetAll()
         replayAll()
-        Assertions.assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isFalse()
+        assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isFalse()
         verifyAll()
     }
 
@@ -57,7 +57,7 @@ class UserRolesPermissionsCheckerComponentUnitTest : AbstractFacadeUnitTest() {
         val invited = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
         resetAll()
         replayAll()
-        Assertions.assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isFalse()
+        assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isFalse()
         verifyAll()
     }
 
@@ -67,7 +67,87 @@ class UserRolesPermissionsCheckerComponentUnitTest : AbstractFacadeUnitTest() {
         val invited = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
         resetAll()
         replayAll()
-        Assertions.assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isTrue()
+        assertThat(checkerComponent.isPermittedToInvite(inviter, invited)).isTrue()
+        verifyAll()
+    }
+
+    @Test
+    fun `test when granted ORGANIZATION_OWNER role`() {
+        val granter = UserRoleModel.ORGANIZATION_OWNER
+        val granted = UserRoleModel.ORGANIZATION_OWNER
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isFalse()
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when granter - ORGANIZATION_OWNER granted - ORGANIZATION_ADMIN role`() {
+        val granter = UserRoleModel.ORGANIZATION_OWNER
+        val granted = UserRoleModel.ORGANIZATION_ADMIN
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isTrue()
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when granter - ORGANIZATION_ADMIN granted - ORGANIZATION_ADMIN role`() {
+        val granter = UserRoleModel.ORGANIZATION_ADMIN
+        val granted = UserRoleModel.ORGANIZATION_ADMIN
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isTrue()
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when granter - SUPER_ADMIN granted - ORGANIZATION_ADMIN role`() {
+        val granter = UserRoleModel.ORGANIZATION_ADMIN
+        val granted = UserRoleModel.ORGANIZATION_ADMIN
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isTrue()
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when granter - ORGANIZATION_ADMIN granted - CLIENT_ORGANIZATION_ADMIN role`() {
+        val granter = UserRoleModel.ORGANIZATION_ADMIN
+        val granted = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isTrue()
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when granter - CLIENT_ORGANIZATION_CONTENT_MANAGER granted - CLIENT_ORGANIZATION_ADMIN role`() {
+        val granter = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER
+        val granted = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isFalse()
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when granter - CLIENT_ORGANIZATION_ADMIN granted - CLIENT_ORGANIZATION_ADMIN role`() {
+        val granter = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
+        val granted = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isTrue()
+        verifyAll()
+    }
+    
+    @Test
+    fun `test when granter - CLIENT_ORGANIZATION_VIEWER`() {
+        val granter = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+        val granted = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
+        resetAll()
+        replayAll()
+        assertThat(checkerComponent.isPermittedToGrant(granter, granted)).isFalse()
         verifyAll()
     }
 }

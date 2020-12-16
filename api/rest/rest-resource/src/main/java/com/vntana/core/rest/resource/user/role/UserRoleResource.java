@@ -70,10 +70,26 @@ public class UserRoleResource {
     }
 
     @DeleteMapping("organizations/clients")
-    ResponseEntity<UserRoleRevokeOrganizationClientsResponse> revokeUserOrganizationClientsRoles(@RequestBody final UserRoleRevokeOrganizationClientsRequest request) {
+    public ResponseEntity<UserRoleRevokeOrganizationClientsResponse> revokeUserOrganizationClientsRoles(@RequestBody final UserRoleRevokeOrganizationClientsRequest request) {
         LOGGER.debug("Processing user-roles resource revokeUserOrganizationClientsRoles for request - {}", request);
         final UserRoleRevokeOrganizationClientsResponse userOrganizationClientsResponse = userRoleServiceFacade.revokeOrganizationClientsRoles(request);
         LOGGER.debug("Successfully processing user-roles resource revokeUserOrganizationClientsRoles for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(userOrganizationClientsResponse);
+    }
+
+    @PutMapping("organization-role")
+    public ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationRole(@RequestBody final UserUpdateOrganizationRoleRequest request) {
+        LOGGER.debug("Processing update user roles for request - {}", request);
+        final UserUpdateRolesResponse userUpdateRolesResponse = userRoleServiceFacade.updateUserOrganizationRole(request);
+        LOGGER.debug("Successfully proceeded update user roles for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(userUpdateRolesResponse);
+    }
+    
+    @PutMapping("organization-clients-role")
+    public ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationClientsRoles(@RequestBody final UserUpdateOrganizationClientsRolesRequest request) {
+        LOGGER.debug("Processing update user roles for request - {}", request);
+        final UserUpdateRolesResponse userUpdateRolesResponse = userRoleServiceFacade.updateUserOrganizationClientsRoles(request);
+        LOGGER.debug("Successfully proceeded update user roles for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(userUpdateRolesResponse);
     }
 }
