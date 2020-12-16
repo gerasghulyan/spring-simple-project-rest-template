@@ -1,11 +1,16 @@
 package com.vntana.core.model.user.role.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by Vardan Aivazian
@@ -22,12 +27,33 @@ public class UserUpdateOrganizationClientsRolesRequest extends AbstractUserUpdat
     }
 
     public UserUpdateOrganizationClientsRolesRequest(
-            final String authorizedUserUuid,
-            final String organizationUuid,
             final String userUuid,
+            final String organizationUuid,
+            final String requestedUserUuid,
             final List<UpdateClientRoleRequest> updateClientRoles) {
-        super(authorizedUserUuid, organizationUuid, userUuid);
+        super(userUuid, organizationUuid, requestedUserUuid);
         this.updateClientRoles = updateClientRoles;
+    }
+
+
+    @Override
+    public List<UserRoleErrorResponseModel> validate() {
+        final List<UserRoleErrorResponseModel> errors = super.validate();
+        if (!CollectionUtils.isEmpty(updateClientRoles)) {
+            final Optional<UpdateClientRoleRequest> errorClientUuid = updateClientRoles.stream()
+                    .filter(updateClientRole -> StringUtils.isBlank(updateClientRole.getClientUuid()))
+                    .findFirst();
+            if (errorClientUuid.isPresent()) {
+                errors.add(UserRoleErrorResponseModel.MISSING_CLIENT_ORGANIZATION_UUID);
+            }
+            final Optional<UpdateClientRoleRequest> errorClientRole = updateClientRoles.stream()
+                    .filter(updateClientRole -> Objects.isNull(updateClientRole.getClientRole()))
+                    .findFirst();
+            if (errorClientRole.isPresent()) {
+                errors.add(UserRoleErrorResponseModel.MISSING_CLIENT_ROLE);
+            }
+        }
+        return errors;
     }
 
     @Override

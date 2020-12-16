@@ -14,8 +14,8 @@ import java.util.List;
 public interface UserRoleHelperComponent {
 
     List<AbstractClientOrganizationAwareUserRole> getVisibleUserClientOrganizations(final String organizationUuid,
-                                                                                    final String userUuid,
-                                                                                    final String authorizedUserUuid);
+                                                                                    final String requestedUserUuid,
+                                                                                    final String userUuid);
 
     List<UpdateClientRoleRequest> fetchRevokeRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request);
 

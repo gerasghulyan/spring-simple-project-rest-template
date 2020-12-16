@@ -17,18 +17,6 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
     @Test
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(authorizedUserUuid = null)),
-                UserRoleErrorResponseModel.MISSING_AUTHORIZED_USER_UUID
-        )
-        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(authorizedUserUuid = emptyString())),
-                UserRoleErrorResponseModel.MISSING_AUTHORIZED_USER_UUID
-        )
-        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
-                userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(authorizedUserUuid = blankString())),
-                UserRoleErrorResponseModel.MISSING_AUTHORIZED_USER_UUID
-        )
-        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                 userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(userUuid = null)),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
         )
@@ -39,6 +27,18 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                 userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(userUuid = blankString())),
                 UserRoleErrorResponseModel.MISSING_USER_UUID
+        )
+        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+                userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(requestedUserUuid = null)),
+                UserRoleErrorResponseModel.MISSING_USER_UUID
+        )
+        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+                userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(requestedUserUuid = emptyString())),
+                UserRoleErrorResponseModel.MISSING_REQUESTED_USER_UUID
+        )
+        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+                userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(requestedUserUuid = blankString())),
+                UserRoleErrorResponseModel.MISSING_REQUESTED_USER_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                 userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(organizationUuid = null)),
@@ -57,7 +57,7 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
     @Test
     fun `test when organization not found`() {
         val userUuid = userResourceTestHelper.persistUser().response().uuid
-        val result = userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(userUuid = userUuid))
+        val result = userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(requestedUserUuid = userUuid))
         assertBasicErrorResultResponse(HttpStatus.NOT_FOUND, result, UserRoleErrorResponseModel.ORGANIZATION_NOT_FOUND)
     }
 
@@ -73,7 +73,7 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
         val user = userResourceTestHelper.persistUser().response()
         userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(
                 organizationUuid = user.organizationUuid,
-                userUuid = user.uuid
+                requestedUserUuid = user.uuid
         )).let {
             assertBasicErrorResultResponse(HttpStatus.CONFLICT, it, UserRoleErrorResponseModel.REQUESTED_USER_IS_ORGANIZATION_OWNER)
         }
@@ -82,14 +82,14 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
     @Test
     fun `test when authorized user organization role not found`() {
         val ownerUser = userResourceTestHelper.persistUser().response()
-        val authorizedUser = userResourceTestHelper.persistUser().response()
+        val user = userResourceTestHelper.persistUser().response()
         val requestedUser = userResourceTestHelper.persistUser().response()
-        authorizedUser.organizationUuid = ownerUser.organizationUuid
+        user.organizationUuid = ownerUser.organizationUuid
         requestedUser.organizationUuid = ownerUser.organizationUuid
         userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(
-                authorizedUserUuid = authorizedUser.uuid,
+                userUuid = user.uuid,
                 organizationUuid = requestedUser.organizationUuid,
-                userUuid = requestedUser.uuid
+                requestedUserUuid = requestedUser.uuid
         )).let {
             assertBasicErrorResultResponse(HttpStatus.FORBIDDEN, it, UserRoleErrorResponseModel.USER_ORGANIZATION_ROLE_NOT_FOUND)
         }
@@ -97,15 +97,15 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
     
     @Test
     fun `test when requested user has client roles`() {
-        val authorizedUser = userResourceTestHelper.persistUser().response()
+        val user = userResourceTestHelper.persistUser().response()
         val requestedUser = userResourceTestHelper.persistUser().response()
-        requestedUser.organizationUuid = authorizedUser.organizationUuid
+        requestedUser.organizationUuid = user.organizationUuid
         val clientOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = requestedUser.organizationUuid).response()
         userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
         userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(
-                authorizedUserUuid = authorizedUser.uuid,
-                organizationUuid = authorizedUser.organizationUuid,
-                userUuid = requestedUser.uuid
+                userUuid = user.uuid,
+                organizationUuid = user.organizationUuid,
+                requestedUserUuid = requestedUser.uuid
         )).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)

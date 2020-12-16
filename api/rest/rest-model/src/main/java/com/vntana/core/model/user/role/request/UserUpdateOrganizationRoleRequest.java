@@ -19,10 +19,10 @@ public class UserUpdateOrganizationRoleRequest extends AbstractUserUpdateRolesRe
     }
 
     public UserUpdateOrganizationRoleRequest(
-            final String authorizedUserUuid,
+            final String userUuid,
             final String organizationUuid,
-            final String userUuid) {
-        super(authorizedUserUuid, organizationUuid, userUuid);
+            final String requestedUserUuid) {
+        super(userUuid, organizationUuid, requestedUserUuid);
         this.userRoleModel = UserRoleModel.ORGANIZATION_ADMIN;
     }
 

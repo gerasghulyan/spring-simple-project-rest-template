@@ -41,17 +41,17 @@ open class UserRoleRestTestHelper : AbstractRestTestHelper() {
     ): UserRoleRevokeOrganizationClientsRequest = UserRoleRevokeOrganizationClientsRequest(userUuid, organizationUuid)
     
     fun buildUserUpdateOrganizationRoleRequest(
-            authorizedUserUuid: String? = uuid(),
             userUuid: String? = uuid(),
+            requestedUserUuid: String? = uuid(),
             organizationUuid: String? = uuid()
-    ): UserUpdateOrganizationRoleRequest = UserUpdateOrganizationRoleRequest(authorizedUserUuid, organizationUuid, userUuid)
+    ): UserUpdateOrganizationRoleRequest = UserUpdateOrganizationRoleRequest(userUuid, organizationUuid, requestedUserUuid)
     
     fun buildUserUpdateOrganizationClientRoleRequest(
-            authorizedUserUuid: String? = uuid(),
             userUuid: String? = uuid(),
+            requestedUserUuid: String? = uuid(),
             organizationUuid: String? = uuid(),
             updateClientRoles: List<UpdateClientRoleRequest>? = listOf(buildUpdateClientRoleRequest(), buildUpdateClientRoleRequest())
-    ): UserUpdateOrganizationClientsRolesRequest = UserUpdateOrganizationClientsRolesRequest(authorizedUserUuid, organizationUuid, userUuid, updateClientRoles)
+    ): UserUpdateOrganizationClientsRolesRequest = UserUpdateOrganizationClientsRolesRequest(userUuid, organizationUuid, requestedUserUuid, updateClientRoles)
     
     fun buildUpdateClientRoleRequest(
             clientUuid: String? = uuid(),

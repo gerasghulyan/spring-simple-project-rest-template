@@ -158,7 +158,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         if (error.isPresent()) {
             return new UserUpdateRolesResponse(error.getHttpStatus(), error.getError());
         }
-        final String userUuid = request.getUserUuid();
+        final String userUuid = request.getRequestedUserUuid();
         final String organizationUuid = request.getOrganizationUuid();
         revokeUserOrganizationClients(organizationUuid, userUuid);
         userRoleService.grantOrganizationAdminRole(new UserGrantOrganizationRoleDto(userUuid, organizationUuid));
@@ -174,13 +174,13 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         if (error.isPresent()) {
             return new UserUpdateRolesResponse(error.getHttpStatus(), error.getError());
         }
-        final String userUuid = request.getUserUuid();
+        final String userUuid = request.getRequestedUserUuid();
         final String organizationUuid = request.getOrganizationUuid();
         revokeIfUserOrganizationAdminRolePresent(organizationUuid, userUuid);
         userRoleHelperComponent.fetchRevokeRolesFromUpdateRolesRequest(request).forEach(revokeClientRole -> revokeClientRole(
-                new UserRoleRevokeClientRequest(request.getUserUuid(), revokeClientRole.getClientUuid(), revokeClientRole.getClientRole())));
+                new UserRoleRevokeClientRequest(request.getRequestedUserUuid(), revokeClientRole.getClientUuid(), revokeClientRole.getClientRole())));
         userRoleHelperComponent.fetchGrantRolesFromUpdateRolesRequest(request).forEach(grantClientRole -> grantClientRole(
-                new UserRoleGrantClientOrganizationRequest(request.getUserUuid(), grantClientRole.getClientUuid(), grantClientRole.getClientRole())));
+                new UserRoleGrantClientOrganizationRequest(request.getRequestedUserUuid(), grantClientRole.getClientUuid(), grantClientRole.getClientRole())));
         LOGGER.debug("Successfully updated user organization clients roles for request - {}", request);
         return new UserUpdateRolesResponse(userUuid);
     }

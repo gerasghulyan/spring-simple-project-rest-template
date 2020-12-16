@@ -35,20 +35,20 @@ public class UserRoleHelperComponentImpl implements UserRoleHelperComponent {
     }
 
     @Override
-    public List<AbstractClientOrganizationAwareUserRole> getVisibleUserClientOrganizations(final String organizationUuid, final String userUuid, final String authorizedUserUuid) {
-        LOGGER.debug("Getting user - {} client organizations visible for authorized user - {}", userUuid, authorizedUserUuid);
-        final List<AbstractClientOrganizationAwareUserRole> existedUserClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid);
-        final Optional<AbstractOrganizationAwareUserRole> organizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, authorizedUserUuid);
+    public List<AbstractClientOrganizationAwareUserRole> getVisibleUserClientOrganizations(final String organizationUuid, final String requestedUserUuid, final String userUuid) {
+        LOGGER.debug("Getting user - {} client organizations visible for authorized user - {}", requestedUserUuid, userUuid);
+        final List<AbstractClientOrganizationAwareUserRole> existedUserClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, requestedUserUuid);
+        final Optional<AbstractOrganizationAwareUserRole> organizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
         if (organizationRole.isPresent()) {
             return existedUserClientsRoles;
         }
-        final List<AbstractClientOrganizationAwareUserRole> organizationClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, authorizedUserUuid);
+        final List<AbstractClientOrganizationAwareUserRole> organizationClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid);
         final List<AbstractClientOrganizationAwareUserRole> clientRolesResult = existedUserClientsRoles.stream()
                 .filter(existedUserClientsRole -> organizationClientsRoles.stream()
                         .anyMatch(organizationClientsRole ->
                                 existedUserClientsRole.getClientOrganization().getUuid().equals(organizationClientsRole.getClientOrganization().getUuid())))
                 .collect(Collectors.toList());
-        LOGGER.debug("Successfully got user - {} client organizations visible for authorized user - {}, clientRolesResult -{}", userUuid, authorizedUserUuid, clientRolesResult);
+        LOGGER.debug("Successfully got user - {} client organizations visible for authorized user - {}, clientRolesResult -{}", requestedUserUuid, userUuid, clientRolesResult);
         return clientRolesResult;
     }
 
@@ -56,7 +56,7 @@ public class UserRoleHelperComponentImpl implements UserRoleHelperComponent {
     public List<UpdateClientRoleRequest> fetchRevokeRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
         LOGGER.debug("Processing fetchRevokeRolesFromUpdateRolesRequest for request - {}", request);
         final List<UpdateClientRoleRequest> updatedClientRoles = request.getUpdateClientRoles();
-        final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getVisibleUserClientOrganizations(request.getOrganizationUuid(), request.getUserUuid(), request.getAuthorizedUserUuid());
+        final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getVisibleUserClientOrganizations(request.getOrganizationUuid(), request.getRequestedUserUuid(), request.getUuid());
         final Set<String> updatedClientRolesUuids = updatedClientRoles.stream()
                 .map(UpdateClientRoleRequest::getClientUuid)
                 .collect(Collectors.toSet());
@@ -72,7 +72,7 @@ public class UserRoleHelperComponentImpl implements UserRoleHelperComponent {
     public List<UpdateClientRoleRequest> fetchGrantRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
         LOGGER.debug("Processing fetchGrantRolesFromUpdateRolesRequest for request - {}", request);
         final List<UpdateClientRoleRequest> updatedClientRoles = request.getUpdateClientRoles();
-        final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getVisibleUserClientOrganizations(request.getOrganizationUuid(), request.getUserUuid(), request.getAuthorizedUserUuid());
+        final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getVisibleUserClientOrganizations(request.getOrganizationUuid(), request.getRequestedUserUuid(), request.getUuid());
         final List<UpdateClientRoleRequest> grantResultList = CollectionUtils.isEmpty(existedClientRoles) ? updatedClientRoles :
                 updatedClientRoles.stream()
                         .filter(updatedClientRole -> existedClientRoles.stream()

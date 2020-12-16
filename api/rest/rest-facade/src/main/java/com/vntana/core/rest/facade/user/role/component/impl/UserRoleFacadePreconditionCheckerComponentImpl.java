@@ -133,7 +133,7 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     public SingleErrorWithStatus<UserRoleErrorResponseModel> checkUpdateUserOrganizationRoles(final UserUpdateOrganizationRoleRequest request) {
         LOGGER.debug("Processing checkUpdateUserOrganizationRoles for request - {}", request);
         final String organizationUuid = request.getOrganizationUuid();
-        final String userUuid = request.getUserUuid();
+        final String userUuid = request.getRequestedUserUuid();
         final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(organizationUuid, userUuid);
         if (error.isPresent()) {
             return error;
@@ -142,7 +142,7 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (grantOrganizationAdminRoleError.isPresent()) {
             return grantOrganizationAdminRoleError;
         }
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> permissionError = checkAuthorizedUserPermissionForGrantOrganizationAdminRole(organizationUuid, request.getAuthorizedUserUuid());
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> permissionError = checkAuthorizedUserPermissionForGrantOrganizationAdminRole(organizationUuid, request.getUuid());
         if (permissionError.isPresent()) {
             return permissionError;
         }
@@ -153,11 +153,11 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     @Override
     public SingleErrorWithStatus<UserRoleErrorResponseModel> checkUpdateUserOrganizationClientsRoles(final UserUpdateOrganizationClientsRolesRequest request) {
         LOGGER.debug("Processing checkUpdateUserOrganizationClientsRoles for request - {}", request);
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(request.getOrganizationUuid(), request.getUserUuid());
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> error = checkOrganizationAndUserExistence(request.getOrganizationUuid(), request.getRequestedUserUuid());
         if (error.isPresent()) {
             return error;
         }
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> grantOrganizationAdminRoleError = checkGrantToOrganizationOwner(request.getOrganizationUuid(), request.getUserUuid());
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> grantOrganizationAdminRoleError = checkGrantToOrganizationOwner(request.getOrganizationUuid(), request.getRequestedUserUuid());
         if (grantOrganizationAdminRoleError.isPresent()) {
             return grantOrganizationAdminRoleError;
         }
@@ -167,11 +167,11 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (notFoundClient.isPresent()) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.CLIENT_ORGANIZATION_NOT_FOUND);
         }
-        final Optional<AbstractOrganizationAwareUserRole> authorizedUserOrganizationRole = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getAuthorizedUserUuid());
+        final Optional<AbstractOrganizationAwareUserRole> authorizedUserOrganizationRole = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
         if (!authorizedUserOrganizationRole.isPresent()) {
             final Optional<UpdateClientRoleRequest> updateClientRolePermissionError = request.getUpdateClientRoles().stream()
                     .filter(updateClientRole -> {
-                        final Optional<AbstractClientOrganizationAwareUserRole> authorizedUserClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), request.getAuthorizedUserUuid());
+                        final Optional<AbstractClientOrganizationAwareUserRole> authorizedUserClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), request.getUuid());
                         return !authorizedUserClientRole.isPresent() ||
                                 !userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole());
                     }).findFirst();
@@ -223,12 +223,12 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
     }
 
     private SingleErrorWithStatus<UserRoleErrorResponseModel> checkAuthorizedUserPermissionForGrantOrganizationAdminRole(final String organizationUuid,
-                                                                                                                         final String authorizedUserUuid) {
-        final Optional<User> optionalUser = userService.findByUuid(authorizedUserUuid);
+                                                                                                                         final String userUuid) {
+        final Optional<User> optionalUser = userService.findByUuid(userUuid);
         if (optionalUser.isPresent() && optionalUser.get().roleOfSuperAdmin().isPresent()) {
             return SingleErrorWithStatus.empty();
         }
-        final Optional<AbstractOrganizationAwareUserRole> authorizedUserOrganizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, authorizedUserUuid);
+        final Optional<AbstractOrganizationAwareUserRole> authorizedUserOrganizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
         if (!authorizedUserOrganizationRole.isPresent()) {
             return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.USER_ORGANIZATION_ROLE_NOT_FOUND);
         }

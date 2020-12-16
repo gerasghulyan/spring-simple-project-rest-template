@@ -35,17 +35,17 @@ class UserRoleUpdateUserOrganizationRoleFacadeUnitTest : AbstractUserRoleService
         val client3 = commonTestHelper.buildUserClientViewerRole()
         val clients = listOf(client1, client2, client3)
         val clientsUuids = listOf(client1.clientOrganization.uuid, client2.clientOrganization.uuid, client3.clientOrganization.uuid)
-        val revokeClientsRolesDto = commonTestHelper.buildUserRevokeClientsRolesDto(userUuid = request.userUuid, clientUuids = clientsUuids)
-        val grantOrganizationAdminRoleDto = commonTestHelper.buildUserGrantOrganizationRoleDto(userUuid = request.userUuid, organizationUuid = request.organizationUuid)
+        val revokeClientsRolesDto = commonTestHelper.buildUserRevokeClientsRolesDto(userUuid = request.requestedUserUuid, clientUuids = clientsUuids)
+        val grantOrganizationAdminRoleDto = commonTestHelper.buildUserGrantOrganizationRoleDto(userUuid = request.requestedUserUuid, organizationUuid = request.organizationUuid)
         val adminRole = commonTestHelper.buildUserOrganizationAdminRole()
         expect(preconditionChecker.checkUpdateUserOrganizationRoles(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(clients)
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(clients)
         expect(userRoleService.revokeUserClientsRoles(revokeClientsRolesDto))
         expect(userRoleService.grantOrganizationAdminRole(grantOrganizationAdminRoleDto)).andReturn(adminRole)
         replayAll()
         userRoleServiceFacade.updateUserOrganizationRole(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().userUuid).isEqualTo(request.userUuid)
+            assertThat(it.response().userUuid).isEqualTo(request.requestedUserUuid)
         }
         verifyAll()
     }

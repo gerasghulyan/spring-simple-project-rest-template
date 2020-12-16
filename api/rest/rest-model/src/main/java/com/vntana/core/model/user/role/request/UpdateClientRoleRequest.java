@@ -1,18 +1,25 @@
 package com.vntana.core.model.user.role.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vntana.commons.api.model.request.ValidatableRequest;
 import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
 import com.vntana.core.model.auth.response.UserRoleModel;
+import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Vardan Aivazian
  * Date: 10.12.2020
  * Time: 18:24
  */
-public class UpdateClientRoleRequest extends AbstractRequestModel {
+public class UpdateClientRoleRequest extends AbstractRequestModel implements ValidatableRequest<UserRoleErrorResponseModel> {
     
     @JsonProperty("clientUuid")
     private String clientUuid;
@@ -27,6 +34,17 @@ public class UpdateClientRoleRequest extends AbstractRequestModel {
     public UpdateClientRoleRequest(final String clientUuid, final UserRoleModel clientRole) {
         this.clientUuid = clientUuid;
         this.clientRole = clientRole;
+    }
+
+    @Override
+    public List<UserRoleErrorResponseModel> validate() {
+        if (StringUtils.isBlank(clientUuid)) {
+            return Collections.singletonList(UserRoleErrorResponseModel.MISSING_CLIENT_ORGANIZATION_UUID);
+        }
+        if (Objects.isNull(clientRole)) {
+            return Collections.singletonList(UserRoleErrorResponseModel.MISSING_CLIENT_ROLE);
+        }
+        return Collections.emptyList();
     }
 
     @Override

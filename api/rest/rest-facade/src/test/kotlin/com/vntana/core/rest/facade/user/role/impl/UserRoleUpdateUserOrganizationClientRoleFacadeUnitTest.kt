@@ -36,19 +36,19 @@ class UserRoleUpdateUserOrganizationClientRoleFacadeUnitTest: AbstractUserRoleSe
         val request = restTestHelper.buildUserUpdateOrganizationClientRoleRequest(updateClientRoles = listOf(updateClientRoleRequest))
         val revokeClientRole = restTestHelper.buildUpdateClientRoleRequest()
         val grantClientRole = restTestHelper.buildUpdateClientRoleRequest(userRoleModel = updateClientRoleRequest.clientRole)
-        val revokeClientRequest = restTestHelper.buildUserRoleRevokeClientRequest(userUuid = request.userUuid, clientUuid = revokeClientRole.clientUuid, userRole = revokeClientRole.clientRole)
+        val revokeClientRequest = restTestHelper.buildUserRoleRevokeClientRequest(userUuid = request.requestedUserUuid, clientUuid = revokeClientRole.clientUuid, userRole = revokeClientRole.clientRole)
         val revokeClientRoleDto = commonTestHelper.buildUserRevokeClientRoleDto(userUuid = revokeClientRequest.userUuid, clientOrganizationUuid = revokeClientRequest.clientUuid, clientRole = UserRole.valueOf(revokeClientRequest.userRole.name))
-        val grantClientRequest = restTestHelper.buildUserRoleGrantClientRequest(userUuid = request.userUuid, clientUuid = grantClientRole.clientUuid, userRole = grantClientRole.clientRole)
+        val grantClientRequest = restTestHelper.buildUserRoleGrantClientRequest(userUuid = request.requestedUserUuid, clientUuid = grantClientRole.clientUuid, userRole = grantClientRole.clientRole)
         val grantClientRoleDto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = grantClientRequest.userUuid, clientRole = UserRole.valueOf(grantClientRequest.userRole.name), clientOrganizationUuid = grantClientRequest.clientUuid)
         val clintContentManagerRole = commonTestHelper.buildUserClientContentManagerRole()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val adminRole = commonTestHelper.buildUserOrganizationAdminRole()
         val dto = commonTestHelper.buildUserRevokeOrganizationAdminRoleDto(
-                userUuid = request.userUuid,
+                userUuid = request.requestedUserUuid,
                 organizationUuid = request.organizationUuid
         )
         expect(preconditionChecker.checkUpdateUserOrganizationClientsRoles(request)).andReturn(SingleErrorWithStatus.empty())
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.userUuid)).andReturn(Optional.of(adminRole))
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.of(adminRole))
         expect(userRoleService.revokeOrganizationAdminRole(dto))
         expect(userRoleHelperComponent.fetchRevokeRolesFromUpdateRolesRequest(request)).andReturn(listOf(revokeClientRole))
         expect(preconditionChecker.checkRevokeClientRole(revokeClientRequest)).andReturn(SingleErrorWithStatus.empty())
@@ -57,12 +57,12 @@ class UserRoleUpdateUserOrganizationClientRoleFacadeUnitTest: AbstractUserRoleSe
         expect(userRoleHelperComponent.fetchGrantRolesFromUpdateRolesRequest(request)).andReturn(listOf(grantClientRole))
         expect(preconditionChecker.checkGrantClientRole(grantClientRequest)).andReturn(SingleErrorWithStatus.empty())
         expect(organizationClientService.getByUuid(grantClientRequest.clientUuid)).andReturn(clientOrganization)
-        expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.userUuid)).andReturn(Optional.empty())
+        expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.requestedUserUuid)).andReturn(Optional.empty())
         expect(userRoleService.grantClientRole(grantClientRoleDto)).andReturn(clintContentManagerRole)
         replayAll()
         userRoleServiceFacade.updateUserOrganizationClientsRoles(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().userUuid).isEqualTo(request.userUuid)
+            assertThat(it.response().userUuid).isEqualTo(request.requestedUserUuid)
         }
         verifyAll()
     }
