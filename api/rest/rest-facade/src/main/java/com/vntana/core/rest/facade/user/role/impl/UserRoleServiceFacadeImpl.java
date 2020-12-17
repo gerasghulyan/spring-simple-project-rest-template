@@ -10,7 +10,7 @@ import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.model.user.role.response.*;
 import com.vntana.core.rest.facade.user.role.UserRoleServiceFacade;
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent;
-import com.vntana.core.rest.facade.user.role.component.UserRoleHelperComponent;
+import com.vntana.core.rest.facade.user.role.component.UserRoleActionItemRetrieverComponent;
 import com.vntana.core.service.client.OrganizationClientService;
 import com.vntana.core.service.token.auth.TokenAuthenticationService;
 import com.vntana.core.service.user.role.UserRoleService;
@@ -39,13 +39,13 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
     private final TokenAuthenticationService tokenAuthenticationService;
     private final UserRoleService userRoleService;
     private final OrganizationClientService organizationClientService;
-    private final UserRoleHelperComponent userRoleHelperComponent;
+    private final UserRoleActionItemRetrieverComponent userRoleHelperComponent;
 
     public UserRoleServiceFacadeImpl(final UserRoleFacadePreconditionCheckerComponent preconditionChecker,
                                      final TokenAuthenticationService tokenAuthenticationService,
                                      final UserRoleService userRoleService,
                                      final OrganizationClientService organizationClientService,
-                                     final UserRoleHelperComponent userRoleHelperComponent
+                                     final UserRoleActionItemRetrieverComponent userRoleHelperComponent
     ) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.preconditionChecker = preconditionChecker;

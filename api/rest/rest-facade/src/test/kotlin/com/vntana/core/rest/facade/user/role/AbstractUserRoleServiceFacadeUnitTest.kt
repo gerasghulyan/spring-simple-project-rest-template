@@ -4,8 +4,8 @@ import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.helper.user.role.UserRoleRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
+import com.vntana.core.rest.facade.user.role.component.UserRoleActionItemRetrieverComponent
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent
-import com.vntana.core.rest.facade.user.role.component.UserRoleHelperComponent
 import com.vntana.core.rest.facade.user.role.impl.UserRoleServiceFacadeImpl
 import com.vntana.core.service.client.OrganizationClientService
 import com.vntana.core.service.token.auth.TokenAuthenticationService
@@ -39,7 +39,7 @@ abstract class AbstractUserRoleServiceFacadeUnitTest : AbstractFacadeUnitTest() 
     protected lateinit var organizationClientService: OrganizationClientService
 
     @Mock
-    protected lateinit var userRoleHelperComponent: UserRoleHelperComponent
+    protected lateinit var userRoleActionItemRetrieverComponent: UserRoleActionItemRetrieverComponent
 
     @Before
     fun prepare() {
@@ -48,7 +48,7 @@ abstract class AbstractUserRoleServiceFacadeUnitTest : AbstractFacadeUnitTest() 
                 tokenAuthenticationService,
                 userRoleService,
                 organizationClientService,
-                userRoleHelperComponent
+                userRoleActionItemRetrieverComponent
         )
     }
 }

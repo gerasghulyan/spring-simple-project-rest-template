@@ -18,9 +18,9 @@ import org.junit.Before
  * Date: 16.12.2020
  * Time: 16:44
  */
-abstract class AbstractUserRoleFacadeHelperComponentUnitTest : AbstractFacadeUnitTest() {
+abstract class AbstractUserRoleFacadeActionItemRetrieverComponentUnitTest : AbstractFacadeUnitTest() {
 
-    protected lateinit var userRoleHelperComponent: UserRoleHelperComponent
+    protected lateinit var userRoleActionItemRetrieverComponent: UserRoleActionItemRetrieverComponent
 
     protected val restTestHelper = UserRoleRestTestHelper()
 
@@ -44,6 +44,6 @@ abstract class AbstractUserRoleFacadeHelperComponentUnitTest : AbstractFacadeUni
 
     @Before
     fun prepare() {
-        userRoleHelperComponent = UserRoleHelperComponentImpl(userRoleService)
+        userRoleActionItemRetrieverComponent = UserRoleHelperComponentImpl(userRoleService)
     }
 }

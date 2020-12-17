@@ -1,7 +1,7 @@
 package com.vntana.core.rest.facade.user.role.component.impl
 
 import com.vntana.core.model.auth.response.UserRoleModel
-import com.vntana.core.rest.facade.user.role.component.AbstractUserRoleFacadeHelperComponentUnitTest
+import com.vntana.core.rest.facade.user.role.component.AbstractUserRoleFacadeActionItemRetrieverComponentUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -12,7 +12,7 @@ import java.util.*
  * Date: 16.12.2020
  * Time: 18:13
  */
-class UserRoleFetchGrantRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleFacadeHelperComponentUnitTest() {
+class UserRoleFetchGrantRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleFacadeActionItemRetrieverComponentUnitTest() {
 
     @Test
     fun `test when organization admin grants all requested client roles`() {
@@ -22,13 +22,12 @@ class UserRoleFetchGrantRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleFa
         val updateClientRole1 = restTestHelper.buildUpdateClientRoleRequest(clientUuid = clientRole1.clientOrganization.uuid, userRoleModel = UserRoleModel.valueOf(clientRole1.userRole.name))
         val updateClientRole2 = restTestHelper.buildUpdateClientRoleRequest(clientUuid = clientRole2.clientOrganization.uuid, userRoleModel = UserRoleModel.valueOf(clientRole2.userRole.name))
         val request = restTestHelper.buildUserUpdateOrganizationClientRoleRequest(updateClientRoles = listOf(updateClientRole1, updateClientRole2))
-//        val existedClientRoles = listOf(clientRole1, clientRole2)
         val organizationAdminRole = commonTestHelper.buildUserOrganizationAdminRole()
         val grantRoles = listOf(updateClientRole1, updateClientRole2)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(listOf())
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
         replayAll()
-        userRoleHelperComponent.fetchGrantRolesFromUpdateRolesRequest(request).let {
+        userRoleActionItemRetrieverComponent.fetchGrantRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(grantRoles)
         }
         verifyAll()
@@ -51,7 +50,7 @@ class UserRoleFetchGrantRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleFa
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
         replayAll()
-        userRoleHelperComponent.fetchGrantRolesFromUpdateRolesRequest(request).let {
+        userRoleActionItemRetrieverComponent.fetchGrantRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(grantRoles)
         }
         verifyAll()

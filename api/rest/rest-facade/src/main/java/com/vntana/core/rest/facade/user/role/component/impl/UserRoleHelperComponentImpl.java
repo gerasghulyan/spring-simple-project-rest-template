@@ -5,7 +5,7 @@ import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.role.request.UpdateClientRoleRequest;
 import com.vntana.core.model.user.role.request.UserUpdateOrganizationClientsRolesRequest;
-import com.vntana.core.rest.facade.user.role.component.UserRoleHelperComponent;
+import com.vntana.core.rest.facade.user.role.component.UserRoleActionItemRetrieverComponent;
 import com.vntana.core.service.user.role.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * Time: 12:40
  */
 @Component
-public class UserRoleHelperComponentImpl implements UserRoleHelperComponent {
+public class UserRoleHelperComponentImpl implements UserRoleActionItemRetrieverComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleHelperComponentImpl.class);
 

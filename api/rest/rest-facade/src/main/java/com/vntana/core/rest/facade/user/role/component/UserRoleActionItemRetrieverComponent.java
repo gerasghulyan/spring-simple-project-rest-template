@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 15.12.2020
  * Time: 12:31
  */
-public interface UserRoleHelperComponent {
+public interface UserRoleActionItemRetrieverComponent {
 
     List<UpdateClientRoleRequest> fetchRevokeRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request);
 

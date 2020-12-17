@@ -1,7 +1,7 @@
 package com.vntana.core.rest.facade.user.role.component.impl
 
 import com.vntana.core.model.auth.response.UserRoleModel
-import com.vntana.core.rest.facade.user.role.component.AbstractUserRoleFacadeHelperComponentUnitTest
+import com.vntana.core.rest.facade.user.role.component.AbstractUserRoleFacadeActionItemRetrieverComponentUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -12,7 +12,7 @@ import java.util.*
  * Date: 16.12.2020
  * Time: 16:42
  */
-class UserRoleFetchRevokeRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleFacadeHelperComponentUnitTest() {
+class UserRoleFetchRevokeRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleFacadeActionItemRetrieverComponentUnitTest() {
 
     @Test
     fun `test when revoke all existed client roles`() {
@@ -28,7 +28,7 @@ class UserRoleFetchRevokeRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleF
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
         replayAll()
-        userRoleHelperComponent.fetchRevokeRolesFromUpdateRolesRequest(request).let {
+        userRoleActionItemRetrieverComponent.fetchRevokeRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(revokeRoles)
         }
         verifyAll()
@@ -51,7 +51,7 @@ class UserRoleFetchRevokeRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleF
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
         replayAll()
-        userRoleHelperComponent.fetchRevokeRolesFromUpdateRolesRequest(request).let {
+        userRoleActionItemRetrieverComponent.fetchRevokeRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(revokeRoles)
         }
         verifyAll()
@@ -74,7 +74,7 @@ class UserRoleFetchRevokeRolesFromUpdateRolesRequestUnitTest : AbstractUserRoleF
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.empty())
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(authorizedUsersClientRoles)
         replayAll()
-        userRoleHelperComponent.fetchRevokeRolesFromUpdateRolesRequest(request).let {
+        userRoleActionItemRetrieverComponent.fetchRevokeRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(revokeRoles)
         }
         verifyAll()
