@@ -30,7 +30,7 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                 userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(requestedUserUuid = null)),
-                UserRoleErrorResponseModel.MISSING_USER_UUID
+                UserRoleErrorResponseModel.MISSING_REQUESTED_USER_UUID
         )
         assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                 userRoleResourceClient.updateUserOrganizationRole(userRoleResourceTestHelper.buildUserUpdateOrganizationRoleRequest(requestedUserUuid = emptyString())),

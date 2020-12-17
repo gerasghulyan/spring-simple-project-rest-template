@@ -76,6 +76,12 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
                                 updateClientRoles = listOf(userRoleResourceTestHelper.buildUpdateClientRoleRequest(userRoleModel = null)))),
                 UserRoleErrorResponseModel.MISSING_CLIENT_ROLE
         )
+        assertBasicErrorResultResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+                userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper
+                        .buildUserUpdateOrganizationClientRoleRequest(
+                                updateClientRoles = listOf(userRoleResourceTestHelper.buildUpdateClientRoleRequest(userRoleModel = UserRoleModel.ORGANIZATION_ADMIN)))),
+                UserRoleErrorResponseModel.REQUEST_ROLE_IS_NOT_CLIENT_RELATED
+        )
     }
 
     @Test
@@ -119,7 +125,7 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
                 requestedUserUuid = requestedUser.uuid,
                 updateClientRoles = listOf(updateClientRoleRequest)
         )).let {
-            assertBasicErrorResultResponse(HttpStatus.FORBIDDEN, it, UserRoleErrorResponseModel.USER_HAS_NOT_PERMISSION_GRANT_CLIENT_ROLE)
+            assertBasicErrorResultResponse(HttpStatus.FORBIDDEN, it, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE)
         }
     }
 

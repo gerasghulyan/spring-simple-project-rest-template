@@ -35,24 +35,6 @@ public class UserRoleHelperComponentImpl implements UserRoleHelperComponent {
     }
 
     @Override
-    public List<AbstractClientOrganizationAwareUserRole> getVisibleUserClientOrganizations(final String organizationUuid, final String requestedUserUuid, final String userUuid) {
-        LOGGER.debug("Getting user - {} client organizations visible for authorized user - {}", requestedUserUuid, userUuid);
-        final List<AbstractClientOrganizationAwareUserRole> existedUserClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, requestedUserUuid);
-        final Optional<AbstractOrganizationAwareUserRole> organizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
-        if (organizationRole.isPresent()) {
-            return existedUserClientsRoles;
-        }
-        final List<AbstractClientOrganizationAwareUserRole> organizationClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid);
-        final List<AbstractClientOrganizationAwareUserRole> clientRolesResult = existedUserClientsRoles.stream()
-                .filter(existedUserClientsRole -> organizationClientsRoles.stream()
-                        .anyMatch(organizationClientsRole ->
-                                existedUserClientsRole.getClientOrganization().getUuid().equals(organizationClientsRole.getClientOrganization().getUuid())))
-                .collect(Collectors.toList());
-        LOGGER.debug("Successfully got user - {} client organizations visible for authorized user - {}, clientRolesResult -{}", requestedUserUuid, userUuid, clientRolesResult);
-        return clientRolesResult;
-    }
-
-    @Override
     public List<UpdateClientRoleRequest> fetchRevokeRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
         LOGGER.debug("Processing fetchRevokeRolesFromUpdateRolesRequest for request - {}", request);
         final List<UpdateClientRoleRequest> updatedClientRoles = request.getUpdateClientRoles();
@@ -85,6 +67,23 @@ public class UserRoleHelperComponentImpl implements UserRoleHelperComponent {
         return grantResultList;
     }
 
+    private List<AbstractClientOrganizationAwareUserRole> getVisibleUserClientOrganizations(final String organizationUuid, final String userUuid, final String authorizedUserUuid) {
+        LOGGER.debug("Getting user - {} client organizations visible for authorized user - {}", userUuid, authorizedUserUuid);
+        final List<AbstractClientOrganizationAwareUserRole> existedUserClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, userUuid);
+        final Optional<AbstractOrganizationAwareUserRole> organizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, authorizedUserUuid);
+        if (organizationRole.isPresent()) {
+            return existedUserClientsRoles;
+        }
+        final List<AbstractClientOrganizationAwareUserRole> organizationClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, authorizedUserUuid);
+        final List<AbstractClientOrganizationAwareUserRole> clientRolesResult = existedUserClientsRoles.stream()
+                .filter(existedUserClientsRole -> organizationClientsRoles.stream()
+                        .anyMatch(organizationClientsRole ->
+                                existedUserClientsRole.getClientOrganization().getUuid().equals(organizationClientsRole.getClientOrganization().getUuid())))
+                .collect(Collectors.toList());
+        LOGGER.debug("Successfully got user - {} client organizations visible for authorized user - {}, clientRolesResult -{}", userUuid, authorizedUserUuid, clientRolesResult);
+        return clientRolesResult;
+    }
+    
     private UpdateClientRoleRequest buildUpdateClientRoleRequest(final AbstractClientOrganizationAwareUserRole clientOrganizationRole) {
         return new UpdateClientRoleRequest(clientOrganizationRole.getClientOrganization().getUuid(), UserRoleModel.valueOf(clientOrganizationRole.getUserRole().name()));
     }

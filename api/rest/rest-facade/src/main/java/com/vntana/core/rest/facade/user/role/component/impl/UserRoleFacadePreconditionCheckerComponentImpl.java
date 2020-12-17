@@ -176,7 +176,7 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
                                 !userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole());
                     }).findFirst();
             if (updateClientRolePermissionError.isPresent()) {
-                return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.USER_HAS_NOT_PERMISSION_GRANT_CLIENT_ROLE);
+                return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE);
             }
         }
         LOGGER.debug("Successfully processed checkUpdateUserOrganizationClientsRoles for request - {}", request);
@@ -236,7 +236,7 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
                 UserRoleModel.valueOf(authorizedUserOrganizationRole.get().getUserRole().name()),
                 UserRoleModel.ORGANIZATION_ADMIN)
         ) {
-            return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.USER_HAS_NOT_PERMISSION_GRANT_ORGANIZATION_ROLE);
+            return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_ORGANIZATION_ROLE);
         }
         return SingleErrorWithStatus.empty();
     }

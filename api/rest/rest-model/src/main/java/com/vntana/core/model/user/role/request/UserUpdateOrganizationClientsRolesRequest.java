@@ -35,7 +35,6 @@ public class UserUpdateOrganizationClientsRolesRequest extends AbstractUserUpdat
         this.updateClientRoles = updateClientRoles;
     }
 
-
     @Override
     public List<UserRoleErrorResponseModel> validate() {
         final List<UserRoleErrorResponseModel> errors = super.validate();
@@ -51,6 +50,12 @@ public class UserUpdateOrganizationClientsRolesRequest extends AbstractUserUpdat
                     .findFirst();
             if (errorClientRole.isPresent()) {
                 errors.add(UserRoleErrorResponseModel.MISSING_CLIENT_ROLE);
+            }
+            final Optional<UpdateClientRoleRequest> errorClientRoleAbility = updateClientRoles.stream()
+                    .filter(updateClientRole -> !Objects.isNull(updateClientRole.getClientRole()) && !updateClientRole.getClientRole().hasClientAbility())
+                    .findFirst();
+            if (errorClientRoleAbility.isPresent()) {
+                errors.add(UserRoleErrorResponseModel.REQUEST_ROLE_IS_NOT_CLIENT_RELATED);
             }
         }
         return errors;

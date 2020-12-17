@@ -45,7 +45,7 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantOrganizationAdminResponse);
     }
 
-    @PostMapping("client")
+    @PostMapping("organizations/client")
     public ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientRole(@RequestBody final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Processing user-roles resource grantUserClientRole for request - {}", request);
         final UserRoleGrantClientOrganizationResponse userRoleGrantClientOrganizationResponse = userRoleServiceFacade.grantClientRole(request);
@@ -77,19 +77,19 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userOrganizationClientsResponse);
     }
 
-    @PutMapping("organization-role")
+    @PutMapping("organization")
     public ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationRole(@RequestBody final UserUpdateOrganizationRoleRequest request) {
-        LOGGER.debug("Processing update user roles for request - {}", request);
+        LOGGER.debug("Processing update user organization role for request - {}", request);
         final UserUpdateRolesResponse userUpdateRolesResponse = userRoleServiceFacade.updateUserOrganizationRole(request);
-        LOGGER.debug("Successfully proceeded update user roles for request - {}", request);
+        LOGGER.debug("Successfully proceeded update user organization role for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(userUpdateRolesResponse);
     }
     
-    @PutMapping("organization-clients-role")
+    @PutMapping("organizations/clients")
     public ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationClientsRoles(@RequestBody final UserUpdateOrganizationClientsRolesRequest request) {
-        LOGGER.debug("Processing update user roles for request - {}", request);
+        LOGGER.debug("Processing update user organization clients roles for request - {}", request);
         final UserUpdateRolesResponse userUpdateRolesResponse = userRoleServiceFacade.updateUserOrganizationClientsRoles(request);
-        LOGGER.debug("Successfully proceeded update user roles for request - {}", request);
+        LOGGER.debug("Successfully proceeded update user organization clients roles for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(userUpdateRolesResponse);
     }
 }

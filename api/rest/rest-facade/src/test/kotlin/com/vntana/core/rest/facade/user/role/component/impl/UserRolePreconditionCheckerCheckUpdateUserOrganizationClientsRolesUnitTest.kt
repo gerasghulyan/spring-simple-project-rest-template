@@ -90,7 +90,7 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationClientsRolesUnitTest
         expect(userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(contentManagerRole.userRole.name), clientRoleRequest.clientRole)).andReturn(false)
         replayAll()
         preconditionChecker.checkUpdateUserOrganizationClientsRoles(request).let {
-            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.USER_HAS_NOT_PERMISSION_GRANT_CLIENT_ROLE)
+            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_FORBIDDEN)
         }
         verifyAll()

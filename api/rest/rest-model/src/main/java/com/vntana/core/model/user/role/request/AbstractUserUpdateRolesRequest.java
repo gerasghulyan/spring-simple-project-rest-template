@@ -33,6 +33,7 @@ public abstract class AbstractUserUpdateRolesRequest extends AbstractUuidAwareRe
             final String uuid,
             final String organizationUuid,
             final String requestedUserUuid) {
+        super(uuid);
         this.organizationUuid = organizationUuid;
         this.requestedUserUuid = requestedUserUuid;
     }

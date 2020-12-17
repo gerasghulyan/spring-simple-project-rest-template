@@ -33,11 +33,7 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
 
     @Override
     public boolean isPermittedToGrant(final UserRoleModel granter, final UserRoleModel granted) {
-        if (granted == UserRoleModel.ORGANIZATION_OWNER ||
-                granted == UserRoleModel.SUPER_ADMIN ||
-                granter == UserRoleModel.CLIENT_ORGANIZATION_VIEWER) {
-            return false;
-        }
-        return granter.getPriority() <= granted.getPriority();
+        return granter.hasGranterAbility() && granted.hasGrantedAbility() &&
+                (granter.getPriority() <= granted.getPriority());
     }
 }

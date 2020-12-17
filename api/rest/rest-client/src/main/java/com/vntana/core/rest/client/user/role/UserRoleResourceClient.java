@@ -26,7 +26,7 @@ public interface UserRoleResourceClient {
     @DeleteMapping("organization-admin")
     ResponseEntity<UserRoleRevokeOrganizationAdminResponse> revokeUserOrganizationAdminRole(@RequestBody final UserRoleRevokeOrganizationAdminRequest request);
 
-    @PostMapping("client")
+    @PostMapping("organizations/client")
     ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientRole(@RequestBody final UserRoleGrantClientOrganizationRequest request);
 
     @DeleteMapping("client")
@@ -35,9 +35,9 @@ public interface UserRoleResourceClient {
     @DeleteMapping("organizations/clients")
     ResponseEntity<UserRoleRevokeOrganizationClientsResponse> revokeUserOrganizationClientsRoles(@RequestBody final UserRoleRevokeOrganizationClientsRequest request);
 
-    @PutMapping("organization-role")
+    @PutMapping("organization")
     ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationRole(@RequestBody final UserUpdateOrganizationRoleRequest request);
 
-    @PutMapping("organization-clients-role")
+    @PutMapping("organizations/clients")
     ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationClientsRoles(@RequestBody final UserUpdateOrganizationClientsRolesRequest request);
 }

@@ -44,6 +44,9 @@ public class UpdateClientRoleRequest extends AbstractRequestModel implements Val
         if (Objects.isNull(clientRole)) {
             return Collections.singletonList(UserRoleErrorResponseModel.MISSING_CLIENT_ROLE);
         }
+        if (Boolean.FALSE.equals(clientRole.hasClientAbility())) {
+            return Collections.singletonList(UserRoleErrorResponseModel.REQUEST_ROLE_IS_NOT_CLIENT_RELATED);
+        }
         return Collections.emptyList();
     }
 

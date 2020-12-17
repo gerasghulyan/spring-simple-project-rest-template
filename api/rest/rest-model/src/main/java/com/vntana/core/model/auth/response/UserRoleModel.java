@@ -11,11 +11,21 @@ public enum UserRoleModel implements UserRoleModelPredefinedAbility {
         public Boolean hasSuperAdminAbility() {
             return true;
         }
+
+        @Override
+        public Boolean hasGrantedAbility() {
+            return false;
+        }
     },
     ORGANIZATION_OWNER(2) {
         @Override
         public Boolean hasOrganizationAbility() {
             return true;
+        }
+
+        @Override
+        public Boolean hasGrantedAbility() {
+            return false;
         }
     },
     ORGANIZATION_ADMIN(3) {
@@ -55,6 +65,11 @@ public enum UserRoleModel implements UserRoleModelPredefinedAbility {
 
         @Override
         public Boolean hasInviterAbility() {
+            return false;
+        }
+
+        @Override
+        public Boolean hasGranterAbility() {
             return false;
         }
     };

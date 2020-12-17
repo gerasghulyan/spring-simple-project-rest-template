@@ -65,6 +65,5 @@ class UserRoleUpdateUserOrganizationClientRoleFacadeUnitTest: AbstractUserRoleSe
             assertThat(it.response().userUuid).isEqualTo(request.requestedUserUuid)
         }
         verifyAll()
-    }
-    
+    }    
 }
