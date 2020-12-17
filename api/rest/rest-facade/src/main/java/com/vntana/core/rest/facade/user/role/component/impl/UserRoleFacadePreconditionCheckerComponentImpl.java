@@ -243,13 +243,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
 
     private SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantToOrganizationOwner(final String organizationUuid,
                                                                                             final String userUuid) {
-        final Optional<AbstractOrganizationAwareUserRole> organizationUserRoleOptional = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
-        if (organizationUserRoleOptional.isPresent()) {
-            final AbstractOrganizationAwareUserRole organizationUserRole = organizationUserRoleOptional.get();
-            if (organizationUserRole.getUserRole() == UserRole.ORGANIZATION_OWNER) {
-                return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_IS_ORGANIZATION_OWNER);
-            }
-        }
-        return SingleErrorWithStatus.empty();
+        return userRoleService.findByOrganizationAndUser(organizationUuid, userUuid)
+                .filter(abstractOrganizationAwareUserRole -> UserRole.ORGANIZATION_OWNER == abstractOrganizationAwareUserRole.getUserRole())
+                .map(abstractOrganizationAwareUserRole -> SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_IS_ORGANIZATION_OWNER))
+                .orElse(SingleErrorWithStatus.empty());
     }
 }
