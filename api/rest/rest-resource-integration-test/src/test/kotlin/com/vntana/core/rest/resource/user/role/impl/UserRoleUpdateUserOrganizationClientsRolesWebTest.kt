@@ -160,6 +160,47 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
     }
 
     @Test
+    fun `test when authorized user is owner and requested user has client roles for update`() {
+        val user = userResourceTestHelper.persistUser().response()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = user.uuid).response().uuid
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        val clientOrganization1 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response()
+        val clientOrganization2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response()
+        val clientOrganization3 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response()
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization1.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization2.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        val updateClientRoleRequest = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization2.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        val grantClientRoleRequest = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization3.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = user.uuid,
+                organizationUuid = organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest, grantClientRoleRequest)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+            userResourceClient.getUsersByClientOrganization(clientOrganization1.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(0)
+            }
+            userResourceClient.getUsersByClientOrganization(clientOrganization2.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+            userResourceClient.getUsersByClientOrganization(clientOrganization3.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(grantClientRoleRequest.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+            userResourceClient.getUsersByOrganization(organizationUuid)?.body?.response()?.run {
+                assertBasicSuccessResultResponse(it)
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+            }
+        }
+    }
+
+    @Test
     fun `test when authorized user is organization admin`() {
         val user = userResourceTestHelper.persistUser().response()
         val requestedUser = userResourceTestHelper.persistUser().response()

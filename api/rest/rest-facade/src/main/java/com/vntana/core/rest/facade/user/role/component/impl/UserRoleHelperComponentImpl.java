@@ -4,6 +4,7 @@ import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.role.request.UpdateClientRoleRequest;
+import com.vntana.core.model.user.role.request.UpdatedClientRoleModel;
 import com.vntana.core.model.user.role.request.UserUpdateOrganizationClientsRolesRequest;
 import com.vntana.core.rest.facade.user.role.component.UserRoleActionItemRetrieverComponent;
 import com.vntana.core.service.user.role.UserRoleService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,8 +37,8 @@ public class UserRoleHelperComponentImpl implements UserRoleActionItemRetrieverC
     }
 
     @Override
-    public List<UpdateClientRoleRequest> fetchRevokeRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
-        LOGGER.debug("Processing fetchRevokeRolesFromUpdateRolesRequest for request - {}", request);
+    public List<UpdateClientRoleRequest> fetchRevokedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
+        LOGGER.debug("Processing fetchRevokedRolesFromUpdateRolesRequest for request - {}", request);
         final List<UpdateClientRoleRequest> updatedClientRoles = request.getUpdateClientRoles();
         final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getRequestAndAuthorizedUsersVisibleClientOrganizations(request.getOrganizationUuid(), request.getRequestedUserUuid(), request.getUuid());
         final Set<String> updatedClientRolesUuids = updatedClientRoles.stream()
@@ -46,25 +48,44 @@ public class UserRoleHelperComponentImpl implements UserRoleActionItemRetrieverC
                 .filter(existedClientRole -> !updatedClientRolesUuids.contains(existedClientRole.getClientOrganization().getUuid()))
                 .map(this::buildUpdateClientRoleRequest)
                 .collect(Collectors.toList());
-        LOGGER.debug("Successfully processed fetchRevokeRolesFromUpdateRolesRequest for request - {}", request);
+        LOGGER.debug("Successfully processed fetchRevokedRolesFromUpdateRolesRequest for request - {}", request);
         return revokeResultList;
     }
 
     @Override
-    public List<UpdateClientRoleRequest> fetchGrantRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
-        LOGGER.debug("Processing fetchGrantRolesFromUpdateRolesRequest for request - {}", request);
+    public List<UpdateClientRoleRequest> fetchGrantedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
+        LOGGER.debug("Processing fetchGrantedRolesFromUpdateRolesRequest for request - {}", request);
         final List<UpdateClientRoleRequest> updatedClientRoles = request.getUpdateClientRoles();
         final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getRequestAndAuthorizedUsersVisibleClientOrganizations(request.getOrganizationUuid(), request.getRequestedUserUuid(), request.getUuid());
         final List<UpdateClientRoleRequest> grantResultList = CollectionUtils.isEmpty(existedClientRoles) ? updatedClientRoles :
                 updatedClientRoles.stream()
                         .filter(updatedClientRole -> existedClientRoles.stream()
-                                .anyMatch(existedClientRole ->
-                                        (!existedClientRole.getClientOrganization().getUuid().equals(updatedClientRole.getClientUuid()) ||
-                                                (existedClientRole.getClientOrganization().getUuid().equals(updatedClientRole.getClientUuid()) &&
-                                                        UserRoleModel.valueOf(existedClientRole.getUserRole().name()) != updatedClientRole.getClientRole()))))
+                                .noneMatch(existedClientRole -> existedClientRole.getClientOrganization().getUuid().equals(updatedClientRole.getClientUuid())))
                         .collect(Collectors.toList());
-        LOGGER.debug("Successfully processed fetchGrantRolesFromUpdateRolesRequest for request - {}", request);
+        LOGGER.debug("Successfully processed fetchGrantedRolesFromUpdateRolesRequest for request - {}", request);
         return grantResultList;
+    }
+
+    @Override
+    public List<UpdatedClientRoleModel> fetchUpdatedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
+        LOGGER.debug("Processing fetchUpdatedRolesFromUpdateRolesRequest for request - {}", request);
+        final List<UpdateClientRoleRequest> updateClientRoles = request.getUpdateClientRoles();
+        final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getRequestAndAuthorizedUsersVisibleClientOrganizations(request.getOrganizationUuid(), request.getRequestedUserUuid(), request.getUuid());
+        final Map<String, UserRoleModel> updatedRolesMap = existedClientRoles.stream()
+                .filter(existedClientRole -> updateClientRoles.stream()
+                        .anyMatch(updateClientRole ->
+                                (updateClientRole.getClientUuid().equals(existedClientRole.getClientOrganization().getUuid()) &&
+                                        updateClientRole.getClientRole() != UserRoleModel.valueOf(existedClientRole.getUserRole().name()))))
+                .collect(Collectors.toMap(
+                        existedClientRole -> existedClientRole.getClientOrganization().getUuid(),
+                        existedClientRole -> UserRoleModel.valueOf(existedClientRole.getUserRole().name())
+                ));
+        final List<UpdatedClientRoleModel> updatedResultList = updateClientRoles.stream()
+                .filter(updateRole -> updatedRolesMap.containsKey(updateRole.getClientUuid()))
+                .map(updateRole -> new UpdatedClientRoleModel(updateRole.getClientUuid(), updatedRolesMap.get(updateRole.getClientUuid()), updateRole.getClientRole()))
+                .collect(Collectors.toList());
+        LOGGER.debug("Successfully processed fetchUpdatedRolesFromUpdateRolesRequest for request - {}", request);
+        return updatedResultList;
     }
 
     private List<AbstractClientOrganizationAwareUserRole> getRequestAndAuthorizedUsersVisibleClientOrganizations(final String organizationUuid, final String requestedUserUuid, final String userUuid) {
