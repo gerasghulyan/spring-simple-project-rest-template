@@ -129,6 +129,36 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
         }
     }
 
+
+    @Test
+    fun `test when authorized user is owner and requested user is org admin`() {
+        val user = userResourceTestHelper.persistUser().response()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = user.uuid).response().uuid
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        userRoleResourceTestHelper.grantUserOrganizationAdminRole(userUuid = requestedUser.uuid, organizationUuid = organizationUuid)
+        val clientOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response()
+        val updateClientRoleRequest = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = user.uuid,
+                organizationUuid = organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+            userResourceClient.getUsersByClientOrganization(clientOrganization.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+            userResourceClient.getUsersByOrganization(organizationUuid)?.body?.response()?.run {
+                assertBasicSuccessResultResponse(it)
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+            }
+        }
+    }
+
     @Test
     fun `test when authorized user is organization admin`() {
         val user = userResourceTestHelper.persistUser().response()
