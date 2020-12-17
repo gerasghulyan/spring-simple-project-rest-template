@@ -61,7 +61,7 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userRoleRevokeOrganizationAdminResponse);
     }
 
-    @DeleteMapping("client")
+    @DeleteMapping("organizations/client")
     public ResponseEntity<UserRoleRevokeClientResponse> revokeUserClientRole(@RequestBody final UserRoleRevokeClientRequest request) {
         LOGGER.debug("Processing user-roles resource revokeUserClientRole for request - {}", request);
         final UserRoleRevokeClientResponse userRoleRevokeClientResponse = userRoleServiceFacade.revokeClientRole(request);
