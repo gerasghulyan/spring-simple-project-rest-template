@@ -10,7 +10,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Created by Vardan Aivazian
@@ -39,23 +38,21 @@ public class UserUpdateOrganizationClientsRolesRequest extends AbstractUserUpdat
     public List<UserRoleErrorResponseModel> validate() {
         final List<UserRoleErrorResponseModel> errors = super.validate();
         if (!CollectionUtils.isEmpty(updateClientRoles)) {
-            final Optional<UpdateClientRoleRequest> errorClientUuid = updateClientRoles.stream()
-                    .filter(updateClientRole -> StringUtils.isBlank(updateClientRole.getClientUuid()))
-                    .findFirst();
-            if (errorClientUuid.isPresent()) {
+            final boolean errorClientUuid = updateClientRoles.stream()
+                    .anyMatch(updateClientRole -> StringUtils.isBlank(updateClientRole.getClientUuid()));
+            if (errorClientUuid) {
                 errors.add(UserRoleErrorResponseModel.MISSING_CLIENT_ORGANIZATION_UUID);
             }
-            final Optional<UpdateClientRoleRequest> errorClientRole = updateClientRoles.stream()
-                    .filter(updateClientRole -> Objects.isNull(updateClientRole.getClientRole()))
-                    .findFirst();
-            if (errorClientRole.isPresent()) {
+            final boolean errorClientRole = updateClientRoles.stream()
+                    .anyMatch(updateClientRole -> Objects.isNull(updateClientRole.getClientRole()));
+            if (errorClientRole) {
                 errors.add(UserRoleErrorResponseModel.MISSING_CLIENT_ROLE);
-            }
-            final Optional<UpdateClientRoleRequest> errorClientRoleAbility = updateClientRoles.stream()
-                    .filter(updateClientRole -> !Objects.isNull(updateClientRole.getClientRole()) && !updateClientRole.getClientRole().hasClientAbility())
-                    .findFirst();
-            if (errorClientRoleAbility.isPresent()) {
-                errors.add(UserRoleErrorResponseModel.REQUEST_ROLE_IS_NOT_CLIENT_RELATED);
+            } else {
+                final boolean errorClientRoleAbility = updateClientRoles.stream()
+                        .anyMatch(updateClientRole -> !updateClientRole.getClientRole().hasClientAbility());
+                if (errorClientRoleAbility) {
+                    errors.add(UserRoleErrorResponseModel.REQUEST_ROLE_IS_NOT_CLIENT_RELATED);
+                }
             }
         }
         return errors;
