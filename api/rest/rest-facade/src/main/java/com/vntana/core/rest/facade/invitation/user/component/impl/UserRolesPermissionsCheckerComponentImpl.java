@@ -30,4 +30,10 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
         }
         return inviter.getPriority() <= invited.getPriority();
     }
+
+    @Override
+    public boolean isPermittedToGrant(final UserRoleModel granter, final UserRoleModel granted) {
+        return granter.hasGranterAbility() && granted.hasGrantedAbility() &&
+                (granter.getPriority() <= granted.getPriority());
+    }
 }

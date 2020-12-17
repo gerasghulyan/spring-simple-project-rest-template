@@ -72,6 +72,23 @@ class UserGetByUuidsAndOrganizationUuidWebTest : AbstractUserWebTest() {
     }
 
     @Test
+    fun `test when `() {
+        val createUserRequest = resourceHelper.buildCreateUserRequest()
+        val userUuid = resourceHelper.persistUser(createUserRequest).response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = userUuid).response().uuid
+        val request = resourceHelper.buildGetByUuidsAndOrganizationUuid(uuids = setOf(userUuid), organizationUuid = organizationUuid)
+        userResourceClient.getByUuidsAndOrganizationUuid(request).let { responseEntity ->
+            assertBasicSuccessResultResponse(responseEntity)
+            responseEntity?.body?.response()?.let {
+                assertThat(it.totalCount()).isEqualTo(1)
+                assertThat(it.items()[0].fullName).isEqualTo(createUserRequest.fullName)
+                assertThat(it.items()[0].email).isEqualTo(createUserRequest.email)
+                assertThat(it.items()[0].isInOrganization).isTrue()
+            }
+        }
+    }
+
+    @Test
     fun test() {
         val createUserRequest = resourceHelper.buildCreateUserRequest()
         val userUuid = resourceHelper.persistUser(createUserRequest).response().uuid

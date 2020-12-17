@@ -45,7 +45,7 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userRoleGrantOrganizationAdminResponse);
     }
 
-    @PostMapping("client")
+    @PostMapping("organizations/client")
     public ResponseEntity<UserRoleGrantClientOrganizationResponse> grantUserClientRole(@RequestBody final UserRoleGrantClientOrganizationRequest request) {
         LOGGER.debug("Processing user-roles resource grantUserClientRole for request - {}", request);
         final UserRoleGrantClientOrganizationResponse userRoleGrantClientOrganizationResponse = userRoleServiceFacade.grantClientRole(request);
@@ -61,7 +61,7 @@ public class UserRoleResource {
         return ResponseEntityUtils.okWithStatusInHeader(userRoleRevokeOrganizationAdminResponse);
     }
 
-    @DeleteMapping("client")
+    @DeleteMapping("organizations/client")
     public ResponseEntity<UserRoleRevokeClientResponse> revokeUserClientRole(@RequestBody final UserRoleRevokeClientRequest request) {
         LOGGER.debug("Processing user-roles resource revokeUserClientRole for request - {}", request);
         final UserRoleRevokeClientResponse userRoleRevokeClientResponse = userRoleServiceFacade.revokeClientRole(request);
@@ -70,10 +70,26 @@ public class UserRoleResource {
     }
 
     @DeleteMapping("organizations/clients")
-    ResponseEntity<UserRoleRevokeOrganizationClientsResponse> revokeUserOrganizationClientsRoles(@RequestBody final UserRoleRevokeOrganizationClientsRequest request) {
+    public ResponseEntity<UserRoleRevokeOrganizationClientsResponse> revokeUserOrganizationClientsRoles(@RequestBody final UserRoleRevokeOrganizationClientsRequest request) {
         LOGGER.debug("Processing user-roles resource revokeUserOrganizationClientsRoles for request - {}", request);
         final UserRoleRevokeOrganizationClientsResponse userOrganizationClientsResponse = userRoleServiceFacade.revokeOrganizationClientsRoles(request);
         LOGGER.debug("Successfully processing user-roles resource revokeUserOrganizationClientsRoles for request - {}", request);
         return ResponseEntityUtils.okWithStatusInHeader(userOrganizationClientsResponse);
+    }
+
+    @PutMapping("organization")
+    public ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationRole(@RequestBody final UserUpdateOrganizationRoleRequest request) {
+        LOGGER.debug("Processing update user organization role for request - {}", request);
+        final UserUpdateRolesResponse userUpdateRolesResponse = userRoleServiceFacade.updateUserOrganizationRole(request);
+        LOGGER.debug("Successfully proceeded update user organization role for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(userUpdateRolesResponse);
+    }
+    
+    @PutMapping("organizations/clients")
+    public ResponseEntity<UserUpdateRolesResponse> updateUserOrganizationClientsRoles(@RequestBody final UserUpdateOrganizationClientsRolesRequest request) {
+        LOGGER.debug("Processing update user organization clients roles for request - {}", request);
+        final UserUpdateRolesResponse userUpdateRolesResponse = userRoleServiceFacade.updateUserOrganizationClientsRoles(request);
+        LOGGER.debug("Successfully proceeded update user organization clients roles for request - {}", request);
+        return ResponseEntityUtils.okWithStatusInHeader(userUpdateRolesResponse);
     }
 }

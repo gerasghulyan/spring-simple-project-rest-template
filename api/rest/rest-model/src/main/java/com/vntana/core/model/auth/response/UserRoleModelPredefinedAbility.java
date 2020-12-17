@@ -26,4 +26,12 @@ public interface UserRoleModelPredefinedAbility {
     default Boolean hasInviterAbility() {
         return true;
     }
+
+    default Boolean hasGranterAbility() {
+        return true;
+    }
+    
+    default Boolean hasGrantedAbility() {
+        return true;
+    }
 }

@@ -10,4 +10,6 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 public interface UserRolesPermissionsCheckerComponent {
 
     boolean isPermittedToInvite(final UserRoleModel inviter, final UserRoleModel invited);
+    
+    boolean isPermittedToGrant(final UserRoleModel granter, final UserRoleModel granted);
 }
