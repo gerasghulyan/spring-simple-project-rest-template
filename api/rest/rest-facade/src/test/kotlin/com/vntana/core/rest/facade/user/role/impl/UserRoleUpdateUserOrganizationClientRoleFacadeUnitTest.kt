@@ -53,6 +53,7 @@ class UserRoleUpdateUserOrganizationClientRoleFacadeUnitTest: AbstractUserRoleSe
         expect(userRoleActionItemRetrieverComponent.fetchRevokedRolesFromUpdateRolesRequest(request)).andReturn(listOf(revokeClientRole))
         expect(preconditionChecker.checkRevokeClientRole(revokeClientRequest)).andReturn(SingleErrorWithStatus.empty())
         expect(userRoleService.revokeClientRole(revokeClientRoleDto))
+        expect(tokenAuthenticationService.expireAllByUser(revokeClientRoleDto.userUuid)).andVoid()
         expect(tokenAuthenticationService.expireAllByUser(revokeClientRequest.userUuid))
         expect(userRoleActionItemRetrieverComponent.fetchGrantedRolesFromUpdateRolesRequest(request)).andReturn(listOf(grantClientRole))
         expect(preconditionChecker.checkGrantClientRole(grantClientRequest)).andReturn(SingleErrorWithStatus.empty())

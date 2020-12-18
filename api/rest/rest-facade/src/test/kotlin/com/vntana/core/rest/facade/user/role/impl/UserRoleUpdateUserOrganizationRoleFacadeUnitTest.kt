@@ -41,6 +41,7 @@ class UserRoleUpdateUserOrganizationRoleFacadeUnitTest : AbstractUserRoleService
         expect(preconditionChecker.checkUpdateUserOrganizationRoles(request)).andReturn(SingleErrorWithStatus.empty())
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(clients)
         expect(userRoleService.revokeUserClientsRoles(revokeClientsRolesDto))
+        expect(tokenAuthenticationService.expireAllByUser(revokeClientsRolesDto.userUuid)).andVoid()
         expect(userRoleService.grantOrganizationAdminRole(grantOrganizationAdminRoleDto)).andReturn(adminRole)
         replayAll()
         userRoleServiceFacade.updateUserOrganizationRole(request).let {

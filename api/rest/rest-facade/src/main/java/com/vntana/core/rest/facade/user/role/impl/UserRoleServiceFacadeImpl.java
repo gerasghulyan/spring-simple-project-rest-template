@@ -199,6 +199,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
                 .collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(clientUuids)) {
             userRoleService.revokeUserClientsRoles(new UserRevokeClientsRolesDto(userUuid, clientUuids));
+            tokenAuthenticationService.expireAllByUser(userUuid);
         }
     }
 
@@ -207,6 +208,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
             if (organizationRole instanceof UserOrganizationAdminRole) {
                 userRoleService.revokeOrganizationAdminRole(
                         new UserRevokeOrganizationAdminRoleDto(userUuid, organizationUuid));
+                tokenAuthenticationService.expireAllByUser(userUuid);
             }
         });
     }

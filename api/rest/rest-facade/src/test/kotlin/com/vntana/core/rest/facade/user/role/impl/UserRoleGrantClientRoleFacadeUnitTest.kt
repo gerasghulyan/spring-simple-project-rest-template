@@ -45,6 +45,7 @@ class UserRoleGrantClientRoleFacadeUnitTest : AbstractUserRoleServiceFacadeUnitT
         expect(organizationClientService.getByUuid(request.clientUuid)).andReturn(clientOrganization)
         expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.userUuid)).andReturn(Optional.of(adminRole))
         expect(userRoleService.revokeOrganizationAdminRole(userRevokeOrganizationAdminRoleDto))
+        expect(tokenAuthenticationService.expireAllByUser(userRevokeOrganizationAdminRoleDto.userUuid)).andVoid()
         replayAll()
         userRoleServiceFacade.grantClientRole(request).let {
             assertBasicSuccessResultResponse(it)
