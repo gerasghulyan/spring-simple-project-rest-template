@@ -138,9 +138,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (error.isPresent()) {
             return error;
         }
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> grantOrganizationAdminRoleError = checkGrantToOrganizationOwner(organizationUuid, userUuid);
-        if (grantOrganizationAdminRoleError.isPresent()) {
-            return grantOrganizationAdminRoleError;
+        final SingleErrorWithStatus<UserRoleErrorResponseModel> grantOrganizationAdminRoleToOrganizationUser = checkGrantToOrganizationUser(organizationUuid, userUuid);
+        if (grantOrganizationAdminRoleToOrganizationUser.isPresent()) {
+            return grantOrganizationAdminRoleToOrganizationUser;
         }
         final SingleErrorWithStatus<UserRoleErrorResponseModel> permissionError = checkAuthorizedUserPermissionForGrantOrganizationAdminRole(organizationUuid, request.getUuid());
         if (permissionError.isPresent()) {
@@ -247,5 +247,18 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
                 .filter(abstractOrganizationAwareUserRole -> UserRole.ORGANIZATION_OWNER == abstractOrganizationAwareUserRole.getUserRole())
                 .map(abstractOrganizationAwareUserRole -> SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_IS_ORGANIZATION_OWNER))
                 .orElse(SingleErrorWithStatus.empty());
+    }
+    
+    private SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantToOrganizationUser(final String organizationUuid,
+                                                                                            final String userUuid) {
+        final Optional<AbstractOrganizationAwareUserRole> byOrganizationAndUser = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
+        if (byOrganizationAndUser.isPresent()) {
+            if (UserRole.ORGANIZATION_OWNER == byOrganizationAndUser.get().getUserRole()) {
+                return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_IS_ORGANIZATION_OWNER);
+            } else if (UserRole.ORGANIZATION_ADMIN == byOrganizationAndUser.get().getUserRole()) {
+                return SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_ALREADY_HAS_ORGANIZATION_ADMIN_ROLE);
+            }
+        }
+        return SingleErrorWithStatus.empty();
     }
 }
