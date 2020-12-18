@@ -83,11 +83,11 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
     public List<AbstractUserRole> findAllOrganizationClientsRolesByOrganizationAndUser(final String organizationUuid, final String userUuid) {
         return entityManager.createQuery(
                 "select role from AbstractUserRole role where role.id in " +
-                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid and ucar.user.uuid = :userUuid)" +
+                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.organization.uuid = :organizationUuid and aur.user.uuid = :userUuid)" +
                         " or role.id in " +
-                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.organization.uuid = :organizationUuid and uccmr.user.uuid = :userUuid)" +
+                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.organization.uuid = :organizationUuid and aur.user.uuid = :userUuid)" +
                         " or role.id in " +
-                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.organization.uuid = :organizationUuid and ucvr.user.uuid = :userUuid)",
+                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.organization.uuid = :organizationUuid and aur.user.uuid = :userUuid)",
                 AbstractUserRole.class)
                 .setParameter("organizationUuid", organizationUuid)
                 .setParameter("userUuid", userUuid)
@@ -117,11 +117,11 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
         return find(() ->
                 entityManager.createQuery(
                         "select role from AbstractUserRole role where role.id in " +
-                                "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid = :clientOrganizationUuid and ucar.user.uuid = :userUuid)" +
+                                "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid = :clientOrganizationUuid and aur.user.uuid = :userUuid)" +
                                 " or role.id in " +
-                                "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.uuid = :clientOrganizationUuid and uccmr.user.uuid = :userUuid)" +
+                                "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.uuid = :clientOrganizationUuid and aur.user.uuid = :userUuid)" +
                                 " or role.id in " +
-                                "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid = :clientOrganizationUuid and ucvr.user.uuid = :userUuid)",
+                                "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid = :clientOrganizationUuid and aur.user.uuid = :userUuid)",
                         AbstractUserRole.class)
                         .setParameter("clientOrganizationUuid", clientOrganizationUuid)
                         .setParameter("userUuid", userUuid)
@@ -147,7 +147,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
         return find(() ->
                 entityManager.createQuery(
                         "select aur from UserClientOrganizationAdminRole uoar join AbstractUserRole aur on aur.id = uoar.id " +
-                                "where uoar.clientOrganization.uuid = :clientOrganizationUuid and uoar.user.uuid = :userUuid",
+                                "where uoar.clientOrganization.uuid = :clientOrganizationUuid and aur.user.uuid = :userUuid",
                         AbstractUserRole.class)
                         .setParameter("clientOrganizationUuid", clientOrganizationUuid)
                         .setParameter("userUuid", userUuid)
@@ -160,7 +160,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
         return find(() ->
                 entityManager.createQuery(
                         "select aur from UserClientOrganizationContentManagerRole uoar join AbstractUserRole aur on aur.id = uoar.id " +
-                                "where uoar.clientOrganization.uuid = :clientOrganizationUuid and uoar.user.uuid = :userUuid",
+                                "where uoar.clientOrganization.uuid = :clientOrganizationUuid and aur.user.uuid = :userUuid",
                         AbstractUserRole.class)
                         .setParameter("clientOrganizationUuid", clientOrganizationUuid)
                         .setParameter("userUuid", userUuid)
@@ -173,7 +173,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
         return find(() ->
                 entityManager.createQuery(
                         "select aur from UserClientOrganizationViewerRole uoar join AbstractUserRole aur on aur.id = uoar.id " +
-                                "where uoar.clientOrganization.uuid = :clientOrganizationUuid and uoar.user.uuid = :userUuid",
+                                "where uoar.clientOrganization.uuid = :clientOrganizationUuid and aur.user.uuid = :userUuid",
                         AbstractUserRole.class)
                         .setParameter("clientOrganizationUuid", clientOrganizationUuid)
                         .setParameter("userUuid", userUuid)
@@ -185,11 +185,11 @@ public class UserRoleRepositoryImpl implements UserRoleRepositoryCustom {
     public int deleteAllForUserAndClientOrganizations(final String userUuid, final List<String> clientOrganizationUuids) {
         return entityManager.createQuery(
                 "delete from AbstractUserRole role where role.id in " +
-                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid in :clientOrganizationUuids and ucar.user.uuid = :userUuid)" +
+                        "(select aur.id from UserClientOrganizationAdminRole ucar join AbstractUserRole aur on aur.id = ucar.id where ucar.clientOrganization.uuid in :clientOrganizationUuids and aur.user.uuid = :userUuid)" +
                         " or role.id in " +
-                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.uuid in :clientOrganizationUuids and uccmr.user.uuid = :userUuid)" +
+                        "(select aur.id from UserClientOrganizationContentManagerRole uccmr join AbstractUserRole aur on aur.id = uccmr.id where uccmr.clientOrganization.uuid in :clientOrganizationUuids and aur.user.uuid = :userUuid)" +
                         " or role.id in " +
-                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid in :clientOrganizationUuids and ucvr.user.uuid = :userUuid)")
+                        "(select aur.id from UserClientOrganizationViewerRole ucvr join AbstractUserRole aur on aur.id = ucvr.id where ucvr.clientOrganization.uuid in :clientOrganizationUuids and aur.user.uuid = :userUuid)")
                 .setParameter("clientOrganizationUuids", clientOrganizationUuids)
                 .setParameter("userUuid", userUuid)
                 .executeUpdate();

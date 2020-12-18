@@ -44,6 +44,21 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationRolesUnitTest : Abst
     }
 
     @Test
+    fun `test when user has organization admin role`() {
+        resetAll()
+        val request = restTestHelper.buildUserUpdateOrganizationRoleRequest()
+        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
+        expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.of(commonTestHelper.buildUserOrganizationAdminRole()))
+        replayAll()
+        preconditionChecker.checkUpdateUserOrganizationRoles(request).let {
+            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.REQUESTED_USER_ALREADY_HAS_ORGANIZATION_ADMIN_ROLE)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+        }
+        verifyAll()
+    }
+    
+    @Test
     fun `test when user has organization owner role`() {
         resetAll()
         val request = restTestHelper.buildUserUpdateOrganizationRoleRequest()
