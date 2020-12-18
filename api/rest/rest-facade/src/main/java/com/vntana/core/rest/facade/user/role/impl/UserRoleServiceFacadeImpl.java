@@ -177,9 +177,15 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
         final String userUuid = request.getRequestedUserUuid();
         final String organizationUuid = request.getOrganizationUuid();
         revokeIfUserOrganizationAdminRolePresent(organizationUuid, userUuid);
-        userRoleHelperComponent.fetchRevokeRolesFromUpdateRolesRequest(request).forEach(revokeClientRole -> revokeClientRole(
+        userRoleHelperComponent.fetchUpdatedRolesFromUpdateRolesRequest(request).forEach(updatedClientRole -> {
+            revokeClientRole(
+                    new UserRoleRevokeClientRequest(request.getRequestedUserUuid(), updatedClientRole.getClientUuid(), updatedClientRole.getRevokeUserRoleModel()));
+            grantClientRole(
+                    new UserRoleGrantClientOrganizationRequest(request.getRequestedUserUuid(), updatedClientRole.getClientUuid(), updatedClientRole.getGrantUserRoleModel()));
+        });
+        userRoleHelperComponent.fetchRevokedRolesFromUpdateRolesRequest(request).forEach(revokeClientRole -> revokeClientRole(
                 new UserRoleRevokeClientRequest(request.getRequestedUserUuid(), revokeClientRole.getClientUuid(), revokeClientRole.getClientRole())));
-        userRoleHelperComponent.fetchGrantRolesFromUpdateRolesRequest(request).forEach(grantClientRole -> grantClientRole(
+        userRoleHelperComponent.fetchGrantedRolesFromUpdateRolesRequest(request).forEach(grantClientRole -> grantClientRole(
                 new UserRoleGrantClientOrganizationRequest(request.getRequestedUserUuid(), grantClientRole.getClientUuid(), grantClientRole.getClientRole())));
         LOGGER.debug("Successfully updated user organization clients roles for request - {}", request);
         return new UserUpdateRolesResponse(userUuid);
