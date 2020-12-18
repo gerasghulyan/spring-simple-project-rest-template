@@ -1,5 +1,6 @@
 package com.vntana.core.model.user.role.request;
 
+import com.vntana.commons.api.model.request.RequestModel;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Date: 17.12.2020
  * Time: 21:03
  */
-public class UpdatedClientRoleModel {
+public class UpdatedClientRoleRequestModel implements RequestModel {
     
     private final String clientUuid;
     
@@ -18,7 +19,7 @@ public class UpdatedClientRoleModel {
     
     private final UserRoleModel grantUserRoleModel;
 
-    public UpdatedClientRoleModel(
+    public UpdatedClientRoleRequestModel(
             final String clientUuid,
             final UserRoleModel revokeUserRoleModel,
             final UserRoleModel grantUserRoleModel) {
@@ -32,10 +33,10 @@ public class UpdatedClientRoleModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UpdatedClientRoleModel)) {
+        if (!(o instanceof UpdatedClientRoleRequestModel)) {
             return false;
         }
-        final UpdatedClientRoleModel that = (UpdatedClientRoleModel) o;
+        final UpdatedClientRoleRequestModel that = (UpdatedClientRoleRequestModel) o;
         return new EqualsBuilder()
                 .append(clientUuid, that.clientUuid)
                 .append(revokeUserRoleModel, that.revokeUserRoleModel)

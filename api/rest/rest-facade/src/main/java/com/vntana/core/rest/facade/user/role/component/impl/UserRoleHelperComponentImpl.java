@@ -4,7 +4,7 @@ import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.role.request.UpdateClientRoleRequest;
-import com.vntana.core.model.user.role.request.UpdatedClientRoleModel;
+import com.vntana.core.model.user.role.request.UpdatedClientRoleRequestModel;
 import com.vntana.core.model.user.role.request.UserUpdateOrganizationClientsRolesRequest;
 import com.vntana.core.rest.facade.user.role.component.UserRoleActionItemRetrieverComponent;
 import com.vntana.core.service.user.role.UserRoleService;
@@ -67,7 +67,7 @@ public class UserRoleHelperComponentImpl implements UserRoleActionItemRetrieverC
     }
 
     @Override
-    public List<UpdatedClientRoleModel> fetchUpdatedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
+    public List<UpdatedClientRoleRequestModel> fetchUpdatedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request) {
         LOGGER.debug("Processing fetchUpdatedRolesFromUpdateRolesRequest for request - {}", request);
         final List<UpdateClientRoleRequest> updateClientRoles = request.getUpdateClientRoles();
         final List<AbstractClientOrganizationAwareUserRole> existedClientRoles = getRequestAndAuthorizedUsersVisibleClientOrganizations(request.getOrganizationUuid(), request.getRequestedUserUuid(), request.getUuid());
@@ -80,9 +80,9 @@ public class UserRoleHelperComponentImpl implements UserRoleActionItemRetrieverC
                         existedClientRole -> existedClientRole.getClientOrganization().getUuid(),
                         existedClientRole -> UserRoleModel.valueOf(existedClientRole.getUserRole().name())
                 ));
-        final List<UpdatedClientRoleModel> updatedResultList = updateClientRoles.stream()
+        final List<UpdatedClientRoleRequestModel> updatedResultList = updateClientRoles.stream()
                 .filter(updateRole -> updatedRolesMap.containsKey(updateRole.getClientUuid()))
-                .map(updateRole -> new UpdatedClientRoleModel(updateRole.getClientUuid(), updatedRolesMap.get(updateRole.getClientUuid()), updateRole.getClientRole()))
+                .map(updateRole -> new UpdatedClientRoleRequestModel(updateRole.getClientUuid(), updatedRolesMap.get(updateRole.getClientUuid()), updateRole.getClientRole()))
                 .collect(Collectors.toList());
         LOGGER.debug("Successfully processed fetchUpdatedRolesFromUpdateRolesRequest for request - {}", request);
         return updatedResultList;

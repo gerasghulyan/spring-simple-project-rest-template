@@ -62,5 +62,5 @@ open class UserRoleRestTestHelper : AbstractRestTestHelper() {
             clientUuid: String? = uuid(),
             revokeUserRoleModel: UserRoleModel? = UserRoleModel.CLIENT_ORGANIZATION_ADMIN,
             grantUserRoleModel: UserRoleModel? = UserRoleModel.CLIENT_ORGANIZATION_VIEWER
-    ): UpdatedClientRoleModel = UpdatedClientRoleModel(clientUuid, revokeUserRoleModel, grantUserRoleModel)
+    ): UpdatedClientRoleRequestModel = UpdatedClientRoleRequestModel(clientUuid, revokeUserRoleModel, grantUserRoleModel)
 }

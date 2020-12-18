@@ -1,7 +1,7 @@
 package com.vntana.core.rest.facade.user.role.component;
 
 import com.vntana.core.model.user.role.request.UpdateClientRoleRequest;
-import com.vntana.core.model.user.role.request.UpdatedClientRoleModel;
+import com.vntana.core.model.user.role.request.UpdatedClientRoleRequestModel;
 import com.vntana.core.model.user.role.request.UserUpdateOrganizationClientsRolesRequest;
 
 import java.util.List;
@@ -17,5 +17,5 @@ public interface UserRoleActionItemRetrieverComponent {
 
     List<UpdateClientRoleRequest> fetchGrantedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request);
     
-    List<UpdatedClientRoleModel> fetchUpdatedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request);
+    List<UpdatedClientRoleRequestModel> fetchUpdatedRolesFromUpdateRolesRequest(final UserUpdateOrganizationClientsRolesRequest request);
 }
