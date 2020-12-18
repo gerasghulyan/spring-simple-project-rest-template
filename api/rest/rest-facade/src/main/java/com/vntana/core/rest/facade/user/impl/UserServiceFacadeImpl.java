@@ -381,7 +381,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                             user.getImageBlobId(),
                             UserRoleModel.valueOf(userRole.getUserRole().name())
                     );
-                }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
+                }).distinct().collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
         LOGGER.debug("Successfully processed user facade getByOrganizationUuid for organizationUuid - {}", organizationUuid);
         return new GetUsersByOrganizationResponse(responseModel);
     }
@@ -405,7 +405,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                             theUser.getImageBlobId(),
                             UserRoleModel.valueOf(theUserRole.getUserRole().name())
                     );
-                }).collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
+                }).distinct().collect(Collectors.collectingAndThen(Collectors.toList(), GetUsersByOrganizationGridResponseModel::new));
         LOGGER.debug("Successfully processed user facade getByClientOrganizationUuid for clientUuid - {}", clientUuid);
         return new GetUsersByOrganizationResponse(responseModel);
     }

@@ -205,7 +205,7 @@ public class UserRoleServiceFacadeImpl implements UserRoleServiceFacade {
 
     private void revokeIfUserOrganizationAdminRolePresent(final String organizationUuid, final String userUuid) {
         userRoleService.findByOrganizationAndUser(organizationUuid, userUuid).ifPresent(organizationRole -> {
-            if (organizationRole instanceof UserOrganizationAdminRole) {
+            if (UserRole.ORGANIZATION_ADMIN == organizationRole.getUserRole()) {
                 userRoleService.revokeOrganizationAdminRole(
                         new UserRevokeOrganizationAdminRoleDto(userUuid, organizationUuid));
                 tokenAuthenticationService.expireAllByUser(userUuid);
