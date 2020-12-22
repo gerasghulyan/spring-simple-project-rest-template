@@ -67,6 +67,7 @@ class InvitationUserToClientAcceptFacadeUnitTest : AbstractInvitationUserFacadeU
             assertThat(it.response().userRoleModel).isEqualTo(UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
             assertThat(it.response().userUuid).isEqualTo(user.uuid)
             assertThat(it.response().clientUuid).isEqualTo(client.uuid)
+            assertThat(it.response().organizationUuid).isEqualTo(client.organization.uuid)
         }
         verifyAll()
     }
