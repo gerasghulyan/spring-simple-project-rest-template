@@ -224,7 +224,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         expireToken(userInvitation, request.getToken());
         LOGGER.debug("Successfully accepted invitation for client user for request- {}", request);
         return new AcceptInvitationUserToClientResultResponse(
-                new AcceptInvitationUserToClientResponseModel(client.getUuid(), user.getUuid(), UserRoleModel.valueOf(userInvitation.getRole().name()))
+                new AcceptInvitationUserToClientResponseModel(client.getUuid(), client.getOrganization().getUuid(), user.getUuid(), UserRoleModel.valueOf(userInvitation.getRole().name()))
         );
     }
 
@@ -265,7 +265,7 @@ public class InvitationUserServiceFacadeImpl implements InvitationUserServiceFac
         expireToken(userInvitation, request.getToken());
         LOGGER.debug("Successfully accepted user invitation for client and signed up for request - {}", request);
         return new AcceptInvitationUserToClientResultResponse(
-                new AcceptInvitationUserToClientResponseModel(client.getUuid(), user.getUuid(), UserRoleModel.valueOf(userInvitation.getRole().name()))
+                new AcceptInvitationUserToClientResponseModel(client.getUuid(), client.getOrganization().getUuid(), user.getUuid(), UserRoleModel.valueOf(userInvitation.getRole().name()))
         );
     }
 

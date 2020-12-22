@@ -97,6 +97,7 @@ class InvitationUserToClientAcceptAndSignUpWebTest : AbstractInvitationUserWebTe
             assertBasicSuccessResultResponse(responseEntity)
             responseEntity?.body?.response()?.let {
                 assertThat(it.clientUuid).isEqualTo(clientUuid)
+                assertThat(it.organizationUuid).isEqualTo(organizationUuid)
                 assertThat(it.userRoleModel).isEqualTo(UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
                 assertThat(it.userUuid).isNotEmpty()
                 assertThat(userResourceClient.accountDetails(it.userUuid)?.body?.response()?.isEmailVerified).isTrue()

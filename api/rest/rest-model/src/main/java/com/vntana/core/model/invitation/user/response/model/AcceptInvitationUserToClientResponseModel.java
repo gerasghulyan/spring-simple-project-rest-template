@@ -16,16 +16,21 @@ public class AcceptInvitationUserToClientResponseModel extends AbstractAcceptUse
     @JsonProperty("clientUuid")
     private String clientUuid;
 
+    @JsonProperty("organizationUuid")
+    private String organizationUuid;
+
     public AcceptInvitationUserToClientResponseModel() {
         super();
     }
 
     public AcceptInvitationUserToClientResponseModel(
             final String clientUuid,
+            final String organizationUuid,
             final String userUuid,
             final UserRoleModel userRoleModel) {
         super(userUuid, userRoleModel);
         this.clientUuid = clientUuid;
+        this.organizationUuid = organizationUuid;
     }
 
     @Override
@@ -40,6 +45,7 @@ public class AcceptInvitationUserToClientResponseModel extends AbstractAcceptUse
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(clientUuid, that.clientUuid)
+                .append(organizationUuid, that.organizationUuid)
                 .isEquals();
     }
 
@@ -48,6 +54,7 @@ public class AcceptInvitationUserToClientResponseModel extends AbstractAcceptUse
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(clientUuid)
+                .append(organizationUuid)
                 .toHashCode();
     }
 
@@ -56,6 +63,7 @@ public class AcceptInvitationUserToClientResponseModel extends AbstractAcceptUse
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("clientUuid", clientUuid)
+                .append("organizationUuid", organizationUuid)
                 .toString();
     }
 
@@ -65,5 +73,13 @@ public class AcceptInvitationUserToClientResponseModel extends AbstractAcceptUse
 
     public void setClientUuid(final String clientUuid) {
         this.clientUuid = clientUuid;
+    }
+
+    public String getOrganizationUuid() {
+        return organizationUuid;
+    }
+
+    public void setOrganizationUuid(final String organizationUuid) {
+        this.organizationUuid = organizationUuid;
     }
 }
