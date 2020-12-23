@@ -1,6 +1,5 @@
 package com.vntana.core.rest.facade.user.role.component.impl
 
-import com.vntana.core.model.auth.response.UserRoleModel
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel
 import com.vntana.core.rest.facade.user.role.component.AbstractUserRoleFacadePreconditionCheckerComponentUnitTest
 import org.apache.http.HttpStatus
@@ -80,11 +79,10 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationRolesUnitTest : Abst
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.empty())
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.empty())
-        expect(userService.findByUuid(request.uuid)).andReturn(Optional.empty())
+        expect(userRolesPermissionsCheckerComponent.isPermittedToUpdateOrganizationRole(request)).andReturn(false)
         replayAll()
         preconditionChecker.checkUpdateUserOrganizationRoles(request).let {
-            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.USER_ORGANIZATION_ROLE_NOT_FOUND)
+            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_ORGANIZATION_ROLE)
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_FORBIDDEN)
         }
         verifyAll()
@@ -94,13 +92,10 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationRolesUnitTest : Abst
     fun `test when owner grants admin`() {
         resetAll()
         val request = restTestHelper.buildUserUpdateOrganizationRoleRequest()
-        val granterOrganizationOwnerRole = commonTestHelper.buildUserOrganizationOwnerRole()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.empty())
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(granterOrganizationOwnerRole))
-        expect(userService.findByUuid(request.uuid)).andReturn(Optional.empty())
-        expect(userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(granterOrganizationOwnerRole.userRole.name), request.userRoleModel)).andReturn(true)
+        expect(userRolesPermissionsCheckerComponent.isPermittedToUpdateOrganizationRole(request)).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkUpdateUserOrganizationRoles(request).isPresent).isEqualTo(false)
         verifyAll()
@@ -110,12 +105,10 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationRolesUnitTest : Abst
     fun `test when super admin grants admin`() {
         resetAll()
         val request = restTestHelper.buildUserUpdateOrganizationRoleRequest()
-        val superAdminUser = userCommonTestHelper.buildUser()
-        superAdminUser.grantSuperAdminRole()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.empty())
-        expect(userService.findByUuid(request.uuid)).andReturn(Optional.of(superAdminUser))
+        expect(userRolesPermissionsCheckerComponent.isPermittedToUpdateOrganizationRole(request)).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkUpdateUserOrganizationRoles(request).isPresent).isEqualTo(false)
         verifyAll()
@@ -125,13 +118,10 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationRolesUnitTest : Abst
     fun `test when admin grants admin`() {
         resetAll()
         val request = restTestHelper.buildUserUpdateOrganizationRoleRequest()
-        val granterOrganizationOwnerRole = commonTestHelper.buildUserOrganizationAdminRole()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.empty())
-        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(granterOrganizationOwnerRole))
-        expect(userService.findByUuid(request.uuid)).andReturn(Optional.empty())
-        expect(userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(granterOrganizationOwnerRole.userRole.name), request.userRoleModel)).andReturn(true)
+        expect(userRolesPermissionsCheckerComponent.isPermittedToUpdateOrganizationRole(request)).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkUpdateUserOrganizationRoles(request).isPresent).isEqualTo(false)
         verifyAll()

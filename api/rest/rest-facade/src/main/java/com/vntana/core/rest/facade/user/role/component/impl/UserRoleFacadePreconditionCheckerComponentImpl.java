@@ -3,11 +3,9 @@ package com.vntana.core.rest.facade.user.role.component.impl;
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
-import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.role.error.UserRoleErrorResponseModel;
 import com.vntana.core.model.user.role.request.*;
 import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent;
@@ -142,9 +140,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (grantOrganizationAdminRoleToOrganizationUser.isPresent()) {
             return grantOrganizationAdminRoleToOrganizationUser;
         }
-        final SingleErrorWithStatus<UserRoleErrorResponseModel> permissionError = checkAuthorizedUserPermissionForGrantOrganizationAdminRole(organizationUuid, request.getUuid());
-        if (permissionError.isPresent()) {
-            return permissionError;
+        final boolean isPermittedToGrant = userRolesPermissionsCheckerComponent.isPermittedToUpdateOrganizationRole(request);
+        if (!isPermittedToGrant) {
+            return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_ORGANIZATION_ROLE);
         }
         LOGGER.debug("Successfully processed checkUpdateUserOrganizationRoles for request - {}", request);
         return SingleErrorWithStatus.empty();
@@ -167,17 +165,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (notFoundClient.isPresent()) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.CLIENT_ORGANIZATION_NOT_FOUND);
         }
-        final Optional<AbstractOrganizationAwareUserRole> authorizedUserOrganizationRole = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
-        if (!authorizedUserOrganizationRole.isPresent()) {
-            final Optional<UpdateClientRoleRequest> updateClientRolePermissionError = request.getUpdateClientRoles().stream()
-                    .filter(updateClientRole -> {
-                        final Optional<AbstractClientOrganizationAwareUserRole> authorizedUserClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), request.getUuid());
-                        return !authorizedUserClientRole.isPresent() ||
-                                (isUpdatedClientRole(updateClientRole, request.getRequestedUserUuid()) && !userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole()));
-                    }).findFirst();
-            if (updateClientRolePermissionError.isPresent()) {
-                return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE);
-            }
+        final Optional<AbstractOrganizationAwareUserRole> userOrganizationRole = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
+        if (!userOrganizationRole.isPresent() && !userRolesPermissionsCheckerComponent.isPermittedClientUserToUpdateClientRole(request)) {
+            return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE);
         }
         LOGGER.debug("Successfully processed checkUpdateUserOrganizationClientsRoles for request - {}", request);
         return SingleErrorWithStatus.empty();
@@ -222,25 +212,6 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         return SingleErrorWithStatus.empty();
     }
 
-    private SingleErrorWithStatus<UserRoleErrorResponseModel> checkAuthorizedUserPermissionForGrantOrganizationAdminRole(final String organizationUuid,
-                                                                                                                         final String userUuid) {
-        final Optional<User> optionalUser = userService.findByUuid(userUuid);
-        if (optionalUser.isPresent() && optionalUser.get().roleOfSuperAdmin().isPresent()) {
-            return SingleErrorWithStatus.empty();
-        }
-        final Optional<AbstractOrganizationAwareUserRole> authorizedUserOrganizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
-        if (!authorizedUserOrganizationRole.isPresent()) {
-            return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.USER_ORGANIZATION_ROLE_NOT_FOUND);
-        }
-        if (!userRolesPermissionsCheckerComponent.isPermittedToGrant(
-                UserRoleModel.valueOf(authorizedUserOrganizationRole.get().getUserRole().name()),
-                UserRoleModel.ORGANIZATION_ADMIN)
-        ) {
-            return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_ORGANIZATION_ROLE);
-        }
-        return SingleErrorWithStatus.empty();
-    }
-
     private SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantToOrganizationOwner(final String organizationUuid,
                                                                                             final String userUuid) {
         return userRoleService.findByOrganizationAndUser(organizationUuid, userUuid)
@@ -260,11 +231,5 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
             }
         }
         return SingleErrorWithStatus.empty();
-    }
-
-    private boolean isUpdatedClientRole(final UpdateClientRoleRequest updateClientRole, final String userUuid) {
-        return userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), userUuid)
-                .map(userClientRole -> updateClientRole.getClientRole() != UserRoleModel.valueOf(userClientRole.getUserRole().name()))
-                .orElse(true);
     }
 }

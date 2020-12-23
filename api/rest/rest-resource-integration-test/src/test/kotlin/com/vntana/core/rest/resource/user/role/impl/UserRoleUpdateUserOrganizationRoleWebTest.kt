@@ -91,7 +91,7 @@ class UserRoleUpdateUserOrganizationRoleWebTest : AbstractUserRoleWebTest() {
                 organizationUuid = requestedUser.organizationUuid,
                 requestedUserUuid = requestedUser.uuid
         )).let {
-            assertBasicErrorResultResponse(HttpStatus.FORBIDDEN, it, UserRoleErrorResponseModel.USER_ORGANIZATION_ROLE_NOT_FOUND)
+            assertBasicErrorResultResponse(HttpStatus.FORBIDDEN, it, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_ORGANIZATION_ROLE)
         }
     }
     

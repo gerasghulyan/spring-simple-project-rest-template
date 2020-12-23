@@ -80,16 +80,31 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationClientsRolesUnitTest
         resetAll()
         val clientRoleRequest = restTestHelper.buildUpdateClientRoleRequest(userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
         val request = restTestHelper.buildUserUpdateOrganizationClientRoleRequest(updateClientRoles = listOf(clientRoleRequest))
-        val requestedUserExistedClientRole = commonTestHelper.buildUserClientViewerRole()
-        val contentManagerRole = commonTestHelper.buildUserClientContentManagerRole()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.empty())
         expect(organizationClientService.existsByUuid(request.updateClientRoles[0].clientUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.empty())
-        expect(userRoleService.findByClientOrganizationAndUser(request.updateClientRoles[0].clientUuid, request.uuid)).andReturn(Optional.of(contentManagerRole))
-        expect(userRoleService.findByClientOrganizationAndUser(request.updateClientRoles[0].clientUuid, request.requestedUserUuid)).andReturn(Optional.of(requestedUserExistedClientRole))
-        expect(userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(contentManagerRole.userRole.name), clientRoleRequest.clientRole)).andReturn(false)
+        expect(userRolesPermissionsCheckerComponent.isPermittedClientUserToUpdateClientRole(request)).andReturn(false)
+        replayAll()
+        preconditionChecker.checkUpdateUserOrganizationClientsRoles(request).let {
+            assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE)
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_FORBIDDEN)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test when CLIENT_ORGANIZATION_CONTENT_MANAGER grants CLIENT_ORGANIZATION_VIEWER to CLIENT_ORGANIZATION_ADMIN`() {
+        resetAll()
+        val clientRoleRequest = restTestHelper.buildUpdateClientRoleRequest(userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        val request = restTestHelper.buildUserUpdateOrganizationClientRoleRequest(updateClientRoles = listOf(clientRoleRequest))
+        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
+        expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(Optional.empty())
+        expect(organizationClientService.existsByUuid(request.updateClientRoles[0].clientUuid)).andReturn(true)
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.empty())
+        expect(userRolesPermissionsCheckerComponent.isPermittedClientUserToUpdateClientRole(request)).andReturn(false)
         replayAll()
         preconditionChecker.checkUpdateUserOrganizationClientsRoles(request).let {
             assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE)

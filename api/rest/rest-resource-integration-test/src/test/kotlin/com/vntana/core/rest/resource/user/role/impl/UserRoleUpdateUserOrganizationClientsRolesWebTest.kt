@@ -259,6 +259,30 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
             }
         }
     }
+    
+    @Test
+    fun `test when ORGANIZATION_OWNER updates only one client role`() {
+        val ownerUser = userResourceTestHelper.persistUser().response()
+        organizationResourceTestHelper.persistOrganization(userUuid = ownerUser.uuid)
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        val clientOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = ownerUser.organizationUuid).response()
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        val updateClientRoleRequest = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = ownerUser.uuid,
+                organizationUuid = ownerUser.organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+            userResourceClient.getUsersByClientOrganization(clientOrganization.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+        }
+    }
 
     @Test
     fun `test when authorized user and requested user has client roles bu not updated all roles`() {
