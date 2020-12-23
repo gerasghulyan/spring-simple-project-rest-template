@@ -80,6 +80,7 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationClientsRolesUnitTest
         resetAll()
         val clientRoleRequest = restTestHelper.buildUpdateClientRoleRequest(userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
         val request = restTestHelper.buildUserUpdateOrganizationClientRoleRequest(updateClientRoles = listOf(clientRoleRequest))
+        val requestedUserExistedClientRole = commonTestHelper.buildUserClientViewerRole()
         val contentManagerRole = commonTestHelper.buildUserClientContentManagerRole()
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(userService.existsByUuid(request.requestedUserUuid)).andReturn(true)
@@ -87,6 +88,7 @@ class UserRolePreconditionCheckerCheckUpdateUserOrganizationClientsRolesUnitTest
         expect(organizationClientService.existsByUuid(request.updateClientRoles[0].clientUuid)).andReturn(true)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.empty())
         expect(userRoleService.findByClientOrganizationAndUser(request.updateClientRoles[0].clientUuid, request.uuid)).andReturn(Optional.of(contentManagerRole))
+        expect(userRoleService.findByClientOrganizationAndUser(request.updateClientRoles[0].clientUuid, request.requestedUserUuid)).andReturn(Optional.of(requestedUserExistedClientRole))
         expect(userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(contentManagerRole.userRole.name), clientRoleRequest.clientRole)).andReturn(false)
         replayAll()
         preconditionChecker.checkUpdateUserOrganizationClientsRoles(request).let {

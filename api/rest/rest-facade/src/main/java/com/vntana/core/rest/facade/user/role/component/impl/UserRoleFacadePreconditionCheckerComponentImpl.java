@@ -173,7 +173,7 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
                     .filter(updateClientRole -> {
                         final Optional<AbstractClientOrganizationAwareUserRole> authorizedUserClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), request.getUuid());
                         return !authorizedUserClientRole.isPresent() ||
-                                !userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole());
+                                (isUpdatedClientRole(updateClientRole, request.getRequestedUserUuid()) && !userRolesPermissionsCheckerComponent.isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole()));
                     }).findFirst();
             if (updateClientRolePermissionError.isPresent()) {
                 return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE);
@@ -248,9 +248,9 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
                 .map(abstractOrganizationAwareUserRole -> SingleErrorWithStatus.of(SC_CONFLICT, UserRoleErrorResponseModel.REQUESTED_USER_IS_ORGANIZATION_OWNER))
                 .orElse(SingleErrorWithStatus.empty());
     }
-    
+
     private SingleErrorWithStatus<UserRoleErrorResponseModel> checkGrantToOrganizationUser(final String organizationUuid,
-                                                                                            final String userUuid) {
+                                                                                           final String userUuid) {
         final Optional<AbstractOrganizationAwareUserRole> byOrganizationAndUser = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
         if (byOrganizationAndUser.isPresent()) {
             if (UserRole.ORGANIZATION_OWNER == byOrganizationAndUser.get().getUserRole()) {
@@ -260,5 +260,11 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
             }
         }
         return SingleErrorWithStatus.empty();
+    }
+
+    private boolean isUpdatedClientRole(final UpdateClientRoleRequest updateClientRole, final String userUuid) {
+        return userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), userUuid)
+                .map(userClientRole -> updateClientRole.getClientRole() != UserRoleModel.valueOf(userClientRole.getUserRole().name()))
+                .orElse(true);
     }
 }
