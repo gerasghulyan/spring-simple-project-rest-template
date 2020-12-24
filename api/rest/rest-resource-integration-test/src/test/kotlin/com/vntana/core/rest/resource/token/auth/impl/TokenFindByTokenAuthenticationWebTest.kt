@@ -17,6 +17,13 @@ class TokenFindByTokenAuthenticationWebTest : AbstractTokenAuthenticationWebTest
     }
 
     @Test
+    fun `test when token expired`() {
+        val token = resourceTestHelper.persistToken()
+        tokenAuthenticationResourceClient.expire(token)
+        assertBasicErrorResultResponse(tokenAuthenticationResourceClient.findByToken(resourceTestHelper.buildTokenAuthenticationRequest(token = token)), TokenAuthenticationErrorResponseModel.TOKEN_NOT_FOUND)
+    }
+
+    @Test
     fun test() {
         val token = resourceTestHelper.persistToken()
         tokenAuthenticationResourceClient.findByToken(resourceTestHelper.buildTokenAuthenticationRequest(token = token)).let {

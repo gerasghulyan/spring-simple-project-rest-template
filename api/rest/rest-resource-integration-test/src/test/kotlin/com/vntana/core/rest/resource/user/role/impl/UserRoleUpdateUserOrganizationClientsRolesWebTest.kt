@@ -129,7 +129,6 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
         }
     }
 
-
     @Test
     fun `test when authorized user is owner and requested user is org admin`() {
         val user = userResourceTestHelper.persistUser().response()
@@ -229,7 +228,6 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
         }
     }
 
-
     @Test
     fun `test when authorized user and requested user has client roles`() {
         val user = userResourceTestHelper.persistUser().response()
@@ -239,6 +237,86 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
         val clientOrganization2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
         userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization1.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
         userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization2.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        val updateClientRoleRequest1 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization1.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        val updateClientRoleRequest2 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization2.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = user.uuid,
+                organizationUuid = requestedUser.organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest1, updateClientRoleRequest2)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+            userResourceClient.getUsersByClientOrganization(clientOrganization1.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest1.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+            userResourceClient.getUsersByClientOrganization(clientOrganization2.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest2.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+        }
+    }
+    
+    @Test
+    fun `test when ORGANIZATION_OWNER updates only one client role`() {
+        val ownerUser = userResourceTestHelper.persistUser().response()
+        organizationResourceTestHelper.persistOrganization(userUuid = ownerUser.uuid)
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        val clientOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = ownerUser.organizationUuid).response()
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        val updateClientRoleRequest = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = ownerUser.uuid,
+                organizationUuid = ownerUser.organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+            userResourceClient.getUsersByClientOrganization(clientOrganization.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+        }
+    }
+
+    @Test
+    fun `test when client viewer updates but not changes`() {
+        val user = userResourceTestHelper.persistUser().response()
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        requestedUser.organizationUuid = user.organizationUuid
+        val clientOrganization1 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
+        val clientOrganization2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization1.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization2.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization1.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization2.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        val updateClientRoleRequest1 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization1.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        val updateClientRoleRequest2 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization2.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = user.uuid,
+                organizationUuid = requestedUser.organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest1, updateClientRoleRequest2)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+        }
+    }
+
+    @Test
+    fun `test when authorized user and requested user has client roles bu not updated all roles`() {
+        val user = userResourceTestHelper.persistUser().response()
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        requestedUser.organizationUuid = user.organizationUuid
+        val clientOrganization1 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
+        val clientOrganization2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization1.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization2.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
         val updateClientRoleRequest1 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization1.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
         val updateClientRoleRequest2 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization2.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
         userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
