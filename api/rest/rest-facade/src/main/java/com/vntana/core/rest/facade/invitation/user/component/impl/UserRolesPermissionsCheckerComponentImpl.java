@@ -83,9 +83,11 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
             final Optional<AbstractClientOrganizationAwareUserRole> requestedUserClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), requestedUserUuid);
             if (requestedUserClientRole.isPresent()) {
                 final UserRoleModel requestedUserClientRoleModel = UserRoleModel.valueOf(requestedUserClientRole.get().getUserRole().name());
-                return updateClientRole.getClientRole() != requestedUserClientRoleModel
-                        && isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole())
-                        && isPermittedGrantTo(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), requestedUserClientRoleModel);
+                if (updateClientRole.getClientRole() != requestedUserClientRoleModel) {
+                    return isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole())
+                            && isPermittedGrantTo(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), requestedUserClientRoleModel);
+                }
+                return true;
             }
             return isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole());
         }
