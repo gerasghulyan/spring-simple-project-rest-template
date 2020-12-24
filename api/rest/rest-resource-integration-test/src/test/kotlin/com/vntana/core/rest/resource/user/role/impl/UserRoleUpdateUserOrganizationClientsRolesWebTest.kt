@@ -339,6 +339,37 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
             }
         }
     }
+    
+    @Test
+    fun `test when CLIENT_VIEWER updates roles without changes`() {
+        val ownerUser = userResourceTestHelper.persistUser().response()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = ownerUser.uuid).response().uuid
+        val user = userResourceTestHelper.persistUser().response()
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        val clientOrganization1 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response()
+        val clientOrganization2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response()
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization1.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization2.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization1.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization2.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        val updateClientRoleRequest1 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization1.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        val updateClientRoleRequest2 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization2.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = user.uuid,
+                organizationUuid = organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest1, updateClientRoleRequest2)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+            userResourceClient.getUsersByClientOrganization(clientOrganization1.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(2)
+            }
+            userResourceClient.getUsersByClientOrganization(clientOrganization2.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(2)
+            }
+        }
+    }
 
     @Test
     fun `test when revoked client roles`() {
