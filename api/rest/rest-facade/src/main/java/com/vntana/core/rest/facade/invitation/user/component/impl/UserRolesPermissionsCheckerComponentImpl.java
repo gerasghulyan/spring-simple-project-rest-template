@@ -52,7 +52,7 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
 
     @Override
     public boolean isPermittedToGrant(final UserRoleModel granter, final UserRoleModel granted) {
-        return granter.hasGranterAbility() && 
+        return granter.hasGranterAbility() &&
                 (Objects.isNull(granted) || (granted.hasGrantedAbility() && granter.getPriority() <= granted.getPriority()));
     }
 
@@ -81,7 +81,7 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
         return granter.hasGranterAbility() && toGranted.hasGrantedAbility() &&
                 (granter.getPriority() <= toGranted.getPriority());
     }
-    
+
     private List<UpdateClientRoleRequest> getRevokeClientRoles(final UserUpdateOrganizationClientsRolesRequest request) {
         final List<AbstractClientOrganizationAwareUserRole> requestedUserClientOrganizations = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), request.getRequestedUserUuid());
         return requestedUserClientOrganizations.stream()
@@ -94,19 +94,20 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
     }
 
     private boolean isPermittedToUpdateClientRole(final UpdateClientRoleRequest updateClientRole, final String userUuid, final String requestedUserUuid) {
-        final Optional<AbstractClientOrganizationAwareUserRole> authorizedUserClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), userUuid);
-        if (authorizedUserClientRole.isPresent()) {
+        final Optional<AbstractClientOrganizationAwareUserRole> userClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), userUuid);
+        if (userClientRole.isPresent()) {
             final Optional<AbstractClientOrganizationAwareUserRole> requestedUserClientRole = userRoleService.findByClientOrganizationAndUser(updateClientRole.getClientUuid(), requestedUserUuid);
-            if (requestedUserClientRole.isPresent()) {
-                final UserRoleModel requestedUserClientRoleModel = UserRoleModel.valueOf(requestedUserClientRole.get().getUserRole().name());
-                if (updateClientRole.getClientRole() != requestedUserClientRoleModel) {
-                    return isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole())
-                            && isPermittedGrantTo(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), requestedUserClientRoleModel);
-                }
-                return true;
-            }
-            return isPermittedToGrant(UserRoleModel.valueOf(authorizedUserClientRole.get().getUserRole().name()), updateClientRole.getClientRole());
+            return requestedUserClientRole.map(clientOrganizationAwareUserRole -> isPermittedToUpdateClientRole(
+                    UserRoleModel.valueOf(userClientRole.get().getUserRole().name()),
+                    UserRoleModel.valueOf(clientOrganizationAwareUserRole.getUserRole().name()),
+                    updateClientRole.getClientRole()
+            )).orElseGet(() -> isPermittedToGrant(UserRoleModel.valueOf(userClientRole.get().getUserRole().name()), updateClientRole.getClientRole()));
         }
         return false;
+    }
+
+    private boolean isPermittedToUpdateClientRole(final UserRoleModel userClientRole, final UserRoleModel requestedOldUserClientRole, final UserRoleModel requestedNewUserClientRole) {
+        return requestedOldUserClientRole == requestedNewUserClientRole
+                || (isPermittedToGrant(userClientRole, requestedNewUserClientRole) && isPermittedGrantTo(userClientRole, requestedOldUserClientRole));
     }
 }
