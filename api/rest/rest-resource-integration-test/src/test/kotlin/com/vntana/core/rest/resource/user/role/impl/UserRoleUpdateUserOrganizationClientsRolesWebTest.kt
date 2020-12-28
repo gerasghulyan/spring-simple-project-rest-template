@@ -372,6 +372,25 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
     }
 
     @Test
+    fun `test when CLINET_VIEWER tries to revoke CLINET_VIEWER`() {
+        val ownerUser = userResourceTestHelper.persistUser().response()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = ownerUser.uuid).response().uuid
+        val user = userResourceTestHelper.persistUser().response()
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        val clientOrganization = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response()
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = user.uuid, clientUuid = clientOrganization.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = user.uuid,
+                organizationUuid = organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = emptyList()
+        )).let {
+            assertBasicErrorResultResponse(HttpStatus.FORBIDDEN, it, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE)
+        }
+    }
+
+    @Test
     fun `test when revoked client roles`() {
         val user = userResourceTestHelper.persistUser().response()
         val requestedUser = userResourceTestHelper.persistUser().response()
