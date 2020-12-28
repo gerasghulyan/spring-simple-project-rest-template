@@ -56,11 +56,6 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
                 (Objects.isNull(granted) || (granted.hasGrantedAbility() && granter.getPriority() <= granted.getPriority()));
     }
 
-    public boolean isPermittedGrantTo(final UserRoleModel granter, final UserRoleModel toGranted) {
-        return granter.hasGranterAbility() && toGranted.hasGrantedAbility() &&
-                (granter.getPriority() <= toGranted.getPriority());
-    }
-
     @Override
     public boolean isPermittedToUpdateOrganizationRole(final UserUpdateOrganizationRoleRequest request) {
         final Optional<User> optionalUser = userService.findByUuid(request.getUuid());
@@ -80,6 +75,11 @@ public class UserRolesPermissionsCheckerComponentImpl implements UserRolesPermis
         return Stream.concat(request.getUpdateClientRoles().stream(), revokeClientRoles.stream())
                 .allMatch(updateClientRole ->
                         isPermittedToUpdateClientRole(updateClientRole, request.getUuid(), request.getRequestedUserUuid()));
+    }
+
+    private boolean isPermittedGrantTo(final UserRoleModel granter, final UserRoleModel toGranted) {
+        return granter.hasGranterAbility() && toGranted.hasGrantedAbility() &&
+                (granter.getPriority() <= toGranted.getPriority());
     }
     
     private List<UpdateClientRoleRequest> getRevokeClientRoles(final UserUpdateOrganizationClientsRolesRequest request) {
