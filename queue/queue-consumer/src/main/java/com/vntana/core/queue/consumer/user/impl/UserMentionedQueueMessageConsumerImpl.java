@@ -13,9 +13,12 @@ import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
+
+import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
 
 /**
  * Created by Arman Gevorgyan.
@@ -26,12 +29,19 @@ import org.springframework.util.Assert;
 class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessageConsumer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserMentionedQueueMessageConsumerImpl.class);
+    private final boolean isEmailNotificationsEnabled;
     private final UserService userService;
     private final OrganizationService organizationService;
     private final OrganizationClientService clientOrganizationService;
     private final UserMentionEmailSenderComponent mentionEmailSenderComponent;
 
-    public UserMentionedQueueMessageConsumerImpl(final UserService userService, final OrganizationService organizationService, final OrganizationClientService clientOrganizationService, final UserMentionEmailSenderComponent mentionEmailSenderComponent) {
+    public UserMentionedQueueMessageConsumerImpl(
+            final UserService userService,
+            final OrganizationService organizationService,
+            final OrganizationClientService clientOrganizationService,
+            final UserMentionEmailSenderComponent mentionEmailSenderComponent,
+            @Value("${user.mentioning.email.notifier.enabled}") final boolean isEmailNotificationsEnabled) {
+        this.isEmailNotificationsEnabled = isEmailNotificationsEnabled;
         this.userService = userService;
         this.organizationService = organizationService;
         this.clientOrganizationService = clientOrganizationService;
@@ -47,7 +57,11 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
     @Override
     public void consume(final UserMentionedQueueMessage message) {
         LOGGER.debug("Trying to consume user mentioned queue message - {}", message);
-        Assert.notNull(message, "The user mentioned queue message should not be null");
+        notNull(message, "The user mentioned queue message should not be null");
+        if (!isEmailNotificationsEnabled) {
+            LOGGER.debug("Email notification sending for message - {} has been disabled. Exiting method...", message);
+            return;
+        }
         final User user = userService.getByUuid(message.getMentionedByUserUuid());
         final Organization organization = organizationService.getByUuid(message.getOrganizationUuid());
         final ClientOrganization client = clientOrganizationService.getByUuid(message.getClientUuid());
@@ -61,23 +75,24 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
         LOGGER.debug("Successfully processed consumption of user mentioned queue message - {}", message);
     }
 
-    private SendUserMentionRequest createSendUserMentionRequest(final String mentionedUserUuid,
-                                                                final String promptingUserName,
-                                                                final UserMentionedEntityTypeModel userMentionedEntityType,
-                                                                final UserMentionedQueueMessage message,
-                                                                final String clientSlug,
-                                                                final String organizationSlug
+    private SendUserMentionRequest createSendUserMentionRequest(
+            final String mentionedUserUuid,
+            final String promptingUserName,
+            final UserMentionedEntityTypeModel userMentionedEntityType,
+            final UserMentionedQueueMessage message,
+            final String clientSlug,
+            final String organizationSlug
     ) {
         final User mentionedUser = userService.getByUuid(mentionedUserUuid);
-        Assert.hasText(mentionedUser.getEmail(), "The email should not be null or empty");
-        Assert.hasText(promptingUserName, "The prompting user full name should not be null or empty");
-        Assert.hasText(mentionedUser.getFullName(), "The mentioned user full name should not be null or empty");
-        Assert.notNull(userMentionedEntityType, "The UserMentionedEntityType should not be null");
-        Assert.hasText(message.getMentionedInEntityUuid(), "The entityUuid should not be null or empty");
-        Assert.hasText(message.getProductUuid(), "The productUuid should not be null or empty");
-        Assert.hasText(message.getProductName(), "The productName should not be null or empty");
-        Assert.hasText(clientSlug, "The clientSlug should not be null or empty");
-        Assert.hasText(organizationSlug, "The organizationSlug should not be null or empty");
+        hasText(mentionedUser.getEmail(), "The email should not be null or empty");
+        hasText(promptingUserName, "The prompting user full name should not be null or empty");
+        hasText(mentionedUser.getFullName(), "The mentioned user full name should not be null or empty");
+        notNull(userMentionedEntityType, "The UserMentionedEntityType should not be null");
+        hasText(message.getMentionedInEntityUuid(), "The entityUuid should not be null or empty");
+        hasText(message.getProductUuid(), "The productUuid should not be null or empty");
+        hasText(message.getProductName(), "The productName should not be null or empty");
+        hasText(clientSlug, "The clientSlug should not be null or empty");
+        hasText(organizationSlug, "The organizationSlug should not be null or empty");
         return new SendUserMentionRequest(
                 mentionedUser.getEmail(),
                 promptingUserName,
