@@ -165,6 +165,10 @@ public class UserRoleFacadePreconditionCheckerComponentImpl implements UserRoleF
         if (notFoundClient.isPresent()) {
             return SingleErrorWithStatus.of(SC_NOT_FOUND, UserRoleErrorResponseModel.CLIENT_ORGANIZATION_NOT_FOUND);
         }
+        final Optional<User> userOptional = userService.findByUuid(request.getUuid());
+        if (userOptional.isPresent() && userOptional.get().roleOfSuperAdmin().isPresent()) {
+            return SingleErrorWithStatus.empty();
+        }
         final Optional<AbstractOrganizationAwareUserRole> userOrganizationRole = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), request.getUuid());
         if (!userOrganizationRole.isPresent() && !userRolesPermissionsCheckerComponent.isPermittedClientUserToUpdateClientRole(request)) {
             return SingleErrorWithStatus.of(SC_FORBIDDEN, UserRoleErrorResponseModel.INCORRECT_PERMISSION_GRANT_CLIENT_ROLE);
