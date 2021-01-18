@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/10/19
@@ -92,7 +94,7 @@ public class CreateClientOrganizationRequest extends AbstractRequestModel implem
                 .append("organizationUuid", organizationUuid)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .toString();
     }
 

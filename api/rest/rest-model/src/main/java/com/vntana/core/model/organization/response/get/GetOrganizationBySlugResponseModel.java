@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Geras Ghulyan
  * Date: 10/9/19
@@ -63,7 +65,7 @@ public class GetOrganizationBySlugResponseModel extends AbstractUuidAwareRespons
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .toString();
     }
 

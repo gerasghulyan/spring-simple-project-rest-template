@@ -13,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.Collections;
 import java.util.List;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Arman Gevorgyan.
  * Date: 12/26/19
@@ -80,7 +82,7 @@ public class UpdateOrganizationRequest extends AbstractUuidAwareRequestModel imp
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("status", status)
                 .toString();
     }
