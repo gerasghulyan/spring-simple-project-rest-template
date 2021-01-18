@@ -9,6 +9,8 @@ import org.springframework.util.Assert;
 
 import java.util.Optional;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Arman Gevorgyan.
  * Date: 12/26/19
@@ -61,7 +63,7 @@ public class UpdateOrganizationDto implements ServiceDto {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("uuid", uuid)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("name", name)
                 .append("status", status)
                 .toString();

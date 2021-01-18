@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Geras Ghulyan.
  * Date: 10/18/19
@@ -86,7 +88,7 @@ public class AccountUserResponseModel implements ResponseModel {
                 .append("email", email)
                 .append("roles", roles)
                 .append("emailVerified", emailVerified)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .toString();
     }
 

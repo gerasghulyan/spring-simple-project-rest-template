@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Arman Gevorgyan.
  * Date: 5/7/20
@@ -76,7 +78,7 @@ public class GetUsersByOrganizationResponseModel extends AbstractUuidAwareRespon
                 .appendSuper(super.toString())
                 .append("fullName", fullName)
                 .append("email", email)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("userRoleModel", userRoleModel)
                 .toString();
     }

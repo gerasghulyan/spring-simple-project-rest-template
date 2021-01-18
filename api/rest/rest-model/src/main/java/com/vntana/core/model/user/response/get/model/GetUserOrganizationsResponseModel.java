@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.LocalDateTime;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Geras Ghulyan
  * Date: 04.11.19
@@ -84,7 +86,7 @@ public class GetUserOrganizationsResponseModel implements ResponseModel {
                 .append("slug", slug)
                 .append("name", name)
                 .append("role", role)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("created", created)
                 .toString();
     }

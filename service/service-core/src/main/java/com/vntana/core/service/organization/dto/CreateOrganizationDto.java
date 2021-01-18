@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.util.Assert;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/8/19
@@ -67,7 +69,7 @@ public class CreateOrganizationDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .toString();
     }
 

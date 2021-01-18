@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.LocalDateTime;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Geras Ghulyan
  * Date: 10/9/19
@@ -112,7 +114,7 @@ public class GetClientOrganizationResponseModel implements ResponseModel {
                 .append("clientUuid", clientUuid)
                 .append("clientSlug", clientSlug)
                 .append("clientName", clientName)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("created", created)
                 .append("productsCount", productsCount)
                 .append("locationsCount", locationsCount)
