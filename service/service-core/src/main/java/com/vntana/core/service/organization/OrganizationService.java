@@ -13,6 +13,7 @@ import java.util.Optional;
  * Time: 5:15 PM
  */
 public interface OrganizationService {
+
     Organization create(final CreateOrganizationDto dto);
 
     Organization createWithInvitation(final CreateOrganizationFromInvitationDto dto);
@@ -34,4 +35,6 @@ public interface OrganizationService {
     Long count();
 
     Optional<Organization> findByUuid(final String uuid);
+
+    Organization setPaymentOutsideStripe(final OrganizationPayedOutsideStripeDto dto);
 }
