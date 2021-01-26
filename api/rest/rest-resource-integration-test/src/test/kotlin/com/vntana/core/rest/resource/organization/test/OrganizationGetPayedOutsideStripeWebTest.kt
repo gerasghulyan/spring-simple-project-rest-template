@@ -2,7 +2,7 @@ package com.vntana.core.rest.resource.organization.test
 
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 /**
@@ -40,8 +40,8 @@ class OrganizationGetPayedOutsideStripeWebTest : AbstractOrganizationWebTest() {
             organizationUuid
         ).let {
             assertBasicSuccessResultResponse(it)
-            Assertions.assertThat(it.body?.response()?.uuid).isEqualTo(organizationUuid)
-            Assertions.assertThat(it.body?.response()?.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.body?.response()?.uuid).isEqualTo(organizationUuid)
+            assertThat(it.body?.response()?.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
         }
     }
 }

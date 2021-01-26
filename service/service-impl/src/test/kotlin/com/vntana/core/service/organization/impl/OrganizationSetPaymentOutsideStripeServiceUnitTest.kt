@@ -36,11 +36,14 @@ class OrganizationSetPaymentOutsideStripeServiceUnitTest : AbstractOrganizationS
         // test data
         val organization = helper.buildOrganization()
         val isPayedOutsideStripe = true
+        val updatedOrganization = organization
+        updatedOrganization.isPayedOutsideStripe = isPayedOutsideStripe
         resetAll()
         // expectations
         expect(
             organizationRepository.findByUuid(organization.uuid)
         ).andReturn(Optional.of(organization))
+        expect(organizationRepository.save(organization)).andReturn(updatedOrganization)
         replayAll()
         // test scenario
         organizationService.setPaymentOutsideStripe(

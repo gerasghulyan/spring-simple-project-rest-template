@@ -2,7 +2,7 @@ package com.vntana.core.model.organization.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vntana.commons.api.model.request.ValidatableRequest;
-import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
+import com.vntana.commons.api.model.request.impl.AbstractUuidAwareRequestModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,26 +16,24 @@ import java.util.List;
  * Date: 1/25/21
  * Time: 9:42 AM
  */
-public class OrganizationPayedOutsideStripeRequest extends AbstractRequestModel implements ValidatableRequest<OrganizationErrorResponseModel> {
-
-    @JsonProperty("uuid")
-    private String uuid;
+public class OrganizationPayedOutsideStripeRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<OrganizationErrorResponseModel> {
 
     @JsonProperty("payedOutsideStripe")
     private boolean payedOutsideStripe;
 
     public OrganizationPayedOutsideStripeRequest() {
+        super();
     }
 
     public OrganizationPayedOutsideStripeRequest(final String uuid, final boolean payedOutsideStripe) {
-        this.uuid = uuid;
+        super(uuid);
         this.payedOutsideStripe = payedOutsideStripe;
     }
 
     @Override
     public List<OrganizationErrorResponseModel> validate() {
         final List<OrganizationErrorResponseModel> errors = initializeNew();
-        if (StringUtils.isBlank(uuid)) {
+        if (StringUtils.isBlank(super.getUuid())) {
             errors.add(OrganizationErrorResponseModel.MISSING_UUID);
         }
         return errors;
@@ -51,16 +49,16 @@ public class OrganizationPayedOutsideStripeRequest extends AbstractRequestModel 
         }
         final OrganizationPayedOutsideStripeRequest that = (OrganizationPayedOutsideStripeRequest) o;
         return new EqualsBuilder()
-                .append(payedOutsideStripe, that.payedOutsideStripe)
-                .append(uuid, that.uuid)
+                .appendSuper(super.equals(o))
+                .append(isPayedOutsideStripe(), that.isPayedOutsideStripe())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(uuid)
-                .append(payedOutsideStripe)
+                .appendSuper(super.hashCode())
+                .append(isPayedOutsideStripe())
                 .toHashCode();
     }
 
@@ -68,13 +66,8 @@ public class OrganizationPayedOutsideStripeRequest extends AbstractRequestModel 
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("uuid", uuid)
                 .append("payedOutsideStripe", payedOutsideStripe)
                 .toString();
-    }
-
-    public String getUuid() {
-        return uuid;
     }
 
     public boolean isPayedOutsideStripe() {

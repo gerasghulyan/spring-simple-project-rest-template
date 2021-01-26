@@ -159,6 +159,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         LOGGER.debug("Setting organization payed outside stripe flag for dto - {}", dto);
         final Organization organization = getByUuid(dto.getUuid());
         organization.setPayedOutsideStripe(dto.isPayedOutsideStripe());
+        organizationRepository.save(organization);
         LOGGER.debug("Done Setting organization payed outside stripe flag for organization with uuid - {}, and flag - {}",
                 organization.getUuid(), organization.isPayedOutsideStripe());
         return organization;
