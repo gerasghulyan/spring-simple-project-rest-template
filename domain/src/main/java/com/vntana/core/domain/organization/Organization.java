@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 import java.util.*;
 
-
 /**
  * Created by Arthur Asatryan.
  * Date: 10/15/19
@@ -37,6 +36,9 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "organization_status", nullable = false)
     private OrganizationStatus status;
+    
+    @Column(name = "payed_outside_stripe", nullable = false)
+    private boolean payedOutsideStripe;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
     private List<ClientOrganization> clientOrganizations;
@@ -140,6 +142,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
                 .append("imageBlobId", imageBlobId)
                 .append("status", status)
                 .append("invitation", getIdOrNull(invitation))
+                .append("payedOutsideStripe", payedOutsideStripe)
                 .toString();
     }
 
@@ -173,5 +176,13 @@ public class Organization extends AbstractUuidAwareDomainEntity {
 
     public InvitationOrganization getInvitation() {
         return invitation;
+    }
+
+    public boolean isPayedOutsideStripe() {
+        return payedOutsideStripe;
+    }
+
+    public void setPayedOutsideStripe(final boolean payedOutsideStripe) {
+        this.payedOutsideStripe = payedOutsideStripe;
     }
 }

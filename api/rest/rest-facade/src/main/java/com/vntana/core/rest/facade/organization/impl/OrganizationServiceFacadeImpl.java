@@ -2,13 +2,18 @@ package com.vntana.core.rest.facade.organization.impl;
 
 import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.*;
+import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
+import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
+import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
+import com.vntana.core.model.organization.request.OrganizationPayedOutsideStripeRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
+import com.vntana.core.model.organization.response.create.OrganizationPayedOutsideStripeResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResponseModel;
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResponseModel;
@@ -28,6 +33,7 @@ import com.vntana.core.service.common.component.SlugValidationComponent;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.organization.dto.CreateOrganizationDto;
 import com.vntana.core.service.organization.dto.GetAllOrganizationDto;
+import com.vntana.core.service.organization.dto.OrganizationPayedOutsideStripeDto;
 import com.vntana.core.service.organization.dto.UpdateOrganizationDto;
 import com.vntana.core.service.organization.mediator.OrganizationLifecycleMediator;
 import com.vntana.core.service.organization.mediator.OrganizationUuidAwareLifecycleMediator;
@@ -248,6 +254,30 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         return new GetOrganizationInvitationByOrganizationResponse(
                 new GetOrganizationInvitationByOrganizationResponseModel(organizationUuid, organization.getInvitation().getCustomerSubscriptionDefinitionUuid())
         );
+    }
+
+    @Transactional
+    @Override
+    public OrganizationPayedOutsideStripeResponse setPaymentOutsideStripe(final OrganizationPayedOutsideStripeRequest request) {
+        LOGGER.debug("Processing organization facade setPaymentOutsideStripe method for request - {}", request);
+        if (!organizationService.existsByUuid(request.getUuid())) {
+            return new OrganizationPayedOutsideStripeResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
+        }
+        final Organization organization = organizationService.setPaymentOutsideStripe(mapperFacade.map(request, OrganizationPayedOutsideStripeDto.class));
+        LOGGER.debug("Successfully processed organization facade setPaymentOutsideStripe method for request - {}", request);
+        return new OrganizationPayedOutsideStripeResponse(organization.getUuid(), organization.isPayedOutsideStripe());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public OrganizationPayedOutsideStripeResponse getIsPayedOutsideStripe(final String uuid) {
+        LOGGER.debug("Processing organization facade getIsPayedOutsideStripe method for uuid - {}", uuid);
+        if (!organizationService.existsByUuid(uuid)) {
+            return new OrganizationPayedOutsideStripeResponse(HttpStatus.SC_NOT_FOUND, OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND);
+        }
+        final Organization organization = organizationService.getByUuid(uuid);
+        LOGGER.debug("Successfully processed organization facade getIsPayedOutsideStripe method for uuid - {}", uuid);
+        return new OrganizationPayedOutsideStripeResponse(organization.getUuid(), organization.isPayedOutsideStripe());
     }
 
     private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotSuperAdmin(final User user) {
