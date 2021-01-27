@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/8/19
@@ -73,7 +75,7 @@ public class ClientOrganization extends AbstractUuidAwareDomainEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("slug", slug)
                 .toString();
     }

@@ -136,6 +136,7 @@ allprojects {
         implementation 'org.apache.commons:commons-lang3'
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
         implementation "io.vavr:vavr"
+        implementation "com.vntana.commons:utils"
         testImplementation "org.easymock:easymock"
         testImplementation "junit:junit"
         testImplementation "org.assertj:assertj-core"
@@ -166,6 +167,7 @@ allprojects {
             dependency("com.vntana.commons:indexation:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:rest-test-helper:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:web-utils:$vntanaCommonsVersion${versionPostfix()}")
+            dependency("com.vntana.commons:utils:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:queue-core-indexation-consumer-message:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.commons:service:$vntanaCommonsVersion${versionPostfix()}")
             dependency("com.vntana.cache:vntana-cache:$vntanaCacheVersion${versionPostfix()}")

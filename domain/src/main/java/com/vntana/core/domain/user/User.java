@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
 import static java.lang.String.format;
 
 /**
@@ -250,7 +251,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         return new ToStringBuilder(this)
                 .append("fullName", fullName)
                 .append("email", email)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("verified", verified)
                 .toString();
     }

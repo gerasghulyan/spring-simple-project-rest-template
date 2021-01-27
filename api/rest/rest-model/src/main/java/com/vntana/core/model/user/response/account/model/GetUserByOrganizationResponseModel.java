@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Vardan Aivazian
  * Date: 04.12.2020
@@ -92,7 +94,7 @@ public class GetUserByOrganizationResponseModel implements ResponseModel {
                 .append("email", email)
                 .append("userRoleModel", userRoleModel)
                 .append("emailVerified", emailVerified)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .toString();
     }
 

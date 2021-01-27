@@ -11,6 +11,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 import java.util.*;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
+
 /**
  * Created by Arthur Asatryan.
  * Date: 10/15/19
@@ -139,7 +142,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("slug", slug)
-                .append("imageBlobId", imageBlobId)
+                .append("imageBlobId", mask(imageBlobId))
                 .append("status", status)
                 .append("invitation", getIdOrNull(invitation))
                 .append("payedOutsideStripe", payedOutsideStripe)
