@@ -3,3 +3,6 @@ alter table organization
 alter table organization
     alter column payed_outside_stripe set default false;
 
+update organization
+set payed_outside_stripe = false
+where organization.payed_outside_stripe is null;
