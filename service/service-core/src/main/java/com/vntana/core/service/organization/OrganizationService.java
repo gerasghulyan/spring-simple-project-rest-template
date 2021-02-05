@@ -36,5 +36,5 @@ public interface OrganizationService {
 
     Optional<Organization> findByUuid(final String uuid);
 
-    Organization setPaymentOutsideStripe(final OrganizationPayedOutsideStripeDto dto);
+    Organization setPaymentOutsideStripe(final OrganizationPaidOutsideStripeDto dto);
 }

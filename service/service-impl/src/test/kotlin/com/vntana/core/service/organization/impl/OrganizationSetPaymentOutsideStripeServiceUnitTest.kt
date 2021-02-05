@@ -1,7 +1,7 @@
 package com.vntana.core.service.organization.impl
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceUnitTest
-import com.vntana.core.service.organization.dto.OrganizationPayedOutsideStripeDto
+import com.vntana.core.service.organization.dto.OrganizationPaidOutsideStripeDto
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
@@ -25,7 +25,12 @@ class OrganizationSetPaymentOutsideStripeServiceUnitTest : AbstractOrganizationS
         assertThatThrownBy { organizationService.setPaymentOutsideStripe(null) }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy {
-            organizationService.setPaymentOutsideStripe(OrganizationPayedOutsideStripeDto(null, false))
+            organizationService.setPaymentOutsideStripe(
+                OrganizationPaidOutsideStripeDto(
+                    null,
+                    false
+                )
+            )
         }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
@@ -37,7 +42,7 @@ class OrganizationSetPaymentOutsideStripeServiceUnitTest : AbstractOrganizationS
         val organization = helper.buildOrganization()
         val isPayedOutsideStripe = true
         val updatedOrganization = organization
-        updatedOrganization.isPayedOutsideStripe = isPayedOutsideStripe
+        updatedOrganization.isPaidOutsideStripe = isPayedOutsideStripe
         resetAll()
         // expectations
         expect(
@@ -47,14 +52,14 @@ class OrganizationSetPaymentOutsideStripeServiceUnitTest : AbstractOrganizationS
         replayAll()
         // test scenario
         organizationService.setPaymentOutsideStripe(
-            OrganizationPayedOutsideStripeDto(
+            OrganizationPaidOutsideStripeDto(
                 organization.uuid,
                 isPayedOutsideStripe
             )
         )
             .let {
                 assertThat(it.uuid).isEqualTo(organization.uuid)
-                assertThat(it.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+                assertThat(it.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
             }
         verifyAll()
     }

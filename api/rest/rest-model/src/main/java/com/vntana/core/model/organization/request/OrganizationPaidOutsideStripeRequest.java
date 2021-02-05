@@ -16,18 +16,18 @@ import java.util.List;
  * Date: 1/25/21
  * Time: 9:42 AM
  */
-public class OrganizationPayedOutsideStripeRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<OrganizationErrorResponseModel> {
+public class OrganizationPaidOutsideStripeRequest extends AbstractUuidAwareRequestModel implements ValidatableRequest<OrganizationErrorResponseModel> {
 
-    @JsonProperty("payedOutsideStripe")
-    private boolean payedOutsideStripe;
+    @JsonProperty("paidOutsideStripe")
+    private boolean paidOutsideStripe;
 
-    public OrganizationPayedOutsideStripeRequest() {
+    public OrganizationPaidOutsideStripeRequest() {
         super();
     }
 
-    public OrganizationPayedOutsideStripeRequest(final String uuid, final boolean payedOutsideStripe) {
+    public OrganizationPaidOutsideStripeRequest(final String uuid, final boolean paidOutsideStripe) {
         super(uuid);
-        this.payedOutsideStripe = payedOutsideStripe;
+        this.paidOutsideStripe = paidOutsideStripe;
     }
 
     @Override
@@ -44,13 +44,13 @@ public class OrganizationPayedOutsideStripeRequest extends AbstractUuidAwareRequ
         if (this == o) {
             return true;
         }
-        if (!(o instanceof OrganizationPayedOutsideStripeRequest)) {
+        if (!(o instanceof OrganizationPaidOutsideStripeRequest)) {
             return false;
         }
-        final OrganizationPayedOutsideStripeRequest that = (OrganizationPayedOutsideStripeRequest) o;
+        final OrganizationPaidOutsideStripeRequest that = (OrganizationPaidOutsideStripeRequest) o;
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(isPayedOutsideStripe(), that.isPayedOutsideStripe())
+                .append(isPaidOutsideStripe(), that.isPaidOutsideStripe())
                 .isEquals();
     }
 
@@ -58,7 +58,7 @@ public class OrganizationPayedOutsideStripeRequest extends AbstractUuidAwareRequ
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(isPayedOutsideStripe())
+                .append(isPaidOutsideStripe())
                 .toHashCode();
     }
 
@@ -66,11 +66,11 @@ public class OrganizationPayedOutsideStripeRequest extends AbstractUuidAwareRequ
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("payedOutsideStripe", payedOutsideStripe)
+                .append("paidOutsideStripe", paidOutsideStripe)
                 .toString();
     }
 
-    public boolean isPayedOutsideStripe() {
-        return payedOutsideStripe;
+    public boolean isPaidOutsideStripe() {
+        return paidOutsideStripe;
     }
 }

@@ -40,8 +40,8 @@ public class Organization extends AbstractUuidAwareDomainEntity {
     @Column(name = "organization_status", nullable = false)
     private OrganizationStatus status;
     
-    @Column(name = "payed_outside_stripe", nullable = false)
-    private boolean payedOutsideStripe;
+    @Column(name = "paid_outside_stripe", nullable = false)
+    private boolean paidOutsideStripe;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
     private List<ClientOrganization> clientOrganizations;
@@ -145,7 +145,7 @@ public class Organization extends AbstractUuidAwareDomainEntity {
                 .append("imageBlobId", mask(imageBlobId))
                 .append("status", status)
                 .append("invitation", getIdOrNull(invitation))
-                .append("payedOutsideStripe", payedOutsideStripe)
+                .append("paidOutsideStripe", paidOutsideStripe)
                 .toString();
     }
 
@@ -181,11 +181,11 @@ public class Organization extends AbstractUuidAwareDomainEntity {
         return invitation;
     }
 
-    public boolean isPayedOutsideStripe() {
-        return payedOutsideStripe;
+    public boolean isPaidOutsideStripe() {
+        return paidOutsideStripe;
     }
 
-    public void setPayedOutsideStripe(final boolean payedOutsideStripe) {
-        this.payedOutsideStripe = payedOutsideStripe;
+    public void setPaidOutsideStripe(final boolean payedOutsideStripe) {
+        this.paidOutsideStripe = payedOutsideStripe;
     }
 }

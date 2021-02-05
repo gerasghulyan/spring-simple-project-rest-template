@@ -1,7 +1,7 @@
 package com.vntana.core.service.organization.impl
 
 import com.vntana.core.service.organization.AbstractOrganizationServiceIntegrationTest
-import com.vntana.core.service.organization.dto.OrganizationPayedOutsideStripeDto
+import com.vntana.core.service.organization.dto.OrganizationPaidOutsideStripeDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -17,14 +17,17 @@ class OrganizationSetPaymentOutsideStripeIntegrationTest : AbstractOrganizationS
         // given
         val organization = integrationTestHelper.persistOrganization()
         val isPayedOutsideStripe = true
-        val updateDto = OrganizationPayedOutsideStripeDto(organization.uuid, isPayedOutsideStripe)
+        val updateDto = OrganizationPaidOutsideStripeDto(
+            organization.uuid,
+            isPayedOutsideStripe
+        )
         flushAndClear()
         // when
         organizationService.setPaymentOutsideStripe(updateDto).let {
             // then
             flushAndClear()
             assertThat(it.uuid).isEqualTo(organization.uuid)
-            assertThat(it.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
         }
     }
 
@@ -33,14 +36,17 @@ class OrganizationSetPaymentOutsideStripeIntegrationTest : AbstractOrganizationS
         // given
         val organization = integrationTestHelper.persistOrganization()
         val isPayedOutsideStripe = false
-        val updateDto = OrganizationPayedOutsideStripeDto(organization.uuid, isPayedOutsideStripe)
+        val updateDto = OrganizationPaidOutsideStripeDto(
+            organization.uuid,
+            isPayedOutsideStripe
+        )
         flushAndClear()
         // when
         organizationService.setPaymentOutsideStripe(updateDto).let {
             // then
             flushAndClear()
             assertThat(it.uuid).isEqualTo(organization.uuid)
-            assertThat(it.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
         }
     }
 }

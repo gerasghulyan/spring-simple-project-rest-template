@@ -1,8 +1,8 @@
 alter table organization
-    add column payed_outside_stripe boolean;
+    add column paid_outside_stripe boolean;
 alter table organization
-    alter column payed_outside_stripe set default false;
+    alter column paid_outside_stripe set default false;
 
 update organization
-set payed_outside_stripe = false
-where organization.payed_outside_stripe is null;
+set paid_outside_stripe = false
+where organization.paid_outside_stripe is null;

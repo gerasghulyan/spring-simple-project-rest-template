@@ -41,7 +41,7 @@ class OrganizationGetPayedOutsideStripeWebTest : AbstractOrganizationWebTest() {
         ).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.uuid).isEqualTo(organizationUuid)
-            assertThat(it.body?.response()?.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.body?.response()?.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
         }
     }
 }
