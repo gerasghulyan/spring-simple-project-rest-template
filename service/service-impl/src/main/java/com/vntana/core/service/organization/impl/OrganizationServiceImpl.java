@@ -158,7 +158,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Assert.notNull(dto, "The OrganizationPaidOutsideStripeDto should not be null");
         LOGGER.debug("Setting organization paid outside stripe flag for dto - {}", dto);
         final Organization organization = getByUuid(dto.getUuid());
-        organization.setPaidOutsideStripe(dto.isPayedOutsideStripe());
+        organization.setPaidOutsideStripe(dto.isPaidOutsideStripe());
         organizationRepository.save(organization);
         LOGGER.debug("Done Setting organization payed outside stripe flag for organization with uuid - {}, and flag - {}",
                 organization.getUuid(), organization.isPaidOutsideStripe());

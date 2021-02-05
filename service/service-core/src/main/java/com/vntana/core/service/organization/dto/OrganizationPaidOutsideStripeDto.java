@@ -14,12 +14,12 @@ import org.springframework.util.Assert;
 public class OrganizationPaidOutsideStripeDto implements ServiceDto {
 
     private final String uuid;
-    private final boolean payedOutsideStripe;
+    private final boolean paidOutsideStripe;
 
-    public OrganizationPaidOutsideStripeDto(final String uuid, final boolean payedOutsideStripe) {
+    public OrganizationPaidOutsideStripeDto(final String uuid, final boolean paidOutsideStripe) {
         Assert.hasText(uuid, "The uuid should not be null or empty");
         this.uuid = uuid;
-        this.payedOutsideStripe = payedOutsideStripe;
+        this.paidOutsideStripe = paidOutsideStripe;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class OrganizationPaidOutsideStripeDto implements ServiceDto {
         }
         final OrganizationPaidOutsideStripeDto that = (OrganizationPaidOutsideStripeDto) o;
         return new EqualsBuilder()
-                .append(payedOutsideStripe, that.payedOutsideStripe)
+                .append(paidOutsideStripe, that.paidOutsideStripe)
                 .append(uuid, that.uuid)
                 .isEquals();
     }
@@ -41,7 +41,7 @@ public class OrganizationPaidOutsideStripeDto implements ServiceDto {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(uuid)
-                .append(payedOutsideStripe)
+                .append(paidOutsideStripe)
                 .toHashCode();
     }
 
@@ -50,7 +50,7 @@ public class OrganizationPaidOutsideStripeDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("uuid", uuid)
-                .append("payedOutsideStripe", payedOutsideStripe)
+                .append("paidOutsideStripe", paidOutsideStripe)
                 .toString();
     }
 
@@ -58,7 +58,7 @@ public class OrganizationPaidOutsideStripeDto implements ServiceDto {
         return uuid;
     }
 
-    public boolean isPayedOutsideStripe() {
-        return payedOutsideStripe;
+    public boolean isPaidOutsideStripe() {
+        return paidOutsideStripe;
     }
 }
