@@ -1,7 +1,7 @@
 package com.vntana.core.rest.resource.organization.test
 
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
-import com.vntana.core.model.organization.request.OrganizationPayedOutsideStripeRequest
+import com.vntana.core.model.organization.request.OrganizationPaidOutsideStripeRequest
 import com.vntana.core.rest.resource.organization.AbstractOrganizationWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -17,7 +17,10 @@ class OrganizationSetPayedOutsideStripeWebTest : AbstractOrganizationWebTest() {
     fun `test with invalid arguments`() {
         assertBasicErrorResultResponse(
             organizationResourceClient.setPaymentOutsideStripe(
-                OrganizationPayedOutsideStripeRequest(null, true)
+                OrganizationPaidOutsideStripeRequest(
+                    null,
+                    true
+                )
             ),
             OrganizationErrorResponseModel.MISSING_UUID
         )
@@ -27,7 +30,10 @@ class OrganizationSetPayedOutsideStripeWebTest : AbstractOrganizationWebTest() {
     fun `test when organization not found`() {
         assertBasicErrorResultResponse(
             organizationResourceClient.setPaymentOutsideStripe(
-                OrganizationPayedOutsideStripeRequest(uuid(), true)
+                OrganizationPaidOutsideStripeRequest(
+                    uuid(),
+                    true
+                )
             ),
             OrganizationErrorResponseModel.ORGANIZATION_NOT_FOUND
         )
@@ -38,11 +44,14 @@ class OrganizationSetPayedOutsideStripeWebTest : AbstractOrganizationWebTest() {
         val organizationUuid = resourceTestHelper.persistOrganization().response().uuid
         val isPayedOutsideStripe = false
         organizationResourceClient.setPaymentOutsideStripe(
-            OrganizationPayedOutsideStripeRequest(organizationUuid, isPayedOutsideStripe)
+            OrganizationPaidOutsideStripeRequest(
+                organizationUuid,
+                isPayedOutsideStripe
+            )
         ).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.uuid).isEqualTo(organizationUuid)
-            assertThat(it.body?.response()?.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.body?.response()?.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
         }
     }
 
@@ -51,11 +60,14 @@ class OrganizationSetPayedOutsideStripeWebTest : AbstractOrganizationWebTest() {
         val organizationUuid = resourceTestHelper.persistOrganization().response().uuid
         val isPayedOutsideStripe = true
         organizationResourceClient.setPaymentOutsideStripe(
-            OrganizationPayedOutsideStripeRequest(organizationUuid, isPayedOutsideStripe)
+            OrganizationPaidOutsideStripeRequest(
+                organizationUuid,
+                isPayedOutsideStripe
+            )
         ).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.uuid).isEqualTo(organizationUuid)
-            assertThat(it.body?.response()?.isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.body?.response()?.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
         }
     }
 }

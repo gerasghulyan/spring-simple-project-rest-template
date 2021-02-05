@@ -154,14 +154,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional
     @Override
-    public Organization setPaymentOutsideStripe(final OrganizationPayedOutsideStripeDto dto) {
-        Assert.notNull(dto, "The 'OrganizationPayedOutsideStripeDto' should not be null");
-        LOGGER.debug("Setting organization payed outside stripe flag for dto - {}", dto);
+    public Organization setPaymentOutsideStripe(final OrganizationPaidOutsideStripeDto dto) {
+        Assert.notNull(dto, "The OrganizationPaidOutsideStripeDto should not be null");
+        LOGGER.debug("Setting organization paid outside stripe flag for dto - {}", dto);
         final Organization organization = getByUuid(dto.getUuid());
-        organization.setPayedOutsideStripe(dto.isPayedOutsideStripe());
+        organization.setPaidOutsideStripe(dto.isPayedOutsideStripe());
         organizationRepository.save(organization);
         LOGGER.debug("Done Setting organization payed outside stripe flag for organization with uuid - {}, and flag - {}",
-                organization.getUuid(), organization.isPayedOutsideStripe());
+                organization.getUuid(), organization.isPaidOutsideStripe());
         return organization;
     }
 

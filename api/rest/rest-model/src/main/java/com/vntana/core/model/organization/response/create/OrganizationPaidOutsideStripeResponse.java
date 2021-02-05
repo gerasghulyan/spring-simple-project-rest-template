@@ -8,17 +8,17 @@ import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
  * Date: 1/25/21
  * Time: 9:54 AM
  */
-public class OrganizationPayedOutsideStripeResponse extends AbstractResultResponseModel<OrganizationPayedOutsideStripeResponseModel, OrganizationErrorResponseModel> {
+public class OrganizationPaidOutsideStripeResponse extends AbstractResultResponseModel<OrganizationPayedOutsideStripeResponseModel, OrganizationErrorResponseModel> {
     
-    public OrganizationPayedOutsideStripeResponse() {
+    public OrganizationPaidOutsideStripeResponse() {
         super();
     }
 
-    public OrganizationPayedOutsideStripeResponse(final String uuid, final boolean isPayedOutsideStripe) {
+    public OrganizationPaidOutsideStripeResponse(final String uuid, final boolean isPayedOutsideStripe) {
         super(new OrganizationPayedOutsideStripeResponseModel(uuid, isPayedOutsideStripe));
     }
 
-    public OrganizationPayedOutsideStripeResponse(final int httpStatusCode, final OrganizationErrorResponseModel error) {
+    public OrganizationPaidOutsideStripeResponse(final int httpStatusCode, final OrganizationErrorResponseModel error) {
         super(httpStatusCode, error);
     }
 }

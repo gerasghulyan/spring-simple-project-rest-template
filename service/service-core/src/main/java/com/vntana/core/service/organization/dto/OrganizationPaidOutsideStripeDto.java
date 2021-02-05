@@ -11,12 +11,12 @@ import org.springframework.util.Assert;
  * Date: 1/25/21
  * Time: 8:22 PM
  */
-public class OrganizationPayedOutsideStripeDto implements ServiceDto {
+public class OrganizationPaidOutsideStripeDto implements ServiceDto {
 
     private final String uuid;
     private final boolean payedOutsideStripe;
 
-    public OrganizationPayedOutsideStripeDto(final String uuid, final boolean payedOutsideStripe) {
+    public OrganizationPaidOutsideStripeDto(final String uuid, final boolean payedOutsideStripe) {
         Assert.hasText(uuid, "The uuid should not be null or empty");
         this.uuid = uuid;
         this.payedOutsideStripe = payedOutsideStripe;
@@ -27,10 +27,10 @@ public class OrganizationPayedOutsideStripeDto implements ServiceDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof OrganizationPayedOutsideStripeDto)) {
+        if (!(o instanceof OrganizationPaidOutsideStripeDto)) {
             return false;
         }
-        final OrganizationPayedOutsideStripeDto that = (OrganizationPayedOutsideStripeDto) o;
+        final OrganizationPaidOutsideStripeDto that = (OrganizationPaidOutsideStripeDto) o;
         return new EqualsBuilder()
                 .append(payedOutsideStripe, that.payedOutsideStripe)
                 .append(uuid, that.uuid)

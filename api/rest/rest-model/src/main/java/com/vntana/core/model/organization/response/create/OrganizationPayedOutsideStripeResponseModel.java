@@ -14,14 +14,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class OrganizationPayedOutsideStripeResponseModel extends AbstractUuidAwareResponseModel {
 
-    private final boolean payedOutsideStripe;
+    private final boolean paidOutsideStripe;
 
     @JsonCreator
     public OrganizationPayedOutsideStripeResponseModel(
             @JsonProperty("uuid") final String uuid,
-            @JsonProperty("payedOutsideStripe") final boolean payedOutsideStripe) {
+            @JsonProperty("paidOutsideStripe") final boolean paidOutsideStripe) {
         super(uuid);
-        this.payedOutsideStripe = payedOutsideStripe;
+        this.paidOutsideStripe = paidOutsideStripe;
     }
 
     @Override
@@ -34,14 +34,14 @@ public class OrganizationPayedOutsideStripeResponseModel extends AbstractUuidAwa
         }
         final OrganizationPayedOutsideStripeResponseModel that = (OrganizationPayedOutsideStripeResponseModel) o;
         return new EqualsBuilder()
-                .append(payedOutsideStripe, that.payedOutsideStripe)
+                .append(paidOutsideStripe, that.paidOutsideStripe)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(payedOutsideStripe)
+                .append(paidOutsideStripe)
                 .toHashCode();
     }
 
@@ -49,11 +49,11 @@ public class OrganizationPayedOutsideStripeResponseModel extends AbstractUuidAwa
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("payedOutsideStripe", payedOutsideStripe)
+                .append("paidOutsideStripe", paidOutsideStripe)
                 .toString();
     }
 
-    public boolean isPayedOutsideStripe() {
-        return payedOutsideStripe;
+    public boolean isPaidOutsideStripe() {
+        return paidOutsideStripe;
     }
 }

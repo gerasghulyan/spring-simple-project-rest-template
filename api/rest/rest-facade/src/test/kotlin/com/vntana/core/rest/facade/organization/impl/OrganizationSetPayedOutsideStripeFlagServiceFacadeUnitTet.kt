@@ -1,9 +1,9 @@
 package com.vntana.core.rest.facade.organization.impl
 
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel
-import com.vntana.core.model.organization.request.OrganizationPayedOutsideStripeRequest
+import com.vntana.core.model.organization.request.OrganizationPaidOutsideStripeRequest
 import com.vntana.core.rest.facade.organization.AbstractOrganizationServiceFacadeUnitTest
-import com.vntana.core.service.organization.dto.OrganizationPayedOutsideStripeDto
+import com.vntana.core.service.organization.dto.OrganizationPaidOutsideStripeDto
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -31,7 +31,7 @@ class OrganizationSetPayedOutsideStripeFlagServiceFacadeUnitTet : AbstractOrgani
         replayAll()
         // test scenario
         organizationServiceFacade.setPaymentOutsideStripe(
-            OrganizationPayedOutsideStripeRequest(
+            OrganizationPaidOutsideStripeRequest(
                 organization.uuid,
                 isPayedOutsideStripe
             )
@@ -48,12 +48,13 @@ class OrganizationSetPayedOutsideStripeFlagServiceFacadeUnitTet : AbstractOrgani
         val organization = commonTestHelper.buildOrganizationWithInvitation()
         val isPayedOutsideStripe = true
         val updatedOrganization = organization
-        updatedOrganization.isPayedOutsideStripe = true
-        val request = OrganizationPayedOutsideStripeRequest(
-            organization.uuid,
-            isPayedOutsideStripe
-        )
-        val dto = OrganizationPayedOutsideStripeDto(
+        updatedOrganization.isPaidOutsideStripe = true
+        val request =
+            OrganizationPaidOutsideStripeRequest(
+                organization.uuid,
+                isPayedOutsideStripe
+            )
+        val dto = OrganizationPaidOutsideStripeDto(
             organization.uuid,
             isPayedOutsideStripe
         )
@@ -64,7 +65,7 @@ class OrganizationSetPayedOutsideStripeFlagServiceFacadeUnitTet : AbstractOrgani
                 organization.uuid
             )
         ).andReturn(true)
-        expect(mapperFacade.map(request, OrganizationPayedOutsideStripeDto::class.java)).andReturn(dto)
+        expect(mapperFacade.map(request, OrganizationPaidOutsideStripeDto::class.java)).andReturn(dto)
         expect(organizationService.setPaymentOutsideStripe(dto)).andReturn(updatedOrganization)
         replayAll()
         // test scenario
@@ -72,7 +73,7 @@ class OrganizationSetPayedOutsideStripeFlagServiceFacadeUnitTet : AbstractOrgani
             .let {
                 assertBasicSuccessResultResponse(it)
                 assertThat(it.response().uuid).isEqualTo(organization.uuid)
-                assertThat(it.response().isPayedOutsideStripe).isEqualTo(isPayedOutsideStripe)
+                assertThat(it.response().isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
             }
         verifyAll()
     }
