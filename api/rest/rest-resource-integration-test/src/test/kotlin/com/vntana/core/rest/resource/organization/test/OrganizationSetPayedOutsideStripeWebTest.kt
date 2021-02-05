@@ -42,32 +42,32 @@ class OrganizationSetPayedOutsideStripeWebTest : AbstractOrganizationWebTest() {
     @Test
     fun `test when payed outside stripe is false`() {
         val organizationUuid = resourceTestHelper.persistOrganization().response().uuid
-        val isPayedOutsideStripe = false
+        val isPaidOutsideStripe = false
         organizationResourceClient.setPaymentOutsideStripe(
             OrganizationPaidOutsideStripeRequest(
                 organizationUuid,
-                isPayedOutsideStripe
+                isPaidOutsideStripe
             )
         ).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.uuid).isEqualTo(organizationUuid)
-            assertThat(it.body?.response()?.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.body?.response()?.isPaidOutsideStripe).isEqualTo(isPaidOutsideStripe)
         }
     }
 
     @Test
     fun `test when payed outside stripe is true`() {
         val organizationUuid = resourceTestHelper.persistOrganization().response().uuid
-        val isPayedOutsideStripe = true
+        val isPaidOutsideStripe = true
         organizationResourceClient.setPaymentOutsideStripe(
             OrganizationPaidOutsideStripeRequest(
                 organizationUuid,
-                isPayedOutsideStripe
+                isPaidOutsideStripe
             )
         ).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.body?.response()?.uuid).isEqualTo(organizationUuid)
-            assertThat(it.body?.response()?.isPaidOutsideStripe).isEqualTo(isPayedOutsideStripe)
+            assertThat(it.body?.response()?.isPaidOutsideStripe).isEqualTo(isPaidOutsideStripe)
         }
     }
 }
