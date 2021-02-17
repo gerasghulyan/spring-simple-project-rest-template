@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.easymock.EasyMock.expect
 import org.junit.Test
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -46,7 +47,7 @@ class TokenAuthenticationExpireServiceUnitTest : AbstractTokenAuthenticationServ
         expect(tokenAuthenticationRepository.findByUuid(authTokenUuid)).andReturn(Optional.of(authToken))
         replayAll()
         tokenAuthenticationService.expire(authTokenUuid).let {
-            assertThat(it.isExpired).isTrue()
+            assertThat(it.expiration).isBefore(LocalDateTime.now().plusSeconds(12))
         }
 
         verifyAll()

@@ -132,7 +132,7 @@ public class TokenAuthentication extends AbstractUuidAwareDomainEntity {
     }
 
     public void expire() {
-        this.expiration = LocalDateTime.now();
+        this.expiration = LocalDateTime.now().plusSeconds(10);
     }
 
     public boolean isExpired() {
