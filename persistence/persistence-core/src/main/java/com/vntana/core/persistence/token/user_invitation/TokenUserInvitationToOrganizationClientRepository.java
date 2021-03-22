@@ -1,4 +1,4 @@
-package com.vntana.core.persistence.token;
+package com.vntana.core.persistence.token.user_invitation;
 
 import com.vntana.core.domain.token.TokenUserInvitationToOrganizationClient;
 import org.springframework.data.jpa.repository.JpaRepository;

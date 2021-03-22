@@ -2,8 +2,8 @@ package com.vntana.core.service.token.invitation.user
 
 import com.vntana.core.helper.unit.invitation.user.InvitationUserCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
-import com.vntana.core.persistence.token.TokenUserInvitationToOrganizationClientRepository
-import com.vntana.core.persistence.token.TokenUserInvitationToOrganizationRepository
+import com.vntana.core.persistence.token.user_invitation.TokenUserInvitationToOrganizationClientRepository
+import com.vntana.core.persistence.token.user_invitation.TokenUserInvitationToOrganizationRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.invitation.user.InvitationUserToClientService
 import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService
