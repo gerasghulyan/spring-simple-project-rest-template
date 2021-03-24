@@ -1,7 +1,7 @@
 buildscript {
     ext {
         platformGroup = 'com.vntana.core'
-        platformVersion = '0.11.0'
+        platformVersion = '0.12.0'
         kotlinVersion = '1.3.61'
         vavrVersion = '0.10.2'
         easymockVersion = '4.0.2'
