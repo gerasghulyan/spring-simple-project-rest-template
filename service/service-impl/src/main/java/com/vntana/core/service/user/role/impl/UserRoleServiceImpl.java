@@ -59,6 +59,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         assertOrganizationUuid(organizationUuid);
         final List<AbstractOrganizationAwareUserRole> userRoles = userRoleRepository.findAllByOrganization(organizationUuid)
                 .stream()
+                .filter(role -> role instanceof AbstractOrganizationAwareUserRole)
                 .map(AbstractOrganizationAwareUserRole.class::cast)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         LOGGER.debug("Successfully userRoles users belonging to organization - {}", organizationUuid);
