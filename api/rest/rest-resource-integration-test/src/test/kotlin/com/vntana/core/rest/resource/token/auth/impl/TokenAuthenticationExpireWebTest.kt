@@ -3,6 +3,7 @@ package com.vntana.core.rest.resource.token.auth.impl
 import com.vntana.core.model.token.auth.error.TokenAuthenticationErrorResponseModel
 import com.vntana.core.rest.resource.token.auth.AbstractTokenAuthenticationWebTest
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Ignore
 import org.junit.Test
 
 /**
@@ -14,9 +15,13 @@ class TokenAuthenticationExpireWebTest : AbstractTokenAuthenticationWebTest() {
 
     @Test
     fun `test when token not found`() {
-        assertBasicErrorResultResponse(tokenAuthenticationResourceClient.expire(uuid()), TokenAuthenticationErrorResponseModel.TOKEN_NOT_FOUND)
+        assertBasicErrorResultResponse(
+            tokenAuthenticationResourceClient.expire(uuid()),
+            TokenAuthenticationErrorResponseModel.TOKEN_NOT_FOUND
+        )
     }
 
+    @Ignore
     @Test
     fun test() {
         val token1 = resourceTestHelper.persistToken()
