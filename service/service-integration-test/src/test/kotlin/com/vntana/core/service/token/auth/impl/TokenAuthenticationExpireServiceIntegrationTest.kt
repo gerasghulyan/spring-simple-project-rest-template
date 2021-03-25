@@ -3,6 +3,7 @@ package com.vntana.core.service.token.auth.impl
 import com.vntana.core.service.token.auth.AbstractTokenAuthenticationServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import java.time.LocalDateTime
 
 /**
  * Created by Arman Gevorgyan.
@@ -17,7 +18,7 @@ class TokenAuthenticationExpireServiceIntegrationTest : AbstractTokenAuthenticat
         flushAndClear()
         tokenAuthenticationService.expire(authToken.uuid).let {
             flushAndClear()
-            assertThat(it.isExpired).isTrue()
+            assertThat(it.expiration).isBefore(LocalDateTime.now().plusMinutes(1))
         }
     }
 }

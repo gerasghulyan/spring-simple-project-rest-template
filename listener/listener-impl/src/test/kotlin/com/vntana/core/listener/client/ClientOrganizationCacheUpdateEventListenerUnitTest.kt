@@ -50,9 +50,10 @@ class ClientOrganizationCacheUpdateEventListenerUnitTest : AbstractListenerUnitT
                 client.name,
                 client.slug,
                 client.organization.uuid,
+                client.organization.slug,
                 client.imageBlobId
         )
-        val model = CacheClientOrganizationModel(dto.uuid, dto.name, dto.slug, dto.organizationUuid, dto.imageBlobId)
+        val model = CacheClientOrganizationModel(dto.uuid, dto.name, dto.slug, dto.organizationUuid, dto.organizationSlug, dto.imageBlobId)
         val payload = ClientOrganizationLifecyclePayload(client, EntityLifecycle.CREATED)
         resetAll()
         // expectations

@@ -74,6 +74,10 @@ public class TokenAuthentication extends AbstractUuidAwareDomainEntity {
         return expiration;
     }
 
+    public void setExpiration(final LocalDateTime expiration) {
+        this.expiration = expiration;
+    }
+
     public String getToken() {
         return token;
     }
