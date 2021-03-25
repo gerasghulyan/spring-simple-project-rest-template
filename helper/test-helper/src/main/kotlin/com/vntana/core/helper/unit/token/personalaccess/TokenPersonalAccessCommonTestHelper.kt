@@ -3,6 +3,7 @@ package com.vntana.core.helper.unit.token.personalaccess
 import com.vntana.core.domain.token.TokenPersonalAccess
 import com.vntana.core.domain.user.User
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
+import com.vntana.core.model.user.request.CreatePersonalAccessTokenRequest
 import com.vntana.core.service.token.personalaccess.dto.CreatePersonalAccessTokenDto
 import com.vntana.core.service.token.personalaccess.dto.RegeneratePersonalAccessTokenDto
 
@@ -27,4 +28,9 @@ open class TokenPersonalAccessCommonTestHelper : AbstractCommonTestHelper() {
         userUuid: String? = uuid(),
         token: String? = uuid()
     ): RegeneratePersonalAccessTokenDto = RegeneratePersonalAccessTokenDto(userUuid, token)
+
+    fun buildCreatePersonalAccessTokenRequest(
+        userUuid: String? = uuid(),
+        token: String? = uuid()
+    ): CreatePersonalAccessTokenRequest = CreatePersonalAccessTokenRequest(token, userUuid)
 }

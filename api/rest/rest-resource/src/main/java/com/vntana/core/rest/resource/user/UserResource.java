@@ -2,6 +2,7 @@ package com.vntana.core.rest.resource.user;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.auth.response.UserRoleModel;
+import com.vntana.core.model.token.auth.request.TokenAuthenticationRequest;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
@@ -9,6 +10,7 @@ import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.personalaccess.FindByPersonalAccessTokenResponseModel;
 import com.vntana.core.model.user.response.personalaccess.PersonalAccessTokenResponse;
 import com.vntana.core.rest.facade.token.personalaccess.PersonalAccessTokenServiceFacade;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
@@ -190,6 +192,38 @@ public class UserResource {
     public ResponseEntity<PersonalAccessTokenResponse> createPersonalAccessToken(@RequestBody final CreatePersonalAccessTokenRequest request) {
         LOGGER.debug("Processing user resource createPersonalAccessToken method for request - {}", request);
         final PersonalAccessTokenResponse response = personalAccessTokenServiceFacade.create(request);
+        LOGGER.debug("Successfully processed user resource createPersonalAccessToken method with response - {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(path = "/personal-access-token/expire/{userUuid}")
+    public ResponseEntity<PersonalAccessTokenResponse> expirePersonalAccessTokenByUserUuid(@PathVariable("userUuid") final String userUuid) {
+        LOGGER.debug("Processing user resource expirePersonalAccessTokenByUserUuid method for user uuid - {}", userUuid);
+        final PersonalAccessTokenResponse response = personalAccessTokenServiceFacade.expireByUserUuid(userUuid);
+        LOGGER.debug("Successfully processed user resource expirePersonalAccessTokenByUserUuid method for user uuid - {}", userUuid);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(path = "/personal-access-token/find-by-token")
+    public ResponseEntity<FindByPersonalAccessTokenResponseModel> findByToken(@RequestBody final TokenAuthenticationRequest request) {
+        LOGGER.debug("Processing user resource findByToken method");
+        final FindByPersonalAccessTokenResponseModel response = personalAccessTokenServiceFacade.findByToken(request);
+        LOGGER.debug("Done processing user resource findByToken method");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/personal-access-token/{userUuid}")
+    public ResponseEntity<PersonalAccessTokenResponse> findPersonalAccessTokenByUserUuid(@PathVariable("userUuid") final String userUuid) {
+        LOGGER.debug("Processing user resource findPersonalAccessTokenByUserUuid method for user uuid - {}", userUuid);
+        final PersonalAccessTokenResponse response = personalAccessTokenServiceFacade.findByUserUuid(userUuid);
+        LOGGER.debug("Successfully processed user resource findPersonalAccessTokenByUserUuid method for user uuid - {}", userUuid);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping(path = "personal-access-token/regenerate")
+    public ResponseEntity<PersonalAccessTokenResponse> regeneratePersonalAccessToken(@RequestBody final RegeneratePersonalAccessKeyTokenRequest request) {
+        LOGGER.debug("Processing user resource regeneratePersonalAccessToken method for request - {}", request);
+        final PersonalAccessTokenResponse response = personalAccessTokenServiceFacade.regenerate(request);
         LOGGER.debug("Successfully processed user resource createPersonalAccessToken method with response - {}", response);
         return ResponseEntity.ok(response);
     }

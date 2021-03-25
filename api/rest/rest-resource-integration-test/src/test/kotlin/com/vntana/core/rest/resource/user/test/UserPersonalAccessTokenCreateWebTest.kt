@@ -11,7 +11,7 @@ import org.junit.Test
  * Date: 3/25/21
  * Time: 1:51 AM
  */
-class UserPersonalAccessKeyCreateWebTest : AbstractUserWebTest() {
+class UserPersonalAccessTokenCreateWebTest : AbstractUserWebTest() {
 
     @Test
     fun `test when user not found`() {
