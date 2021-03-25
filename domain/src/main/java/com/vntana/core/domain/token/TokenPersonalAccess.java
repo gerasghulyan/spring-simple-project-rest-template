@@ -23,22 +23,14 @@ public class TokenPersonalAccess extends AbstractToken {
     )
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "entity_type", nullable = false, updatable = false)
-    private PersonalAccessTokenType entityType;
-
-    @Column(name = "entity_id", nullable = false, updatable = false)
-    private String entityId;
+    public TokenPersonalAccess() {
+    }
 
     public TokenPersonalAccess(
             final String token,
-            final User user,
-            final PersonalAccessTokenType entityType,
-            final String entityId) {
+            final User user) {
         super(token);
         this.user = user;
-        this.entityType = entityType;
-        this.entityId = entityId;
     }
 
     @Override
@@ -53,8 +45,6 @@ public class TokenPersonalAccess extends AbstractToken {
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(user, that.user)
-                .append(entityType, that.entityType)
-                .append(entityId, that.entityId)
                 .isEquals();
     }
 
@@ -63,8 +53,6 @@ public class TokenPersonalAccess extends AbstractToken {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(user)
-                .append(entityType)
-                .append(entityId)
                 .toHashCode();
     }
 
@@ -73,8 +61,6 @@ public class TokenPersonalAccess extends AbstractToken {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("user", user)
-                .append("entityType", entityType)
-                .append("entityId", entityId)
                 .toString();
     }
 
@@ -89,21 +75,5 @@ public class TokenPersonalAccess extends AbstractToken {
 
     public void setUser(final User user) {
         this.user = user;
-    }
-
-    public PersonalAccessTokenType getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(final PersonalAccessTokenType entityType) {
-        this.entityType = entityType;
-    }
-
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(final String entityId) {
-        this.entityId = entityId;
     }
 }

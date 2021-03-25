@@ -3,11 +3,12 @@ package com.vntana.core.rest.client.user;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
-import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.personalaccess.PersonalAccessTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,4 +73,7 @@ public interface UserResourceClient {
 
     @PutMapping
     UpdateUserResponse update(@RequestBody final UpdateUserRequest request);
+
+    @PostMapping(path = "/personal-access-token/create")
+    ResponseEntity<PersonalAccessTokenResponse> createPersonalAccessToken(@RequestBody final CreatePersonalAccessTokenRequest request);
 }

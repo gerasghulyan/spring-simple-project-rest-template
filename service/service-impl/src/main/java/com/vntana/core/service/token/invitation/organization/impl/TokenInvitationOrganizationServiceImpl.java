@@ -2,7 +2,7 @@ package com.vntana.core.service.token.invitation.organization.impl;
 
 import com.vntana.core.domain.invitation.organization.InvitationOrganization;
 import com.vntana.core.domain.token.TokenInvitationOrganization;
-import com.vntana.core.persistence.token.invitation_to_organization.TokenInvitationOrganizationRepository;
+import com.vntana.core.persistence.token.invitationtoorganization.TokenInvitationOrganizationRepository;
 import com.vntana.core.persistence.token.TokenRepository;
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService;
 import com.vntana.core.service.token.exception.TokenNotFoundException;

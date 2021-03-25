@@ -4,11 +4,13 @@ import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
-import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.personalaccess.PersonalAccessTokenResponse;
+import com.vntana.core.rest.facade.token.personalaccess.PersonalAccessTokenServiceFacade;
 import com.vntana.core.rest.facade.user.UserServiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +31,11 @@ public class UserResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
     private final UserServiceFacade userServiceFacade;
+    private final PersonalAccessTokenServiceFacade personalAccessTokenServiceFacade;
 
-    public UserResource(final UserServiceFacade userServiceFacade) {
+    public UserResource(final UserServiceFacade userServiceFacade,
+                        final PersonalAccessTokenServiceFacade personalAccessTokenServiceFacade) {
+        this.personalAccessTokenServiceFacade = personalAccessTokenServiceFacade;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userServiceFacade = userServiceFacade;
     }
@@ -178,6 +183,14 @@ public class UserResource {
         LOGGER.debug("Processing user resource update method for request - {}", request);
         final UpdateUserResponse response = userServiceFacade.update(request);
         LOGGER.debug("Successfully processed user resource update method for request - {}", request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(path = "/personal-access-token/create")
+    public ResponseEntity<PersonalAccessTokenResponse> createPersonalAccessToken(@RequestBody final CreatePersonalAccessTokenRequest request) {
+        LOGGER.debug("Processing user resource createPersonalAccessToken method for request - {}", request);
+        final PersonalAccessTokenResponse response = personalAccessTokenServiceFacade.create(request);
+        LOGGER.debug("Successfully processed user resource createPersonalAccessToken method with response - {}", response);
         return ResponseEntity.ok(response);
     }
 }

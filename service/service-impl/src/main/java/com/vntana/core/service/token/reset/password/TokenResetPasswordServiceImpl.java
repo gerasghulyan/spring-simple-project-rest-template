@@ -2,7 +2,7 @@ package com.vntana.core.service.token.reset.password;
 
 import com.vntana.core.domain.token.TokenResetPassword;
 import com.vntana.core.domain.user.User;
-import com.vntana.core.persistence.token.reset_password.TokenResetPasswordRepository;
+import com.vntana.core.persistence.token.resetpassword.TokenResetPasswordRepository;
 import com.vntana.core.service.token.reset.password.dto.CreateTokenResetPasswordDto;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;

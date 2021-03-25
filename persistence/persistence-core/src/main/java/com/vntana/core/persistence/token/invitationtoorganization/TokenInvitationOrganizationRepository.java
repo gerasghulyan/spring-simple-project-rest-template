@@ -1,4 +1,4 @@
-package com.vntana.core.persistence.token.invitation_to_organization;
+package com.vntana.core.persistence.token.invitationtoorganization;
 
 import com.vntana.core.domain.token.TokenInvitationOrganization;
 import org.springframework.data.repository.CrudRepository;

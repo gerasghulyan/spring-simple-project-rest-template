@@ -3,10 +3,7 @@ package com.vntana.core.helper.unit.token
 import com.vntana.core.domain.invitation.organization.InvitationOrganization
 import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser
 import com.vntana.core.domain.invitation.user.InvitationOrganizationUser
-import com.vntana.core.domain.token.TokenInvitationOrganization
-import com.vntana.core.domain.token.TokenResetPassword
-import com.vntana.core.domain.token.TokenUserInvitationToOrganization
-import com.vntana.core.domain.token.TokenUserInvitationToOrganizationClient
+import com.vntana.core.domain.token.*
 import com.vntana.core.domain.user.User
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
@@ -15,6 +12,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.service.token.invitation.organization.dto.CreateTokenInvitationOrganizationDto
 import com.vntana.core.service.token.invitation.user.dto.CreateInvitationUserToOrganizationDto
 import com.vntana.core.service.token.invitation.user.dto.InvitationUuidAndTokenDto
+import com.vntana.core.service.token.personalaccess.dto.CreatePersonalAccessTokenDto
 import com.vntana.core.service.token.reset.password.dto.CreateTokenResetPasswordDto
 import java.time.LocalDateTime
 

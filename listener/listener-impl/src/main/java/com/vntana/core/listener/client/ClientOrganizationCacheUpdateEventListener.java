@@ -39,6 +39,7 @@ public class ClientOrganizationCacheUpdateEventListener implements EntityLifecyc
                 client.getName(),
                 client.getSlug(),
                 client.getOrganization().getUuid(),
+                client.getOrganization().getSlug(),
                 client.getImageBlobId()
         );
         clientOrganizationCacheService.cacheByUuid(dto);

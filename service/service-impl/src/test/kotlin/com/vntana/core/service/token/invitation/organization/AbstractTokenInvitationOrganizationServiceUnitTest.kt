@@ -2,7 +2,7 @@ package com.vntana.core.service.token.invitation.organization
 
 import com.vntana.core.helper.unit.invitation.organization.InvitationOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.token.TokenCommonTestHelper
-import com.vntana.core.persistence.token.invitation_to_organization.TokenInvitationOrganizationRepository
+import com.vntana.core.persistence.token.invitationtoorganization.TokenInvitationOrganizationRepository
 import com.vntana.core.persistence.token.TokenRepository
 import com.vntana.core.service.AbstractServiceUnitTest
 import com.vntana.core.service.invitation.organization.InvitationOrganizationService
