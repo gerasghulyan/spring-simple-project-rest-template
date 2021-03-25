@@ -5,6 +5,7 @@ import com.vntana.core.rest.facade.token.auth.AbstractTokenAuthenticationService
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -18,8 +19,14 @@ class TokenAuthenticationIsExpiredFacadeUnitTest : AbstractTokenAuthenticationSe
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertBasicErrorResultResponse(tokenAuthenticationServiceFacade.isExpired(null), TokenAuthenticationErrorResponseModel.MISSING_TOKEN)
-        assertBasicErrorResultResponse(tokenAuthenticationServiceFacade.isExpired(""), TokenAuthenticationErrorResponseModel.MISSING_TOKEN)
+        assertBasicErrorResultResponse(
+            tokenAuthenticationServiceFacade.isExpired(null),
+            TokenAuthenticationErrorResponseModel.MISSING_TOKEN
+        )
+        assertBasicErrorResultResponse(
+            tokenAuthenticationServiceFacade.isExpired(""),
+            TokenAuthenticationErrorResponseModel.MISSING_TOKEN
+        )
         verifyAll()
     }
 
@@ -29,7 +36,10 @@ class TokenAuthenticationIsExpiredFacadeUnitTest : AbstractTokenAuthenticationSe
         val token = uuid()
         expect(tokenAuthenticationService.findByToken(token)).andReturn(Optional.empty())
         replayAll()
-        assertBasicErrorResultResponse(tokenAuthenticationServiceFacade.isExpired(token), TokenAuthenticationErrorResponseModel.TOKEN_NOT_FOUND)
+        assertBasicErrorResultResponse(
+            tokenAuthenticationServiceFacade.isExpired(token),
+            TokenAuthenticationErrorResponseModel.TOKEN_NOT_FOUND
+        )
         verifyAll()
     }
 
@@ -51,7 +61,7 @@ class TokenAuthenticationIsExpiredFacadeUnitTest : AbstractTokenAuthenticationSe
     fun `test when expired`() {
         resetAll()
         val authToken = commonTestHelper.buildTokenAuthentication()
-        authToken.expire()
+        authToken.expiration = LocalDateTime.now()
         val token = authToken.token
         expect(tokenAuthenticationService.findByToken(token)).andReturn(Optional.of(authToken))
         replayAll()
