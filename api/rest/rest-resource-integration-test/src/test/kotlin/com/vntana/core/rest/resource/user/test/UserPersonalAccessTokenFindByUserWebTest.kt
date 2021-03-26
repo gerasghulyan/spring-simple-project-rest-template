@@ -21,8 +21,8 @@ class UserPersonalAccessTokenFindByUserWebTest : AbstractUserWebTest() {
         resourceHelper.persistPersonalAccessToken(CreatePersonalAccessTokenRequest(token, userUuid))
         userResourceClient.findPersonalAccessTokenByUserUuid(userUuid).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body.response().userUuid).isEqualTo(userUuid)
-            assertThat(it.body.response().token).isEqualTo(token)
+            assertThat(it.body!!.response().userUuid).isEqualTo(userUuid)
+            assertThat(it.body!!.response().token).isEqualTo(token)
         }
     }
 }

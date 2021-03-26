@@ -19,8 +19,8 @@ class UserPersonalAccessTokenExpireWebTest : AbstractUserWebTest() {
         ).response().uuid
         userResourceClient.expirePersonalAccessTokenByUserUuid(userUuid).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body.response().token).isNull()
-            assertThat(it.body.response().userUuid).isEqualTo(userUuid)
+            assertThat(it.body!!.response().token).isNull()
+            assertThat(it.body!!.response().userUuid).isEqualTo(userUuid)
         }
     }
 
@@ -33,8 +33,8 @@ class UserPersonalAccessTokenExpireWebTest : AbstractUserWebTest() {
         resourceHelper.persistPersonalAccessToken(CreatePersonalAccessTokenRequest(token, userUuid))
         resourceHelper.userResourceClient.expirePersonalAccessTokenByUserUuid(userUuid).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body.response().token).isNull()
-            assertThat(it.body.response().userUuid).isEqualTo(userUuid)
+            assertThat(it.body!!.response().token).isNull()
+            assertThat(it.body!!.response().userUuid).isEqualTo(userUuid)
         }
     }
 }

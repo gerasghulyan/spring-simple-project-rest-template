@@ -14,7 +14,7 @@ import org.junit.Before
  * Date: 3/25/21
  * Time: 4:57 PM
  */
-open class AbstractPersonalAccessTokenFacadeUnitTest : AbstractFacadeUnitTest() {
+abstract class AbstractPersonalAccessTokenFacadeUnitTest : AbstractFacadeUnitTest() {
 
     protected lateinit var personalAccessTokenServiceFacade: PersonalAccessTokenServiceFacade
 
