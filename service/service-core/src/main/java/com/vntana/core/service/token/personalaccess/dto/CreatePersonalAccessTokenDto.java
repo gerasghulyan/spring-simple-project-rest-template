@@ -4,6 +4,7 @@ import com.vntana.commons.service.dto.ServiceDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.util.Assert;
 
 /**
  * Created by Diana Gevorgyan
@@ -16,6 +17,8 @@ public class CreatePersonalAccessTokenDto implements ServiceDto {
     private final String token;
 
     public CreatePersonalAccessTokenDto(final String userUuid, final String token) {
+        Assert.hasText(userUuid, "The userUuid should not be null or empty");
+        Assert.hasText(token, "The token should not be null or empty");
         this.userUuid = userUuid;
         this.token = token;
     }

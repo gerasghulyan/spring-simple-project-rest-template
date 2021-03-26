@@ -20,6 +20,7 @@ public class PersonalAccessTokenResponseModel implements ResponseModel {
     private String userUuid;
 
     public PersonalAccessTokenResponseModel() {
+        super();
     }
 
     public PersonalAccessTokenResponseModel(final String token, final String userUuid) {

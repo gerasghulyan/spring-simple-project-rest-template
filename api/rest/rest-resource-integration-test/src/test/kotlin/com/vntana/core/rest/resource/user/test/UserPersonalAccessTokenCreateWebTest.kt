@@ -12,6 +12,16 @@ import org.junit.Test
  * Time: 1:51 AM
  */
 class UserPersonalAccessTokenCreateWebTest : AbstractUserWebTest() {
+    
+    @Test
+    fun `test when missing token`() {
+        val token = null
+        val userUuid = uuid()
+        assertBasicErrorResultResponse(
+            userResourceClient.createPersonalAccessToken(CreatePersonalAccessTokenRequest(null, null)),
+            UserErrorResponseModel.MISSING_TOKEN, UserErrorResponseModel.MISSING_UUID
+        )
+    }
 
     @Test
     fun `test when user not found`() {
