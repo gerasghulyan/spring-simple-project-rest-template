@@ -36,5 +36,6 @@ public enum UserErrorResponseModel implements ErrorResponseModel {
     INVALID_VERIFICATION_TOKEN,
     ORGANIZATION_ROLE_CONFLICT,
     NOT_A_SUPER_ADMIN,
-    MISSING_TOKEN
+    MISSING_TOKEN,
+    TOKEN_NOT_FOUND;
 }

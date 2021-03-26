@@ -44,7 +44,7 @@ public interface UserServiceFacade {
     GetUsersByRoleAndOrganizationUuidResponse getByRoleAndOrganizationUuid(final UserRoleModel userRole, final String organizationUuid);
 
     /**
-     * Gets user having acess to give organization (client organization is not included. For this purpose see getClientsByOrganization method)
+     * Gets user having access to give organization (client organization is not included. For this purpose see getClientsByOrganization method)
      *
      * @param organizationUuid
      * @return

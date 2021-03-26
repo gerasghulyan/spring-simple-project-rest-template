@@ -1,4 +1,4 @@
-package com.vntana.core.persistence.token.reset_password;
+package com.vntana.core.persistence.token.resetpassword;
 
 import com.vntana.core.domain.token.TokenResetPassword;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,13 +1,16 @@
 package com.vntana.core.rest.client.user;
 
 import com.vntana.core.model.auth.response.UserRoleModel;
+import com.vntana.core.model.token.auth.request.TokenAuthenticationRequest;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
-import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
+import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
+import com.vntana.core.model.user.response.personalaccess.FindByPersonalAccessTokenResponseModel;
+import com.vntana.core.model.user.response.personalaccess.PersonalAccessTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,4 +75,19 @@ public interface UserResourceClient {
 
     @PutMapping
     UpdateUserResponse update(@RequestBody final UpdateUserRequest request);
+
+    @PostMapping(path = "/personal-access-token/create")
+    ResponseEntity<PersonalAccessTokenResponse> createPersonalAccessToken(@RequestBody final CreatePersonalAccessTokenRequest request);
+
+    @PostMapping(path = "/personal-access-token/expire/{userUuid}")
+    ResponseEntity<PersonalAccessTokenResponse> expirePersonalAccessTokenByUserUuid(@PathVariable("userUuid") final String userUuid);
+
+    @PostMapping(path = "/personal-access-token/find-by-token")
+    ResponseEntity<FindByPersonalAccessTokenResponseModel> findByToken(@RequestBody final TokenAuthenticationRequest request);
+
+    @GetMapping(path = "/personal-access-token/{userUuid}")
+    ResponseEntity<PersonalAccessTokenResponse> findPersonalAccessTokenByUserUuid(@PathVariable("userUuid") final String userUuid);
+
+    @PutMapping(path = "personal-access-token/regenerate")
+    ResponseEntity<PersonalAccessTokenResponse> regeneratePersonalAccessToken(@RequestBody final RegeneratePersonalAccessKeyTokenRequest request);
 }
