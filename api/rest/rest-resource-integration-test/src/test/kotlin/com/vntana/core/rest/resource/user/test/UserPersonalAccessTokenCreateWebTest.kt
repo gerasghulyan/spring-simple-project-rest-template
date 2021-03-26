@@ -15,8 +15,6 @@ class UserPersonalAccessTokenCreateWebTest : AbstractUserWebTest() {
     
     @Test
     fun `test when missing token`() {
-        val token = null
-        val userUuid = uuid()
         assertBasicErrorResultResponse(
             userResourceClient.createPersonalAccessToken(CreatePersonalAccessTokenRequest(null, null)),
             UserErrorResponseModel.MISSING_TOKEN, UserErrorResponseModel.MISSING_UUID
@@ -41,8 +39,8 @@ class UserPersonalAccessTokenCreateWebTest : AbstractUserWebTest() {
         ).response().uuid
         userResourceClient.createPersonalAccessToken(CreatePersonalAccessTokenRequest(token, userUuid)).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body.response().token).isEqualTo(token)
-            assertThat(it.body.response().userUuid).isEqualTo(userUuid)
+            assertThat(it.body!!.response().token).isEqualTo(token)
+            assertThat(it.body!!.response().userUuid).isEqualTo(userUuid)
         }
     }
 }

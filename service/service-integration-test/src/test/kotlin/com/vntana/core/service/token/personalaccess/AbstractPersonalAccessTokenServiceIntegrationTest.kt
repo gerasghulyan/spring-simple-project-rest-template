@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
  * Date: 3/25/21
  * Time: 12:56 AM
  */
-class AbstractPersonalAccessTokenServiceIntegrationTest : AbstractServiceIntegrationTest() {
+abstract class AbstractPersonalAccessTokenServiceIntegrationTest : AbstractServiceIntegrationTest() {
 
     @Autowired
     protected lateinit var personalAccessTokenService: PersonalAccessTokenService

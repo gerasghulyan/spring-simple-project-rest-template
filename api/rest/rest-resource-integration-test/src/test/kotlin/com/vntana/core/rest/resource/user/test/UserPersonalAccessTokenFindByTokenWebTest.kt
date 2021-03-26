@@ -22,7 +22,7 @@ class UserPersonalAccessTokenFindByTokenWebTest : AbstractUserWebTest() {
         resourceHelper.persistPersonalAccessToken(CreatePersonalAccessTokenRequest(token, userUuid))
         userResourceClient.findByToken(TokenAuthenticationRequest(token)).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body.response().userUuid).isEqualTo(userUuid)
+            assertThat(it.body!!.response().userUuid).isEqualTo(userUuid)
         }
     }
 }
