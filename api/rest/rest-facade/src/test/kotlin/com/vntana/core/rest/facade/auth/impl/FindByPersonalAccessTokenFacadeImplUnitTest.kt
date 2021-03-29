@@ -1,8 +1,8 @@
-package com.vntana.core.rest.facade.token.personalaccess.impl
+package com.vntana.core.rest.facade.auth.impl
 
-import com.vntana.core.model.token.auth.request.TokenAuthenticationRequest
+import com.vntana.core.model.security.request.FindUserByPersonalAccessTokenRequest
 import com.vntana.core.model.user.error.UserErrorResponseModel
-import com.vntana.core.rest.facade.token.personalaccess.AbstractPersonalAccessTokenFacadeUnitTest
+import com.vntana.core.rest.facade.auth.AbstractAuthFacadeUnitTest
 import org.assertj.core.api.Assertions
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -13,17 +13,17 @@ import java.util.*
  * Date: 3/25/21
  * Time: 5:25 PM
  */
-class PersonalAccessTokenFindByTokenServiceUnitTest : AbstractPersonalAccessTokenFacadeUnitTest() {
+class FindByPersonalAccessTokenFacadeImplUnitTest : AbstractAuthFacadeUnitTest() {
 
     @Test
     fun `test when token not found`() {
         val token = uuid()
-        val request = TokenAuthenticationRequest(token)
+        val request = FindUserByPersonalAccessTokenRequest(token)
         resetAll()
         expect(personalAccessTokenService.findByToken(token)).andReturn(Optional.empty())
         replayAll()
         assertBasicErrorResultResponse(
-            personalAccessTokenServiceFacade.findByToken(request),
+            authFacade.findByPersonalAccessToken(request),
             UserErrorResponseModel.TOKEN_NOT_FOUND
         )
     }
@@ -32,15 +32,15 @@ class PersonalAccessTokenFindByTokenServiceUnitTest : AbstractPersonalAccessToke
     fun `test when token found`() {
         val user = userHelper.buildUser()
         val token = uuid()
-        val request = TokenAuthenticationRequest(token)
-        val pat = testHelper.buildTokenPersonalAccess(token = token, user = user)
+        val request = FindUserByPersonalAccessTokenRequest(token)
+        val pat = personalAccessCommonTestHelper.buildTokenPersonalAccess(token = token, user = user)
         resetAll()
         expect(personalAccessTokenService.findByToken(token)).andReturn(Optional.of(pat))
         replayAll()
-        personalAccessTokenServiceFacade.findByToken(request).let {
+        authFacade.findByPersonalAccessToken(request).let {
             assertBasicSuccessResultResponse(it)
-            Assertions.assertThat(it.response().userUuid).isEqualTo(user.uuid)
-            Assertions.assertThat(it.response().userEmail).isEqualTo(user.email)
+            Assertions.assertThat(it.response().uuid).isEqualTo(user.uuid)
+            Assertions.assertThat(it.response().username).isEqualTo(user.email)
         }
     }
 }

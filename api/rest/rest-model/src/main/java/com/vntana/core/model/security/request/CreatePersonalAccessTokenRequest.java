@@ -1,31 +1,47 @@
-package com.vntana.core.model.user.response.personalaccess;
+package com.vntana.core.model.security.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vntana.commons.api.model.response.ResponseModel;
+import com.vntana.commons.api.model.request.ValidatableRequest;
+import com.vntana.commons.api.model.request.impl.AbstractRequestModel;
+import com.vntana.core.model.user.error.UserErrorResponseModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.List;
+
 /**
  * Created by Diana Gevorgyan
  * Date: 3/25/21
- * Time: 1:22 AM
+ * Time: 1:30 AM
  */
-public class PersonalAccessTokenResponseModel implements ResponseModel {
-    
+public class CreatePersonalAccessTokenRequest extends AbstractRequestModel implements ValidatableRequest<UserErrorResponseModel> {
+
     @JsonProperty("token")
     private String token;
-    
+
     @JsonProperty("userUuid")
     private String userUuid;
 
-    public PersonalAccessTokenResponseModel() {
-        super();
+    public CreatePersonalAccessTokenRequest() {
     }
 
-    public PersonalAccessTokenResponseModel(final String token, final String userUuid) {
+    public CreatePersonalAccessTokenRequest(final String token, final String userUuid) {
         this.token = token;
         this.userUuid = userUuid;
+    }
+
+    @Override
+    public List<UserErrorResponseModel> validate() {
+        final List<UserErrorResponseModel> errors = initializeNew();
+        if (StringUtils.isBlank(token)) {
+            errors.add(UserErrorResponseModel.MISSING_TOKEN);
+        }
+        if (StringUtils.isBlank(userUuid)) {
+            errors.add(UserErrorResponseModel.MISSING_UUID);
+        }
+        return errors;
     }
 
     @Override
@@ -33,10 +49,10 @@ public class PersonalAccessTokenResponseModel implements ResponseModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PersonalAccessTokenResponseModel)) {
+        if (!(o instanceof CreatePersonalAccessTokenRequest)) {
             return false;
         }
-        final PersonalAccessTokenResponseModel that = (PersonalAccessTokenResponseModel) o;
+        final CreatePersonalAccessTokenRequest that = (CreatePersonalAccessTokenRequest) o;
         return new EqualsBuilder()
                 .append(token, that.token)
                 .append(userUuid, that.userUuid)

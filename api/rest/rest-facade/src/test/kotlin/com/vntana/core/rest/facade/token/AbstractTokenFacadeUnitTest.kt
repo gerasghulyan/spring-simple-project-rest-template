@@ -41,11 +41,12 @@ abstract class AbstractTokenFacadeUnitTest : AbstractFacadeUnitTest() {
 
     @Before
     fun prepare() {
-        tokenServiceFacade = TokenServiceFacadeImpl(tokenService,
-                tokenInvitationOrganizationService,
-                tokenInvitationUserService,
-                preconditionChecker,
-                mapperFacade
+        tokenServiceFacade = TokenServiceFacadeImpl(
+            tokenService,
+            tokenInvitationOrganizationService,
+            tokenInvitationUserService,
+            preconditionChecker,
+            mapperFacade
         )
     }
 }

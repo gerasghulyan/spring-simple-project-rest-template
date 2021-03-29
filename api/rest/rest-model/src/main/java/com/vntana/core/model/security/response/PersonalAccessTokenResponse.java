@@ -1,6 +1,7 @@
-package com.vntana.core.model.user.response.personalaccess;
+package com.vntana.core.model.security.response;
 
 import com.vntana.commons.api.model.response.impl.AbstractResultResponseModel;
+import com.vntana.core.model.security.response.model.PersonalAccessTokenResponseModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 
 import java.util.List;
