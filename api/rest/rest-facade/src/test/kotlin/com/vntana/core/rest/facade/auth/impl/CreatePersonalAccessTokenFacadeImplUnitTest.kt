@@ -1,9 +1,7 @@
-package com.vntana.core.rest.facade.token.personalaccess.impl
+package com.vntana.core.rest.facade.auth.impl
 
 import com.vntana.core.model.user.error.UserErrorResponseModel
-import com.vntana.core.model.user.request.RegeneratePersonalAccessKeyTokenRequest
-import com.vntana.core.rest.facade.token.personalaccess.AbstractPersonalAccessTokenFacadeUnitTest
-import com.vntana.core.service.token.personalaccess.dto.RegeneratePersonalAccessTokenDto
+import com.vntana.core.rest.facade.auth.AbstractAuthFacadeUnitTest
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.expect
 import org.junit.Test
@@ -12,20 +10,21 @@ import java.util.*
 /**
  * Created by Diana Gevorgyan
  * Date: 3/25/21
- * Time: 5:29 PM
+ * Time: 5:01 PM
  */
-class PersonalAccessTokenRegenerateServiceFacadeUnitTest : AbstractPersonalAccessTokenFacadeUnitTest() {
+class CreatePersonalAccessTokenFacadeImplUnitTest : AbstractAuthFacadeUnitTest() {
 
     @Test
     fun `test when user not found`() {
         val user = userHelper.buildUser()
         val token = uuid()
-        val request = RegeneratePersonalAccessKeyTokenRequest(token, user.uuid)
+        val dto =
+            personalAccessCommonTestHelper.buildCreatePersonalAccessTokenRequest(userUuid = user.uuid, token = token)
         resetAll()
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.empty())
         replayAll()
         assertBasicErrorResultResponse(
-            personalAccessTokenServiceFacade.regenerate(request),
+            authFacade.createPersonalAccessToken(dto),
             UserErrorResponseModel.USER_NOT_FOUND
         )
     }
@@ -34,14 +33,16 @@ class PersonalAccessTokenRegenerateServiceFacadeUnitTest : AbstractPersonalAcces
     fun test() {
         val user = userHelper.buildUser()
         val token = uuid()
-        val request = RegeneratePersonalAccessKeyTokenRequest(token, user.uuid)
-        val dto = RegeneratePersonalAccessTokenDto(user.uuid, token)
-        val pat = testHelper.buildTokenPersonalAccess(token = token, user = user)
+        val req =
+            personalAccessCommonTestHelper.buildCreatePersonalAccessTokenRequest(userUuid = user.uuid, token = token)
+        val dto =
+            personalAccessCommonTestHelper.buildTokenPersonalAccessCreateDto(userUuid = user.uuid, token = token)
+        val pat = personalAccessCommonTestHelper.buildTokenPersonalAccess(token = token, user = user)
         resetAll()
         expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))
-        expect(personalAccessTokenService.regenerateTokenForUser(dto)).andReturn(pat)
+        expect(personalAccessTokenService.create(dto)).andReturn(pat)
         replayAll()
-        personalAccessTokenServiceFacade.regenerate(request).let {
+        authFacade.createPersonalAccessToken(req).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().token).isEqualTo(token)
             assertThat(it.response().userUuid).isEqualTo(user.uuid)

@@ -1,12 +1,9 @@
 package com.vntana.core.helper.user
 
-import com.vntana.core.model.user.request.CreatePersonalAccessTokenRequest
 import com.vntana.core.model.user.request.CreateUserRequest
 import com.vntana.core.model.user.response.CreateUserResponse
-import com.vntana.core.model.user.response.personalaccess.PersonalAccessTokenResponse
 import com.vntana.core.rest.client.user.UserResourceClient
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 
 /**
@@ -27,10 +24,6 @@ class UserResourceTestHelper : UserRestTestHelper() {
     fun persistVerifiedUser(request: CreateUserRequest = buildCreateUserRequest()) {
         persistUser(request)
         userResourceClient.verify(buildVerifyUserRequest(email = request.email))
-    }
-
-    fun persistPersonalAccessToken(request: CreatePersonalAccessTokenRequest): ResponseEntity<PersonalAccessTokenResponse> {
-        return userResourceClient.createPersonalAccessToken(request)
     }
 
     fun buildUserInvalidEmail(): String = uuid()
