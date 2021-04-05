@@ -23,4 +23,18 @@ class PersonalAccessTokenCreateServiceIntegrationTest : AbstractPersonalAccessTo
             assertThat(it.token).isEqualTo(token)
         }
     }
+
+    @Test
+    fun `test when 2 active tokens exists`() {
+        val token = uuid()
+        val user = userIntegrationTestHelper.persistUser()
+        val dto =
+            integrationTestHelper.buildTokenPersonalAccessCreateDto(user.uuid, token)
+        integrationTestHelper.persistPersonalAccessToken(uuid(), user.uuid)
+        flushAndClear()
+        personalAccessTokenService.create(dto).let {
+            assertThat(it.user).isEqualTo(user)
+            assertThat(it.token).isEqualTo(token)
+        }
+    }
 }

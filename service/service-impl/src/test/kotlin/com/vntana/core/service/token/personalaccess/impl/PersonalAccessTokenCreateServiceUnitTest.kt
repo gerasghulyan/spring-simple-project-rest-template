@@ -32,7 +32,10 @@ class PersonalAccessTokenCreateServiceUnitTest : AbstractPersonalAccessTokenServ
         val dto = CreatePersonalAccessTokenDto(user.uuid, token)
         val personalAccessToken = commonTestHelper.buildTokenPersonalAccess(token, user)
         expect(userService.getByUuid(eq(dto.userUuid))).andReturn(user)
-        expect(tokenPersonalAccessRepository.save(anyObject(TokenPersonalAccess::class.java))).andReturn(personalAccessToken)
+        expect(tokenPersonalAccessRepository.findAllByUserAndExpirationIsNull(eq(user))).andReturn(emptyList())
+        expect(tokenPersonalAccessRepository.save(anyObject(TokenPersonalAccess::class.java))).andReturn(
+            personalAccessToken
+        )
         replayAll()
         personalAccessTokenService.create(dto).let {
             assertThat(it.user).isEqualTo(user)

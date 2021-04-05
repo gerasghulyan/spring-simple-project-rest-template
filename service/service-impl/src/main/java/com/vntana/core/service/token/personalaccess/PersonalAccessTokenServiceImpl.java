@@ -41,6 +41,9 @@ public class PersonalAccessTokenServiceImpl implements PersonalAccessTokenServic
         LOGGER.debug("Creating personal access token for dto - {}", dto);
         notNull(dto, "The CreatePersonalAccessTokenDto should not be null");
         final User user = userService.getByUuid(dto.getUserUuid());
+        personalAccessRepository.findAllByUserAndExpirationIsNull(user).forEach(token -> {
+            expire(token.getUuid());
+        });
         final TokenPersonalAccess tokenPersonalAccess = new TokenPersonalAccess(dto.getToken(), user);
         final TokenPersonalAccess savedToken = personalAccessRepository.save(tokenPersonalAccess);
         LOGGER.debug("Done creating personal access token for dto - {}", dto);
