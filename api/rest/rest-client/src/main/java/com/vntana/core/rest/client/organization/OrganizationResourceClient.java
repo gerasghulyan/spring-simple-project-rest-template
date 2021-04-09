@@ -2,10 +2,12 @@ package com.vntana.core.rest.client.organization;
 
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
+import com.vntana.core.model.organization.request.GetAllOrganizationsRequest;
 import com.vntana.core.model.organization.request.OrganizationPaidOutsideStripeRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
 import com.vntana.core.model.organization.response.create.OrganizationPaidOutsideStripeResponse;
+import com.vntana.core.model.organization.response.get.GetAllOrganizationResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
 import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
@@ -46,10 +48,13 @@ public interface OrganizationResourceClient {
 
     @GetMapping(path = "{organizationUuid}/organization-invitations/")
     ResponseEntity<GetOrganizationInvitationByOrganizationResponse> getOrganizationInvitation(@PathVariable("organizationUuid") final String organizationUuid);
-    
+
     @PutMapping(path = "/payment-outside-stripe")
     ResponseEntity<OrganizationPaidOutsideStripeResponse> setPaymentOutsideStripe(@RequestBody final OrganizationPaidOutsideStripeRequest request);
 
     @GetMapping(path = "/payment-outside-stripe/{uuid}")
     ResponseEntity<OrganizationPaidOutsideStripeResponse> getPaymentOutsideStripe(@PathVariable("uuid") final String uuid);
+
+    @PostMapping(path = "/all")
+    ResponseEntity<GetAllOrganizationResponse> getAllOrganizations(@RequestBody final GetAllOrganizationsRequest request);
 }

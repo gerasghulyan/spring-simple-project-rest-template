@@ -10,14 +10,12 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.organization.error.OrganizationErrorResponseModel;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
+import com.vntana.core.model.organization.request.GetAllOrganizationsRequest;
 import com.vntana.core.model.organization.request.OrganizationPaidOutsideStripeRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
 import com.vntana.core.model.organization.response.create.OrganizationPaidOutsideStripeResponse;
-import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResponseModel;
-import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
-import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResponseModel;
-import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
+import com.vntana.core.model.organization.response.get.*;
 import com.vntana.core.model.organization.response.get.model.OrganizationStatusModel;
 import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
 import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponseModel;
@@ -48,6 +46,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -278,6 +277,30 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         final Organization organization = organizationService.getByUuid(uuid);
         LOGGER.debug("Successfully processed organization facade getIsPaidOutsideStripe method for uuid - {}", uuid);
         return new OrganizationPaidOutsideStripeResponse(organization.getUuid(), organization.isPaidOutsideStripe());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetAllOrganizationResponse getAllOrganizations(final GetAllOrganizationsRequest request) {
+        LOGGER.debug("Retrieving organizations by request- {}", request);
+        final Page<Organization> organizations = organizationService.getAll(new GetAllOrganizationDto(request.getPage(), request.getSize()));
+        final List<GetAllOrganizationResponseModel> models = buildOrganizationModels(organizations);
+        return new GetAllOrganizationResponse(
+                new GetAllOrganizationsGridResponseModel((int) organizations.getTotalElements(), models)
+        );
+    }
+
+    private List<GetAllOrganizationResponseModel> buildOrganizationModels(final Page<Organization> organizations) {
+        return organizations.getContent()
+                .stream()
+                .map(organization ->
+                        new GetAllOrganizationResponseModel(
+                                organization.getUuid(),
+                                organization.getName(),
+                                organization.getSlug()
+                        )
+                )
+                .collect(Collectors.toList());
     }
 
     private List<GetUserOrganizationsResponseModel> getOrganizationsWhenNotSuperAdmin(final User user) {

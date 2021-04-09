@@ -3,10 +3,12 @@ package com.vntana.core.rest.resource.organization;
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
+import com.vntana.core.model.organization.request.GetAllOrganizationsRequest;
 import com.vntana.core.model.organization.request.OrganizationPaidOutsideStripeRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
 import com.vntana.core.model.organization.response.create.OrganizationPaidOutsideStripeResponse;
+import com.vntana.core.model.organization.response.get.GetAllOrganizationResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
 import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
@@ -103,7 +105,7 @@ public class OrganizationResource {
     }
 
     @PutMapping(path = "/payment-outside-stripe")
-    public ResponseEntity<OrganizationPaidOutsideStripeResponse> setPaymentOutsideStripe(@RequestBody final OrganizationPaidOutsideStripeRequest request){
+    public ResponseEntity<OrganizationPaidOutsideStripeResponse> setPaymentOutsideStripe(@RequestBody final OrganizationPaidOutsideStripeRequest request) {
         LOGGER.debug("Processing organization resource setPaymentOutsideStripe method for request - {}", request);
         final OrganizationPaidOutsideStripeResponse response = organizationServiceFacade.setPaymentOutsideStripe(request);
         LOGGER.debug("Successfully processed organization resource setPaymentOutsideStripe method with response - {}", response);
@@ -111,10 +113,18 @@ public class OrganizationResource {
     }
 
     @GetMapping(path = "/payment-outside-stripe/{uuid}")
-    public ResponseEntity<OrganizationPaidOutsideStripeResponse> getPaymentOutsideStripe(@PathVariable("uuid") final String uuid){
+    public ResponseEntity<OrganizationPaidOutsideStripeResponse> getPaymentOutsideStripe(@PathVariable("uuid") final String uuid) {
         LOGGER.debug("Processing organization resource getPaymentOutsideStripe method for uuid - {}", uuid);
         final OrganizationPaidOutsideStripeResponse response = organizationServiceFacade.getIsPaidOutsideStripe(uuid);
         LOGGER.debug("Successfully processed organization resource getPaymentOutsideStripe method with response - {}", response);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @PostMapping(path = "/all")
+    public ResponseEntity<GetAllOrganizationResponse> getAllOrganizations(@RequestBody final GetAllOrganizationsRequest request) {
+        LOGGER.debug("Retrieving organizations by request- {}", request);
+        final GetAllOrganizationResponse response = organizationServiceFacade.getAllOrganizations(request);
+        LOGGER.debug("Successfully retrieved organizations by request- {} with response - {}", request, response);
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 }

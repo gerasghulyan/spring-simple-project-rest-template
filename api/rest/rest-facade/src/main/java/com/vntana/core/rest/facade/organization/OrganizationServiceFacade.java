@@ -2,10 +2,12 @@ package com.vntana.core.rest.facade.organization;
 
 import com.vntana.core.model.organization.request.CheckAvailableOrganizationSlugRequest;
 import com.vntana.core.model.organization.request.CreateOrganizationRequest;
+import com.vntana.core.model.organization.request.GetAllOrganizationsRequest;
 import com.vntana.core.model.organization.request.OrganizationPaidOutsideStripeRequest;
 import com.vntana.core.model.organization.response.CheckAvailableOrganizationSlugResultResponse;
 import com.vntana.core.model.organization.response.create.CreateOrganizationResultResponse;
 import com.vntana.core.model.organization.response.create.OrganizationPaidOutsideStripeResponse;
+import com.vntana.core.model.organization.response.get.GetAllOrganizationResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationBySlugResultResponse;
 import com.vntana.core.model.organization.response.get.GetOrganizationByUuidResultResponse;
 import com.vntana.core.model.organization.response.invitation.GetOrganizationInvitationByOrganizationResponse;
@@ -38,4 +40,6 @@ public interface OrganizationServiceFacade {
     OrganizationPaidOutsideStripeResponse setPaymentOutsideStripe(final OrganizationPaidOutsideStripeRequest request);
 
     OrganizationPaidOutsideStripeResponse getIsPaidOutsideStripe(final String uuid);
+
+    GetAllOrganizationResponse getAllOrganizations(final GetAllOrganizationsRequest request);
 }
