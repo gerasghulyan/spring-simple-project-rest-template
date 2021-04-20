@@ -89,7 +89,22 @@ class InvitationForOrganizationUserCreateWebTest : AbstractInvitationUserWebTest
         assertBasicErrorResultResponse(
                 HttpStatus.CONFLICT,
                 invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)),
-                InvitationUserErrorResponseModel.USER_ALREADY_PART_OF_ORGANIZATION
+                InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION
+        )
+    }
+    
+    @Test
+    fun `test when invited user is already part of organization's client`() {
+        val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
+        val email = email()
+        val invitedUserUuid = userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = email)).response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
+        val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        userRoleResourceTestHelper.grantUserClientRole(invitedUserUuid, clientUuid, UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        assertBasicErrorResultResponse(
+                HttpStatus.CONFLICT,
+                invitationUserResourceClient.createInvitationForOrganization(resourceTestHelper.buildCreateInvitationUserForOrganizationRequest(inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)),
+                InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT
         )
     }
 

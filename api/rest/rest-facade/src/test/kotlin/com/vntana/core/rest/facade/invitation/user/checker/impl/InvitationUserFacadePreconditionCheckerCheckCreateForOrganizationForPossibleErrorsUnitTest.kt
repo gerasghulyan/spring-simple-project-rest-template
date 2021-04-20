@@ -60,14 +60,36 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForOrganizationForPossib
         val organization = organizationCommonTestHelper.buildOrganization()
         val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole(organization = organization)
         val request = invitationUserRestTestHelper.buildCreateInvitationUserForOrganizationRequest(organizationUuid = organization.uuid, email = user.email)
+        val organizationAdminRole = userRoleCommonTestHelper.buildUserOrganizationAdminRole()
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(userService.findByEmailAndOrganizationUuid(request.email, request.organizationUuid)).andReturn(Optional.of(user))
+        expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, user.uuid)).andReturn(Optional.of(organizationAdminRole))
         replayAll()
         preconditionChecker.checkCreateInvitationForOrganizationForPossibleErrors(request).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
-            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_PART_OF_ORGANIZATION)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test when invited user already is a part of client`() {
+        val organization = organizationCommonTestHelper.buildOrganization()
+        val user = userCommonTestHelper.buildUserWithOrganizationOwnerRole(organization = organization)
+        val request = invitationUserRestTestHelper.buildCreateInvitationUserForOrganizationRequest(organizationUuid = organization.uuid, email = user.email)
+        val clientAdminRole = userRoleCommonTestHelper.buildUserClientAdminRole()
+        resetAll()
+        expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
+        expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
+        expect(userService.findByEmail(request.email)).andReturn(Optional.of(user))
+        expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, user.uuid)).andReturn(Optional.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, user.uuid)).andReturn(listOf(clientAdminRole))
+        replayAll()
+        preconditionChecker.checkCreateInvitationForOrganizationForPossibleErrors(request).let {
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT)
         }
         verifyAll()
     }
@@ -78,7 +100,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForOrganizationForPossib
         resetAll()
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
-        expect(userService.findByEmailAndOrganizationUuid(request.email, request.organizationUuid)).andReturn(Optional.empty())
+        expect(userService.findByEmail(request.email)).andReturn(Optional.empty())
         replayAll()
         assertThat(preconditionChecker.checkCreateInvitationForOrganizationForPossibleErrors(request).isPresent).isFalse()
         verifyAll()

@@ -6,6 +6,7 @@ import com.vntana.core.domain.invitation.user.InvitationOrganizationUser;
 import com.vntana.core.domain.token.TokenUserInvitationToOrganization;
 import com.vntana.core.domain.token.TokenUserInvitationToOrganizationClient;
 import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
+import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseModel;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -31,7 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -87,9 +88,18 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             LOGGER.debug("Checking invitation user creation for organization for organization  precondition for request - {} has been done with error, no organization was found by uuid - {}", request, request.getOrganizationUuid());
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_FOUND, InvitationUserErrorResponseModel.INVITING_ORGANIZATION_NOT_FOUND);
         }
-        if (userService.findByEmailAndOrganizationUuid(request.getEmail(), request.getOrganizationUuid()).isPresent()) {
-            LOGGER.debug("Checking invitation user creation for organization precondition for request - {} has been done with error, the invited user already is part of the organization", request);
-            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_PART_OF_ORGANIZATION);
+        final Optional<User> invitedUser = userService.findByEmail(request.getEmail());
+        if (invitedUser.isPresent()) {
+            final Optional<AbstractOrganizationAwareUserRole> invitedUserOrganizationRoleOptional = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.get().getUuid());
+            if (invitedUserOrganizationRoleOptional.isPresent()) {
+                LOGGER.debug("Checking if invited user with uuid - {} has organization level permissions has been done successfully", request.getInviterUserUuid());
+                return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
+            }
+            final List<AbstractClientOrganizationAwareUserRole> invitedUserClientOrganizationRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.get().getUuid());
+            if (!CollectionUtils.isEmpty(invitedUserClientOrganizationRoles)) {
+                LOGGER.debug("Invited user with uuid - {} is already in one of clients of organization - {}", request.getInviterUserUuid(), request.getOrganizationUuid());
+                return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
+            }
         }
         LOGGER.debug("Successfully checked invitation user creation for organization precondition for request - {}", request);
         return SingleErrorWithStatus.empty();
@@ -111,16 +121,16 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             LOGGER.debug("Checking if invitations client uuids and user roles are valid for request - {} has been done with error", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.INCORRECT_PERMISSIONS);
         }
-        final Optional<User> invitedUser = userService.findByEmailAndOrganizationUuid(request.getEmail(), request.getOrganizationUuid());
+        final Optional<User> invitedUser = userService.findByEmail(request.getEmail());
         if (invitedUser.isPresent()) {
-            LOGGER.debug("Checking if invited user for email - {} has organization level permissions", request.getEmail());
-            if (isInvitedUserExistsInOrganization(request, invitedUser.get())) {
-                LOGGER.debug("Checking if invited user for email - {} has organization level permissions has been done successfully", request.getEmail());
+            final Optional<AbstractOrganizationAwareUserRole> invitedUserOrganizationRoleOptional = userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.get().getUuid());
+            if (invitedUserOrganizationRoleOptional.isPresent()) {
+                LOGGER.debug("Checking if invited user with uuid - {} has organization level permissions has been done successfully", request.getInviterUserUuid());
                 return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
             }
-            LOGGER.debug("Checking if invited user with email - {} is already in organization clients - {}", request.getEmail(), request.getInvitations());
-            if (isInvitedUserExistsInClients(request, invitedUser.get())) {
-                LOGGER.debug("Invited user with email - {} is already in one of organization clients - {}", request.getEmail(), request.getInvitations());
+            final List<AbstractClientOrganizationAwareUserRole> invitedUserClientOrganizationRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.get().getUuid());
+            if (!CollectionUtils.isEmpty(invitedUserClientOrganizationRoles)) {
+                LOGGER.debug("Invited user with uuid - {} is already in one of clients of organization - {}", request.getInviterUserUuid(), request.getOrganizationUuid());
                 return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
             }
         }
@@ -170,6 +180,9 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         if (userRoleService.findByOrganizationAndUser(invitationUser.getOrganization().getUuid(), user.getUuid()).isPresent()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
         }
+        if (isInvitedUserExistsInOrganizationClients(invitationUser.getOrganization().getUuid(), user)) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
+        }
         if (tokenInvitationUserOptional.get().isExpired()) {
             return SingleErrorWithStatus.of(HttpStatus.SC_NOT_ACCEPTABLE, InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED);
         }
@@ -187,6 +200,10 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         }
         final InvitationOrganizationClientUser userInvitation = userInvitationTokenOptional.get().getUserInvitation();
         final User user = userService.getByEmail(userInvitation.getEmail());
+        final String organizationUuid = userInvitation.getClientOrganization().getOrganization().getUuid();
+        if (userRoleService.findByOrganizationAndUser(organizationUuid, user.getUuid()).isPresent()) {
+            return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION);
+        }
         if (userRoleService.findByClientOrganizationAndUser(userInvitation.getClientOrganization().getUuid(), user.getUuid()).isPresent()) {
             LOGGER.debug("Checking invitation user accept for client precondition for request - {} has been done with error, user already has role in client", request);
             return SingleErrorWithStatus.of(HttpStatus.SC_CONFLICT, InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT);
@@ -335,18 +352,9 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
         return request.getInvitations().size() == filtered.size();
     }
 
-    private boolean isInvitedUserExistsInOrganization(final CreateInvitationForOrganizationClientUserRequest request, final User invitedUser) {
-        return userRoleService.findByOrganizationAndUser(request.getOrganizationUuid(), invitedUser.getUuid())
-                .filter(role -> role.getUserRole().hasOrganizationAbility())
-                .isPresent();
-    }
-
-    private boolean isInvitedUserExistsInClients(final CreateInvitationForOrganizationClientUserRequest request, final User invitedUser) {
-        final List<SingleUserInvitationToClientRequestModel> filtered = request.getInvitations().stream()
-                .filter(invitation ->
-                        userRoleService.findByClientOrganizationAndUser(invitation.getClientUuid(), invitedUser.getUuid()).isPresent())
-                .collect(toList());
-        return !filtered.isEmpty();
+    private boolean isInvitedUserExistsInOrganizationClients(final String organizationUuid, final User invitedUser) {
+        final List<AbstractClientOrganizationAwareUserRole> clientOrganizationUser = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, invitedUser.getUuid());
+        return !CollectionUtils.isEmpty(clientOrganizationUser);
     }
 
     private boolean isInvitedRolesPermitted(final CreateInvitationForOrganizationClientUserRequest request) {

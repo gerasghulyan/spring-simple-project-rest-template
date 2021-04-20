@@ -18,9 +18,9 @@ class InvitationUserToClientAcceptWebTest : AbstractInvitationUserWebTest() {
     @Test
     fun `test when token not found`() {
         assertBasicErrorResultResponse(
-            HttpStatus.NOT_FOUND,
-            invitationUserResourceClient.acceptInvitationForClient(resourceTestHelper.buildAcceptInvitationUserRequest()),
-            InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN
+                HttpStatus.NOT_FOUND,
+                invitationUserResourceClient.acceptInvitationForClient(resourceTestHelper.buildAcceptInvitationUserRequest()),
+                InvitationUserErrorResponseModel.NOT_FOUND_FOR_TOKEN
         )
     }
 
@@ -28,48 +28,43 @@ class InvitationUserToClientAcceptWebTest : AbstractInvitationUserWebTest() {
     fun `test when already has any role`() {
         val token = uuid()
         val invitationEmail = email()
-
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val clientUuid =
-            clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
-                .response().uuid
-
+                clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
+                        .response().uuid
         val inviterUserUuid =
-            userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response().uuid
+                userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response().uuid
         userRoleResourceTestHelper.grantUserClientRole(
-            inviterUserUuid,
-            clientUuid = clientUuid,
-            userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
+                inviterUserUuid,
+                clientUuid = clientUuid,
+                userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
         )
-
-        val invitedUserUuid =
-            userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = invitationEmail))
-                .response().uuid
-        userRoleResourceTestHelper.grantUserClientRole(
-            invitedUserUuid,
-            clientUuid = clientUuid,
-            userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
-        )
-
         val userInvitationUuid = resourceTestHelper
-            .persistInvitationUserToClient(
-                listOf(
-                    SingleUserInvitationToClientRequestModel(
-                        clientUuid,
-                        UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER
-                    )
-                ), invitationEmail, inviterUserUuid, organizationUuid
-            )!![0]
-        tokenResourceTestHelper.persistTokenInvitationUserToClient(
-            token = token,
-            invitationUserUuid = userInvitationUuid
+                .persistInvitationUserToClient(
+                        listOf(
+                                SingleUserInvitationToClientRequestModel(
+                                        clientUuid,
+                                        UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER
+                                )
+                        ), invitationEmail, inviterUserUuid, organizationUuid
+                )!![0]
+        val invitedUserUuid =
+                userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = invitationEmail))
+                        .response().uuid
+        userRoleResourceTestHelper.grantUserClientRole(
+                invitedUserUuid,
+                clientUuid = clientUuid,
+                userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
         )
-
+        tokenResourceTestHelper.persistTokenInvitationUserToClient(
+                token = token,
+                invitationUserUuid = userInvitationUuid
+        )
         val request = resourceTestHelper.buildAcceptInvitationUserRequest(token = token)
         assertBasicErrorResultResponse(
-            HttpStatus.CONFLICT,
-            invitationUserResourceClient.acceptInvitationForClient(request),
-            InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT
+                HttpStatus.CONFLICT,
+                invitationUserResourceClient.acceptInvitationForClient(request),
+                InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT
         )
     }
 
@@ -77,38 +72,34 @@ class InvitationUserToClientAcceptWebTest : AbstractInvitationUserWebTest() {
     fun test() {
         val token = uuid()
         val invitationEmail = email()
-
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val clientUuid =
-            clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
-                .response().uuid
-
+                clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid)
+                        .response().uuid
         val inviterUserUuid =
-            userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response().uuid
+                userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest()).response().uuid
         userRoleResourceTestHelper.grantUserClientRole(
-            inviterUserUuid,
-            clientUuid = clientUuid,
-            userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
+                inviterUserUuid,
+                clientUuid = clientUuid,
+                userRole = UserRoleModel.CLIENT_ORGANIZATION_ADMIN
         )
         val invitedUserUuid =
-            userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = invitationEmail))
-                .response().uuid
+                userResourceTestHelper.persistUser(userResourceTestHelper.buildCreateUserRequest(email = invitationEmail))
+                        .response().uuid
         val userInvitationUuid = resourceTestHelper
-            .persistInvitationUserToClient(
-                listOf(
-                    SingleUserInvitationToClientRequestModel(
-                        clientUuid,
-                        UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER
-                    )
-                ), invitationEmail, inviterUserUuid, organizationUuid
-            )!![0]
+                .persistInvitationUserToClient(
+                        listOf(
+                                SingleUserInvitationToClientRequestModel(
+                                        clientUuid,
+                                        UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER
+                                )
+                        ), invitationEmail, inviterUserUuid, organizationUuid
+                )!![0]
         tokenResourceTestHelper.persistTokenInvitationUserToClient(
-            token = token,
-            invitationUserUuid = userInvitationUuid
+                token = token,
+                invitationUserUuid = userInvitationUuid
         )
-
         val request = resourceTestHelper.buildAcceptInvitationUserRequest(token = token)
-
         invitationUserResourceClient.acceptInvitationForClient(request).let { responseEntity ->
             assertBasicSuccessResultResponse(responseEntity)
             responseEntity?.body?.response()?.let {
@@ -119,7 +110,7 @@ class InvitationUserToClientAcceptWebTest : AbstractInvitationUserWebTest() {
             }
         }
         assertThat(userResourceClient.getUsersByClientOrganization(clientUuid)
-            ?.body?.response()?.items()?.map { model -> model.email }
+                ?.body?.response()?.items()?.map { model -> model.email }
         ).contains(invitationEmail)
         assertThat(tokenResourceClient.isExpire(request.token)?.body?.response()?.expired).isTrue()
     }
