@@ -95,7 +95,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+        expect(userService.findByEmail(eq(request.email))).andReturn(
             Optional.of(invited)
         )
         expect(userRoleService.findByOrganizationAndUser(eq(request.organizationUuid), eq(invited.uuid))).andReturn(
@@ -134,18 +134,15 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+        expect(userService.findByEmail(eq(request.email))).andReturn(
             Optional.of(invited)
         )
         expect(userRoleService.findByOrganizationAndUser(eq(request.organizationUuid), eq(invited.uuid))).andReturn(
             Optional.empty()
         )
-        expect(
-            userRoleService.findByClientOrganizationAndUser(
-                eq(clientOrganization.uuid),
-                eq(invited.uuid)
-            )
-        ).andReturn(Optional.of(invitedUserClientLevelRole))
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, invited.uuid)).andReturn(
+                listOf(invitedUserClientLevelRole)
+        )
         replayAll()
         preconditionChecker.checkCreateInvitationForClientsForPossibleErrors(request).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
@@ -174,7 +171,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+        expect(userService.findByEmail(eq(request.email))).andReturn(
             Optional.empty()
         )
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
@@ -217,7 +214,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+        expect(userService.findByEmail(eq(request.email))).andReturn(
             Optional.empty()
         )
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
@@ -245,7 +242,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
         expect(userService.existsByUuid(request.inviterUserUuid)).andReturn(true)
         expect(organizationService.existsByUuid(request.organizationUuid)).andReturn(true)
         expect(organizationClientService.existsByUuid(eq(clientOrganization.uuid))).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+        expect(userService.findByEmail(eq(request.email))).andReturn(
             Optional.empty()
         )
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
@@ -286,7 +283,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
             )
         ).andReturn(listOf(inviterPermissions))
         expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+        expect(userService.findByEmail(eq(request.email))).andReturn(
             Optional.empty()
         )
         expect(userService.getByUuid(eq(inviter.uuid))).andReturn(inviter)
@@ -330,7 +327,7 @@ class InvitationUserFacadePreconditionCheckerCheckCreateForClientForPossibleErro
             )
         ).andReturn(listOf(inviterPermissions))
         expect(organizationClientService.existsByUuid(request.invitations[0].clientUuid)).andReturn(true).once()
-        expect(userService.findByEmailAndOrganizationUuid(eq(request.email), eq(request.organizationUuid))).andReturn(
+        expect(userService.findByEmail(eq(request.email))).andReturn(
             Optional.empty()
         )
         expect(

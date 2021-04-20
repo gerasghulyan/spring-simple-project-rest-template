@@ -87,6 +87,42 @@ class InvitationForClientUserCreateWebTest : AbstractInvitationUserWebTest() {
     }
 
     @Test
+    fun `test when invited user is already has client organization role`() {
+        val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
+        val email = email()
+        val userRequest = userResourceTestHelper.buildCreateUserRequest(email = email)
+        val invitedUserUuid = userResourceTestHelper.persistUser(createUserRequest = userRequest).response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = inviterUserUuid).response().uuid
+        val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        userRoleResourceTestHelper.grantUserClientRole(invitedUserUuid, clientUuid, UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        assertBasicErrorResultResponse(
+                HttpStatus.CONFLICT,
+                invitationUserResourceClient.createInvitationForClient(
+                        resourceTestHelper.buildCreateInvitationUserForClientRequest(
+                                userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(clientUuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
+                                inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)),
+                InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT
+        )
+    }
+
+    @Test
+    fun `test when invited user is already has organization role`() {
+        val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
+        val email = email()
+        val createUserRequest = userResourceTestHelper.buildCreateUserRequest(email = email)
+        val invitedUserUuid = userResourceTestHelper.persistUser(createUserRequest).response().uuid
+        val organizationUuid = organizationResourceTestHelper.persistOrganization(userUuid = invitedUserUuid).response().uuid
+        val clientUuid = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organizationUuid).response().uuid
+        assertBasicErrorResultResponse(
+                HttpStatus.CONFLICT,
+                invitationUserResourceClient.createInvitationForClient(resourceTestHelper.buildCreateInvitationUserForClientRequest(
+                        userRoleRequestModels = listOf(SingleUserInvitationToClientRequestModel(clientUuid, UserRoleModel.CLIENT_ORGANIZATION_VIEWER)),
+                        inviterUserUuid = inviterUserUuid, organizationUuid = organizationUuid, email = email)),
+                InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_ORGANIZATION
+        )
+    }
+
+    @Test
     fun test() {
         val inviterUserUuid = userResourceTestHelper.persistUser().response().uuid
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid

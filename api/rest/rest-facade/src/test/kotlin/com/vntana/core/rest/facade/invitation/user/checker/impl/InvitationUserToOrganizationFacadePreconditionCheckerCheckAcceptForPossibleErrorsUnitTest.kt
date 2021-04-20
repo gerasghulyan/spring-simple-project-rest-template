@@ -62,11 +62,33 @@ class InvitationUserToOrganizationFacadePreconditionCheckerCheckAcceptForPossibl
         expect(tokenInvitationUserService.findByOrganizationInvitationToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
         expect(userService.getByEmail(invitationUser.email)).andReturn(user)
         expect(userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(Optional.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(emptyList())
         replayAll()
         preconditionChecker.checkAcceptForOrganizationForPossibleErrors(request).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_ACCEPTABLE)
             assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.TOKEN_IS_EXPIRED)
+        }
+        verifyAll()
+    }
+
+    @Test
+    fun `test when USER_ALREADY_HAS_ROLE_IN_CLIENT`() {
+        resetAll()
+        val request = invitationUserRestTestHelper.buildAcceptInvitationUserRequest()
+        val tokenInvitationUser = tokenCommonTestHelper.buildTokenInvitationUserToOrganization()
+        val invitationUser = tokenInvitationUser.invitationUser
+        val organization = invitationUser.organization
+        val user = userCommonTestHelper.buildUser()
+        expect(tokenInvitationUserService.findByOrganizationInvitationToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
+        expect(userService.getByEmail(invitationUser.email)).andReturn(user)
+        expect(userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(Optional.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(listOf(userRoleCommonTestHelper.buildUserClientContentManagerRole()))
+        replayAll()
+        preconditionChecker.checkAcceptForOrganizationForPossibleErrors(request).let {
+            assertThat(it.isPresent).isTrue()
+            assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_CONFLICT)
+            assertThat(it.error).isEqualTo(InvitationUserErrorResponseModel.USER_ALREADY_HAS_ROLE_IN_CLIENT)
         }
         verifyAll()
     }
@@ -82,6 +104,7 @@ class InvitationUserToOrganizationFacadePreconditionCheckerCheckAcceptForPossibl
         expect(tokenInvitationUserService.findByOrganizationInvitationToken(request.token)).andReturn(Optional.of(tokenInvitationUser))
         expect(userService.getByEmail(invitationUser.email)).andReturn(user)
         expect(userRoleService.findByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(Optional.empty())
+        expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organization.uuid, user.uuid)).andReturn(emptyList())
         replayAll()
         assertThat(preconditionChecker.checkAcceptForOrganizationForPossibleErrors(request).isPresent).isFalse()
         verifyAll()
