@@ -7,7 +7,7 @@ import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.role.component.UserRoleActionItemRetrieverComponent
 import com.vntana.core.rest.facade.user.role.component.UserRoleFacadePreconditionCheckerComponent
 import com.vntana.core.rest.facade.user.role.impl.UserRoleServiceFacadeImpl
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.token.auth.TokenAuthenticationService
 import com.vntana.core.service.user.role.UserRoleService
 import org.easymock.Mock
@@ -36,7 +36,7 @@ abstract class AbstractUserRoleServiceFacadeUnitTest : AbstractFacadeUnitTest() 
     protected lateinit var userRoleService: UserRoleService
 
     @Mock
-    protected lateinit var organizationClientService: OrganizationClientService
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     @Mock
     protected lateinit var userRoleActionItemRetrieverComponent: UserRoleActionItemRetrieverComponent
@@ -47,7 +47,7 @@ abstract class AbstractUserRoleServiceFacadeUnitTest : AbstractFacadeUnitTest() 
         userRoleServiceFacade = UserRoleServiceFacadeImpl(preconditionChecker,
                 tokenAuthenticationService,
                 userRoleService,
-                organizationClientService,
+                clientOrganizationService,
                 userRoleActionItemRetrieverComponent
         )
     }

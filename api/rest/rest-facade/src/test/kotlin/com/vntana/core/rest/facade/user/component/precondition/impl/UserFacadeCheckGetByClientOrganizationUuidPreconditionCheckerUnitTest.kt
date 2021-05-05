@@ -37,7 +37,7 @@ class UserFacadeCheckGetByClientOrganizationUuidPreconditionCheckerUnitTest : Ab
     fun `test when organization not found`() {
         resetAll()
         val clientUuid = uuid()
-        expect(clientService.existsByUuid(clientUuid)).andReturn(false)
+        expect(clientOrganizationService.existsByUuid(clientUuid)).andReturn(false)
         replayAll()
         preconditionChecker.checkGetByClientOrganizationUuid(clientUuid).let {
             assertThat(it.isPresent).isTrue()
@@ -51,7 +51,7 @@ class UserFacadeCheckGetByClientOrganizationUuidPreconditionCheckerUnitTest : Ab
     fun test() {
         resetAll()
         val clientUuid = uuid()
-        expect(clientService.existsByUuid(clientUuid)).andReturn(true)
+        expect(clientOrganizationService.existsByUuid(clientUuid)).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkGetByClientOrganizationUuid(clientUuid)).isEqualTo(SingleErrorWithStatus.empty<UserErrorResponseModel>())
         verifyAll()

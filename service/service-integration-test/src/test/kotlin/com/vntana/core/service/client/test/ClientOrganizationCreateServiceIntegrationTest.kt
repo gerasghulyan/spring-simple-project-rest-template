@@ -34,7 +34,7 @@ class ClientOrganizationCreateServiceIntegrationTest : AbstractClientOrganizatio
                 dto = commonTestHelper.buildCreateClientOrganizationDto(name = " ${uuid()} ", slug = slug, organizationUuid = organization.uuid)
         )
         assertThatThrownBy {
-            organizationClientService.create(
+            clientOrganizationService.create(
                     commonTestHelper.buildCreateClientOrganizationDto(name = " ${uuid()} ", slug = slug, organizationUuid = organization.uuid)
             )
         }.isExactlyInstanceOf(IllegalStateException::class.java)
@@ -43,12 +43,12 @@ class ClientOrganizationCreateServiceIntegrationTest : AbstractClientOrganizatio
     @Test
     fun `test same organization with different slug names`() {
         val organization = organizationIntegrationTestHelper.persistOrganization()
-        organizationClientService.create(
+        clientOrganizationService.create(
                 commonTestHelper.buildCreateClientOrganizationDto(name = " ${uuid()} ", slug = " ${uuid()} ", organizationUuid = organization.uuid)
         )
         flushAndClear()
         val dto = commonTestHelper.buildCreateClientOrganizationDto(name = " ${uuid()} ", slug = " ${uuid()} ", organizationUuid = organization.uuid)
-        val clientOrganization = organizationClientService.create(dto)
+        val clientOrganization = clientOrganizationService.create(dto)
         flushAndClear()
         assertThat(clientOrganization)
                 .hasFieldOrPropertyWithValue("name", StringUtils.trim(dto.name))

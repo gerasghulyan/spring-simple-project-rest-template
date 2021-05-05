@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.persistence.user.role.UserRoleRepository
 import com.vntana.core.service.AbstractServiceUnitTest
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import com.vntana.core.service.user.role.impl.UserRoleServiceImpl
@@ -32,7 +32,7 @@ abstract class AbstractUserRoleServiceUnitTest : AbstractServiceUnitTest() {
     protected lateinit var organizationService: OrganizationService
 
     @Mock
-    protected lateinit var organizationClientService: OrganizationClientService
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     protected val commonTestHelper = UserRoleCommonTestHelper()
     protected val organizationCommonTestHelper = OrganizationCommonTestHelper()
@@ -41,6 +41,6 @@ abstract class AbstractUserRoleServiceUnitTest : AbstractServiceUnitTest() {
 
     @Before
     fun prepare() {
-        userRoleService = UserRoleServiceImpl(userRoleRepository, userService, organizationService, organizationClientService)
+        userRoleService = UserRoleServiceImpl(userRoleRepository, userService, organizationService, clientOrganizationService)
     }
 }

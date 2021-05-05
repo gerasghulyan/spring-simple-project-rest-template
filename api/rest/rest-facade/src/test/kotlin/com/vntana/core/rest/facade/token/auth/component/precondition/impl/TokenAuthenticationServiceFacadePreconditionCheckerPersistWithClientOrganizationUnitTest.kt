@@ -33,7 +33,7 @@ class TokenAuthenticationServiceFacadePreconditionCheckerPersistWithClientOrgani
         resetAll()
         val request = tokenAuthenticationRestTestHelper.buildTokenAuthenticationPersistWithClientOrganizationRequest()
         expect(userService.existsByUuid(anyString())).andReturn(true)
-        expect(organizationClientService.existsByUuid(anyString())).andReturn(false)
+        expect(clientOrganizationService.existsByUuid(anyString())).andReturn(false)
         replayAll()
         preconditionChecker.checkPersistWithClientOrganization(request).let {
             assertThat(it.httpStatus).isEqualTo(HttpStatus.SC_NOT_FOUND)
@@ -47,7 +47,7 @@ class TokenAuthenticationServiceFacadePreconditionCheckerPersistWithClientOrgani
         resetAll()
         val request = tokenAuthenticationRestTestHelper.buildTokenAuthenticationPersistWithClientOrganizationRequest()
         expect(userService.existsByUuid(anyString())).andReturn(true)
-        expect(organizationClientService.existsByUuid(anyString())).andReturn(true)
+        expect(clientOrganizationService.existsByUuid(anyString())).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkPersistWithClientOrganization(request).isPresent).isFalse()
         verifyAll()

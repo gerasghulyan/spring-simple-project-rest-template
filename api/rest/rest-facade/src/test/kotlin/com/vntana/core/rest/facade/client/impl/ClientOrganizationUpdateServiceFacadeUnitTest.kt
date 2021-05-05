@@ -22,7 +22,7 @@ class ClientOrganizationUpdateServiceFacadeUnitTest : AbstractClientOrganization
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
         expect(mapperFacade.map(request, UpdateClientOrganizationDto::class.java)).andReturn(dto)
-        expect(organizationClientService.update(dto)).andReturn(clientOrganization)
+        expect(clientOrganizationService.update(dto)).andReturn(clientOrganization)
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.update(request)

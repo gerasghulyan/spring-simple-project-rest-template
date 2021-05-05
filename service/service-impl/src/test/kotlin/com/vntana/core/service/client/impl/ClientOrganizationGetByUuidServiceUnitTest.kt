@@ -20,7 +20,7 @@ class ClientOrganizationGetByUuidServiceUnitTest : AbstractClientOrganizationSer
         resetAll()
         expect(clientOrganizationRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
-        assertThatThrownBy { organizationClientService.getByUuid(uuid) }
+        assertThatThrownBy { clientOrganizationService.getByUuid(uuid) }
                 .isExactlyInstanceOf(IllegalStateException::class.java)
         verifyAll()
     }
@@ -31,7 +31,7 @@ class ClientOrganizationGetByUuidServiceUnitTest : AbstractClientOrganizationSer
         resetAll()
         expect(clientOrganizationRepository.findByUuid(clientOrganization.uuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
-        assertThat(organizationClientService.getByUuid(clientOrganization.uuid)).isEqualTo(clientOrganization)
+        assertThat(clientOrganizationService.getByUuid(clientOrganization.uuid)).isEqualTo(clientOrganization)
         verifyAll()
     }
 }

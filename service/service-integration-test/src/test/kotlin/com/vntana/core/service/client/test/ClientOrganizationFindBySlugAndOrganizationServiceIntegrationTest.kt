@@ -15,7 +15,7 @@ class ClientOrganizationFindBySlugAndOrganizationServiceIntegrationTest : Abstra
     fun `test when not found`() {
         // given
         integrationTestHelper.persistClientOrganization()
-        organizationClientService.findBySlugAndOrganization(uuid(), uuid()).let {
+        clientOrganizationService.findBySlugAndOrganization(uuid(), uuid()).let {
             assertThat(it.isPresent).isFalse()
         }
     }
@@ -24,7 +24,7 @@ class ClientOrganizationFindBySlugAndOrganizationServiceIntegrationTest : Abstra
     fun `test`() {
         // given
         val clientOrganization = integrationTestHelper.persistClientOrganization()
-        organizationClientService.findBySlugAndOrganization(clientOrganization.slug, clientOrganization.organization.uuid).let {
+        clientOrganizationService.findBySlugAndOrganization(clientOrganization.slug, clientOrganization.organization.uuid).let {
             assertThat(it.isPresent).isTrue()
             assertThat(it.get()).isEqualTo(clientOrganization)
             assertThat(it.get().name).isEqualTo(clientOrganization.name)

@@ -42,7 +42,7 @@ class UserRoleGrantClientRoleFacadeUnitTest : AbstractUserRoleServiceFacadeUnitT
         val clintAdminRole = commonTestHelper.buildUserClientAdminRole()
         expect(preconditionChecker.checkGrantClientRole(request)).andReturn(SingleErrorWithStatus.empty())
         expect(userRoleService.grantClientRole(dto)).andReturn(clintAdminRole)
-        expect(organizationClientService.getByUuid(request.clientUuid)).andReturn(clientOrganization)
+        expect(clientOrganizationService.getByUuid(request.clientUuid)).andReturn(clientOrganization)
         expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.userUuid)).andReturn(Optional.of(adminRole))
         expect(userRoleService.revokeOrganizationAdminRole(userRevokeOrganizationAdminRoleDto))
         expect(tokenAuthenticationService.expireAllByUser(userRevokeOrganizationAdminRoleDto.userUuid)).andVoid()
@@ -67,7 +67,7 @@ class UserRoleGrantClientRoleFacadeUnitTest : AbstractUserRoleServiceFacadeUnitT
         val clintAdminRole = commonTestHelper.buildUserClientAdminRole()
         expect(preconditionChecker.checkGrantClientRole(request)).andReturn(SingleErrorWithStatus.empty())
         expect(userRoleService.grantClientRole(dto)).andReturn(clintAdminRole)
-        expect(organizationClientService.getByUuid(request.clientUuid)).andReturn(clientOrganization)
+        expect(clientOrganizationService.getByUuid(request.clientUuid)).andReturn(clientOrganization)
         expect(userRoleService.findByOrganizationAndUser(clientOrganization.organization.uuid, request.userUuid)).andReturn(Optional.empty())
         replayAll()
         userRoleServiceFacade.grantClientRole(request).let {
