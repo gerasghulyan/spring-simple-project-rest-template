@@ -40,7 +40,7 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
         expect(slugValidationComponent.validate(slug)).andReturn(true)
-        expect(organizationClientService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
+        expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.create(request)
@@ -58,9 +58,9 @@ class ClientOrganizationCreateServiceFacadeUnitTest : AbstractClientOrganization
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
         expect(slugValidationComponent.validate(slug)).andReturn(true)
-        expect(organizationClientService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.empty())
+        expect(clientOrganizationService.findBySlugAndOrganization(slug, request.organizationUuid)).andReturn(Optional.empty())
         expect(mapperFacade.map(request, CreateClientOrganizationDto::class.java)).andReturn(dto)
-        expect(organizationClientService.create(dto)).andReturn(clientOrganization)
+        expect(clientOrganizationService.create(dto)).andReturn(clientOrganization)
         expect(clientOrganizationLifecycleMediator.onCreated(clientOrganization))
         replayAll()
         // test scenario

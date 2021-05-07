@@ -8,7 +8,7 @@ import com.vntana.core.model.user.enums.UserMentionedEntityTypeModel;
 import com.vntana.core.model.user.request.SendUserMentionRequest;
 import com.vntana.core.queue.consumer.user.UserMentionedQueueMessageConsumer;
 import com.vntana.core.rest.facade.user.component.UserMentionEmailSenderComponent;
-import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -32,13 +32,13 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
     private final boolean isEmailNotificationsEnabled;
     private final UserService userService;
     private final OrganizationService organizationService;
-    private final OrganizationClientService clientOrganizationService;
+    private final ClientOrganizationService clientOrganizationService;
     private final UserMentionEmailSenderComponent mentionEmailSenderComponent;
 
     public UserMentionedQueueMessageConsumerImpl(
             final UserService userService,
             final OrganizationService organizationService,
-            final OrganizationClientService clientOrganizationService,
+            final ClientOrganizationService clientOrganizationService,
             final UserMentionEmailSenderComponent mentionEmailSenderComponent,
             @Value("${user.mentioning.email.notifier.enabled}") final boolean isEmailNotificationsEnabled) {
         this.isEmailNotificationsEnabled = isEmailNotificationsEnabled;

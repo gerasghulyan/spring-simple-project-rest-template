@@ -13,7 +13,7 @@ import com.vntana.core.model.invitation.user.error.InvitationUserErrorResponseMo
 import com.vntana.core.model.invitation.user.request.*;
 import com.vntana.core.rest.facade.invitation.user.checker.InvitationUserFacadePreconditionChecker;
 import com.vntana.core.rest.facade.invitation.user.component.UserRolesPermissionsCheckerComponent;
-import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.invitation.user.InvitationUserToClientService;
 import com.vntana.core.service.invitation.user.InvitationUserToOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
@@ -50,7 +50,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
     private final InvitationUserToOrganizationService invitationUserToOrganizationService;
     private final InvitationUserToClientService invitationUserToClientService;
     private final TokenInvitationUserService tokenInvitationUserService;
-    private final OrganizationClientService clientOrganizationService;
+    private final ClientOrganizationService clientOrganizationService;
     private final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker;
 
     public InvitationUserFacadePreconditionCheckerImpl(
@@ -60,7 +60,7 @@ public class InvitationUserFacadePreconditionCheckerImpl implements InvitationUs
             final InvitationUserToOrganizationService invitationUserToOrganizationService,
             final InvitationUserToClientService invitationUserToClientService,
             final TokenInvitationUserService tokenInvitationUserService,
-            final OrganizationClientService clientOrganizationService,
+            final ClientOrganizationService clientOrganizationService,
             final UserRolesPermissionsCheckerComponent userRolesPermissionsChecker) {
         this.userService = userService;
         this.userRoleService = userRoleService;

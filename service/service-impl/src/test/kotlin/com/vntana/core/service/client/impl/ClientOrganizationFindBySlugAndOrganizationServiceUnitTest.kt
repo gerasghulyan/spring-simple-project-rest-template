@@ -20,13 +20,13 @@ class ClientOrganizationFindBySlugAndOrganizationServiceUnitTest : AbstractClien
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { organizationClientService.findBySlugAndOrganization(null, uuid()) }
+        assertThatThrownBy { clientOrganizationService.findBySlugAndOrganization(null, uuid()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationClientService.findBySlugAndOrganization("", uuid()) }
+        assertThatThrownBy { clientOrganizationService.findBySlugAndOrganization("", uuid()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationClientService.findBySlugAndOrganization(uuid(), null) }
+        assertThatThrownBy { clientOrganizationService.findBySlugAndOrganization(uuid(), null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationClientService.findBySlugAndOrganization(uuid(), emptyString()) }
+        assertThatThrownBy { clientOrganizationService.findBySlugAndOrganization(uuid(), emptyString()) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -41,7 +41,7 @@ class ClientOrganizationFindBySlugAndOrganizationServiceUnitTest : AbstractClien
         expect(clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organizationUuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
-        assertThat(organizationClientService.findBySlugAndOrganization(slug, organizationUuid)).isEmpty
+        assertThat(clientOrganizationService.findBySlugAndOrganization(slug, organizationUuid)).isEmpty
         verifyAll()
     }
 
@@ -56,7 +56,7 @@ class ClientOrganizationFindBySlugAndOrganizationServiceUnitTest : AbstractClien
         expect(clientOrganizationRepository.findBySlugAndOrganizationUuid(slug, organization.uuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
-        assertThat(organizationClientService.findBySlugAndOrganization(slug, organization.uuid)).isNotEmpty.hasValue(clientOrganization)
+        assertThat(clientOrganizationService.findBySlugAndOrganization(slug, organization.uuid)).isNotEmpty.hasValue(clientOrganization)
         verifyAll()
     }
 }

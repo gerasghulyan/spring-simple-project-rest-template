@@ -8,7 +8,7 @@ import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.rest.facade.client.component.precondition.ClientOrganizationServiceFacadePreconditionCheckerComponent
 import com.vntana.core.rest.facade.client.impl.ClientOrganizationServiceFacadeImpl
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator
 import com.vntana.core.service.common.component.SlugValidationComponent
 import com.vntana.core.service.organization.OrganizationService
@@ -30,7 +30,7 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
     protected lateinit var mapperFacade: MapperFacade
 
     @Mock
-    protected lateinit var organizationClientService: OrganizationClientService
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     @Mock
     protected lateinit var userService: UserService
@@ -66,7 +66,7 @@ abstract class AbstractClientOrganizationServiceFacadeUnitTest : AbstractFacadeU
     fun before() {
         clientOrganizationServiceFacade = ClientOrganizationServiceFacadeImpl(
                 mapperFacade,
-                organizationClientService,
+                clientOrganizationService,
                 organizationService,
                 userService,
                 userRoleService,

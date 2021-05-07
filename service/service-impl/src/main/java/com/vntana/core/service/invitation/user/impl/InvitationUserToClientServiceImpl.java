@@ -6,7 +6,7 @@ import com.vntana.core.domain.invitation.user.InvitationOrganizationClientUser;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.persistence.invitation.user.InvitationOrganizationClientUserRepository;
-import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.invitation.user.InvitationUserToClientService;
 import com.vntana.core.service.invitation.user.dto.CreateInvitationForClientsUserDto;
 import com.vntana.core.service.invitation.user.dto.GetAllByOrganizationUuidAndStatusInvitationUsersDto;
@@ -37,13 +37,13 @@ public class InvitationUserToClientServiceImpl implements InvitationUserToClient
     private static final Logger LOGGER = LoggerFactory.getLogger(InvitationUserToClientServiceImpl.class);
 
     private final UserService userService;
-    private final OrganizationClientService clientOrganizationService;
+    private final ClientOrganizationService clientOrganizationService;
     private final InvitationOrganizationClientUserRepository invitationOrganizationClientUserRepository;
     private final OrganizationService organizationService;
 
     public InvitationUserToClientServiceImpl(
             final UserService userService,
-            final OrganizationClientService clientOrganizationService,
+            final ClientOrganizationService clientOrganizationService,
             final InvitationOrganizationClientUserRepository invitationOrganizationClientUserRepository,
             final OrganizationService organizationService) {
         this.userService = userService;

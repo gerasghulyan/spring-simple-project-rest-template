@@ -3,7 +3,7 @@ package com.vntana.core.rest.facade.token.auth.component.precondition
 import com.vntana.core.helper.token.auth.TokenAuthenticationRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.token.auth.component.precondition.impl.TokenAuthenticationServiceFacadePreconditionCheckerComponentImpl
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import org.easymock.Mock
@@ -25,7 +25,7 @@ abstract class AbstractTokenAuthenticationServiceFacadePreconditionCheckerUnitTe
     protected lateinit var organizationService: OrganizationService
 
     @Mock
-    protected lateinit var organizationClientService: OrganizationClientService
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     protected val tokenAuthenticationRestTestHelper = TokenAuthenticationRestTestHelper()
 
@@ -34,7 +34,7 @@ abstract class AbstractTokenAuthenticationServiceFacadePreconditionCheckerUnitTe
         preconditionChecker = TokenAuthenticationServiceFacadePreconditionCheckerComponentImpl(
                 userService,
                 organizationService,
-                organizationClientService
+                clientOrganizationService
         )
     }
 }

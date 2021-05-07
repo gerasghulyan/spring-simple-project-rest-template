@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.invitation.user.InvitationOrganizationClientUserRepository
 import com.vntana.core.service.AbstractServiceUnitTest
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.invitation.user.impl.InvitationUserToClientServiceImpl
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
@@ -26,7 +26,7 @@ abstract class AbstractUserInvitationToClientServiceUnitTest : AbstractServiceUn
     protected lateinit var userService: UserService
 
     @Mock
-    protected lateinit var organizationClientService: OrganizationClientService
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     @Mock
     protected lateinit var invitationOrganizationClientUserRepository: InvitationOrganizationClientUserRepository
@@ -46,6 +46,6 @@ abstract class AbstractUserInvitationToClientServiceUnitTest : AbstractServiceUn
     @Before
     fun prepare() {
         invitationUserToClientService =
-                InvitationUserToClientServiceImpl(userService, organizationClientService, invitationOrganizationClientUserRepository, organizationService)
+                InvitationUserToClientServiceImpl(userService, clientOrganizationService, invitationOrganizationClientUserRepository, organizationService)
     }
 }

@@ -45,7 +45,7 @@ class CreateInvitationUserToClientServiceUnitTest : AbstractUserInvitationToClie
         )
         resetAll()
         expect(userService.getByUuid(dto.inviterUserUuid)).andReturn(inviterUser)
-        expect(organizationClientService.getByUuid(client.uuid)).andReturn(client).once()
+        expect(clientOrganizationService.getByUuid(client.uuid)).andReturn(client).once()
         expect(invitationOrganizationClientUserRepository.save(isA(InvitationOrganizationClientUser::class.java))).andReturn(invitationUser).once()
         replayAll()
         assertThat(invitationUserToClientService.create(dto)[0]).isEqualTo(invitationUser)

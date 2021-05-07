@@ -21,7 +21,7 @@ import com.vntana.core.model.user.response.get.model.GetUserClientBulkOrganizati
 import com.vntana.core.model.user.response.get.model.GetUserClientOrganizationsResponseModel;
 import com.vntana.core.rest.facade.client.ClientOrganizationServiceFacade;
 import com.vntana.core.rest.facade.client.component.precondition.ClientOrganizationServiceFacadePreconditionCheckerComponent;
-import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto;
 import com.vntana.core.service.client.dto.UpdateClientOrganizationDto;
 import com.vntana.core.service.client.mediator.ClientOrganizationLifecycleMediator;
@@ -59,7 +59,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOrganizationServiceFacadeImpl.class);
 
     private final MapperFacade mapperFacade;
-    private final OrganizationClientService organizationClientService;
+    private final ClientOrganizationService organizationClientService;
     private final OrganizationService organizationService;
     private final UserService userService;
     private final UserRoleService userRoleService;
@@ -68,7 +68,7 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
     private final ClientOrganizationLifecycleMediator clientOrganizationLifecycleMediator;
 
     public ClientOrganizationServiceFacadeImpl(final MapperFacade mapperFacade,
-                                               final OrganizationClientService organizationClientService,
+                                               final ClientOrganizationService organizationClientService,
                                                final OrganizationService organizationService,
                                                final UserService userService,
                                                final UserRoleService userRoleService,

@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.token.auth.TokenAuthenticationCommonTestHelpe
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.token.auth.TokenAuthenticationRepository
 import com.vntana.core.service.AbstractServiceUnitTest
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.token.auth.impl.TokenAuthenticationServiceImpl
 import com.vntana.core.service.user.UserService
@@ -32,7 +32,7 @@ abstract class AbstractTokenAuthenticationServiceUnitTest : AbstractServiceUnitT
     protected lateinit var organizationService: OrganizationService
 
     @Mock
-    protected lateinit var organizationClientService: OrganizationClientService
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     protected val commonTestHelper = TokenAuthenticationCommonTestHelper()
     protected val userCommonTestHelper = UserCommonTestHelper()
@@ -41,6 +41,6 @@ abstract class AbstractTokenAuthenticationServiceUnitTest : AbstractServiceUnitT
 
     @Before
     fun prepare() {
-        tokenAuthenticationService = TokenAuthenticationServiceImpl(userService, tokenAuthenticationRepository, organizationService, organizationClientService)
+        tokenAuthenticationService = TokenAuthenticationServiceImpl(userService, tokenAuthenticationRepository, organizationService, clientOrganizationService)
     }
 }

@@ -4,7 +4,7 @@ import com.vntana.core.domain.client.ClientOrganization;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.*;
 import com.vntana.core.persistence.user.role.UserRoleRepository;
-import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
@@ -39,12 +39,12 @@ public class UserRoleServiceImpl implements UserRoleService {
     private final UserRoleRepository userRoleRepository;
     private final UserService userService;
     private final OrganizationService organizationService;
-    private final OrganizationClientService clientOrganizationService;
+    private final ClientOrganizationService clientOrganizationService;
 
     public UserRoleServiceImpl(final UserRoleRepository userRoleRepository,
                                final UserService userService,
                                final OrganizationService organizationService,
-                               final OrganizationClientService clientOrganizationService) {
+                               final ClientOrganizationService clientOrganizationService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userRoleRepository = userRoleRepository;
         this.userService = userService;

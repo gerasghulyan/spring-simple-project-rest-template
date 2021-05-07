@@ -4,7 +4,7 @@ import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.GetByUuidsAndOrganizationUuidRequest;
 import com.vntana.core.rest.facade.user.component.precondition.UserFacadePreconditionCheckerComponent;
-import com.vntana.core.service.client.OrganizationClientService;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -28,11 +28,11 @@ public class UserFacadePreconditionCheckerComponentImpl implements UserFacadePre
 
     private final UserService userService;
     private final OrganizationService organizationService;
-    private final OrganizationClientService clientService;
+    private final ClientOrganizationService clientService;
 
     public UserFacadePreconditionCheckerComponentImpl(final UserService userService,
                                                       final OrganizationService organizationService,
-                                                      final OrganizationClientService clientService) {
+                                                      final ClientOrganizationService clientService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.clientService = clientService;

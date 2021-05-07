@@ -20,9 +20,9 @@ class ClientOrganizationFindByUuidServiceUnitTest : AbstractClientOrganizationSe
         // expectations
         replayAll()
         // test scenario
-        assertThatThrownBy { organizationClientService.findByUuid(null) }
+        assertThatThrownBy { clientOrganizationService.findByUuid(null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { organizationClientService.findByUuid(" ") }
+        assertThatThrownBy { clientOrganizationService.findByUuid(" ") }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         verifyAll()
     }
@@ -36,7 +36,7 @@ class ClientOrganizationFindByUuidServiceUnitTest : AbstractClientOrganizationSe
         expect(clientOrganizationRepository.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
-        assertThat(organizationClientService.findByUuid(uuid)).isEmpty
+        assertThat(clientOrganizationService.findByUuid(uuid)).isEmpty
         verifyAll()
     }
 
@@ -50,7 +50,7 @@ class ClientOrganizationFindByUuidServiceUnitTest : AbstractClientOrganizationSe
         expect(clientOrganizationRepository.findByUuid(uuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
-        assertThat(organizationClientService.findByUuid(uuid)).isNotEmpty.hasValue(clientOrganization)
+        assertThat(clientOrganizationService.findByUuid(uuid)).isNotEmpty.hasValue(clientOrganization)
         verifyAll()
     }
 }

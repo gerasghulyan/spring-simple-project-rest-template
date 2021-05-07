@@ -3,7 +3,7 @@ package com.vntana.core.helper.integration.client
 import com.vntana.core.domain.client.ClientOrganization
 import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.client.dto.CreateClientOrganizationDto
 import com.vntana.core.service.organization.OrganizationService
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 @Component
 class ClientOrganizationIntegrationTestHelper : ClientOrganizationCommonTestHelper() {
     @Autowired
-    private lateinit var organizationClientService: OrganizationClientService
+    private lateinit var clientOrganizationService: ClientOrganizationService
 
     @Autowired
     private lateinit var organizationService: OrganizationService
@@ -28,5 +28,5 @@ class ClientOrganizationIntegrationTestHelper : ClientOrganizationCommonTestHelp
     fun persistClientOrganization(
             organizationUuid: String = organizationService.create(organizationCommonTestHelper.buildCreateOrganizationDto()).uuid,
             dto: CreateClientOrganizationDto = buildCreateClientOrganizationDto(organizationUuid = organizationUuid)
-    ): ClientOrganization = organizationClientService.create(dto)
+    ): ClientOrganization = clientOrganizationService.create(dto)
 }

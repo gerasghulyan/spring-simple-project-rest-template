@@ -34,7 +34,7 @@ class UserRoleGrantClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserRole.CLIENT_ORGANIZATION_ADMIN)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
-        expect(organizationClientService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
+        expect(clientOrganizationService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
         expect(userRoleRepository.save(isA(AbstractUserRole::class.java))).andAnswer { getCurrentArguments()[0] as AbstractUserRole }
         replayAll()
         userRoleService.grantClientRole(dto).let {
@@ -51,7 +51,7 @@ class UserRoleGrantClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserRole.CLIENT_ORGANIZATION_CONTENT_MANAGER)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
-        expect(organizationClientService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
+        expect(clientOrganizationService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
         expect(userRoleRepository.save(isA(AbstractUserRole::class.java))).andAnswer { getCurrentArguments()[0] as AbstractUserRole }
         replayAll()
         userRoleService.grantClientRole(dto).let {
@@ -68,7 +68,7 @@ class UserRoleGrantClientRoleServiceUnitTest : AbstractUserRoleServiceUnitTest()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val dto = commonTestHelper.buildUserGrantClientRoleDto(userUuid = user.uuid, clientOrganizationUuid = clientOrganization.uuid, clientRole = UserRole.CLIENT_ORGANIZATION_VIEWER)
         expect(userService.getByUuid(dto.userUuid)).andReturn(user)
-        expect(organizationClientService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
+        expect(clientOrganizationService.getByUuid(dto.clientOrganizationUuid)).andReturn(clientOrganization)
         expect(userRoleRepository.save(isA(AbstractUserRole::class.java))).andAnswer { getCurrentArguments()[0] as AbstractUserRole }
         replayAll()
         userRoleService.grantClientRole(dto).let {

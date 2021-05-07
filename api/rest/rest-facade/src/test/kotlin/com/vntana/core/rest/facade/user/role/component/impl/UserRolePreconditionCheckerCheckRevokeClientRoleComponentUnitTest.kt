@@ -19,7 +19,7 @@ class UserRolePreconditionCheckerCheckRevokeClientRoleComponentUnitTest : Abstra
     fun `test when organization not found`() {
         resetAll()
         val request = restTestHelper.buildUserRoleRevokeClientRequest()
-        expect(organizationClientService.existsByUuid(request.clientUuid)).andReturn(false)
+        expect(clientOrganizationService.existsByUuid(request.clientUuid)).andReturn(false)
         replayAll()
         preconditionChecker.checkRevokeClientRole(request).let {
             assertThat(it.error).isEqualTo(UserRoleErrorResponseModel.CLIENT_ORGANIZATION_NOT_FOUND)
@@ -32,7 +32,7 @@ class UserRolePreconditionCheckerCheckRevokeClientRoleComponentUnitTest : Abstra
     fun `test when user not found`() {
         resetAll()
         val request = restTestHelper.buildUserRoleRevokeClientRequest()
-        expect(organizationClientService.existsByUuid(request.clientUuid)).andReturn(true)
+        expect(clientOrganizationService.existsByUuid(request.clientUuid)).andReturn(true)
         expect(userService.existsByUuid(request.userUuid)).andReturn(false)
         replayAll()
         preconditionChecker.checkRevokeClientRole(request).let {
@@ -46,7 +46,7 @@ class UserRolePreconditionCheckerCheckRevokeClientRoleComponentUnitTest : Abstra
     fun test() {
         resetAll()
         val request = restTestHelper.buildUserRoleRevokeClientRequest()
-        expect(organizationClientService.existsByUuid(request.clientUuid)).andReturn(true)
+        expect(clientOrganizationService.existsByUuid(request.clientUuid)).andReturn(true)
         expect(userService.existsByUuid(request.userUuid)).andReturn(true)
         replayAll()
         assertThat(preconditionChecker.checkRevokeClientRole(request)).isEqualTo(SingleErrorWithStatus.empty<UserRoleErrorResponseModel>())

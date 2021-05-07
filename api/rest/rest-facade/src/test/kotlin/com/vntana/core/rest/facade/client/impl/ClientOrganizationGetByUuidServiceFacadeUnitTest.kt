@@ -32,7 +32,7 @@ class ClientOrganizationGetByUuidServiceFacadeUnitTest : AbstractClientOrganizat
         resetAll()
         val uuid = uuid()
         // expectations
-        expect(organizationClientService.findByUuid(uuid)).andReturn(Optional.empty())
+        expect(clientOrganizationService.findByUuid(uuid)).andReturn(Optional.empty())
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.getByUuid(uuid)
@@ -46,7 +46,7 @@ class ClientOrganizationGetByUuidServiceFacadeUnitTest : AbstractClientOrganizat
         resetAll()
         val clientOrganization = commonTestHelper.buildClientOrganization()
         // expectations
-        expect(organizationClientService.findByUuid(clientOrganization.uuid)).andReturn(Optional.of(clientOrganization))
+        expect(clientOrganizationService.findByUuid(clientOrganization.uuid)).andReturn(Optional.of(clientOrganization))
         replayAll()
         // test scenario
         val resultResponse = clientOrganizationServiceFacade.getByUuid(clientOrganization.uuid)

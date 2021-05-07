@@ -6,7 +6,7 @@ import com.vntana.core.helper.unit.user.role.UserRoleCommonTestHelper
 import com.vntana.core.helper.user.role.UserRoleRestTestHelper
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.role.component.impl.UserRoleHelperComponentImpl
-import com.vntana.core.service.client.OrganizationClientService
+import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.organization.OrganizationService
 import com.vntana.core.service.user.UserService
 import com.vntana.core.service.user.role.UserRoleService
@@ -40,7 +40,7 @@ abstract class AbstractUserRoleFacadeActionItemRetrieverComponentUnitTest : Abst
     protected lateinit var userRoleService: UserRoleService
 
     @Mock
-    protected lateinit var organizationClientService: OrganizationClientService
+    protected lateinit var clientOrganizationService: ClientOrganizationService
 
     @Before
     fun prepare() {
