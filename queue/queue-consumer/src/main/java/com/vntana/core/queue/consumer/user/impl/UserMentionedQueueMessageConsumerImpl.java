@@ -35,7 +35,7 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
     private final ClientOrganizationService clientOrganizationService;
     private final UserMentionEmailSenderComponent mentionEmailSenderComponent;
 
-    public UserMentionedQueueMessageConsumerImpl(
+    UserMentionedQueueMessageConsumerImpl(
             final UserService userService,
             final OrganizationService organizationService,
             final ClientOrganizationService clientOrganizationService,
