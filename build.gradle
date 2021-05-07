@@ -233,6 +233,7 @@ project(':queue:queue-consumer') {
         implementation project(":service:service-core")
         runtimeOnly project(":service:service-impl")
         implementation project(":domain")
+        testImplementation project(":helper::test-helper")
         api "com.vntana.commons:queue-commons"
         api "com.vntana.commons:queue-asset-producer-message"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
