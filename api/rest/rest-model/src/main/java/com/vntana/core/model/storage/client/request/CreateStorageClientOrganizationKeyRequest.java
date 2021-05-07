@@ -22,9 +22,11 @@ public class CreateStorageClientOrganizationKeyRequest extends AbstractRequestMo
     private String clientUuid;
 
     public CreateStorageClientOrganizationKeyRequest() {
+        super();
     }
 
     public CreateStorageClientOrganizationKeyRequest(final String clientUuid) {
+        super();
         this.clientUuid = clientUuid;
     }
 
