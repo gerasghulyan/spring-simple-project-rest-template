@@ -21,10 +21,10 @@ class StorageClientOrganizationKeyCreateServiceIntegrationTest : AbstractStorage
             storageClientOrganizationKeyService.create(dto).let { key ->
                 // then
                 flushAndClear()
-                assertThat(key)
-                        .hasFieldOrProperty("name")
-                        .hasFieldOrPropertyWithValue("clientOrganization", client)
-                        .hasFieldOrPropertyWithValue("type", StorageClientOrganizationKeyType.CUSTOMER_MANAGED_KEY)
+                assertThat(key.name).isNotBlank()
+                assertThat(key.ring).isNotBlank()
+                assertThat(key.clientOrganization).isEqualTo(client)
+                assertThat(key.type).isEqualTo(StorageClientOrganizationKeyType.CUSTOMER_MANAGED_KEY)
             }
         }
     }

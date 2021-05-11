@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Geras Ghulyan
  * Date: 03-May-21
@@ -19,12 +21,17 @@ public class GetStorageClientOrganizationKeyResponseModel implements ResponseMod
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("ring")
+    private String ring;
+
     public GetStorageClientOrganizationKeyResponseModel() {
+        super();
     }
 
-    public GetStorageClientOrganizationKeyResponseModel(final String clientUuid, final String name) {
+    public GetStorageClientOrganizationKeyResponseModel(final String clientUuid, final String name, final String ring) {
         this.clientUuid = clientUuid;
         this.name = name;
+        this.ring = ring;
     }
 
     @Override
@@ -39,6 +46,7 @@ public class GetStorageClientOrganizationKeyResponseModel implements ResponseMod
         return new EqualsBuilder()
                 .append(clientUuid, that.clientUuid)
                 .append(name, that.name)
+                .append(ring, that.ring)
                 .isEquals();
     }
 
@@ -47,6 +55,7 @@ public class GetStorageClientOrganizationKeyResponseModel implements ResponseMod
         return new HashCodeBuilder()
                 .append(clientUuid)
                 .append(name)
+                .append(ring)
                 .toHashCode();
     }
 
@@ -55,7 +64,8 @@ public class GetStorageClientOrganizationKeyResponseModel implements ResponseMod
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("clientUuid", clientUuid)
-                .append("name", name)
+                .append("name", mask(name))
+                .append("ring", mask(ring))
                 .toString();
     }
 
@@ -73,5 +83,13 @@ public class GetStorageClientOrganizationKeyResponseModel implements ResponseMod
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public String getRing() {
+        return ring;
+    }
+
+    public void setRing(final String ring) {
+        this.ring = ring;
     }
 }

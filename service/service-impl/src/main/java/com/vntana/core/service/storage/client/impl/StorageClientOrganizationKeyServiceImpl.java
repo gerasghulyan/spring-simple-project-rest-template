@@ -27,6 +27,7 @@ public class StorageClientOrganizationKeyServiceImpl implements StorageClientOrg
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientOrganizationKeyServiceImpl.class);
     private static final String CUSTOMER_MANAGED_KEY_NAME = UUID.randomUUID().toString();
     private static final StorageClientOrganizationKeyType CUSTOMER_MANAGED_KEY_TYPE = StorageClientOrganizationKeyType.CUSTOMER_MANAGED_KEY;
+    private static final String CUSTOMER_MANAGED_KEY_RING_PREFIX = "org-";
 
     private final StorageClientOrganizationKeyRepository storageClientOrganizationKeyRepository;
     private final ClientOrganizationService clientOrganizationService;
@@ -61,10 +62,13 @@ public class StorageClientOrganizationKeyServiceImpl implements StorageClientOrg
     }
 
     private StorageClientOrganizationKey getStorageClientOrganizationKey(final CreateStorageClientOrganizationKeyDto dto) {
+        final ClientOrganization client = clientOrganizationService.getByUuid(dto.getClientUuid());
         return new StorageClientOrganizationKey(
-                clientOrganizationService.getByUuid(dto.getClientUuid()),
+                client,
                 CUSTOMER_MANAGED_KEY_NAME,
-                CUSTOMER_MANAGED_KEY_TYPE
+                CUSTOMER_MANAGED_KEY_TYPE,
+                CUSTOMER_MANAGED_KEY_RING_PREFIX + client.getOrganization().getUuid()
+
         );
     }
 }

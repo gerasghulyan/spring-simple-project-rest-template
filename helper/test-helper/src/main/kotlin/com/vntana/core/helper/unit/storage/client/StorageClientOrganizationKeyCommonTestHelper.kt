@@ -32,6 +32,7 @@ open class StorageClientOrganizationKeyCommonTestHelper : AbstractCommonTestHelp
     fun buildStorageClientOrganizationKey(
             client: ClientOrganization? = clientOrganizationCommonTestHelper.buildClientOrganization(),
             name: String? = uuid(),
-            type: StorageClientOrganizationKeyType? = StorageClientOrganizationKeyType.CUSTOMER_MANAGED_KEY
-    ): StorageClientOrganizationKey = StorageClientOrganizationKey(client, name, type)
+            type: StorageClientOrganizationKeyType? = StorageClientOrganizationKeyType.CUSTOMER_MANAGED_KEY,
+            ring: String? = uuid()
+    ): StorageClientOrganizationKey = StorageClientOrganizationKey(client, name, type, ring)
 }

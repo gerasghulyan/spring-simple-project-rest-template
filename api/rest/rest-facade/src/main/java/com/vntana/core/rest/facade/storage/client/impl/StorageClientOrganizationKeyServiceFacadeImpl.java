@@ -42,7 +42,13 @@ public class StorageClientOrganizationKeyServiceFacadeImpl implements StorageCli
                 new CreateStorageClientOrganizationKeyDto(request.getClientUuid())
         );
         LOGGER.debug("Successfully created StorageClientOrganizationKey by clientUuid - {}", request.getClientUuid());
-        return new CreateStorageClientOrganizationKeyResultResponse(new CreateStorageClientOrganizationKeyResponseModel(key.getClientOrganization().getUuid()));
+        return new CreateStorageClientOrganizationKeyResultResponse(
+                new CreateStorageClientOrganizationKeyResponseModel(
+                        key.getClientOrganization().getUuid(),
+                        key.getName(),
+                        key.getRing()
+                )
+        );
     }
 
     @Override
@@ -55,7 +61,11 @@ public class StorageClientOrganizationKeyServiceFacadeImpl implements StorageCli
                 .map(key -> {
                     LOGGER.debug("Successfully retrieved StorageClientOrganizationKey by clientUuid - {}", clientUuid);
                     return new GetStorageClientOrganizationKeyResultResponse(
-                            new GetStorageClientOrganizationKeyResponseModel(key.getClientOrganization().getUuid(), key.getName())
+                            new GetStorageClientOrganizationKeyResponseModel(
+                                    key.getClientOrganization().getUuid(),
+                                    key.getName(),
+                                    key.getRing()
+                            )
                     );
                 })
                 .orElseGet(() -> {

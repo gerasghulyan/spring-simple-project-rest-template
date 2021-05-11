@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
+import static com.vntana.commons.utils.DataSanitizerUtils.mask;
+
 /**
  * Created by Geras Ghulyan
  * Date: 30-Apr-21
@@ -27,15 +29,19 @@ public class StorageClientOrganizationKey extends AbstractDomainEntity {
     @Column(name = "type", nullable = false, updatable = false)
     private StorageClientOrganizationKeyType type;
 
+    @Column(name = "ring", nullable = false, updatable = false)
+    private String ring;
+
     public StorageClientOrganizationKey() {
         super();
     }
 
-    public StorageClientOrganizationKey(final ClientOrganization clientOrganization, final String name, final StorageClientOrganizationKeyType type) {
+    public StorageClientOrganizationKey(final ClientOrganization clientOrganization, final String name, final StorageClientOrganizationKeyType type, final String ring) {
         super();
         this.clientOrganization = clientOrganization;
         this.name = name;
         this.type = type;
+        this.ring = ring;
     }
 
     @Override
@@ -52,6 +58,7 @@ public class StorageClientOrganizationKey extends AbstractDomainEntity {
                 .append(getIdOrNull(clientOrganization), getIdOrNull(that.clientOrganization))
                 .append(name, that.name)
                 .append(type, that.type)
+                .append(ring, that.ring)
                 .isEquals();
     }
 
@@ -62,7 +69,19 @@ public class StorageClientOrganizationKey extends AbstractDomainEntity {
                 .append(getIdOrNull(clientOrganization))
                 .append(name)
                 .append(type)
+                .append(ring)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .appendSuper(super.toString())
+                .append("clientOrganization", getIdOrNull(clientOrganization))
+                .append("name", mask(name))
+                .append("type", type)
+                .append("ring", mask(ring))
+                .toString();
     }
 
     public ClientOrganization getClientOrganization() {
@@ -71,16 +90,6 @@ public class StorageClientOrganizationKey extends AbstractDomainEntity {
 
     public void setClientOrganization(final ClientOrganization clientOrganization) {
         this.clientOrganization = clientOrganization;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .appendSuper(super.toString())
-                .append("clientOrganization", getIdOrNull(clientOrganization))
-                .append("name", name)
-                .append("type", type)
-                .toString();
     }
 
     public String getName() {
@@ -97,5 +106,13 @@ public class StorageClientOrganizationKey extends AbstractDomainEntity {
 
     public void setType(final StorageClientOrganizationKeyType type) {
         this.type = type;
+    }
+
+    public String getRing() {
+        return ring;
+    }
+
+    public void setRing(final String ring) {
+        this.ring = ring;
     }
 }

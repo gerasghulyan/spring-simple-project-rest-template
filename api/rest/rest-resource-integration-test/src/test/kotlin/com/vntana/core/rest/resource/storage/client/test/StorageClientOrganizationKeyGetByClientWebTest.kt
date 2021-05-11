@@ -19,6 +19,7 @@ class StorageClientOrganizationKeyGetByClientWebTest : AbstractStorageClientOrga
             assertBasicSuccessResultResponse(it)
             assertThat(it.body.response().name).isNotBlank()
             assertThat(it.body.response().clientUuid).isNotBlank().isEqualTo(clientUuid)
+            assertThat(it.body.response().ring).isNotBlank()
         }
     }
 

@@ -16,8 +16,8 @@ class StorageClientOrganizationKeyCreateServiceFacadeUnitTest : AbstractStorageC
     @Test
     fun `test create`() {
         // test data
-        val request = storageClientOrganizationKeyRestTestHelper.buildCreateStorageClientOrganizationKeyRequest()
         val key = storageClientOrganizationKeyCommonTestHelper.buildStorageClientOrganizationKey()
+        val request = storageClientOrganizationKeyRestTestHelper.buildCreateStorageClientOrganizationKeyRequest(clientUuid = key.clientOrganization.uuid)
         val dto = storageClientOrganizationKeyCommonTestHelper.buildCreateStorageClientOrganizationKeyDto(clientUuid = request.clientUuid)
         resetAll()
         // expectations
@@ -26,6 +26,9 @@ class StorageClientOrganizationKeyCreateServiceFacadeUnitTest : AbstractStorageC
         // test scenario
         storageClientOrganizationKeyServiceFacade.create(request).let {
             assertBasicSuccessResultResponse(it)
+            assertThat(it.response().name).isNotBlank()
+            assertThat(it.response().ring).isNotBlank()
+            assertThat(it.response().uuid).isEqualTo(request.clientUuid)
         }
         verifyAll()
     }

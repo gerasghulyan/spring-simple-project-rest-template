@@ -38,6 +38,8 @@ class StorageClientOrganizationKeyCreateWebTest : AbstractStorageClientOrganizat
         val request = storageClientOrganizationKeyResourceTestHelper.buildCreateStorageClientOrganizationKeyRequest(clientUuid = clientUuid)
         storageClientOrganizationKeyResourceClient.create(request).let {
             assertBasicSuccessResultResponse(it)
+            assertThat(it.body.response().name).isNotBlank()
+            assertThat(it.body.response().ring).isNotBlank()
             assertThat(it.body.response().uuid).isNotBlank().isEqualTo(clientUuid)
         }
     }

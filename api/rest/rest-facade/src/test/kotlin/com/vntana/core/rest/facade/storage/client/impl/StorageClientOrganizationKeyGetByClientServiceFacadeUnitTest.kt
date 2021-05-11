@@ -28,6 +28,8 @@ class StorageClientOrganizationKeyGetByClientServiceFacadeUnitTest : AbstractSto
         storageClientOrganizationKeyServiceFacade.getByClientUuid(client.uuid).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().clientUuid).isEqualTo(client.uuid)
+            assertThat(it.response().name).isNotBlank()
+            assertThat(it.response().ring).isNotBlank()
         }
         verifyAll()
     }

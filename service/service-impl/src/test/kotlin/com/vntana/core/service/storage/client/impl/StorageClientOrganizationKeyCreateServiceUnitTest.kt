@@ -45,10 +45,12 @@ class StorageClientOrganizationKeyCreateServiceUnitTest : AbstractStorageClientO
                 .andAnswer { EasyMock.getCurrentArguments()[0] as StorageClientOrganizationKey }
         replayAll()
         // test scenario
-        assertThat(storageClientOrganizationKeyService.create(dto))
-                .hasFieldOrProperty("name")
-                .hasFieldOrPropertyWithValue("clientOrganization", client)
-                .hasFieldOrPropertyWithValue("type", StorageClientOrganizationKeyType.CUSTOMER_MANAGED_KEY)
+        storageClientOrganizationKeyService.create(dto).let {
+            assertThat(it.name).isNotBlank()
+            assertThat(it.ring).isNotBlank()
+            assertThat(it.clientOrganization).isEqualTo(client)
+            assertThat(it.type).isEqualTo(StorageClientOrganizationKeyType.CUSTOMER_MANAGED_KEY)
+        }
         verifyAll()
     }
 
