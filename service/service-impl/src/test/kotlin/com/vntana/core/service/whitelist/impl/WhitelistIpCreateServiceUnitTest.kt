@@ -12,12 +12,11 @@ import org.junit.Test
  * Date: 11/28/19
  * Time: 3:48 PM
  */
-class WhitelistIpCreateServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
+class WhitelistIpCreateServiceUnitTest : AbstractWhitelistIpServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
         assertThatThrownBy { whitelistIpService.create(null) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { testHelper.buildCreateWhitelistIpDto(ip = null) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
@@ -27,6 +26,8 @@ class WhitelistIpCreateServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { testHelper.buildCreateWhitelistIpDto(organizationUuid = "") }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { testHelper.buildCreateWhitelistIpDto(type = null) }
+            .isExactlyInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test

@@ -14,7 +14,7 @@ import java.util.*
  * Date: 11/28/19
  * Time: 3:48 PM
  */
-class WhitelistIpUpdateServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
+class WhitelistIpUpdateServiceUnitTest : AbstractWhitelistIpServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {

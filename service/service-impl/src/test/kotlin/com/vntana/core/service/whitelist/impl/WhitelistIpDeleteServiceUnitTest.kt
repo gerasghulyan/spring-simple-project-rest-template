@@ -10,7 +10,7 @@ import org.junit.Test
  * Date: 11/28/19
  * Time: 3:48 PM
  */
-class WhitelistIpDeleteServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
+class WhitelistIpDeleteServiceUnitTest : AbstractWhitelistIpServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {

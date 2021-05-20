@@ -1,5 +1,6 @@
 package com.vntana.core.service.whitelist.impl
 
+import com.vntana.core.domain.whitelist.WhitelistType
 import com.vntana.core.service.whitelist.AbstractWhitelistIpServiceIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -17,11 +18,13 @@ class WhitelistIpGetByOrganizationServiceIntegrationTest : AbstractWhitelistIpSe
     }
 
     @Test
-    fun `test`() {
+    fun test() {
         val organization = organizationTestHelper.persistOrganization()
-        val whitelistIps = listOf(testHelper.persistWhitelistIp(organization = organization),
-                testHelper.persistWhitelistIp(organization = organization),
-                testHelper.persistWhitelistIp(organization = organization))
+        val whitelistIps = listOf(
+            testHelper.persistWhitelistIp(organization = organization),
+            testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.API),
+            testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.EMBEDDED)
+        )
         whitelistIpService.getByOrganization(organization.uuid).let {
             assertThat(it).containsAll(whitelistIps)
         }

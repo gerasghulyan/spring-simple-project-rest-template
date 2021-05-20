@@ -2,6 +2,7 @@ package com.vntana.core.helper.unit.whitelist
 
 import com.vntana.core.domain.organization.Organization
 import com.vntana.core.domain.whitelist.WhitelistIp
+import com.vntana.core.domain.whitelist.WhitelistType
 import com.vntana.core.helper.unit.AbstractCommonTestHelper
 import com.vntana.core.service.whitelist.dto.CreateWhitelistIpDto
 import com.vntana.core.service.whitelist.dto.UpdateWhitelistIpDto
@@ -14,18 +15,27 @@ import com.vntana.core.service.whitelist.mediator.dto.SaveWhitelistIpLifecycleDt
  */
 open class WhitelistIpCommonTestHelper : AbstractCommonTestHelper() {
 
-    fun buildWhitelistIp(label: String? = uuid(), ip: String? = uuid(), organization: Organization?
-    ): WhitelistIp = WhitelistIp(label, ip, organization)
+    fun buildWhitelistIp(
+        label: String? = uuid(),
+        ip: String? = uuid(),
+        organization: Organization?,
+        type: WhitelistType? = WhitelistType.EMBEDDED
+    ): WhitelistIp = WhitelistIp(label, ip, organization, type)
 
-    fun buildCreateWhitelistIpDto(label: String? = uuid(), ip: String? = uuid(), organizationUuid: String? = uuid()
-    ): CreateWhitelistIpDto = CreateWhitelistIpDto(label, ip, organizationUuid)
+    fun buildCreateWhitelistIpDto(
+        label: String? = uuid(),
+        ip: String? = uuid(),
+        organizationUuid: String? = uuid(),
+        type: WhitelistType? = WhitelistType.EMBEDDED
+    ): CreateWhitelistIpDto = CreateWhitelistIpDto(label, ip, organizationUuid, type)
 
-    fun buildUpdateWhitelistIpDto(uuid: String? = uuid(), label: String? = uuid(), ip: String? = uuid()
+    fun buildUpdateWhitelistIpDto(
+        uuid: String? = uuid(), label: String? = uuid(), ip: String? = uuid()
     ): UpdateWhitelistIpDto = UpdateWhitelistIpDto(uuid, label, ip)
 
     fun buildSaveWhitelistIpLifecycleDto(
-            organizationUuid: String? = uuid(),
-            organizationSlug: String? = uuid(),
-            ips: List<String>? = listOf(uuid(), uuid())
+        organizationUuid: String? = uuid(),
+        organizationSlug: String? = uuid(),
+        ips: List<String>? = listOf(uuid(), uuid())
     ): SaveWhitelistIpLifecycleDto = SaveWhitelistIpLifecycleDto(organizationUuid, organizationSlug, ips)
 }

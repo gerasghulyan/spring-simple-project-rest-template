@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.whitelist.test
 
+import com.vntana.core.model.whitelist.request.WhitelistTypeModel
 import com.vntana.core.rest.resource.whitelist.AbstractWhitelistIpWebTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -13,7 +14,12 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
 
     @Test
     fun `test when empty`() {
-        whitelistIpResourceClient.getByOrganization(uuid()).let {
+        whitelistIpResourceClient.getByOrganizationAndType(
+            testHelper.buildGetWhitelistIpsRequest(
+                uuid(),
+                WhitelistTypeModel.API
+            )
+        ).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().totalCount()).isEqualTo(0)
             assertThat(it.response().items()).isEmpty()
@@ -23,11 +29,16 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
     @Test
     fun `test when 1 whitelist ip exists`() {
         val organizationUuid = organizationTestHelper.persistOrganization().response().uuid
-        testHelper.persistWhitelistIps(organizationUuid = organizationUuid)
-        whitelistIpResourceClient.getByOrganization(organizationUuid).let {
+        val expectedType = WhitelistTypeModel.API
+        val expectedWhitelistIp =
+            testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = expectedType)
+        testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = WhitelistTypeModel.EMBEDDED)
+        val request = testHelper.buildGetWhitelistIpsRequest(organizationUuid, expectedType)
+        whitelistIpResourceClient.getByOrganizationAndType(request).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().totalCount()).isEqualTo(1)
             assertThat(it.response().items()[0].organizationUuid).isEqualTo(organizationUuid)
+            assertThat(it.response().items()[0].uuid).isEqualTo(expectedWhitelistIp)
         }
     }
 
@@ -39,11 +50,25 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
         val label2 = uuid()
         val ip1 = "192.168.1.1"
         val ip2 = "684D:1111:222:3333:4444:5555:6:77"
-        testHelper.persistWhitelistIps(request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(organizationUuid, listOf(
-                testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label1, ip1),
-                testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label2, ip2)
-        )))
-        whitelistIpResourceClient.getByOrganization(organizationUuid).let {
+        val expectedType = WhitelistTypeModel.API
+        testHelper.persistWhitelistIps(
+            request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(
+                organizationUuid, listOf(
+                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label1, ip1),
+                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label2, ip2)
+                ), expectedType
+            )
+        )
+        testHelper.persistWhitelistIps(
+            request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(
+                organizationUuid, listOf(
+                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(uuid(), ip1),
+                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label2, uuid())
+                ), WhitelistTypeModel.EMBEDDED
+            )
+        )
+        val request = testHelper.buildGetWhitelistIpsRequest(organizationUuid, expectedType)
+        whitelistIpResourceClient.getByOrganizationAndType(request).let {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().totalCount()).isEqualTo(2)
             assertThat(it.response().items()[0].organizationUuid).isEqualTo(organizationUuid)

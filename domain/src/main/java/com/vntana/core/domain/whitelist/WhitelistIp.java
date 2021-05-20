@@ -23,6 +23,10 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
     @Column(name = "ip")
     private String ip;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private WhitelistType type;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false, updatable = false,
             foreignKey = @ForeignKey(name = "fk_settings_whitelist_ip_organization_id")
@@ -33,11 +37,12 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
         super();
     }
 
-    public WhitelistIp(final String label, final String ip, final Organization organization) {
+    public WhitelistIp(final String label, final String ip, final Organization organization, final WhitelistType type) {
         super();
         this.label = label;
         this.ip = ip;
         this.organization = organization;
+        this.type = type;
     }
 
     @Override
@@ -54,6 +59,7 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
                 .append(label, that.label)
                 .append(ip, that.ip)
                 .append(getIdOrNull(organization), getIdOrNull(that.organization))
+                .append(type, that.type)
                 .isEquals();
     }
 
@@ -64,6 +70,7 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
                 .append(label)
                 .append(ip)
                 .append(getIdOrNull(organization))
+                .append(type)
                 .toHashCode();
     }
 
@@ -73,6 +80,7 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
                 .append("label", label)
                 .append("ip", ip)
                 .append("organizationId", getIdOrNull(organization))
+                .append("type", type)
                 .toString();
     }
 
@@ -98,5 +106,13 @@ public class WhitelistIp extends AbstractUuidAwareDomainEntity {
 
     public void setOrganization(final Organization organization) {
         this.organization = organization;
+    }
+
+    public WhitelistType getType() {
+        return type;
+    }
+
+    public void setType(final WhitelistType type) {
+        this.type = type;
     }
 }

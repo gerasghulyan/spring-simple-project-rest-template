@@ -21,7 +21,7 @@ public class WhitelistIpCacheUpdateEventListenerImpl implements WhitelistIpCache
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WhitelistIpCacheUpdateEventListenerImpl.class);
 
-    private WhitelistIpCacheService whitelistIpCacheService;
+    private final WhitelistIpCacheService whitelistIpCacheService;
 
     public WhitelistIpCacheUpdateEventListenerImpl(final WhitelistIpCacheService whitelistIpCacheService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());

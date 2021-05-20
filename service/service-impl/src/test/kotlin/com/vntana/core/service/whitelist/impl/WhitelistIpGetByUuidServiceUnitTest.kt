@@ -12,7 +12,7 @@ import java.util.*
  * Date: 11/28/19
  * Time: 3:48 PM
  */
-class WhitelistIpGetByUuidServiceUniTest : AbstractWhitelistIpServiceUnitTest() {
+class WhitelistIpGetByUuidServiceUnitTest : AbstractWhitelistIpServiceUnitTest() {
 
     @Test
     fun `test with invalid arguments`() {
