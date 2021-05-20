@@ -8,5 +8,5 @@ package com.vntana.core.domain.whitelist;
 public enum WhitelistType {
 
     EMBEDDED,
-    API
+    ADMIN
 }

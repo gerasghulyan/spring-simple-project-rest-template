@@ -19,10 +19,10 @@ class WhitelistIpGetByOrganizationAndTypeServiceIntegrationTest : AbstractWhitel
 
     @Test
     fun test() {
-        val type = WhitelistType.API
+        val type = WhitelistType.ADMIN
         val organization = organizationTestHelper.persistOrganization()
-        val whitelistIp1 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.API)
-        val whitelistIp2 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.API)
+        val whitelistIp1 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.ADMIN)
+        val whitelistIp2 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.ADMIN)
         val whitelistIp3 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.EMBEDDED)
 
         whitelistIpService.getByOrganizationAndType(organization.uuid, type).let {

@@ -21,7 +21,7 @@ class WhitelistIpFindByOrganizationUuidAndTypeServiceUnitTest : AbstractWhitelis
         replayAll()
         assertThatThrownBy { whitelistIpService.getByOrganizationAndType(null, WhitelistType.EMBEDDED) }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
-        assertThatThrownBy { whitelistIpService.getByOrganizationAndType("", WhitelistType.API) }
+        assertThatThrownBy { whitelistIpService.getByOrganizationAndType("", WhitelistType.ADMIN) }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { whitelistIpService.getByOrganizationAndType(uuid(), null) }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
@@ -32,7 +32,7 @@ class WhitelistIpFindByOrganizationUuidAndTypeServiceUnitTest : AbstractWhitelis
     fun test() {
         val organization = organizationTestHelper.buildOrganization()
         val organizationUuid = organization.uuid
-        val type = WhitelistType.API
+        val type = WhitelistType.ADMIN
         val whitelistIp = testHelper.buildWhitelistIp(organization = organization, type = type)
         resetAll()
         expect(
