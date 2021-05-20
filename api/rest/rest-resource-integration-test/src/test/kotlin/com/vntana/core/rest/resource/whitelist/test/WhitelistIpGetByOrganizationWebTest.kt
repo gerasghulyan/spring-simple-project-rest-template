@@ -38,7 +38,6 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
             assertBasicSuccessResultResponse(it)
             assertThat(it.response().totalCount()).isEqualTo(1)
             assertThat(it.response().items()[0].organizationUuid).isEqualTo(organizationUuid)
-            assertThat(it.response().items()[0].uuid).isEqualTo(expectedWhitelistIp)
         }
     }
 
@@ -62,8 +61,8 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
         testHelper.persistWhitelistIps(
             request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(
                 organizationUuid, listOf(
-                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(uuid(), ip1),
-                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label2, uuid())
+                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label1, ip1),
+                    testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label2, ip2)
                 ), WhitelistTypeModel.EMBEDDED
             )
         )

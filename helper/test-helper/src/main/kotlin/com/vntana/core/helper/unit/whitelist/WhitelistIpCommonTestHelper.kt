@@ -36,6 +36,7 @@ open class WhitelistIpCommonTestHelper : AbstractCommonTestHelper() {
     fun buildSaveWhitelistIpLifecycleDto(
         organizationUuid: String? = uuid(),
         organizationSlug: String? = uuid(),
-        ips: List<String>? = listOf(uuid(), uuid())
-    ): SaveWhitelistIpLifecycleDto = SaveWhitelistIpLifecycleDto(organizationUuid, organizationSlug, ips)
+        ips: List<String>? = listOf(uuid(), uuid()),
+        type: WhitelistType? = WhitelistType.EMBEDDED
+    ): SaveWhitelistIpLifecycleDto = SaveWhitelistIpLifecycleDto(organizationUuid, organizationSlug, ips, type)
 }

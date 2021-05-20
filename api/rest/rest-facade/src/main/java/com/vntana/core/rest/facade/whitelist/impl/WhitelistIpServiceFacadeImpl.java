@@ -64,7 +64,8 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
         if (!possibleErrors.isEmpty()) {
             return new SaveWhitelistIpResponse(possibleErrors);
         }
-        final List<String> uuids = whitelistIpService.getByOrganization(request.getOrganizationUuid()).stream()
+        final WhitelistType whitelistType = WhitelistType.valueOf(request.getType().name());
+        final List<String> uuids = whitelistIpService.getByOrganizationAndType(request.getOrganizationUuid(), whitelistType).stream()
                 .map(WhitelistIp::getUuid)
                 .collect(Collectors.toList());
         if (!uuids.isEmpty()) {
@@ -77,7 +78,8 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
                             model.getLabel(),
                             model.getIp(),
                             request.getOrganizationUuid(),
-                            WhitelistType.valueOf(request.getType().name()));
+                            whitelistType
+                    );
                     whitelistIpService.create(createDto);
                 });
         whitelistIpLifecycleMediator.onSaved(buildSaveWhitelistIpLifecycleDto(request));
@@ -112,7 +114,7 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
         return new SaveWhitelistIpLifecycleDto(
                 organization.getUuid(),
                 organization.getSlug(),
-                ips
-        );
+                ips,
+                WhitelistType.valueOf(request.getType().name()));
     }
 }
