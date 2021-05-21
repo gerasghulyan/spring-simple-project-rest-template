@@ -1,11 +1,10 @@
 package com.vntana.core.rest.client.whitelist;
 
+import com.vntana.core.model.whitelist.request.GetWhitelistIpsRequest;
 import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest;
-import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
 import com.vntana.core.model.whitelist.response.GetWhitelistIpsByOrganizationResponse;
+import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,6 +19,6 @@ public interface WhitelistIpResourceClient {
     @PostMapping(path = "/save")
     SaveWhitelistIpResponse save(@RequestBody final SaveWhitelistIpsRequest request);
 
-    @GetMapping(path = "/organizations/{uuid}")
-    GetWhitelistIpsByOrganizationResponse getByOrganization(@PathVariable("uuid") final String organizationUuid);
+    @PostMapping(path = "/by-organization-and-type")
+    GetWhitelistIpsByOrganizationResponse getByOrganizationAndType(@RequestBody final GetWhitelistIpsRequest request);
 }

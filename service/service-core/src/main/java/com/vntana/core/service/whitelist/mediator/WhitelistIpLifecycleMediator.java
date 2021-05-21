@@ -10,5 +10,4 @@ import com.vntana.core.service.whitelist.mediator.dto.SaveWhitelistIpLifecycleDt
 public interface WhitelistIpLifecycleMediator {
 
     void onSaved(final SaveWhitelistIpLifecycleDto dto);
-
 }

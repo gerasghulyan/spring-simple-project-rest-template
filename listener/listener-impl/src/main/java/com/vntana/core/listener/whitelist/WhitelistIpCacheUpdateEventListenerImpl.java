@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
+
+import static org.springframework.util.Assert.notNull;
 
 /**
  * Created by Geras Ghulyan
@@ -21,7 +22,7 @@ public class WhitelistIpCacheUpdateEventListenerImpl implements WhitelistIpCache
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WhitelistIpCacheUpdateEventListenerImpl.class);
 
-    private WhitelistIpCacheService whitelistIpCacheService;
+    private final WhitelistIpCacheService whitelistIpCacheService;
 
     public WhitelistIpCacheUpdateEventListenerImpl(final WhitelistIpCacheService whitelistIpCacheService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
@@ -31,12 +32,13 @@ public class WhitelistIpCacheUpdateEventListenerImpl implements WhitelistIpCache
     @EventListener
     @Override
     public void handleEvent(final WhitelistIpLifecyclePayload payload) {
-        Assert.notNull(payload, "The WhitelistIpLifecyclePayload should not be null");
+        notNull(payload, "The WhitelistIpLifecyclePayload should not be null");
         final SaveWhitelistIpLifecycleDto whitelistIpLifecycleDto = payload.getDto();
         final CacheWhitelistCreateDto dto = new CacheWhitelistCreateDto(
                 whitelistIpLifecycleDto.getOrganizationUuid(),
                 whitelistIpLifecycleDto.getOrganizationSlug(),
                 whitelistIpLifecycleDto.getIps()
+                // TODO: 5/20/21 add ip type here 
         );
         whitelistIpCacheService.cacheByOrganizationUuid(dto);
         whitelistIpCacheService.cacheByOrganizationSlug(dto);

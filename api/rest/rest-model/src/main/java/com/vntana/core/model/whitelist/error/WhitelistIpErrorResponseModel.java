@@ -13,5 +13,5 @@ public enum WhitelistIpErrorResponseModel implements ErrorResponseModel {
     MISSING_LABEL,
     MISSING_IP,
     ORGANIZATION_NOT_FOUND,
-    INVALID_IP
+    MISSING_WHITELIST_TYPE, INVALID_IP
 }

@@ -2,8 +2,10 @@ package com.vntana.core.rest.facade.whitelist.impl;
 
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.whitelist.WhitelistIp;
+import com.vntana.core.domain.whitelist.WhitelistType;
 import com.vntana.core.model.whitelist.error.WhitelistIpErrorResponseModel;
 import com.vntana.core.model.whitelist.request.CreateOrUpdateWhitelistIpItemRequestModel;
+import com.vntana.core.model.whitelist.request.GetWhitelistIpsRequest;
 import com.vntana.core.model.whitelist.request.SaveWhitelistIpsRequest;
 import com.vntana.core.model.whitelist.response.GetWhitelistIpsByOrganizationResponse;
 import com.vntana.core.model.whitelist.response.SaveWhitelistIpResponse;
@@ -62,7 +64,8 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
         if (!possibleErrors.isEmpty()) {
             return new SaveWhitelistIpResponse(possibleErrors);
         }
-        final List<String> uuids = whitelistIpService.getByOrganization(request.getOrganizationUuid()).stream()
+        final WhitelistType whitelistType = WhitelistType.valueOf(request.getType().name());
+        final List<String> uuids = whitelistIpService.getByOrganizationAndType(request.getOrganizationUuid(), whitelistType).stream()
                 .map(WhitelistIp::getUuid)
                 .collect(Collectors.toList());
         if (!uuids.isEmpty()) {
@@ -71,7 +74,12 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
         Stream.ofAll(request.getWhitelistIps())
                 .distinctBy(Comparator.comparing(CreateOrUpdateWhitelistIpItemRequestModel::getIp))
                 .forEach(model -> {
-                    final CreateWhitelistIpDto createDto = new CreateWhitelistIpDto(model.getLabel(), model.getIp(), request.getOrganizationUuid());
+                    final CreateWhitelistIpDto createDto = new CreateWhitelistIpDto(
+                            model.getLabel(),
+                            model.getIp(),
+                            request.getOrganizationUuid(),
+                            whitelistType
+                    );
                     whitelistIpService.create(createDto);
                 });
         whitelistIpLifecycleMediator.onSaved(buildSaveWhitelistIpLifecycleDto(request));
@@ -81,11 +89,12 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
 
     @Transactional
     @Override
-    public GetWhitelistIpsByOrganizationResponse getByOrganization(final String organizationUuid) {
-        LOGGER.debug("Processing WhitelistIp resource getByOrganization method for organizationUuid - {}", organizationUuid);
-        final List<WhitelistIp> whitelistIps = whitelistIpService.getByOrganization(organizationUuid);
+    public GetWhitelistIpsByOrganizationResponse getByOrganizationAndType(final GetWhitelistIpsRequest request) {
+        LOGGER.debug("Processing WhitelistIp resource getByOrganization method for organizationUuid - {} and type - {}", request.getOrganizationUuid(), request.getType());
+        final List<WhitelistIp> whitelistIps = whitelistIpService.getByOrganizationAndType(
+                request.getOrganizationUuid(), WhitelistType.valueOf(request.getType().name()));
         final List<GetWhitelistIpResponseModel> responseModels = mapperFacade.mapAsList(whitelistIps, GetWhitelistIpResponseModel.class);
-        LOGGER.debug("Successfully processed WhitelistIp resource getByOrganization method for organizationUuid - {}", organizationUuid);
+        LOGGER.debug("Successfully processed WhitelistIp resource getByOrganization method with response - {}", responseModels);
         return new GetWhitelistIpsByOrganizationResponse(new GetWhitelistIpGridResponseModel(responseModels.size(), responseModels));
     }
 
@@ -105,7 +114,7 @@ public class WhitelistIpServiceFacadeImpl implements WhitelistIpServiceFacade {
         return new SaveWhitelistIpLifecycleDto(
                 organization.getUuid(),
                 organization.getSlug(),
-                ips
-        );
+                ips,
+                WhitelistType.valueOf(request.getType().name()));
     }
 }

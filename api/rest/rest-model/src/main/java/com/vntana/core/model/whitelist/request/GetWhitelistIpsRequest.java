@@ -11,32 +11,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Created by Arman Gevorgyan.
- * Date: 11/29/19
- * Time: 11:16 AM
+ * Created by Diana Gevorgyan
+ * Date: 5/20/21
+ * Time: 10:26 AM
  */
-public class SaveWhitelistIpsRequest extends AbstractRequestModel implements ValidatableRequest<WhitelistIpErrorResponseModel> {
+public class GetWhitelistIpsRequest extends AbstractRequestModel implements ValidatableRequest<WhitelistIpErrorResponseModel> {
 
     @JsonProperty("organizationUuid")
     private String organizationUuid;
 
-    @JsonProperty("whitelistIps")
-    private List<CreateOrUpdateWhitelistIpItemRequestModel> whitelistIps;
-    
     @JsonProperty("whitelistType")
     private WhitelistTypeModel type;
 
-    private SaveWhitelistIpsRequest() {
-        super();
+    public GetWhitelistIpsRequest() {
     }
 
-    public SaveWhitelistIpsRequest(final String organizationUuid, final List<CreateOrUpdateWhitelistIpItemRequestModel> whitelistIps, WhitelistTypeModel type) {
-        super();
+    public GetWhitelistIpsRequest(final String organizationUuid, final WhitelistTypeModel type) {
         this.organizationUuid = organizationUuid;
-        this.whitelistIps = whitelistIps;
         this.type = type;
     }
 
@@ -45,16 +38,10 @@ public class SaveWhitelistIpsRequest extends AbstractRequestModel implements Val
         if (StringUtils.isEmpty(organizationUuid)) {
             return Collections.singletonList(WhitelistIpErrorResponseModel.MISSING_ORGANIZATION_UUID);
         }
-        if (whitelistIps == null) {
-            return Collections.singletonList(WhitelistIpErrorResponseModel.MISSING_WHITELIST_IPS);
-        }
         if (type == null) {
             return Collections.singletonList(WhitelistIpErrorResponseModel.MISSING_WHITELIST_TYPE);
         }
-        return whitelistIps.parallelStream()
-                .flatMap(ip -> ip.validate().stream())
-                .distinct()
-                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+        return Collections.emptyList();
     }
 
     @Override
@@ -62,13 +49,12 @@ public class SaveWhitelistIpsRequest extends AbstractRequestModel implements Val
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SaveWhitelistIpsRequest)) {
+        if (!(o instanceof GetWhitelistIpsRequest)) {
             return false;
         }
-        final SaveWhitelistIpsRequest that = (SaveWhitelistIpsRequest) o;
+        final GetWhitelistIpsRequest that = (GetWhitelistIpsRequest) o;
         return new EqualsBuilder()
                 .append(organizationUuid, that.organizationUuid)
-                .append(whitelistIps, that.whitelistIps)
                 .append(type, that.type)
                 .isEquals();
     }
@@ -77,15 +63,15 @@ public class SaveWhitelistIpsRequest extends AbstractRequestModel implements Val
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(organizationUuid)
-                .append(whitelistIps)
+                .append(type)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .appendSuper(super.toString())
                 .append("organizationUuid", organizationUuid)
-                .append("whitelistIps", whitelistIps)
                 .append("type", type)
                 .toString();
     }
@@ -96,14 +82,6 @@ public class SaveWhitelistIpsRequest extends AbstractRequestModel implements Val
 
     public void setOrganizationUuid(final String organizationUuid) {
         this.organizationUuid = organizationUuid;
-    }
-
-    public List<CreateOrUpdateWhitelistIpItemRequestModel> getWhitelistIps() {
-        return whitelistIps;
-    }
-
-    public void setWhitelistIps(final List<CreateOrUpdateWhitelistIpItemRequestModel> whitelistIps) {
-        this.whitelistIps = whitelistIps;
     }
 
     public WhitelistTypeModel getType() {

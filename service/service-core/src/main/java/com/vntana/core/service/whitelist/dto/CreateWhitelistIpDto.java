@@ -1,6 +1,7 @@
 package com.vntana.core.service.whitelist.dto;
 
 import com.vntana.commons.service.dto.ServiceDto;
+import com.vntana.core.domain.whitelist.WhitelistType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,14 +17,17 @@ public class CreateWhitelistIpDto implements ServiceDto {
     private final String label;
     private final String ip;
     private final String organizationUuid;
+    private final WhitelistType type;
 
-    public CreateWhitelistIpDto(final String label, final String ip, final String organizationUuid) {
+    public CreateWhitelistIpDto(final String label, final String ip, final String organizationUuid, final WhitelistType type) {
         super();
         Assert.hasText(ip, "The whitelist ip ip should not be null or empty");
         Assert.hasText(organizationUuid, "The whitelist ip organizationUuid should not be null or empty");
+        Assert.notNull(type, "The whitelist type cannot be null");
         this.label = label;
         this.ip = ip;
         this.organizationUuid = organizationUuid;
+        this.type = type;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class CreateWhitelistIpDto implements ServiceDto {
                 .append(label, that.label)
                 .append(ip, that.ip)
                 .append(organizationUuid, that.organizationUuid)
+                .append(type, type)
                 .isEquals();
     }
 
@@ -48,6 +53,7 @@ public class CreateWhitelistIpDto implements ServiceDto {
                 .append(label)
                 .append(ip)
                 .append(organizationUuid)
+                .append(type)
                 .toHashCode();
     }
 
@@ -57,6 +63,7 @@ public class CreateWhitelistIpDto implements ServiceDto {
                 .append("label", label)
                 .append("ip", ip)
                 .append("organizationUuid", organizationUuid)
+                .append("type", type)
                 .toString();
     }
 
@@ -70,5 +77,9 @@ public class CreateWhitelistIpDto implements ServiceDto {
 
     public String getOrganizationUuid() {
         return organizationUuid;
+    }
+
+    public WhitelistType getType() {
+        return type;
     }
 }

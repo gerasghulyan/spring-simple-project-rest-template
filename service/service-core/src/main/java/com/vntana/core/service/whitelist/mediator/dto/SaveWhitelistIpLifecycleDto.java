@@ -1,12 +1,15 @@
 package com.vntana.core.service.whitelist.mediator.dto;
 
 import com.vntana.commons.service.dto.ServiceDto;
+import com.vntana.core.domain.whitelist.WhitelistType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.util.Assert;
 
 import java.util.List;
+
+import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
 
 /**
  * Created by Geras Ghulyan
@@ -18,13 +21,16 @@ public class SaveWhitelistIpLifecycleDto implements ServiceDto {
     private final String organizationUuid;
     private final String organizationSlug;
     private final List<String> ips;
+    private final WhitelistType type;
 
-    public SaveWhitelistIpLifecycleDto(final String organizationUuid, final String organizationSlug, final List<String> ips) {
-        Assert.hasText(organizationUuid, "The organizationUuid should not be null or empty");
-        Assert.hasText(organizationSlug, "The organizationSlug should not be null or empty");
+    public SaveWhitelistIpLifecycleDto(final String organizationUuid, final String organizationSlug, final List<String> ips, final WhitelistType type) {
+        hasText(organizationUuid, "The organizationUuid should not be null or empty");
+        hasText(organizationSlug, "The organizationSlug should not be null or empty");
+        notNull(type, "Whitelist type cannot be null");
         this.organizationUuid = organizationUuid;
         this.organizationSlug = organizationSlug;
         this.ips = ips;
+        this.type = type;
     }
 
     @Override
@@ -40,6 +46,7 @@ public class SaveWhitelistIpLifecycleDto implements ServiceDto {
                 .append(organizationUuid, that.organizationUuid)
                 .append(organizationSlug, that.organizationSlug)
                 .append(ips, that.ips)
+                .append(type, that.type)
                 .isEquals();
     }
 
@@ -49,6 +56,7 @@ public class SaveWhitelistIpLifecycleDto implements ServiceDto {
                 .append(organizationUuid)
                 .append(organizationSlug)
                 .append(ips)
+                .append(type)
                 .toHashCode();
     }
 
@@ -58,6 +66,7 @@ public class SaveWhitelistIpLifecycleDto implements ServiceDto {
                 .append("organizationUuid", organizationUuid)
                 .append("organizationSlug", organizationSlug)
                 .append("ips", ips)
+                .append("type", type)
                 .toString();
     }
 
@@ -71,5 +80,9 @@ public class SaveWhitelistIpLifecycleDto implements ServiceDto {
 
     public List<String> getIps() {
         return ips;
+    }
+
+    public WhitelistType getType() {
+        return type;
     }
 }

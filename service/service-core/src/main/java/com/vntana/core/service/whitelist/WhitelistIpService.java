@@ -1,6 +1,7 @@
 package com.vntana.core.service.whitelist;
 
 import com.vntana.core.domain.whitelist.WhitelistIp;
+import com.vntana.core.domain.whitelist.WhitelistType;
 import com.vntana.core.service.whitelist.dto.CreateWhitelistIpDto;
 import com.vntana.core.service.whitelist.dto.UpdateWhitelistIpDto;
 
@@ -19,6 +20,8 @@ public interface WhitelistIpService {
     Optional<WhitelistIp> findByUuid(final String uuid);
 
     List<WhitelistIp> getByOrganization(final String organizationUuid);
+    
+    List<WhitelistIp> getByOrganizationAndType(final String organizationUuid, final WhitelistType type);
 
     WhitelistIp update(final UpdateWhitelistIpDto updateDto);
 
