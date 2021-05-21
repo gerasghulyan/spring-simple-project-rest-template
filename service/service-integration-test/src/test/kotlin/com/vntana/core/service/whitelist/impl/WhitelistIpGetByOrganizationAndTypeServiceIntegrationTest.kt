@@ -14,7 +14,7 @@ class WhitelistIpGetByOrganizationAndTypeServiceIntegrationTest : AbstractWhitel
 
     @Test
     fun `test when nothing exists`() {
-        assertThat(whitelistIpService.getByOrganizationAndType(uuid(), WhitelistType.EMBEDDED)).isEmpty()
+        assertThat(whitelistIpService.getByOrganizationAndType(uuid(), WhitelistType.API)).isEmpty()
     }
 
     @Test
@@ -23,7 +23,7 @@ class WhitelistIpGetByOrganizationAndTypeServiceIntegrationTest : AbstractWhitel
         val organization = organizationTestHelper.persistOrganization()
         val whitelistIp1 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.ADMIN)
         val whitelistIp2 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.ADMIN)
-        val whitelistIp3 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.EMBEDDED)
+        val whitelistIp3 = testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.API)
 
         whitelistIpService.getByOrganizationAndType(organization.uuid, type).let {
             assertThat(it).containsExactlyInAnyOrder(whitelistIp1, whitelistIp2)

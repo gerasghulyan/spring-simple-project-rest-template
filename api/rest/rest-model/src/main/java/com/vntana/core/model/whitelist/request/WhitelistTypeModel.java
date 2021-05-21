@@ -7,6 +7,6 @@ package com.vntana.core.model.whitelist.request;
  */
 public enum WhitelistTypeModel {
 
-    EMBEDDED,
+    API,
     ADMIN
 }

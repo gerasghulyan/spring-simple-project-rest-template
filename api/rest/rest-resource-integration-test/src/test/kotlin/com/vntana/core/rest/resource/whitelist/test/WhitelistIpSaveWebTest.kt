@@ -68,7 +68,7 @@ class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
     @Test
     fun `test duplicate ips`() {
         val organizationUuid1 = organizationTestHelper.persistOrganization().response().uuid
-        val type = WhitelistTypeModel.EMBEDDED
+        val type = WhitelistTypeModel.API
         val validIp = testHelper.validIp()
         val request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(
             organizationUuid = organizationUuid1,
@@ -95,7 +95,7 @@ class WhitelistIpSaveWebTest : AbstractWhitelistIpWebTest() {
     fun test() {
         val organizationUuid1 = organizationTestHelper.persistOrganization().response().uuid
         val organizationUuid2 = organizationTestHelper.persistOrganization().response().uuid
-        val type = WhitelistTypeModel.EMBEDDED
+        val type = WhitelistTypeModel.API
         testHelper.persistWhitelistIps(
             request = testHelper.buildCreateOrUpdateWhitelistIpsRequest(
                 organizationUuid = organizationUuid1,

@@ -19,14 +19,14 @@ open class WhitelistIpCommonTestHelper : AbstractCommonTestHelper() {
         label: String? = uuid(),
         ip: String? = uuid(),
         organization: Organization?,
-        type: WhitelistType? = WhitelistType.EMBEDDED
+        type: WhitelistType? = WhitelistType.API
     ): WhitelistIp = WhitelistIp(label, ip, organization, type)
 
     fun buildCreateWhitelistIpDto(
         label: String? = uuid(),
         ip: String? = uuid(),
         organizationUuid: String? = uuid(),
-        type: WhitelistType? = WhitelistType.EMBEDDED
+        type: WhitelistType? = WhitelistType.API
     ): CreateWhitelistIpDto = CreateWhitelistIpDto(label, ip, organizationUuid, type)
 
     fun buildUpdateWhitelistIpDto(
@@ -37,6 +37,6 @@ open class WhitelistIpCommonTestHelper : AbstractCommonTestHelper() {
         organizationUuid: String? = uuid(),
         organizationSlug: String? = uuid(),
         ips: List<String>? = listOf(uuid(), uuid()),
-        type: WhitelistType? = WhitelistType.EMBEDDED
+        type: WhitelistType? = WhitelistType.API
     ): SaveWhitelistIpLifecycleDto = SaveWhitelistIpLifecycleDto(organizationUuid, organizationSlug, ips, type)
 }

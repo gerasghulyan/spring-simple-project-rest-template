@@ -19,7 +19,7 @@ class WhitelistIpFindByOrganizationUuidAndTypeServiceUnitTest : AbstractWhitelis
     fun `test with invalid arguments`() {
         resetAll()
         replayAll()
-        assertThatThrownBy { whitelistIpService.getByOrganizationAndType(null, WhitelistType.EMBEDDED) }
+        assertThatThrownBy { whitelistIpService.getByOrganizationAndType(null, WhitelistType.API) }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)
         assertThatThrownBy { whitelistIpService.getByOrganizationAndType("", WhitelistType.ADMIN) }
             .isExactlyInstanceOf(IllegalArgumentException::class.java)

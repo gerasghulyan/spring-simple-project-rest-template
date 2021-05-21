@@ -20,7 +20,7 @@ class WhitelistIpGetByOrganizationAndTypeServiceFacadeUnitTest : AbstractWhiteli
     @Test
     fun `test when no ips found`() {
         val organization = organizationCommonTestHelper.buildOrganization()
-        val type = WhitelistType.EMBEDDED
+        val type = WhitelistType.API
         val request = testHelper.buildGetWhitelistIpsRequest(
             organizationUuid = organization.uuid,
             type = WhitelistTypeModel.valueOf(type.name)
@@ -40,7 +40,7 @@ class WhitelistIpGetByOrganizationAndTypeServiceFacadeUnitTest : AbstractWhiteli
     @Test
     fun test() {
         val organization = organizationCommonTestHelper.buildOrganization()
-        val type = WhitelistType.EMBEDDED
+        val type = WhitelistType.API
         val request = testHelper.buildGetWhitelistIpsRequest(
             organizationUuid = organization.uuid,
             type = WhitelistTypeModel.valueOf(type.name)

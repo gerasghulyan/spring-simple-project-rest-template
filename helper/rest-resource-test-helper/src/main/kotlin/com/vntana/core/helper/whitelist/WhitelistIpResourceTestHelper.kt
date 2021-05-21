@@ -24,7 +24,7 @@ class WhitelistIpResourceTestHelper : WhitelistIpRestTestHelper() {
 
     fun persistWhitelistIps(
         organizationUuid: String = organizationResourceTestHelper.persistOrganization().response().uuid,
-        type: WhitelistTypeModel = WhitelistTypeModel.EMBEDDED,
+        type: WhitelistTypeModel = WhitelistTypeModel.API,
         request: SaveWhitelistIpsRequest = buildCreateOrUpdateWhitelistIpsRequest(
             organizationUuid = organizationUuid,
             type = type

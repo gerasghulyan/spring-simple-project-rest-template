@@ -32,7 +32,7 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
         val expectedType = WhitelistTypeModel.ADMIN
         val expectedWhitelistIp =
             testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = expectedType)
-        testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = WhitelistTypeModel.EMBEDDED)
+        testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = WhitelistTypeModel.API)
         val request = testHelper.buildGetWhitelistIpsRequest(organizationUuid, expectedType)
         whitelistIpResourceClient.getByOrganizationAndType(request).let {
             assertBasicSuccessResultResponse(it)
@@ -63,7 +63,7 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
                 organizationUuid, listOf(
                     testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label1, ip1),
                     testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(label2, ip2)
-                ), WhitelistTypeModel.EMBEDDED
+                ), WhitelistTypeModel.API
             )
         )
         val request = testHelper.buildGetWhitelistIpsRequest(organizationUuid, expectedType)

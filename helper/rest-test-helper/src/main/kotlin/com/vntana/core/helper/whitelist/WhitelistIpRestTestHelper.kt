@@ -20,12 +20,12 @@ open class WhitelistIpRestTestHelper : AbstractRestTestHelper() {
         whitelistIps: List<CreateOrUpdateWhitelistIpItemRequestModel>? = listOf(
             buildCreateOrUpdateWhitelistIpItemRequestModel()
         ),
-        type: WhitelistTypeModel? = WhitelistTypeModel.EMBEDDED
+        type: WhitelistTypeModel? = WhitelistTypeModel.API
     ): SaveWhitelistIpsRequest = SaveWhitelistIpsRequest(organizationUuid, whitelistIps, type)
 
     fun buildGetWhitelistIpsRequest(
         organizationUuid: String? = uuid(),
-        type: WhitelistTypeModel? = WhitelistTypeModel.EMBEDDED
+        type: WhitelistTypeModel? = WhitelistTypeModel.API
     ): GetWhitelistIpsRequest = GetWhitelistIpsRequest(organizationUuid, type)
 
     fun buildCreateOrUpdateWhitelistIpItemRequestModel(

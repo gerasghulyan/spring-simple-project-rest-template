@@ -23,7 +23,7 @@ class WhitelistIpGetByOrganizationServiceIntegrationTest : AbstractWhitelistIpSe
         val whitelistIps = listOf(
             testHelper.persistWhitelistIp(organization = organization),
             testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.ADMIN),
-            testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.EMBEDDED)
+            testHelper.persistWhitelistIp(organization = organization, type = WhitelistType.API)
         )
         whitelistIpService.getByOrganization(organization.uuid).let {
             assertThat(it).containsAll(whitelistIps)

@@ -33,7 +33,7 @@ class WhitelistIpSaveServiceFacadeUnitTest : AbstractWhitelistIpServiceFacadeUni
     fun `test when previous ips not found`() {
         val organization = organizationCommonTestHelper.buildOrganization()
         val organizationUuid = organization.uuid
-        val type = WhitelistType.EMBEDDED
+        val type = WhitelistType.API
         val item = testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel()
         val createDto = commonTestHelper.buildCreateWhitelistIpDto(
             label = item.label,
@@ -73,7 +73,7 @@ class WhitelistIpSaveServiceFacadeUnitTest : AbstractWhitelistIpServiceFacadeUni
     fun `test when previous ips not found and request contains duplicate ips`() {
         val organization = organizationCommonTestHelper.buildOrganization()
         val organizationUuid = organization.uuid
-        val type = WhitelistType.EMBEDDED
+        val type = WhitelistType.API
         val ip = testHelper.validIp()
         val item1 = testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = ip)
         val item2 = testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel(ip = ip)
@@ -116,7 +116,7 @@ class WhitelistIpSaveServiceFacadeUnitTest : AbstractWhitelistIpServiceFacadeUni
     fun `test when previous ips found`() {
         val organization = organizationCommonTestHelper.buildOrganization()
         val organizationUuid = organization.uuid
-        val type = WhitelistType.EMBEDDED
+        val type = WhitelistType.API
         val item = testHelper.buildCreateOrUpdateWhitelistIpItemRequestModel()
         val createDto = commonTestHelper.buildCreateWhitelistIpDto(
             label = item.label,

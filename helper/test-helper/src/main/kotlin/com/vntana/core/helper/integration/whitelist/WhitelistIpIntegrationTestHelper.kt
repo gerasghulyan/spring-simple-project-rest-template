@@ -27,7 +27,7 @@ class WhitelistIpIntegrationTestHelper : WhitelistIpCommonTestHelper() {
         label: String = uuid(),
         ip: String = uuid(),
         organization: Organization = organizationHelper.persistOrganization(),
-        type: WhitelistType = WhitelistType.EMBEDDED
+        type: WhitelistType = WhitelistType.API
     ): WhitelistIp {
         return whitelistIpService.create(buildCreateWhitelistIpDto(label, ip, organization.uuid, type))
     }
