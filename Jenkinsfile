@@ -2,36 +2,33 @@ pipeline {
     options {
         buildDiscarder logRotator(numToKeepStr: '10')
     }
-    agent any
+    agent {
+        label "jenkins-slave"
+    }
     stages {
         stage("Build and Test") {
-            agent {
-                docker {
-                    image "openjdk:8"
-                }
-            }
             steps {
-                withCredentials(
-                    [
-                        usernamePassword(
-                            credentialsId: 'nexus',
-                            usernameVariable: 'SONATYPE_USERNAME',
-                            passwordVariable: 'SONATYPE_PASSWORD'
-                        )
-                    ]
-                ) {
-                sh './gradlew clean build'
-               }
+                container("gcloud") {
+                    script {
+                        withCredentials(
+                            [
+                                usernamePassword(
+                                    credentialsId: 'nexus',
+                                    usernameVariable: 'SONATYPE_USERNAME',
+                                    passwordVariable: 'SONATYPE_PASSWORD'
+                                )
+                            ]
+                        ) {
+                            sh './gradlew clean build'
+                        }
+                    }
+                }
             }
         }
         stage("Quality Analysis") {
-            agent {
-                docker {
-                    image "openjdk:8"
-                }
-            }
             steps {
-                withCredentials(
+                container("gcloud") {
+                    withCredentials(
                     [
                         string(
                             credentialsId: 'sonar',
@@ -43,21 +40,16 @@ pipeline {
                             passwordVariable: 'SONATYPE_PASSWORD'
                         )
                     ]
-                ) {
-                sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
-               }
+                    ) {
+                        sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
+                    }
+                }
             }
         }
         stage("Upload Maven") {
-            when {
-                anyOf {
-                    branch 'master';
-                    branch 'release';
-                    branch 'develop'
-                }
-            }
             steps {
-                withCredentials(
+                container("gcloud") {
+                    withCredentials(
                     [
                         usernamePassword(
                             credentialsId: 'nexus',
@@ -65,76 +57,39 @@ pipeline {
                             passwordVariable: 'SONATYPE_PASSWORD'
                         )
                     ]
-                ) {
-                    sh "./gradlew :api:rest:rest-model:upload :api:rest:rest-client:upload :helper:rest-test-helper:upload --refresh-dependencies"
+                    ) {
+                       sh "./gradlew :api:rest:rest-model:upload :api:rest:rest-client:upload :helper:rest-test-helper:upload --refresh-dependencies"
+                    }
                 }
             }
         }
         stage("Push Docker") {
-            when {
-                anyOf {
-                    branch 'master';
-                    branch 'release';
-                    branch 'develop'
-                }
-            }
-            agent {
-                docker {
-                    image "openjdk:8"
-                }
-            }
             steps {
-                withCredentials(
-                    [
-                        usernamePassword(
-                            credentialsId: 'nexus',
-                            usernameVariable: 'SONATYPE_USERNAME',
-                            passwordVariable: 'SONATYPE_PASSWORD'
-                        ),
-                        usernamePassword(
-                            credentialsId: 'nexus',
-                            usernameVariable: 'DOCKER_REGISTRY_USERNAME',
-                            passwordVariable: 'DOCKER_REGISTRY_PASSWORD'
+                container("gcloud") {
+                        sh 'gcloud config set project $PROJECT_NAME >/dev/null 2>&1'
+                        sh 'gcloud auth configure-docker --quiet'
+                        
+                        sh "./gradlew --exclude-task test pushDockerTags --project-prop dockerRegistry=$DOCKER_GCR_REGISTRY --project-prop removeImage"
+                }
+            }
+        }
+        stage("DeployDev") {
+            when {
+                branch "develop"
+            }
+            steps{
+                container("gcloud") {
+                    script {
+                        git(
+                            url: 'https://bitbucket.org/vntanaplatform2/vntana-configs.git',
+                            credentialsId: 'bitbucket',
+                            branch: "terraform"
                         )
-                    ]
-                ) {
-                    sh "./gradlew --exclude-task test pushDockerTags --project-prop dockerRegistry=$DOCKER_REGISTRY --project-prop removeImage"
+                        sh 'gcloud container clusters get-credentials development-vntana --zone europe-west4 --project $PROJECT_NAME-development'
+
+                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core --set podLabels.version=${NODE_ENV} development-configs/vntana/core'
+                    }
                 }
-            }
-        }
-        stage("DeployDEV") {
-            when {
-                 expression {
-                    return env.BRANCH_NAME == 'develop'
-                }
-            }
-            steps {
-                build(
-                    job: 'DeployDEV/master',
-                    parameters: [
-                        booleanParam(name: "core", value: true),
-                        booleanParam(name: "coreConsumer", value: true)
-                    ],
-                    propagate: 'true',
-                    wait: 'false'
-                )
-            }
-        }
-        stage("DeployACC") {
-            when {
-                 expression {
-                    return env.BRANCH_NAME == 'release'
-                }
-            }
-            steps {
-                build(
-                    job: 'DeployACC/master',
-                    parameters: [
-                        booleanParam(name: "core", value: true)
-                    ],
-                    propagate: 'true',
-                    wait: 'false'
-                )
             }
         }
     }

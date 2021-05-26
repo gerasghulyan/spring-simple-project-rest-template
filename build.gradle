@@ -44,7 +44,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id "org.jetbrains.kotlin.plugin.spring" version "1.3.50"
     id "org.ajoberstar.grgit" version "3.0.0"
-    id 'com.bmuschko.docker-remote-api' version "4.2.0"
+    id 'com.bmuschko.docker-remote-api' version "6.7.0"
     id 'com.palantir.git-version' version '0.11.0'
     id "org.sonarqube" version "2.7.1"
 }
@@ -233,7 +233,6 @@ project(':queue:queue-consumer') {
         implementation project(":service:service-core")
         runtimeOnly project(":service:service-impl")
         implementation project(":domain")
-        testImplementation project(":helper::test-helper")
         api "com.vntana.commons:queue-commons"
         api "com.vntana.commons:queue-asset-producer-message"
         testImplementation "org.springframework.boot:spring-boot-starter-test"
@@ -797,16 +796,6 @@ configure(subprojects.findAll {
     apply plugin: 'com.bmuschko.docker-remote-api'
 
     def registry = project.findProperty("dockerRegistry") ?: ""
-    if (registry) {
-        registry += "/"
-    }
-    docker {
-        registryCredentials {
-            url = "https://$registry"
-            username = System.getenv("DOCKER_REGISTRY_USERNAME")
-            password = System.getenv("DOCKER_REGISTRY_PASSWORD")
-        }
-    }
 
     task createDockerfile(type: Dockerfile) {
         destFile = project.layout.buildDirectory.file('docker/Dockerfile')
@@ -836,13 +825,15 @@ configure(subprojects.findAll {
                 "migration-executable"    : "migration",
                 "queue-consumer-executable": "core-consumer"
         ][project.name]
-        tags.add("$registry$repo:$project.version")
+
+        images.add("$registry$repo:$project.version")
+        
         def v = versionDetails()
         if (v.gitHash) {
-            tags.add("$registry$repo:${v.gitHash}")
+            images.add("$registry$repo:${v.gitHash}")
         }
         if (v.branchName) {
-            tags.add("$registry$repo:${v.branchName.replaceAll("/", "-")}")
+            images.add("$registry$repo:${v.branchName.replaceAll("/", "-")}")
         }
     }
 
@@ -851,11 +842,9 @@ configure(subprojects.findAll {
         targetImageId buildDockerImage.getImageId()
     }
 
-    buildDockerImage.tags.get().each { tag ->
-        tasks.create(name: "pushDockerTag_${tag.replaceAll('[/\\\\:<>"\\?\\*\\|]', "-")}", type: DockerPushImage) {
-            dependsOn buildDockerImage
-            imageName = tag
-        }
+    task pushDockerImage(type: DockerPushImage) {
+        dependsOn buildDockerImage
+        images = buildDockerImage.images.get()
     }
 
     task pushDockerTags {
