@@ -88,6 +88,7 @@ pipeline {
                         sh 'gcloud container clusters get-credentials development-vntana --zone europe-west4 --project $PROJECT_NAME-development'
 
                         sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core  development-configs/vntana/core'
+                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core-consumer development-configs/vntana/core-consumer'
                     }
                 }
             }
