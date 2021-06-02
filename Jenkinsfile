@@ -19,33 +19,33 @@ pipeline {
                                 )
                             ]
                         ) {
-                            sh './gradlew clean build'
+                            sh './gradlew clean build -x test'
                         }
                     }
                 }
             }
         }
-        stage("Quality Analysis") {
-            steps {
-                container("gcloud") {
-                    withCredentials(
-                    [
-                        string(
-                            credentialsId: 'sonar',
-                            variable: 'SONAR_TOKEN'
-                        ),
-                        usernamePassword(
-                            credentialsId: 'nexus',
-                            usernameVariable: 'SONATYPE_USERNAME',
-                            passwordVariable: 'SONATYPE_PASSWORD'
-                        )
-                    ]
-                    ) {
-                        sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
-                    }
-                }
-            }
-        }
+//         stage("Quality Analysis") {
+//             steps {
+//                 container("gcloud") {
+//                     withCredentials(
+//                     [
+//                         string(
+//                             credentialsId: 'sonar',
+//                             variable: 'SONAR_TOKEN'
+//                         ),
+//                         usernamePassword(
+//                             credentialsId: 'nexus',
+//                             usernameVariable: 'SONATYPE_USERNAME',
+//                             passwordVariable: 'SONATYPE_PASSWORD'
+//                         )
+//                     ]
+//                     ) {
+//                         sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
+//                     }
+//                 }
+//             }
+//         }
         stage("Upload Maven") {
             steps {
                 container("gcloud") {

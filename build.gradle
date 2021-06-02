@@ -279,12 +279,10 @@ project(":migration:migration-executable") {
 
     sonarqube.skipProject = true
 
-    group = "${platformGroup}.migration"
-
     apply plugin: "org.springframework.boot"
 
     bootJar {
-        mainClassName = "${group}.boot.MigrationBootApplication"
+        mainClassName = "${platformGroup}.boot.MigrationBootApplication"
         manifest {
             attributes(
                     "Implementation-Version": environmentPlatformVersion()
@@ -790,12 +788,16 @@ import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 configure(subprojects.findAll {
     it.name == "rest-resource-executable" || it.name == "scheduler" || it.name == "queue-consumer" || it.name == "migration-executable" \
- || it.name == "queue-consumer-executable"
+  || it.name == "queue-consumer-executable"
 }) {
 
     apply plugin: 'com.bmuschko.docker-remote-api'
 
     def registry = project.findProperty("dockerRegistry") ?: ""
+
+    if (registry) {
+        registry += "/"
+    }
 
     task createDockerfile(type: Dockerfile) {
         destFile = project.layout.buildDirectory.file('docker/Dockerfile')
@@ -821,13 +823,13 @@ configure(subprojects.findAll {
             }
         }
         def repo = [
-                "rest-resource-executable": "core",
-                "migration-executable"    : "migration",
+                "rest-resource-executable" : "core",
+                "migration-executable"     : "migration",
                 "queue-consumer-executable": "core-consumer"
         ][project.name]
 
         images.add("$registry$repo:$project.version")
-        
+
         def v = versionDetails()
         if (v.gitHash) {
             images.add("$registry$repo:${v.gitHash}")
