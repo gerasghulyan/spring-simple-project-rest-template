@@ -235,6 +235,7 @@ project(':queue:queue-consumer') {
         implementation project(":domain")
         api "com.vntana.commons:queue-commons"
         api "com.vntana.commons:queue-asset-producer-message"
+        api project(":helper:test-helper")
         testImplementation "org.springframework.boot:spring-boot-starter-test"
     }
 }
