@@ -20,7 +20,7 @@ public interface TokenPersonalAccessRepository extends CrudRepository<TokenPerso
 
     Optional<TokenPersonalAccess> findByUuid(final String tokenUuid);
 
-    Optional<TokenPersonalAccess> findByToken(final String token);
+    Optional<TokenPersonalAccess> findByTokenAndExpirationIsNull(final String token);
 
     List<TokenPersonalAccess> findAllByUserAndExpirationIsNull(final User user);
 }
