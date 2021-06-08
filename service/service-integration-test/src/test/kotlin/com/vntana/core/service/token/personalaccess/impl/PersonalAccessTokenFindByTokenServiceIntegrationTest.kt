@@ -33,10 +33,7 @@ class PersonalAccessTokenFindByTokenServiceIntegrationTest : AbstractPersonalAcc
         }
         flushAndClear()
         personalAccessTokenService.findByToken(token).let {
-            assertThat(it.isPresent).isTrue()
-            assertThat(it.get().user).isEqualTo(user)
-            assertThat(it.get().token).isEqualTo(token)
-            assertThat(it.get().isExpired).isEqualTo(true)
+            assertThat(it.isPresent).isFalse()
         }
     }
 }

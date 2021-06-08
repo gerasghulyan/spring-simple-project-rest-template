@@ -2,6 +2,7 @@ package com.vntana.core.listener.whitelist;
 
 import com.vntana.cache.service.whitelist.WhitelistIpCacheService;
 import com.vntana.cache.service.whitelist.dto.CacheWhitelistCreateDto;
+import com.vntana.core.domain.whitelist.WhitelistType;
 import com.vntana.core.service.whitelist.mediator.dto.SaveWhitelistIpLifecycleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +35,16 @@ public class WhitelistIpCacheUpdateEventListenerImpl implements WhitelistIpCache
     public void handleEvent(final WhitelistIpLifecyclePayload payload) {
         notNull(payload, "The WhitelistIpLifecyclePayload should not be null");
         final SaveWhitelistIpLifecycleDto whitelistIpLifecycleDto = payload.getDto();
-        final CacheWhitelistCreateDto dto = new CacheWhitelistCreateDto(
-                whitelistIpLifecycleDto.getOrganizationUuid(),
-                whitelistIpLifecycleDto.getOrganizationSlug(),
-                whitelistIpLifecycleDto.getIps()
-                // TODO: 5/20/21 add ip type here 
-        );
-        whitelistIpCacheService.cacheByOrganizationUuid(dto);
-        whitelistIpCacheService.cacheByOrganizationSlug(dto);
+        // TODO: @Diana please cleanup this after release
+        if (whitelistIpLifecycleDto.getType().equals(WhitelistType.API)) {
+            final CacheWhitelistCreateDto dto = new CacheWhitelistCreateDto(
+                    whitelistIpLifecycleDto.getOrganizationUuid(),
+                    whitelistIpLifecycleDto.getOrganizationSlug(),
+                    whitelistIpLifecycleDto.getIps()
+                    // TODO: 5/20/21 add ip type here 
+            );
+            whitelistIpCacheService.cacheByOrganizationUuid(dto);
+            whitelistIpCacheService.cacheByOrganizationSlug(dto);
+        }
     }
 }
