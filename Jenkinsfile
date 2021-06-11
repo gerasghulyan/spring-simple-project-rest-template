@@ -5,6 +5,12 @@ pipeline {
     agent {
         label "jenkins-slave"
     }
+    environment {
+        GIT_COMMIT = """${sh(
+            returnStdout: true,
+            script: "git rev-parse --short=10 HEAD"
+        )}""".trim()
+    }
     stages {
         stage("Build and Test") {
             steps {
@@ -19,33 +25,33 @@ pipeline {
                                 )
                             ]
                         ) {
-                            sh './gradlew clean build'
+                            sh './gradlew clean build -x test'
                         }
                     }
                 }
             }
         }
-        stage("Quality Analysis") {
-            steps {
-                container("gcloud") {
-                    withCredentials(
-                    [
-                        string(
-                            credentialsId: 'sonar',
-                            variable: 'SONAR_TOKEN'
-                        ),
-                        usernamePassword(
-                            credentialsId: 'nexus',
-                            usernameVariable: 'SONATYPE_USERNAME',
-                            passwordVariable: 'SONATYPE_PASSWORD'
-                        )
-                    ]
-                    ) {
-                        sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
-                    }
-                }
-            }
-        }
+//         stage("Quality Analysis") {
+//             steps {
+//                 container("gcloud") {
+//                     withCredentials(
+//                     [
+//                         string(
+//                             credentialsId: 'sonar',
+//                             variable: 'SONAR_TOKEN'
+//                         ),
+//                         usernamePassword(
+//                             credentialsId: 'nexus',
+//                             usernameVariable: 'SONATYPE_USERNAME',
+//                             passwordVariable: 'SONATYPE_PASSWORD'
+//                         )
+//                     ]
+//                     ) {
+//                         sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
+//                     }
+//                 }
+//             }
+//         }
         stage("Upload Maven") {
             steps {
                 container("gcloud") {
@@ -87,8 +93,8 @@ pipeline {
                         )
                         sh 'gcloud container clusters get-credentials development-vntana --zone europe-west4 --project $PROJECT_NAME-development'
 
-                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core  development-configs/vntana/core'
-                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core-consumer development-configs/vntana/core-consumer'
+                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core -f development-configs/vntana/core/values.yaml --set image.tag=$GIT_COMMIT development-configs/vntana/core'
+                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core-consumer -f development-configs/vntana/core-consume/values.yaml --set image.tag=$GIT_COMMIT development-configs/vntana/core-consumer'
                     }
                 }
             }
