@@ -94,7 +94,7 @@ pipeline {
                         sh 'gcloud container clusters get-credentials development-vntana --zone europe-west4 --project $PROJECT_NAME-development'
 
                         sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core -f development-configs/vntana/core/values.yaml --set image.tag=$GIT_COMMIT development-configs/vntana/core'
-                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core-consumer -f development-configs/vntana/core-consume/values.yaml --set image.tag=$GIT_COMMIT development-configs/vntana/core-consumer'
+                        sh 'helm -n development upgrade --install --wait --atomic --timeout=150s core-consumer -f development-configs/vntana/core-consumer/values.yaml --set image.tag=$GIT_COMMIT development-configs/vntana/core-consumer'
                     }
                 }
             }
