@@ -42,6 +42,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -142,7 +143,11 @@ public class ClientOrganizationServiceFacadeImpl implements ClientOrganizationSe
         }
         final User user = userService.getByUuid(userUuid);
         final Organization organization = organizationService.getByUuid(userOrganizationUuid);
-        final UserClientOrganizationResponse response = new UserClientOrganizationResponse(getUserClientOrganizationResponse(user, organization));
+        final List<GetUserClientOrganizationsResponseModel> userClientResponseModel = getUserClientOrganizationResponse(user, organization)
+                .stream()
+                .sorted(Comparator.comparing(GetUserClientOrganizationsResponseModel::getName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
+        final UserClientOrganizationResponse response = new UserClientOrganizationResponse(userClientResponseModel);
         LOGGER.debug("Successfully retrieved user organization's client organizations by user uuid - {} and by user organization uuid - {}", userUuid, userOrganizationUuid);
         return response;
     }
