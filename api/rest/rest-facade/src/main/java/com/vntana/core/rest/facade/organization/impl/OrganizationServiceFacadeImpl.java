@@ -157,7 +157,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .map(user -> {
                     final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenNotSuperAdmin(user)
                             .stream()
-                            .sorted(Comparator.comparing(GetUserOrganizationsResponseModel::getName))
+                            .sorted(Comparator.comparing(GetUserOrganizationsResponseModel::getName, String.CASE_INSENSITIVE_ORDER))
                             .collect(Collectors.toList());
                     return new UserOrganizationResponse(
                             new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
@@ -180,7 +180,7 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
                 .map(user -> {
                     final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenSuperAdmin(user.getUuid())
                             .stream()
-                            .sorted(Comparator.comparing(GetUserOrganizationsResponseModel::getName))
+                            .sorted(Comparator.comparing(GetUserOrganizationsResponseModel::getName, String.CASE_INSENSITIVE_ORDER))
                             .collect(Collectors.toList());
                     return new UserOrganizationResponse(
                             new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
