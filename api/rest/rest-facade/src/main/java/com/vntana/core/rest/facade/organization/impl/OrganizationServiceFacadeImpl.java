@@ -50,6 +50,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -154,7 +155,10 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         LOGGER.debug("Retrieving user organizations by user uuid - {}", userUuid);
         return userService.findByUuid(userUuid)
                 .map(user -> {
-                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenNotSuperAdmin(user);
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenNotSuperAdmin(user)
+                            .stream()
+                            .sorted(Comparator.comparing(GetUserOrganizationsResponseModel::getName))
+                            .collect(Collectors.toList());
                     return new UserOrganizationResponse(
                             new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
                     );
@@ -174,7 +178,10 @@ public class OrganizationServiceFacadeImpl implements OrganizationServiceFacade 
         LOGGER.debug("Retrieving super admin user organizations by user uuid - {}", userUuid);
         return userService.findByUuid(userUuid)
                 .map(user -> {
-                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenSuperAdmin(user.getUuid());
+                    final List<GetUserOrganizationsResponseModel> userResponse = getOrganizationsWhenSuperAdmin(user.getUuid())
+                            .stream()
+                            .sorted(Comparator.comparing(GetUserOrganizationsResponseModel::getName))
+                            .collect(Collectors.toList());
                     return new UserOrganizationResponse(
                             new GetUserOrganizationsGridResponseModel(userResponse.size(), userResponse)
                     );

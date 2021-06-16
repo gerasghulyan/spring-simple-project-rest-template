@@ -32,8 +32,8 @@ class OrganizationGetSuperAdminUserOrganizationsServiceFacadeUnitTest : Abstract
     fun `test getSuperAdminUserOrganizations when super admin`() {
         // test data
         resetAll()
-        val organization = commonTestHelper.buildOrganization()
-        val organization2 = commonTestHelper.buildOrganization()
+        val organization = commonTestHelper.buildOrganization(name = "aaa")
+        val organization2 = commonTestHelper.buildOrganization(name = "bbb")
         val user = userHelper.buildUserWithOrganizationOwnerRole()
         user.grantSuperAdminRole()
         val organizations = listOf(organization, organization2)
