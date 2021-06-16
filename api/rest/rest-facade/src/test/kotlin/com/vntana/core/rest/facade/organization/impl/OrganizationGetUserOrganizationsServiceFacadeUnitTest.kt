@@ -24,8 +24,14 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         // expectations
         replayAll()
         // test scenario
-        restHelper.assertBasicErrorResultResponse(organizationServiceFacade.getUserOrganizations(null), OrganizationErrorResponseModel.MISSING_USER_UUID)
-        restHelper.assertBasicErrorResultResponse(organizationServiceFacade.getUserOrganizations(""), OrganizationErrorResponseModel.MISSING_USER_UUID)
+        restHelper.assertBasicErrorResultResponse(
+            organizationServiceFacade.getUserOrganizations(null),
+            OrganizationErrorResponseModel.MISSING_USER_UUID
+        )
+        restHelper.assertBasicErrorResultResponse(
+            organizationServiceFacade.getUserOrganizations(""),
+            OrganizationErrorResponseModel.MISSING_USER_UUID
+        )
         verifyAll()
     }
 
@@ -36,7 +42,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         val organization = commonTestHelper.buildOrganization()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val user = userHelper.buildUserWithOrganizationOwnerRole(
-                organization = organization
+            organization = organization
         )
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         // expectations
@@ -63,7 +69,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         val organization = commonTestHelper.buildOrganization()
         val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
         val user = userHelper.buildUserWithOrganizationOwnerRole(
-                organization = organization
+            organization = organization
         )
         user.grantClientRole(clientOrganization, UserRole.CLIENT_ORGANIZATION_ADMIN)
         // expectations
@@ -72,6 +78,32 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
         // test scenario
         val resultResponse = organizationServiceFacade.getUserOrganizations(user.uuid)
         restHelper.assertBasicErrorResultResponse(resultResponse, OrganizationErrorResponseModel.USER_NOT_FOUND)
+        verifyAll()
+    }
+
+    @Test
+    fun `test alphabetic order`() {
+        // test data
+        resetAll()
+        val organization1 = commonTestHelper.buildOrganization(name = "aaa")
+        val organization2 = commonTestHelper.buildOrganization(name = "bbb")
+        val user = userHelper.buildUserWithOrganizationOwnerRole(
+            organization = organization2
+        )
+        user.grantOrganizationOwnerRole(organization1)
+        // expectations
+        expect(userService.findByUuid(user.uuid)).andReturn(Optional.of(user))
+        replayAll()
+        // test scenario
+        organizationServiceFacade.getUserOrganizations(user.uuid).let {
+            assertThat(it.response().totalCount()).isEqualTo(2)
+            assertThat(it.response().items()[0].uuid).isEqualTo(organization1.uuid)
+            assertThat(it.response().items()[0].name).isEqualTo(organization1.name)
+            assertThat(it.response().items()[0].role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+            assertThat(it.response().items()[1].uuid).isEqualTo(organization2.uuid)
+            assertThat(it.response().items()[1].name).isEqualTo(organization2.name)
+            assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.ORGANIZATION_OWNER)
+        }
         verifyAll()
     }
 }
