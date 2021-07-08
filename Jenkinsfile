@@ -25,7 +25,7 @@ pipeline {
                                 )
                             ]
                         ) {
-                            sh './gradlew clean build -x test'
+                            sh './gradlew clean build'
                         }
                     }
                 }
