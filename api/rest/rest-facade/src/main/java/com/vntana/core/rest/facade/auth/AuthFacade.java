@@ -5,6 +5,8 @@ import com.vntana.core.model.security.request.FindUserByPersonalAccessTokenReque
 import com.vntana.core.model.security.request.FindUserByUuidAndClientOrganizationRequest;
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest;
 import com.vntana.core.model.security.response.*;
+import com.vntana.core.model.auth.request.SignInOrSignUpAsAnonymousUserRequest;
+import com.vntana.core.model.auth.response.SignInOrSignUpAsAnonymousUserResponse;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.request.RegeneratePersonalAccessTokenRequest;
 
@@ -30,4 +32,6 @@ public interface AuthFacade {
     PersonalAccessTokenResponse findPersonalAccessTokenByUserUuid(final String userUuid);
 
     PersonalAccessTokenResponse regeneratePersonalAccessToken(final RegeneratePersonalAccessTokenRequest request);
+
+    SignInOrSignUpAsAnonymousUserResponse signInOrSignUpAsAnonymousUser(SignInOrSignUpAsAnonymousUserRequest request);
 }

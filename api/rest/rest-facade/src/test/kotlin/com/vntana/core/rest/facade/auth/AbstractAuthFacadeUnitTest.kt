@@ -47,6 +47,13 @@ abstract class AbstractAuthFacadeUnitTest : AbstractFacadeUnitTest() {
 
     @Before
     fun before() {
-        authFacade = AuthFacadeImpl(userService, userRoleService, persistenceUtilityService, personalAccessTokenService)
+        authFacade = AuthFacadeImpl(
+            userService,
+            userRoleService,
+            persistenceUtilityService,
+            personalAccessTokenService,
+            organizationService,
+            anonymousUserService
+        )
     }
 }

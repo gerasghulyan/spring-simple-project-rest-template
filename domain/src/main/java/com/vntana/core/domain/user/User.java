@@ -81,6 +81,14 @@ public class User extends AbstractUuidAwareDomainEntity {
         final AbstractUserRole role = new UserSuperAdminRole(this);
         mutableRoles().add(role);
     }
+    
+    public void grantOrganizationAdminRole(final Organization organization) {
+        if (roleOfOrganizationAdmin(organization).isPresent()) {
+            throw new IllegalStateException(format("User - %s already has role in organization - %s", this, organization));
+        }
+        final AbstractUserRole role = new UserOrganizationAdminRole(this, organization);
+        mutableRoles().add(role);
+    }
 
     public void revokeClientRole(final ClientOrganization clientOrganization) {
         final UserClientOrganizationAdminRole role = roleOfClient(clientOrganization)

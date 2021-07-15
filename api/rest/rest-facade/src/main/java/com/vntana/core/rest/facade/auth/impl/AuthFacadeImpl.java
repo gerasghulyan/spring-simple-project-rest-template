@@ -1,9 +1,13 @@
 package com.vntana.core.rest.facade.auth.impl;
 
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.token.TokenPersonalAccess;
 import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.User;
+import com.vntana.core.domain.user.anonymousUser.AnonymousUser;
+import com.vntana.core.domain.user.anonymousUser.AnonymousUserSource;
+import com.vntana.core.model.auth.response.SignInOrSignUpAsAnonymousUserResponseModel;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.security.request.CreatePersonalAccessTokenRequest;
 import com.vntana.core.model.security.request.FindUserByPersonalAccessTokenRequest;
@@ -11,15 +15,20 @@ import com.vntana.core.model.security.request.FindUserByUuidAndClientOrganizatio
 import com.vntana.core.model.security.request.FindUserByUuidAndOrganizationRequest;
 import com.vntana.core.model.security.response.*;
 import com.vntana.core.model.security.response.model.*;
+import com.vntana.core.model.auth.request.SignInOrSignUpAsAnonymousUserRequest;
+import com.vntana.core.model.auth.response.SignInOrSignUpAsAnonymousUserResponse;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.FindUserByEmailRequest;
 import com.vntana.core.model.user.request.RegeneratePersonalAccessTokenRequest;
 import com.vntana.core.persistence.utils.PersistenceUtilityService;
 import com.vntana.core.rest.facade.auth.AuthFacade;
+import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.token.personalaccess.PersonalAccessTokenService;
 import com.vntana.core.service.token.personalaccess.dto.CreatePersonalAccessTokenDto;
 import com.vntana.core.service.token.personalaccess.dto.RegeneratePersonalAccessTokenDto;
 import com.vntana.core.service.user.UserService;
+import com.vntana.core.service.user.anonymous.AnonymousUserService;
+import com.vntana.core.service.user.anonymous.dto.GetOrCreateAnonymousUserDto;
 import com.vntana.core.service.user.role.UserRoleService;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -37,8 +46,7 @@ import java.util.stream.Collectors;
 
 import static com.vntana.core.model.user.error.UserErrorResponseModel.NOT_FOUND_FOR_ROLE;
 import static com.vntana.core.model.user.error.UserErrorResponseModel.USER_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_FORBIDDEN;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.*;
 
 /**
  * Created by Geras Ghulyan.
@@ -54,12 +62,19 @@ public class AuthFacadeImpl implements AuthFacade {
     private final UserRoleService userRoleService;
     private final PersistenceUtilityService persistenceUtilityService;
     private final PersonalAccessTokenService personalAccessTokenService;
+    private final OrganizationService organizationService;
+    private final AnonymousUserService anonymousUserService;
 
-    public AuthFacadeImpl(final UserService userService,
-                          final UserRoleService userRoleService,
-                          final PersistenceUtilityService persistenceUtilityService,
-                          final PersonalAccessTokenService personalAccessTokenService) {
+    public AuthFacadeImpl(
+            final UserService userService,
+            final UserRoleService userRoleService,
+            final PersistenceUtilityService persistenceUtilityService,
+            final PersonalAccessTokenService personalAccessTokenService,
+            final OrganizationService organizationService,
+            final AnonymousUserService anonymousUserService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+        this.organizationService = organizationService;
+        this.anonymousUserService = anonymousUserService;
         this.userService = userService;
         this.userRoleService = userRoleService;
         this.persistenceUtilityService = persistenceUtilityService;
@@ -208,6 +223,21 @@ public class AuthFacadeImpl implements AuthFacade {
         final PersonalAccessTokenResponse response = new PersonalAccessTokenResponse(pat.getToken(), pat.getUser().getUuid());
         LOGGER.debug("Successfully processed auth facade regenerate with response - {} ", response);
         return response;
+    }
+
+    @Override
+    public SignInOrSignUpAsAnonymousUserResponse signInOrSignUpAsAnonymousUser(final SignInOrSignUpAsAnonymousUserRequest request) {
+        LOGGER.debug("Processing auth facade signInOrSignUpAsAnonymousUser for request - {}", request);
+        final Optional<Organization> organizationOptional = organizationService.findByUuid(request.getOrganizationUuid());
+        if (!organizationOptional.isPresent()) {
+            return new SignInOrSignUpAsAnonymousUserResponse(SC_CONFLICT, UserErrorResponseModel.ORGANIZATION_NOT_FOUND);
+        }
+        final AnonymousUser result = anonymousUserService.getOrCreate(
+                new GetOrCreateAnonymousUserDto(
+                        request.getExternalUuid(),
+                        AnonymousUserSource.OTTO,
+                        organizationOptional.get()));
+        return new SignInOrSignUpAsAnonymousUserResponse(new SignInOrSignUpAsAnonymousUserResponseModel(result.getTargetUser().getUuid(), result.getExternalUuid()));
     }
 
     private List<UserRoleModel> collectUserRoles(final User user) {
