@@ -11,7 +11,6 @@ create table external_user
     user_id              bigint       not null
         constraint external_user_user_id_fk
             references user_,
-    external_user_source varchar(255) not null,
     created              timestamp    not null,
     removed              timestamp,
     updated              timestamp

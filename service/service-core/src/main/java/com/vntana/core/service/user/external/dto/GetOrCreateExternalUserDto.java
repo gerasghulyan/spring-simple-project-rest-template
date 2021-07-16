@@ -2,7 +2,6 @@ package com.vntana.core.service.user.external.dto;
 
 import com.vntana.commons.service.dto.ServiceDto;
 import com.vntana.core.domain.organization.Organization;
-import com.vntana.core.domain.user.external.ExternalUserSource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -18,15 +17,12 @@ import static org.springframework.util.Assert.notNull;
 public class GetOrCreateExternalUserDto implements ServiceDto {
 
     private final String externalUuid;
-    private final ExternalUserSource source;
     private final Organization organization;
 
-    public GetOrCreateExternalUserDto(final String externalUuid, final ExternalUserSource source, final Organization organization) {
+    public GetOrCreateExternalUserDto(final String externalUuid, final Organization organization) {
         hasText(externalUuid, "External uuid cannot be null or empty");
-        notNull(source, "External User Source cannot be null");
         notNull(organization, "Organization cannot be null or empty");
         this.externalUuid = externalUuid;
-        this.source = source;
         this.organization = organization;
     }
 
@@ -41,7 +37,6 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
         final GetOrCreateExternalUserDto that = (GetOrCreateExternalUserDto) o;
         return new EqualsBuilder()
                 .append(externalUuid, that.externalUuid)
-                .append(source, that.source)
                 .append(organization, that.organization)
                 .isEquals();
     }
@@ -50,7 +45,6 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(externalUuid)
-                .append(source)
                 .append(organization)
                 .toHashCode();
     }
@@ -60,7 +54,6 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("externalUuid", externalUuid)
-                .append("source", source)
                 .append("organizationUuid", organization.getUuid())
                 .toString();
     }
@@ -68,11 +61,7 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
     public String getExternalUuid() {
         return externalUuid;
     }
-
-    public ExternalUserSource getSource() {
-        return source;
-    }
-
+    
     public Organization getOrganization() {
         return organization;
     }

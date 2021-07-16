@@ -1,6 +1,5 @@
 package com.vntana.core.service.user.external.impl
 
-import com.vntana.core.domain.user.external.ExternalUserSource
 import com.vntana.core.service.user.external.AbstractExternalUserServiceIntegrationTest
 import com.vntana.core.service.user.external.dto.GetOrCreateExternalUserDto
 import org.junit.Test
@@ -17,14 +16,12 @@ class ExternalUserGetOrCreateServiceIntegrationTest : AbstractExternalUserServic
     fun `test when anonymous user is not present`() {
         // test data
         val externalUuid = uuid()
-        val source = ExternalUserSource.OTTO
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val dto = GetOrCreateExternalUserDto(
             externalUuid,
-            source,
             organization
         )
-        assertFalse(externalUserService.findByExternalUuidAndSource(externalUuid, source).isPresent)
+        assertFalse(externalUserService.findByExternalUuidAndSource(externalUuid).isPresent)
         // test scenario
         externalUserService.getOrCreate(dto).let {
             assertEquals(externalUuid, it.externalUuid)

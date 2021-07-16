@@ -1,8 +1,7 @@
 package com.vntana.core.service.user.external.impl
 
-import com.vntana.core.domain.user.external.ExternalUser
-import com.vntana.core.domain.user.external.ExternalUserSource
 import com.vntana.core.domain.user.User
+import com.vntana.core.domain.user.external.ExternalUser
 import com.vntana.core.service.user.external.AbstractExternalUserServiceUnitTest
 import com.vntana.core.service.user.external.dto.GetOrCreateExternalUserDto
 import org.easymock.EasyMock.*
@@ -22,18 +21,16 @@ class ExternalUserGetOrCreateServiceUnitTest : AbstractExternalUserServiceUnitTe
         // test data
         resetAll()
         val externalUuid = uuid()
-        val source = ExternalUserSource.OTTO
         val organization = organizationTestHelper.buildOrganization()
         val dto = GetOrCreateExternalUserDto(
             externalUuid,
-            source,
             organization
         )
         val user = helper.buildUser()
         val anonymousUser =
-            ExternalUser(externalUuid, user, source)
+            ExternalUser(externalUuid, user)
         // expectations
-        expect(repository.findByExternalUuidAndSource(eq(dto.externalUuid), eq(dto.source)))
+        expect(repository.findByExternalUuid(eq(dto.externalUuid)))
             .andReturn(Optional.empty())
         expect(userRepository.save(isA(User::class.java))).andReturn(user)
         expect(repository.save(isA(ExternalUser::class.java))).andReturn(anonymousUser)
@@ -51,18 +48,16 @@ class ExternalUserGetOrCreateServiceUnitTest : AbstractExternalUserServiceUnitTe
         // test data
         resetAll()
         val externalUuid = uuid()
-        val source = ExternalUserSource.OTTO
         val organization = organizationTestHelper.buildOrganization()
         val dto = GetOrCreateExternalUserDto(
             externalUuid,
-            source,
             organization
         )
         val user = helper.buildUser()
         val anonymousUser =
-            ExternalUser(externalUuid, user, source)
+            ExternalUser(externalUuid, user)
         // expectations
-        expect(repository.findByExternalUuidAndSource(eq(dto.externalUuid), eq(dto.source)))
+        expect(repository.findByExternalUuid(eq(dto.externalUuid)))
             .andReturn(Optional.of(anonymousUser))
         replayAll()
         // test scenario

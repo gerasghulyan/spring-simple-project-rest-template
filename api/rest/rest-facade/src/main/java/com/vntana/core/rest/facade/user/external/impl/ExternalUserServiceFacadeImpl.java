@@ -1,7 +1,6 @@
 package com.vntana.core.rest.facade.user.external.impl;
 
 import com.vntana.core.domain.user.external.ExternalUser;
-import com.vntana.core.domain.user.external.ExternalUserSource;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.external.request.GetOrCreateExternalUserRequest;
 import com.vntana.core.model.user.external.responce.GetOrCreateExternalUserResponse;
@@ -45,8 +44,6 @@ public class ExternalUserServiceFacadeImpl implements ExternalUserServiceFacade 
                     final ExternalUser externalUser = externalUserService.getOrCreate(
                             new GetOrCreateExternalUserDto(
                                     request.getExternalUuid(),
-                                    //TODO change this source type in case of further integrations
-                                    ExternalUserSource.OTTO,
                                     org));
                     return new GetOrCreateExternalUserResponse(
                             new GetOrCreateExternalUserResponseModel(

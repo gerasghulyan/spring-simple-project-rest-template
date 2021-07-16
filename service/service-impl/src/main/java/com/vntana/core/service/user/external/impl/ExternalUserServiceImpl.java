@@ -3,7 +3,6 @@ package com.vntana.core.service.user.external.impl;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.external.ExternalUser;
-import com.vntana.core.domain.user.external.ExternalUserSource;
 import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.persistence.user.extrenal.ExternalUserRepository;
 import com.vntana.core.service.user.external.ExternalUserService;
@@ -42,25 +41,24 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     public ExternalUser getOrCreate(final GetOrCreateExternalUserDto dto) {
         LOGGER.debug("Getting anonymous user with provided dto - {}", dto);
         Assert.notNull(dto, "The GetOrCreateAnonymousUserDto cannot be null or empty");
-        return repository.findByExternalUuidAndSource(dto.getExternalUuid(), dto.getSource())
+        return repository.findByExternalUuid(dto.getExternalUuid())
                 .orElseGet(() -> createNewAnonymousUser(dto));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<ExternalUser> findByExternalUuidAndSource(final String externalUuid, final ExternalUserSource source) {
+    public Optional<ExternalUser> findByExternalUuidAndSource(final String externalUuid) {
         Assert.hasText(externalUuid, "External uuid cannot be null or empty");
-        Assert.notNull(source, "AnonymousUserSource cannot be null");
-        LOGGER.debug("Searching existing anonymous user with external uuid - {} and anonymous user source - {}", externalUuid, source);
-        final Optional<ExternalUser> result = repository.findByExternalUuidAndSource(externalUuid, source);
-        LOGGER.debug("Done searching existing anonymous user with external uuid - {} and anonymous user source - {}", externalUuid, source);
+        LOGGER.debug("Searching existing anonymous user with external uuid - {}", externalUuid);
+        final Optional<ExternalUser> result = repository.findByExternalUuid(externalUuid);
+        LOGGER.debug("Done searching existing anonymous user with external uuid - {}", externalUuid);
         return result;
     }
 
     private ExternalUser createNewAnonymousUser(final GetOrCreateExternalUserDto dto) {
         LOGGER.debug("Creating new anonymous user for provided dto - {}", dto);
         final User newOrganizationAdmin = createRandomUserWithOrganizationAdminRole(dto.getOrganization());
-        final ExternalUser result = repository.save(new ExternalUser(dto.getExternalUuid(), newOrganizationAdmin, dto.getSource()));
+        final ExternalUser result = repository.save(new ExternalUser(dto.getExternalUuid(), newOrganizationAdmin));
         LOGGER.debug("Done creating anonymous user with result - {}", result);
         return result;
     }

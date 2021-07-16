@@ -1,7 +1,6 @@
 package com.vntana.core.rest.facade.user.external.impl
 
 import com.vntana.core.domain.user.external.ExternalUser
-import com.vntana.core.domain.user.external.ExternalUserSource
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.model.user.external.request.GetOrCreateExternalUserRequest
 import com.vntana.core.rest.facade.user.external.AbstractExternalUserServiceFacadeUnitTest
@@ -45,13 +44,12 @@ class ExternalUserSignUpOrSignInServiceFacadeUnitTest : AbstractExternalUserServ
         resetAll()
         val externalUuid = uuid()
         val organization = organizationHelper.buildOrganization()
-        val externalUserSource = ExternalUserSource.OTTO
         val request = GetOrCreateExternalUserRequest(
             externalUuid,
             organization.uuid
         )
-        val dto = GetOrCreateExternalUserDto(externalUuid, ExternalUserSource.OTTO, organization)
-        val externalUser = ExternalUser(externalUuid, userHelper.buildUser(), externalUserSource)
+        val dto = GetOrCreateExternalUserDto(externalUuid, organization)
+        val externalUser = ExternalUser(externalUuid, userHelper.buildUser())
         // expectations
         expect(organizationService.findByUuid(eq(organization.uuid))).andReturn(Optional.of(organization))
         expect(externalUserService.getOrCreate(eq(dto))).andReturn(externalUser)

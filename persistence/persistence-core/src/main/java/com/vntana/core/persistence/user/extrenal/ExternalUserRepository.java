@@ -1,7 +1,6 @@
 package com.vntana.core.persistence.user.extrenal;
 
 import com.vntana.core.domain.user.external.ExternalUser;
-import com.vntana.core.domain.user.external.ExternalUserSource;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -13,5 +12,5 @@ import java.util.Optional;
  */
 public interface ExternalUserRepository extends JpaRepository<ExternalUser, String> {
 
-    Optional<ExternalUser> findByExternalUuidAndSource(final String externalUuid, final ExternalUserSource source);
+    Optional<ExternalUser> findByExternalUuid(final String externalUuid);
 }

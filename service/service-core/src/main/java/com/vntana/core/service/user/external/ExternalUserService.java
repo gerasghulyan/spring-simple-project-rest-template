@@ -1,7 +1,6 @@
 package com.vntana.core.service.user.external;
 
 import com.vntana.core.domain.user.external.ExternalUser;
-import com.vntana.core.domain.user.external.ExternalUserSource;
 import com.vntana.core.service.user.external.dto.GetOrCreateExternalUserDto;
 
 import java.util.Optional;
@@ -15,5 +14,5 @@ public interface ExternalUserService {
 
     ExternalUser getOrCreate(GetOrCreateExternalUserDto dto);
     
-    Optional<ExternalUser> findByExternalUuidAndSource(final String externalUuid, final ExternalUserSource source);
+    Optional<ExternalUser> findByExternalUuidAndSource(final String externalUuid);
 }

@@ -33,23 +33,15 @@ public class ExternalUser extends AbstractDomainEntity {
             foreignKey = @ForeignKey(name = "external_user_user_id_fk")
     )
     private User targetUser;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "external_user_source",
-            nullable = false
-    )
-    private ExternalUserSource source;
-
+    
     public ExternalUser() {
     }
 
     public ExternalUser(
             final String externalUuid,
-            final User targetUser,
-            final ExternalUserSource source) {
+            final User targetUser) {
         this.externalUuid = externalUuid;
         this.targetUser = targetUser;
-        this.source = source;
     }
 
     @Override
@@ -64,7 +56,6 @@ public class ExternalUser extends AbstractDomainEntity {
         return new EqualsBuilder()
                 .append(externalUuid, that.externalUuid)
                 .append(targetUser, getIdOrNull(that.targetUser))
-                .append(source, that.source)
                 .isEquals();
     }
 
@@ -73,7 +64,6 @@ public class ExternalUser extends AbstractDomainEntity {
         return new HashCodeBuilder()
                 .append(externalUuid)
                 .append(targetUser)
-                .append(source)
                 .toHashCode();
     }
 
@@ -83,7 +73,6 @@ public class ExternalUser extends AbstractDomainEntity {
                 .appendSuper(super.toString())
                 .append("externalUuid", externalUuid)
                 .append("user", targetUser)
-                .append("source", source)
                 .toString();
     }
 
@@ -101,13 +90,5 @@ public class ExternalUser extends AbstractDomainEntity {
 
     public void setTargetUser(final User targetUser) {
         this.targetUser = targetUser;
-    }
-
-    public ExternalUserSource getAnonymousUserSource() {
-        return source;
-    }
-
-    public void setAnonymousUserSource(final ExternalUserSource anonymousUserSource) {
-        this.source = anonymousUserSource;
     }
 }
