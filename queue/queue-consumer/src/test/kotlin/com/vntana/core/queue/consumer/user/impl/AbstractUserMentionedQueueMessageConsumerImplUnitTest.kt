@@ -77,7 +77,6 @@ abstract class AbstractUserMentionedQueueMessageConsumerImplUnitTest : AbstractQ
     }
     
     fun buildSendUserMentionRequest(
-            mentionedUserUuid: String? = uuid(),
             mentionedUserEmail: String? = uuid(),
             mentionedUserName: String? = uuid(),
             promptingUserName: String? = uuid(),
@@ -85,7 +84,7 @@ abstract class AbstractUserMentionedQueueMessageConsumerImplUnitTest : AbstractQ
             message: UserMentionedQueueMessage? = buildUserMentionedQueueMessage(),
             clientSlug: String? = uuid(),
             organizationSlug: String? = uuid()
-    ): SendUserMentionRequest? {
+    ): SendUserMentionRequest {
         return SendUserMentionRequest(
                 mentionedUserEmail,
                 promptingUserName,

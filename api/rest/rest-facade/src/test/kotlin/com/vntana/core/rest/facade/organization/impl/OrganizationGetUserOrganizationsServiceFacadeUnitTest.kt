@@ -39,8 +39,9 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
     fun `test getUserOrganizations when is not super admin`() {
         // test data
         resetAll()
-        val organization = commonTestHelper.buildOrganization()
-        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization()
+        val organization = commonTestHelper.buildOrganization(name = "aaa")
+        val organization1 = commonTestHelper.buildOrganization(name = "bbb")
+        val clientOrganization = clientOrganizationCommonTestHelper.buildClientOrganization(organization = organization1)
         val user = userHelper.buildUserWithOrganizationOwnerRole(
             organization = organization
         )
@@ -59,7 +60,7 @@ class OrganizationGetUserOrganizationsServiceFacadeUnitTest : AbstractOrganizati
             assertThat(it.response().items()[1].name).isEqualTo(clientOrganization.organization.name)
             assertThat(it.response().items()[1].role).isEqualTo(UserRoleModel.ORGANIZATION_CLIENT_MEMBER)
         }
-        verifyAll()
+        verifyAll() 
     }
 
     @Test

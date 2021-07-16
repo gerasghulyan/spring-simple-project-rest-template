@@ -51,9 +51,7 @@ abstract class AbstractAuthFacadeUnitTest : AbstractFacadeUnitTest() {
             userService,
             userRoleService,
             persistenceUtilityService,
-            personalAccessTokenService,
-            organizationService,
-            anonymousUserService
+            personalAccessTokenService
         )
     }
 }

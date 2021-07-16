@@ -30,8 +30,7 @@ class WhitelistIpGetByOrganizationWebTest : AbstractWhitelistIpWebTest() {
     fun `test when 1 whitelist ip exists`() {
         val organizationUuid = organizationTestHelper.persistOrganization().response().uuid
         val expectedType = WhitelistTypeModel.ADMIN
-        val expectedWhitelistIp =
-            testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = expectedType)
+        testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = expectedType)
         testHelper.persistWhitelistIps(organizationUuid = organizationUuid, type = WhitelistTypeModel.API)
         val request = testHelper.buildGetWhitelistIpsRequest(organizationUuid, expectedType)
         whitelistIpResourceClient.getByOrganizationAndType(request).let {
