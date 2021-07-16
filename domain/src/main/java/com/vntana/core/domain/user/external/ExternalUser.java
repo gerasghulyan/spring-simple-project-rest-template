@@ -15,16 +15,16 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "external_user",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}, name = "uk_external_user_uuid")},
-        indexes = {@Index(columnList = "uuid", name = "uk_external_user_uuid", unique = true)}
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"external_uuid"}, name = "uk_external_user_uuid")},
+        indexes = {@Index(columnList = "external_uuid", name = "uk_external_user_uuid", unique = true)}
 )
 public class ExternalUser extends AbstractDomainEntity {
-    @Column(name = "uuid",
+    @Column(name = "external_uuid",
             nullable = false,
             updatable = false,
             unique = true
     )
-    private String uuid;
+    private String externalUuid;
 
     @OneToOne
     @JoinColumn(
@@ -44,10 +44,10 @@ public class ExternalUser extends AbstractDomainEntity {
     }
 
     public ExternalUser(
-            final String uuid,
+            final String externalUuid,
             final User targetUser,
             final ExternalUserSource source) {
-        this.uuid = uuid;
+        this.externalUuid = externalUuid;
         this.targetUser = targetUser;
         this.source = source;
     }
@@ -62,8 +62,8 @@ public class ExternalUser extends AbstractDomainEntity {
         }
         final ExternalUser that = (ExternalUser) o;
         return new EqualsBuilder()
-                .append(uuid, that.uuid)
-                .append(targetUser, that.targetUser)
+                .append(externalUuid, that.externalUuid)
+                .append(targetUser, getIdOrNull(that.targetUser))
                 .append(source, that.source)
                 .isEquals();
     }
@@ -71,7 +71,7 @@ public class ExternalUser extends AbstractDomainEntity {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(uuid)
+                .append(externalUuid)
                 .append(targetUser)
                 .append(source)
                 .toHashCode();
@@ -81,18 +81,18 @@ public class ExternalUser extends AbstractDomainEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
-                .append("uuid", uuid)
+                .append("externalUuid", externalUuid)
                 .append("user", targetUser)
                 .append("source", source)
                 .toString();
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getExternalUuid() {
+        return externalUuid;
     }
 
-    public void setUuid(final String uuid) {
-        this.uuid = uuid;
+    public void setExternalUuid(final String externalUuid) {
+        this.externalUuid = externalUuid;
     }
 
     public User getTargetUser() {

@@ -1,5 +1,6 @@
 package com.vntana.core.service.user.external.dto;
 
+import com.vntana.commons.service.dto.ServiceDto;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.external.ExternalUserSource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -14,7 +15,7 @@ import static org.springframework.util.Assert.notNull;
  * Date: 7/9/2021
  * Time: 3:50 PM
  */
-public class GetOrCreateExternalUserDto {
+public class GetOrCreateExternalUserDto implements ServiceDto {
 
     private final String externalUuid;
     private final ExternalUserSource source;

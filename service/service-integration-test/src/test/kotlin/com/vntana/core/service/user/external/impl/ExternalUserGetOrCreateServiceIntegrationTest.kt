@@ -5,7 +5,6 @@ import com.vntana.core.service.user.external.AbstractExternalUserServiceIntegrat
 import com.vntana.core.service.user.external.dto.GetOrCreateExternalUserDto
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
-import org.testcontainers.shaded.org.apache.commons.lang.RandomStringUtils
 
 /**
  * Created by Diana Gevorgyan
@@ -17,7 +16,7 @@ class ExternalUserGetOrCreateServiceIntegrationTest : AbstractExternalUserServic
     @Test
     fun `test when anonymous user is not present`() {
         // test data
-        val externalUuid = RandomStringUtils.random(8)
+        val externalUuid = uuid()
         val source = ExternalUserSource.OTTO
         val organization = organizationIntegrationTestHelper.persistOrganization()
         val dto = GetOrCreateExternalUserDto(
@@ -28,7 +27,7 @@ class ExternalUserGetOrCreateServiceIntegrationTest : AbstractExternalUserServic
         assertFalse(externalUserService.findByExternalUuidAndSource(externalUuid, source).isPresent)
         // test scenario
         externalUserService.getOrCreate(dto).let {
-            assertEquals(externalUuid, it.uuid)
+            assertEquals(externalUuid, it.externalUuid)
             assertNotNull(it.targetUser)
         }
     }

@@ -42,7 +42,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     public ExternalUser getOrCreate(final GetOrCreateExternalUserDto dto) {
         LOGGER.debug("Getting anonymous user with provided dto - {}", dto);
         Assert.notNull(dto, "The GetOrCreateAnonymousUserDto cannot be null or empty");
-        return repository.findByUuidAndSource(dto.getExternalUuid(), dto.getSource())
+        return repository.findByExternalUuidAndSource(dto.getExternalUuid(), dto.getSource())
                 .orElseGet(() -> createNewAnonymousUser(dto));
     }
 
@@ -52,7 +52,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         Assert.hasText(externalUuid, "External uuid cannot be null or empty");
         Assert.notNull(source, "AnonymousUserSource cannot be null");
         LOGGER.debug("Searching existing anonymous user with external uuid - {} and anonymous user source - {}", externalUuid, source);
-        final Optional<ExternalUser> result = repository.findByUuidAndSource(externalUuid, source);
+        final Optional<ExternalUser> result = repository.findByExternalUuidAndSource(externalUuid, source);
         LOGGER.debug("Done searching existing anonymous user with external uuid - {} and anonymous user source - {}", externalUuid, source);
         return result;
     }
@@ -69,8 +69,8 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         final User user = userRepository.save(
                 new User(
                         randomAlphabetic(5),
-                        randomAlphabetic(5),
-                        randomAlphabetic(5)));
+                        null,
+                        null));
         user.grantOrganizationAdminRole(organization);
         return user;
     }

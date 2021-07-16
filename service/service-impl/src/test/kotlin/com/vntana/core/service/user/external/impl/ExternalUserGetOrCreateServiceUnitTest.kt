@@ -33,14 +33,14 @@ class ExternalUserGetOrCreateServiceUnitTest : AbstractExternalUserServiceUnitTe
         val anonymousUser =
             ExternalUser(externalUuid, user, source)
         // expectations
-        expect(repository.findByUuidAndSource(eq(dto.externalUuid), eq(dto.source)))
+        expect(repository.findByExternalUuidAndSource(eq(dto.externalUuid), eq(dto.source)))
             .andReturn(Optional.empty())
         expect(userRepository.save(isA(User::class.java))).andReturn(user)
         expect(repository.save(isA(ExternalUser::class.java))).andReturn(anonymousUser)
         replayAll()
         // test scenario
         externalUserService.getOrCreate(dto).let {
-            assertEquals(externalUuid, it.uuid)
+            assertEquals(externalUuid, it.externalUuid)
             assertEquals(user, it.targetUser)
         }
         verifyAll()
@@ -62,12 +62,12 @@ class ExternalUserGetOrCreateServiceUnitTest : AbstractExternalUserServiceUnitTe
         val anonymousUser =
             ExternalUser(externalUuid, user, source)
         // expectations
-        expect(repository.findByUuidAndSource(eq(dto.externalUuid), eq(dto.source)))
+        expect(repository.findByExternalUuidAndSource(eq(dto.externalUuid), eq(dto.source)))
             .andReturn(Optional.of(anonymousUser))
         replayAll()
         // test scenario
         externalUserService.getOrCreate(dto).let {
-            assertEquals(externalUuid, it.uuid)
+            assertEquals(externalUuid, it.externalUuid)
             assertEquals(user, it.targetUser)
         }
         verifyAll()

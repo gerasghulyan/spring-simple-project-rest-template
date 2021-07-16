@@ -13,5 +13,5 @@ import java.util.Optional;
  */
 public interface ExternalUserRepository extends JpaRepository<ExternalUser, String> {
 
-    Optional<ExternalUser> findByUuidAndSource(final String externalUuid, final ExternalUserSource source);
+    Optional<ExternalUser> findByExternalUuidAndSource(final String externalUuid, final ExternalUserSource source);
 }
