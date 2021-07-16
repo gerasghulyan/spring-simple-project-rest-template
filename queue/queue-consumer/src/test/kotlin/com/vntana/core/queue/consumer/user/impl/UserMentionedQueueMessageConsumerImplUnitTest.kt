@@ -32,7 +32,6 @@ class UserMentionedQueueMessageConsumerImplUnitTest : AbstractUserMentionedQueue
                 mentionedUserUuids = setOf(mentionedUserUuid1)
         )
         val sendUser1MentionRequest = buildSendUserMentionRequest(
-                mentionedUserUuid = mentionedUserUuid1,
                 mentionedUserEmail = mentioned.email,
                 mentionedUserName = mentioned.fullName,
                 promptingUserName = mentionedByUser.fullName,

@@ -9,11 +9,11 @@ import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.error.UserErrorResponseModel;
 import com.vntana.core.model.user.request.*;
 import com.vntana.core.model.user.response.*;
-import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.account.AccountUserResponse;
-import com.vntana.core.model.user.response.account.model.GetUserByOrganizationResponseModel;
+import com.vntana.core.model.user.response.account.GetUserByOrganizationResponse;
 import com.vntana.core.model.user.response.account.model.AccountUserResponseModel;
 import com.vntana.core.model.user.response.account.model.AccountUserRolesModel;
+import com.vntana.core.model.user.response.account.model.GetUserByOrganizationResponseModel;
 import com.vntana.core.model.user.response.get.GetUsersByOrganizationResponse;
 import com.vntana.core.model.user.response.get.GetUsersByRoleAndOrganizationUuidResponse;
 import com.vntana.core.model.user.response.get.GetUsersByUuidsAndOrganizationUuidResponse;
@@ -83,19 +83,20 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     private final TokenAuthenticationService tokenAuthenticationService;
     private final Long resetPasswordTokenExpirationInMinutes;
 
-    public UserServiceFacadeImpl(final UserService userService,
-                                 final UserRoleService userRoleService,
-                                 final OrganizationService organizationService,
-                                 final PersistenceUtilityService persistenceUtilityService,
-                                 final UserFacadePreconditionCheckerComponent preconditionCheckerComponent,
-                                 final EmailValidationComponent emailValidationComponent,
-                                 final UserVerificationSenderComponent verificationSenderComponent,
-                                 final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent,
-                                 final OrganizationLifecycleMediator organizationLifecycleMediator,
-                                 final TokenService tokenService,
-                                 final TokenResetPasswordService tokenResetPasswordService,
-                                 final TokenAuthenticationService tokenAuthenticationService,
-                                 @Value("${reset.password.token.expiration.minutes}") final Long resetPasswordTokenExpirationInMinutes) {
+    public UserServiceFacadeImpl(
+            final UserService userService,
+            final UserRoleService userRoleService,
+            final OrganizationService organizationService,
+            final PersistenceUtilityService persistenceUtilityService,
+            final UserFacadePreconditionCheckerComponent preconditionCheckerComponent,
+            final EmailValidationComponent emailValidationComponent,
+            final UserVerificationSenderComponent verificationSenderComponent,
+            final UserResetPasswordEmailSenderComponent resetPasswordEmailSenderComponent,
+            final OrganizationLifecycleMediator organizationLifecycleMediator,
+            final TokenService tokenService,
+            final TokenResetPasswordService tokenResetPasswordService,
+            final TokenAuthenticationService tokenAuthenticationService,
+            @Value("${reset.password.token.expiration.minutes}") final Long resetPasswordTokenExpirationInMinutes) {
         this.userService = userService;
         this.userRoleService = userRoleService;
         this.organizationService = organizationService;
@@ -203,7 +204,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         LOGGER.debug("Successfully processed facade getByUuidsAndOrganizationUuid method for request - {}", request);
         return new GetUsersByUuidsAndOrganizationUuidResponse(responseModel);
     }
-    
+
     @Transactional
     @Override
     public AccountUserResponse accountDetails(final String uuid) {
@@ -244,7 +245,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 user.getEmail(),
                 getNotSuperAdminUserRoleInOrganization(user, organizationUuid),
                 user.getVerified(),
-                user.getImageBlobId()                
+                user.getImageBlobId()
         );
         return new GetUserByOrganizationResponse(responseModel);
     }

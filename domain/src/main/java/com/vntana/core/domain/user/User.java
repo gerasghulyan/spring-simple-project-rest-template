@@ -32,10 +32,10 @@ public class User extends AbstractUuidAwareDomainEntity {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "verified", nullable = false)
@@ -79,6 +79,14 @@ public class User extends AbstractUuidAwareDomainEntity {
             throw new IllegalStateException(format("User - %s already has super admin role - %s", this, role));
         });
         final AbstractUserRole role = new UserSuperAdminRole(this);
+        mutableRoles().add(role);
+    }
+    
+    public void grantOrganizationAdminRole(final Organization organization) {
+        if (roleOfOrganizationAdmin(organization).isPresent()) {
+            throw new IllegalStateException(format("User - %s already has role in organization - %s", this, organization));
+        }
+        final AbstractUserRole role = new UserOrganizationAdminRole(this, organization);
         mutableRoles().add(role);
     }
 

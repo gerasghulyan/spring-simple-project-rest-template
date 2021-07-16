@@ -55,10 +55,11 @@ public class AuthFacadeImpl implements AuthFacade {
     private final PersistenceUtilityService persistenceUtilityService;
     private final PersonalAccessTokenService personalAccessTokenService;
 
-    public AuthFacadeImpl(final UserService userService,
-                          final UserRoleService userRoleService,
-                          final PersistenceUtilityService persistenceUtilityService,
-                          final PersonalAccessTokenService personalAccessTokenService) {
+    public AuthFacadeImpl(
+            final UserService userService,
+            final UserRoleService userRoleService,
+            final PersistenceUtilityService persistenceUtilityService,
+            final PersonalAccessTokenService personalAccessTokenService) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userService = userService;
         this.userRoleService = userRoleService;
