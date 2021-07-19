@@ -3,7 +3,7 @@ pipeline {
         buildDiscarder logRotator(numToKeepStr: '10')
     }
     agent {
-        label "jenkins-slave-jdk-11"
+        label "jenkins-slave-jdk-8"
     }
     environment {
         GIT_COMMIT = """${sh(
