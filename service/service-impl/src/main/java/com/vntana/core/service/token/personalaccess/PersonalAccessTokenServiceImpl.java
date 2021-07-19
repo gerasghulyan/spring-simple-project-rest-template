@@ -55,7 +55,7 @@ public class PersonalAccessTokenServiceImpl implements PersonalAccessTokenServic
     public Optional<TokenPersonalAccess> findByToken(final String token) {
         LOGGER.debug("Searching personal access token for token - {}", token);
         notNull(token, "Token should not be null");
-        final Optional<TokenPersonalAccess> foundToken = personalAccessRepository.findByToken(token);
+        final Optional<TokenPersonalAccess> foundToken = personalAccessRepository.findByTokenAndExpirationIsNull(token);
         LOGGER.debug("Done searching personal access token for token - {} with response - {}", token, foundToken);
         return foundToken;
     }

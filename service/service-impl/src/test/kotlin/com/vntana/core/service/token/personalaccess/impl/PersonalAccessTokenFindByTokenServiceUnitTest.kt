@@ -31,7 +31,7 @@ class PersonalAccessTokenFindByTokenServiceUnitTest : AbstractPersonalAccessToke
         expiredToken.uuid = uuid()
         expiredToken.expire()
         resetAll()
-        expect(tokenPersonalAccessRepository.findByToken(eq(expiredToken.token)))
+        expect(tokenPersonalAccessRepository.findByTokenAndExpirationIsNull(eq(expiredToken.token)))
             .andReturn(
                 Optional.empty()
             )
@@ -48,7 +48,7 @@ class PersonalAccessTokenFindByTokenServiceUnitTest : AbstractPersonalAccessToke
         val token = commonTestHelper.buildTokenPersonalAccess(token = uuid(), user = user)
         token.uuid = uuid()
         resetAll()
-        expect(tokenPersonalAccessRepository.findByToken(eq(token.token)))
+        expect(tokenPersonalAccessRepository.findByTokenAndExpirationIsNull(eq(token.token)))
             .andReturn(
                 Optional.of(token)
             )
