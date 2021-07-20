@@ -795,6 +795,7 @@ configure(subprojects.findAll {
     apply plugin: 'com.bmuschko.docker-remote-api'
 
     def registry = project.findProperty("dockerRegistry") ?: ""
+    def JAVA_VERSION = project.findProperty("javaVersion") ?: "8"
 
     if (registry) {
         registry += "/"
@@ -802,7 +803,14 @@ configure(subprojects.findAll {
 
     task createDockerfile(type: Dockerfile) {
         destFile = project.layout.buildDirectory.file('docker/Dockerfile')
-        from 'openjdk:8-jre'
+        
+        from "us.gcr.io/vntana-platform-2/ubi8-openjdk-${JAVA_VERSION}-runtime"
+        user("root")
+        runCommand("mkdir -p /data")
+        runCommand("chown -R jboss:jboss /data")
+        runCommand("chmod -R 750 /data")
+        user("jboss")
+
         label(
                 [
                         'maintainer': 'vntana@sfl.am',
