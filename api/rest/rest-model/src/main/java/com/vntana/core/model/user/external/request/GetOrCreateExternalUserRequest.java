@@ -26,12 +26,19 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
     @JsonProperty("organizationUuid")
     private String organizationUuid;
 
+    @JsonProperty("clientOrganizationUuid")
+    private String clientOrganizationUuid;
+
     public GetOrCreateExternalUserRequest() {
     }
 
-    public GetOrCreateExternalUserRequest(final String externalUuid, final String organizationUuid) {
+    public GetOrCreateExternalUserRequest(
+            final String externalUuid,
+            final String organizationUuid,
+            final String clientOrganizationUuid) {
         this.externalUuid = externalUuid;
         this.organizationUuid = organizationUuid;
+        this.clientOrganizationUuid = clientOrganizationUuid;
     }
 
     @Override
@@ -41,6 +48,9 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
         }
         if (Objects.isNull(organizationUuid)) {
             return Collections.singletonList(UserErrorResponseModel.MISSING_ORGANIZATION);
+        }
+        if (Objects.isNull(clientOrganizationUuid)) {
+            return Collections.singletonList(UserErrorResponseModel.MISSING_CLIENT);
         }
         return Collections.emptyList();
     }
@@ -57,6 +67,7 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
         return new EqualsBuilder()
                 .append(externalUuid, that.externalUuid)
                 .append(organizationUuid, that.organizationUuid)
+                .append(clientOrganizationUuid, that.clientOrganizationUuid)
                 .isEquals();
     }
 
@@ -65,6 +76,7 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
         return new HashCodeBuilder()
                 .append(externalUuid)
                 .append(organizationUuid)
+                .append(clientOrganizationUuid)
                 .toHashCode();
     }
 
@@ -74,6 +86,7 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
                 .appendSuper(super.toString())
                 .append("externalUuid", externalUuid)
                 .append("organizationUuid", organizationUuid)
+                .append("clientOrganizationUuid", clientOrganizationUuid)
                 .toString();
     }
 
@@ -91,5 +104,13 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
 
     public void setOrganizationUuid(final String organizationUuid) {
         this.organizationUuid = organizationUuid;
+    }
+
+    public String getClientOrganizationUuid() {
+        return clientOrganizationUuid;
+    }
+
+    public void setClientOrganizationUuid(final String clientOrganizationUuid) {
+        this.clientOrganizationUuid = clientOrganizationUuid;
     }
 }

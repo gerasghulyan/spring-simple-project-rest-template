@@ -19,6 +19,7 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
             externalUserClient.getOrCreateExternalUser(
                 GetOrCreateExternalUserRequest(
                     null,
+                    uuid(),
                     uuid()
                 )
             ), UserErrorResponseModel.MISSING_UUID
@@ -31,7 +32,8 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
             externalUserClient.getOrCreateExternalUser(
                 GetOrCreateExternalUserRequest(
                     uuid(),
-                    null
+                    null,
+                    uuid()
                 )
             ), UserErrorResponseModel.MISSING_ORGANIZATION
         )
@@ -43,6 +45,7 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
             externalUserClient.getOrCreateExternalUser(
                 GetOrCreateExternalUserRequest(
                     uuid(),
+                    uuid(),
                     uuid()
                 )
             ), UserErrorResponseModel.ORGANIZATION_NOT_FOUND
@@ -53,10 +56,14 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
     fun test() {
         // test data
         val organization = organizationResourceTestHelper.persistOrganization().response()
+        val clientOrganization =
+            clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
+                .response()
         val externalUuid = uuid()
         val request = GetOrCreateExternalUserRequest(
             externalUuid,
-            organization.uuid
+            organization.uuid,
+            clientOrganization.uuid
         )
         // test scenario
         externalUserClient.getOrCreateExternalUser(request).let {
