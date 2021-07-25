@@ -1,5 +1,6 @@
 package com.vntana.core.rest.resource.user.external
 
+import com.vntana.core.helper.client.ClientOrganizationResourceTestHelper
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.rest.client.user.external.ExternalUserResourceClient
 import com.vntana.core.rest.resource.AbstractWebIntegrationTest
@@ -17,4 +18,7 @@ abstract class AbstractExternalUserWebTest : AbstractWebIntegrationTest() {
 
     @Autowired
     protected lateinit var organizationResourceTestHelper: OrganizationResourceTestHelper
+    
+    @Autowired
+    protected lateinit var clientOrganizationResourceTestHelper: ClientOrganizationResourceTestHelper
 }

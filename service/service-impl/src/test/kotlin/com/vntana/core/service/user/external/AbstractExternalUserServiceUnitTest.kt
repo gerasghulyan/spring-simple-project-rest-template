@@ -1,5 +1,6 @@
 package com.vntana.core.service.user.external
 
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.user.UserRepository
@@ -27,6 +28,8 @@ abstract class AbstractExternalUserServiceUnitTest : AbstractServiceUnitTest() {
     protected val helper = UserCommonTestHelper()
 
     protected val organizationTestHelper = OrganizationCommonTestHelper()
+    
+    protected val organizationClientTestHelper = ClientOrganizationCommonTestHelper()
 
     @Before
     fun beforeTest() {

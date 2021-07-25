@@ -22,9 +22,11 @@ class ExternalUserGetOrCreateServiceUnitTest : AbstractExternalUserServiceUnitTe
         resetAll()
         val externalUuid = uuid()
         val organization = organizationTestHelper.buildOrganization()
+        val clientOrganization = organizationClientTestHelper.buildClientOrganization(organization = organization)
         val dto = GetOrCreateExternalUserDto(
             externalUuid,
-            organization
+            organization,
+            clientOrganization
         )
         val user = helper.buildUser()
         val anonymousUser =
@@ -49,9 +51,11 @@ class ExternalUserGetOrCreateServiceUnitTest : AbstractExternalUserServiceUnitTe
         resetAll()
         val externalUuid = uuid()
         val organization = organizationTestHelper.buildOrganization()
+        val clientOrganization = organizationClientTestHelper.buildClientOrganization(organization = organization)
         val dto = GetOrCreateExternalUserDto(
             externalUuid,
-            organization
+            organization,
+            clientOrganization
         )
         val user = helper.buildUser()
         val anonymousUser =

@@ -17,9 +17,12 @@ class ExternalUserGetOrCreateServiceIntegrationTest : AbstractExternalUserServic
         // test data
         val externalUuid = uuid()
         val organization = organizationIntegrationTestHelper.persistOrganization()
+        val clientOrganization =
+            clientOrganizationIntegrationTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
         val dto = GetOrCreateExternalUserDto(
             externalUuid,
-            organization
+            organization,
+            clientOrganization
         )
         assertFalse(externalUserService.findByExternalUuidAndSource(externalUuid).isPresent)
         // test scenario

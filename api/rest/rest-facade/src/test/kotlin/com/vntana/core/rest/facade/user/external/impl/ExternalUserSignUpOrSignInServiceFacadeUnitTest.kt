@@ -24,9 +24,11 @@ class ExternalUserSignUpOrSignInServiceFacadeUnitTest : AbstractExternalUserServ
         resetAll()
         val externalUuid = uuid()
         val organizationUuid = uuid()
+        val clientOrganization = uuid()
         val request = GetOrCreateExternalUserRequest(
             externalUuid,
-            organizationUuid
+            organizationUuid,
+            clientOrganization
         )
         // expectations
         expect(organizationService.findByUuid(eq(organizationUuid))).andReturn(Optional.empty())
@@ -44,14 +46,21 @@ class ExternalUserSignUpOrSignInServiceFacadeUnitTest : AbstractExternalUserServ
         resetAll()
         val externalUuid = uuid()
         val organization = organizationHelper.buildOrganization()
+        val clientOrganization = clientOrganizationTestHelper.buildClientOrganization(organization = organization)
         val request = GetOrCreateExternalUserRequest(
             externalUuid,
-            organization.uuid
+            organization.uuid,
+            clientOrganization.uuid
         )
-        val dto = GetOrCreateExternalUserDto(externalUuid, organization)
+        val dto = GetOrCreateExternalUserDto(externalUuid, organization, clientOrganization)
         val externalUser = ExternalUser(externalUuid, userHelper.buildUser())
         // expectations
         expect(organizationService.findByUuid(eq(organization.uuid))).andReturn(Optional.of(organization))
+        expect(clientOrganizationService.findByUuid(eq(clientOrganization.uuid))).andReturn(
+            Optional.of(
+                clientOrganization
+            )
+        )
         expect(externalUserService.getOrCreate(eq(dto))).andReturn(externalUser)
         replayAll()
         //test scenario

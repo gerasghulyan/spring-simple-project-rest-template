@@ -1,5 +1,6 @@
 package com.vntana.core.service.user.external
 
+import com.vntana.core.helper.integration.client.ClientOrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.organization.OrganizationIntegrationTestHelper
 import com.vntana.core.helper.integration.user.UserIntegrationTestHelper
 import com.vntana.core.service.AbstractServiceIntegrationTest
@@ -17,7 +18,10 @@ abstract class AbstractExternalUserServiceIntegrationTest : AbstractServiceInteg
 
     @Autowired
     protected lateinit var externalUserService: ExternalUserService
-    
+
     @Autowired
     protected lateinit var organizationIntegrationTestHelper: OrganizationIntegrationTestHelper
+
+    @Autowired
+    protected lateinit var clientOrganizationIntegrationTestHelper: ClientOrganizationIntegrationTestHelper
 }

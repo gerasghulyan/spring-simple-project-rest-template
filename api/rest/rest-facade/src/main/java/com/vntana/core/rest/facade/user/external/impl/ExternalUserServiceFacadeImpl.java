@@ -6,6 +6,7 @@ import com.vntana.core.model.user.external.request.GetOrCreateExternalUserReques
 import com.vntana.core.model.user.external.responce.GetOrCreateExternalUserResponse;
 import com.vntana.core.model.user.external.responce.GetOrCreateExternalUserResponseModel;
 import com.vntana.core.rest.facade.user.external.ExternalUserServiceFacade;
+import com.vntana.core.service.client.ClientOrganizationService;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.external.ExternalUserService;
 import com.vntana.core.service.user.external.dto.GetOrCreateExternalUserDto;
@@ -27,12 +28,14 @@ public class ExternalUserServiceFacadeImpl implements ExternalUserServiceFacade 
 
     private final ExternalUserService externalUserService;
     private final OrganizationService organizationService;
+    private final ClientOrganizationService clientOrganizationService;
 
     public ExternalUserServiceFacadeImpl(
             final ExternalUserService externalUserService,
-            final OrganizationService organizationService) {
+            final OrganizationService organizationService, final ClientOrganizationService clientOrganizationService) {
         this.externalUserService = externalUserService;
         this.organizationService = organizationService;
+        this.clientOrganizationService = clientOrganizationService;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
     }
 
@@ -41,14 +44,17 @@ public class ExternalUserServiceFacadeImpl implements ExternalUserServiceFacade 
         LOGGER.debug("Getting external user for request - {}", request);
         final GetOrCreateExternalUserResponse result = organizationService.findByUuid(request.getOrganizationUuid())
                 .map(org -> {
-                    final ExternalUser externalUser = externalUserService.getOrCreate(
-                            new GetOrCreateExternalUserDto(
-                                    request.getExternalUuid(),
-                                    org));
-                    return new GetOrCreateExternalUserResponse(
-                            new GetOrCreateExternalUserResponseModel(
-                                    externalUser.getTargetUser().getUuid(),
-                                    externalUser.getExternalUuid()));
+                    return clientOrganizationService.findByUuid(request.getClientOrganizationUuid())
+                            .map(clientOrganization -> {
+                                final ExternalUser externalUser = externalUserService.getOrCreate(
+                                        new GetOrCreateExternalUserDto(
+                                                request.getExternalUuid(),
+                                                org, clientOrganization));
+                                return new GetOrCreateExternalUserResponse(
+                                        new GetOrCreateExternalUserResponseModel(
+                                                externalUser.getTargetUser().getUuid(),
+                                                externalUser.getExternalUuid()));
+                            }).orElseGet(() -> new GetOrCreateExternalUserResponse(SC_CONFLICT, UserErrorResponseModel.ORGANIZATION_NOT_FOUND));
                 })
                 .orElseGet(() -> new GetOrCreateExternalUserResponse(SC_CONFLICT, UserErrorResponseModel.ORGANIZATION_NOT_FOUND));
         LOGGER.debug("Done getting external user with result - {}", result);
