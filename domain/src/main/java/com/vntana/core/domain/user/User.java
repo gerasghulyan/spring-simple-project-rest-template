@@ -45,6 +45,7 @@ public class User extends AbstractUuidAwareDomainEntity {
     private String imageBlobId;
 
     @Column(name = "source", nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private UserSource source;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
