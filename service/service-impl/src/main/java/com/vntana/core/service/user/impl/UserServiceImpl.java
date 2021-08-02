@@ -3,6 +3,7 @@ package com.vntana.core.service.user.impl;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.domain.user.UserRole;
+import com.vntana.core.domain.user.UserSource;
 import com.vntana.core.persistence.user.UserRepository;
 import com.vntana.core.service.organization.OrganizationService;
 import com.vntana.core.service.user.UserService;
@@ -12,6 +13,7 @@ import com.vntana.core.service.user.dto.UpdateUserDto;
 import com.vntana.core.service.user.exception.UserAlreadyVerifiedException;
 import com.vntana.core.service.user.exception.UserNotFoundForTokenException;
 import com.vntana.core.service.user.exception.UserNotFoundForUuidException;
+import com.vntana.core.service.user.dto.GetOrCreateExternalUserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -209,6 +211,26 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(email, "The user email should not be null");
         LOGGER.debug("Getting user for email - {}", email);
         return findByEmail(email).orElseThrow(() -> new UserNotFoundForTokenException(String.format("User not found for email %s", email)));
+    }
+
+    @Transactional
+    @Override
+    public User getOrCreateExternalUser(final GetOrCreateExternalUserDto dto) {
+        LOGGER.debug("Getting external user for provided dto - {}", dto);
+        Assert.notNull(dto, "The GetOrCreateExternalUserDto cannot be null or empty");
+        return userRepository.findByUuid(dto.getExternalUuid())
+                .orElseGet(() -> createNewExternalUser(dto));
+    }
+
+    private User createNewExternalUser(final GetOrCreateExternalUserDto dto) {
+        LOGGER.debug("Creating new anonymous user for provided dto - {}", dto);
+        final User user = new User(dto.getFullName(), dto.getEmail(), null);
+        user.setUuid(dto.getExternalUuid());
+        user.setSource(UserSource.EXTERNAL);
+        user.grantClientRole(dto.getClientOrganization(), UserRole.CLIENT_ORGANIZATION_ADMIN);
+        userRepository.save(user);
+        LOGGER.debug("Done creating external user with result - {}", user);
+        return user;
     }
 
     private User updateUser(final User user, final UpdateUserDto dto) {

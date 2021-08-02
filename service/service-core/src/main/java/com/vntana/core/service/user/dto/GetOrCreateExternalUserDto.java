@@ -1,4 +1,4 @@
-package com.vntana.core.service.user.external.dto;
+package com.vntana.core.service.user.dto;
 
 import com.vntana.commons.service.dto.ServiceDto;
 import com.vntana.core.domain.client.ClientOrganization;
@@ -20,16 +20,22 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
     private final String externalUuid;
     private final Organization organization;
     private final ClientOrganization clientOrganization;
+    private final String fullName;
+    private final String email;
 
     public GetOrCreateExternalUserDto(
             final String externalUuid,
             final Organization organization,
-            final ClientOrganization clientOrganization) {
+            final ClientOrganization clientOrganization,
+            final String fullName,
+            final String email) {
         hasText(externalUuid, "External uuid cannot be null or empty");
         notNull(organization, "Organization cannot be null or empty");
         this.externalUuid = externalUuid;
         this.organization = organization;
         this.clientOrganization = clientOrganization;
+        this.fullName = fullName;
+        this.email = email;
     }
 
     @Override
@@ -45,6 +51,8 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
                 .append(externalUuid, that.externalUuid)
                 .append(organization, that.organization)
                 .append(clientOrganization, that.clientOrganization)
+                .append(fullName, that.fullName)
+                .append(email, that.email)
                 .isEquals();
     }
 
@@ -54,6 +62,8 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
                 .append(externalUuid)
                 .append(organization)
                 .append(clientOrganization)
+                .append(fullName)
+                .append(email)
                 .toHashCode();
     }
 
@@ -62,8 +72,10 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("externalUuid", externalUuid)
-                .append("organizationUuid", organization.getUuid())
-                .append("clientOrganization", clientOrganization.getUuid())
+                .append("organization", organization)
+                .append("clientOrganization", clientOrganization)
+                .append("fullName", fullName)
+                .append("email", email)
                 .toString();
     }
 
@@ -77,5 +89,13 @@ public class GetOrCreateExternalUserDto implements ServiceDto {
 
     public ClientOrganization getClientOrganization() {
         return clientOrganization;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 }

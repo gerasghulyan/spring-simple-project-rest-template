@@ -29,16 +29,26 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
     @JsonProperty("clientOrganizationUuid")
     private String clientOrganizationUuid;
 
+    @JsonProperty("fullName")
+    private String fullName;
+
+    @JsonProperty("email")
+    private String email;
+
     public GetOrCreateExternalUserRequest() {
     }
 
     public GetOrCreateExternalUserRequest(
             final String externalUuid,
             final String organizationUuid,
-            final String clientOrganizationUuid) {
+            final String clientOrganizationUuid,
+            final String fullName,
+            final String email) {
         this.externalUuid = externalUuid;
         this.organizationUuid = organizationUuid;
         this.clientOrganizationUuid = clientOrganizationUuid;
+        this.fullName = fullName;
+        this.email = email;
     }
 
     @Override
@@ -51,6 +61,9 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
         }
         if (Objects.isNull(clientOrganizationUuid)) {
             return Collections.singletonList(UserErrorResponseModel.MISSING_CLIENT);
+        }
+        if(Objects.isNull(fullName)) {
+            return Collections.singletonList(UserErrorResponseModel.MISSING_FULL_NAME);
         }
         return Collections.emptyList();
     }
@@ -68,6 +81,8 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
                 .append(externalUuid, that.externalUuid)
                 .append(organizationUuid, that.organizationUuid)
                 .append(clientOrganizationUuid, that.clientOrganizationUuid)
+                .append(fullName, that.fullName)
+                .append(email, that.email)
                 .isEquals();
     }
 
@@ -77,6 +92,8 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
                 .append(externalUuid)
                 .append(organizationUuid)
                 .append(clientOrganizationUuid)
+                .append(fullName)
+                .append(email)
                 .toHashCode();
     }
 
@@ -87,6 +104,8 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
                 .append("externalUuid", externalUuid)
                 .append("organizationUuid", organizationUuid)
                 .append("clientOrganizationUuid", clientOrganizationUuid)
+                .append("fullName", fullName)
+                .append("email", email)
                 .toString();
     }
 
@@ -112,5 +131,21 @@ public class GetOrCreateExternalUserRequest extends AbstractRequestModel impleme
 
     public void setClientOrganizationUuid(final String clientOrganizationUuid) {
         this.clientOrganizationUuid = clientOrganizationUuid;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(final String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
     }
 }

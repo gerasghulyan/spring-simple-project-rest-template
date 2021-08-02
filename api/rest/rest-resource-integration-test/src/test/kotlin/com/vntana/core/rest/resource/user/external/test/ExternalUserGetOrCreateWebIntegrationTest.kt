@@ -20,6 +20,8 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
                 GetOrCreateExternalUserRequest(
                     null,
                     uuid(),
+                    uuid(),
+                    uuid(),
                     uuid()
                 )
             ), UserErrorResponseModel.MISSING_UUID
@@ -33,6 +35,8 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
                 GetOrCreateExternalUserRequest(
                     uuid(),
                     null,
+                    uuid(),
+                    uuid(),
                     uuid()
                 )
             ), UserErrorResponseModel.MISSING_ORGANIZATION
@@ -44,6 +48,8 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
         assertBasicErrorResultResponse(
             externalUserClient.getOrCreateExternalUser(
                 GetOrCreateExternalUserRequest(
+                    uuid(),
+                    uuid(),
                     uuid(),
                     uuid(),
                     uuid()
@@ -60,16 +66,20 @@ class ExternalUserGetOrCreateWebIntegrationTest : AbstractExternalUserWebTest() 
             clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = organization.uuid)
                 .response()
         val externalUuid = uuid()
+        val fullName = uuid()
+        val email = null
         val request = GetOrCreateExternalUserRequest(
             externalUuid,
             organization.uuid,
-            clientOrganization.uuid
+            clientOrganization.uuid,
+            fullName,
+            email
         )
         // test scenario
         externalUserClient.getOrCreateExternalUser(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.body!!.response().externalUuid).isEqualTo(externalUuid)
-            assertThat(it.body!!.response().userUuid).isNotBlank()
+            assertThat(it.body!!.response().uuid).isEqualTo(externalUuid)
+            assertThat(it.body!!.response().fullName).isEqualTo(fullName)
         }
     }
 }

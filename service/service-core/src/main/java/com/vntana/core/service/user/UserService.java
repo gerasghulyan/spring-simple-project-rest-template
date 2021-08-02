@@ -5,6 +5,7 @@ import com.vntana.core.domain.user.UserRole;
 import com.vntana.core.service.user.dto.CreateUserDto;
 import com.vntana.core.service.user.dto.CreateUserWithOwnerRoleDto;
 import com.vntana.core.service.user.dto.UpdateUserDto;
+import com.vntana.core.service.user.dto.GetOrCreateExternalUserDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,4 +49,6 @@ public interface UserService {
     Optional<User> findByEmailAndOrganizationUuid(final String email, final String organizationUuid);
 
     User getByEmail(final String email);
+
+    User getOrCreateExternalUser(final GetOrCreateExternalUserDto getOrCreateExternalUserDto);
 }

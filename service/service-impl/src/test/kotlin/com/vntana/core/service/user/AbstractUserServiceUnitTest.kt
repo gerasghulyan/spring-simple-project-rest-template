@@ -1,5 +1,6 @@
 package com.vntana.core.service.user
 
+import com.vntana.core.helper.unit.client.ClientOrganizationCommonTestHelper
 import com.vntana.core.helper.unit.organization.OrganizationCommonTestHelper
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.persistence.user.UserRepository
@@ -28,6 +29,8 @@ abstract class AbstractUserServiceUnitTest : AbstractServiceUnitTest() {
     protected val helper = UserCommonTestHelper()
 
     protected val organizationHelper = OrganizationCommonTestHelper()
+
+    protected val clientOrganizationHelper = ClientOrganizationCommonTestHelper()
 
     @Mock
     protected lateinit var passwordEncoder: BCryptPasswordEncoder
