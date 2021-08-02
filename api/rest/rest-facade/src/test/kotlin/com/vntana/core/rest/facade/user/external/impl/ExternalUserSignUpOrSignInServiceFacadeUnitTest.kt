@@ -1,10 +1,11 @@
 package com.vntana.core.rest.facade.user.external.impl
 
-import com.vntana.core.domain.user.external.ExternalUser
+import com.vntana.core.domain.user.User
+import com.vntana.core.domain.user.UserSource
 import com.vntana.core.model.user.error.UserErrorResponseModel
 import com.vntana.core.model.user.external.request.GetOrCreateExternalUserRequest
 import com.vntana.core.rest.facade.user.external.AbstractExternalUserServiceFacadeUnitTest
-import com.vntana.core.service.user.external.dto.GetOrCreateExternalUserDto
+import com.vntana.core.service.user.dto.GetOrCreateExternalUserDto
 import org.assertj.core.api.Assertions.assertThat
 import org.easymock.EasyMock.eq
 import org.easymock.EasyMock.expect
@@ -25,10 +26,14 @@ class ExternalUserSignUpOrSignInServiceFacadeUnitTest : AbstractExternalUserServ
         val externalUuid = uuid()
         val organizationUuid = uuid()
         val clientOrganization = uuid()
+        val fullName = uuid()
+        val email = null
         val request = GetOrCreateExternalUserRequest(
             externalUuid,
             organizationUuid,
-            clientOrganization
+            clientOrganization,
+            fullName,
+            email
         )
         // expectations
         expect(organizationService.findByUuid(eq(organizationUuid))).andReturn(Optional.empty())
@@ -45,15 +50,27 @@ class ExternalUserSignUpOrSignInServiceFacadeUnitTest : AbstractExternalUserServ
         // test data
         resetAll()
         val externalUuid = uuid()
+        val fullName = uuid()
+        val email = null
         val organization = organizationHelper.buildOrganization()
         val clientOrganization = clientOrganizationTestHelper.buildClientOrganization(organization = organization)
         val request = GetOrCreateExternalUserRequest(
             externalUuid,
             organization.uuid,
-            clientOrganization.uuid
+            clientOrganization.uuid,
+            fullName,
+            email
         )
-        val dto = GetOrCreateExternalUserDto(externalUuid, organization, clientOrganization)
-        val externalUser = ExternalUser(externalUuid, userHelper.buildUser())
+        val dto = GetOrCreateExternalUserDto(
+            externalUuid,
+            organization,
+            clientOrganization,
+            fullName,
+            email
+        )
+        val externalUser = User(fullName, email, null)
+        externalUser.source = UserSource.EXTERNAL
+        externalUser.uuid = externalUuid
         // expectations
         expect(organizationService.findByUuid(eq(organization.uuid))).andReturn(Optional.of(organization))
         expect(clientOrganizationService.findByUuid(eq(clientOrganization.uuid))).andReturn(
@@ -61,13 +78,13 @@ class ExternalUserSignUpOrSignInServiceFacadeUnitTest : AbstractExternalUserServ
                 clientOrganization
             )
         )
-        expect(externalUserService.getOrCreate(eq(dto))).andReturn(externalUser)
+        expect(userService.getOrCreateExternalUser(eq(dto))).andReturn(externalUser)
         replayAll()
         //test scenario
         externalUserServiceFacade.getOrCreateExternalUser(request).let {
             assertBasicSuccessResultResponse(it)
-            assertThat(it.response().externalUuid).isEqualTo(externalUuid)
-            assertThat(it.response().userUuid).isEqualTo(externalUser.targetUser.uuid)
+            assertThat(it.response().uuid).isEqualTo(externalUuid)
+            assertThat(it.response().fullName).isEqualTo(fullName)
         }
     }
 }

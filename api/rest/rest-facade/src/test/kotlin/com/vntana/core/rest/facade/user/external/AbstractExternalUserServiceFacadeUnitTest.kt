@@ -7,7 +7,7 @@ import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.external.impl.ExternalUserServiceFacadeImpl
 import com.vntana.core.service.client.ClientOrganizationService
 import com.vntana.core.service.organization.OrganizationService
-import com.vntana.core.service.user.external.ExternalUserService
+import com.vntana.core.service.user.UserService
 import org.easymock.Mock
 import org.junit.Before
 
@@ -25,18 +25,18 @@ abstract class AbstractExternalUserServiceFacadeUnitTest : AbstractFacadeUnitTes
     protected val clientOrganizationTestHelper = ClientOrganizationCommonTestHelper()
 
     @Mock
-    protected lateinit var externalUserService: ExternalUserService
+    protected lateinit var userService: UserService
 
     @Mock
     protected lateinit var organizationService: OrganizationService
-    
+
     @Mock
     protected lateinit var clientOrganizationService: ClientOrganizationService
 
     @Before
     fun before() {
         externalUserServiceFacade = ExternalUserServiceFacadeImpl(
-            externalUserService,
+            userService,
             organizationService,
             clientOrganizationService
         )

@@ -44,10 +44,13 @@ public class User extends AbstractUuidAwareDomainEntity {
     @Column(name = "image_blob_id")
     private String imageBlobId;
 
+    @Column(name = "source", nullable = false)
+    private UserSource source;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AbstractUserRole> roles;
 
-    User() {
+    public User() {
     }
 
     public User(final String fullName, final String email, final String password) {
@@ -55,6 +58,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         this.email = email;
         this.password = password;
         this.verified = false;
+        this.source = UserSource.INTERNAL;
     }
 
     //region Public methods
@@ -81,7 +85,7 @@ public class User extends AbstractUuidAwareDomainEntity {
         final AbstractUserRole role = new UserSuperAdminRole(this);
         mutableRoles().add(role);
     }
-    
+
     public void grantOrganizationAdminRole(final Organization organization) {
         if (roleOfOrganizationAdmin(organization).isPresent()) {
             throw new IllegalStateException(format("User - %s already has role in organization - %s", this, organization));
@@ -164,6 +168,15 @@ public class User extends AbstractUuidAwareDomainEntity {
     public void setRoles(final List<AbstractUserRole> roles) {
         this.roles = roles;
     }
+
+    public UserSource getSource() {
+        return source;
+    }
+
+    public void setSource(final UserSource source) {
+        this.source = source;
+    }
+
     //endregion
 
     //region Utility methods
@@ -240,6 +253,7 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .append(this.email, user.email)
                 .append(this.verified, user.verified)
                 .append(this.imageBlobId, user.imageBlobId)
+                .append(this.source, user.source)
                 .isEquals();
     }
 
@@ -251,6 +265,7 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .append(this.email)
                 .append(this.verified)
                 .append(this.imageBlobId)
+                .append(this.source)
                 .toHashCode();
     }
 
@@ -261,6 +276,7 @@ public class User extends AbstractUuidAwareDomainEntity {
                 .append("email", email)
                 .append("imageBlobId", mask(imageBlobId))
                 .append("verified", verified)
+                .append("source", source)
                 .toString();
     }
 }

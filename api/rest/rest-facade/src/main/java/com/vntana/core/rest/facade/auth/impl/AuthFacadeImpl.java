@@ -1,7 +1,6 @@
 package com.vntana.core.rest.facade.auth.impl;
 
 import com.vntana.core.domain.token.TokenPersonalAccess;
-import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.AbstractUserRole;
 import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
@@ -118,7 +117,6 @@ public class AuthFacadeImpl implements AuthFacade {
         LOGGER.debug("Processing auth facade findByUserAndClientOrganization for request - {}", request);
         final SecureFindUserByUuidAndClientOrganizationResponse result = userService.findByUuid(request.getUuid())
                 .map(theUser -> userRoleService.findByClientOrganizationAndUser(request.getClientUuid(), request.getUuid())
-                        .map(AbstractClientOrganizationAwareUserRole.class::cast)
                         .map(theClientOrganizationRole -> new SecureFindUserByUuidAndClientOrganizationResponse(
                                 new SecureUserClientOrganizationAwareResponseModel(
                                         theUser.getUuid(),
