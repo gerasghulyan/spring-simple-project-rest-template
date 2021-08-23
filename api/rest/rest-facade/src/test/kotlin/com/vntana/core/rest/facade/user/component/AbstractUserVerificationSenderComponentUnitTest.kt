@@ -3,6 +3,7 @@ package com.vntana.core.rest.facade.user.component
 import com.vntana.core.helper.unit.user.UserCommonTestHelper
 import com.vntana.core.helper.user.UserRestTestHelper
 import com.vntana.core.notification.EmailSenderService
+import com.vntana.core.rest.facade.common.component.UserEmailSenderComponentPreconditionChecker
 import com.vntana.core.rest.facade.test.AbstractFacadeUnitTest
 import com.vntana.core.rest.facade.user.component.impl.UserVerificationSenderComponentImpl
 import com.vntana.core.service.template.email.TemplateEmailService
@@ -32,17 +33,22 @@ abstract class AbstractUserVerificationSenderComponentUnitTest : AbstractFacadeU
     @Mock
     protected lateinit var templateEmailService: TemplateEmailService
 
+    @Mock
+    protected lateinit var userEmailSenderComponentPreconditionChecker: UserEmailSenderComponentPreconditionChecker
+
     private val verificationUrlPrefix: String = uuid()
 
     private val senderEmail: String = uuid()
 
     @Before
     fun prepare() {
-        userVerificationSenderComponent = UserVerificationSenderComponentImpl(userService,
-                emailSenderService,
-                templateEmailService,
-                verificationUrlPrefix,
-                senderEmail
+        userVerificationSenderComponent = UserVerificationSenderComponentImpl(
+            userService,
+            emailSenderService,
+            templateEmailService,
+            verificationUrlPrefix,
+            senderEmail,
+            userEmailSenderComponentPreconditionChecker
         )
     }
 }

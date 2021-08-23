@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.user.component.impl;
 
+import com.vntana.commons.api.utils.SingleErrorWithStatus;
 import com.vntana.core.domain.template.email.TemplateEmail;
 import com.vntana.core.domain.template.email.TemplateEmailType;
 import com.vntana.core.domain.user.User;
@@ -8,6 +9,7 @@ import com.vntana.core.model.user.request.SendUserVerificationRequest;
 import com.vntana.core.model.user.response.SendUserVerificationResponse;
 import com.vntana.core.notification.EmailSenderService;
 import com.vntana.core.notification.payload.verification.VerificationEmailSendPayload;
+import com.vntana.core.rest.facade.common.component.UserEmailSenderComponentPreconditionChecker;
 import com.vntana.core.rest.facade.user.component.UserVerificationSenderComponent;
 import com.vntana.core.service.template.email.TemplateEmailService;
 import com.vntana.core.service.user.UserService;
@@ -17,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.Optional;
 
 /**
  * Created by Arman Gevorgyan.
@@ -34,13 +35,17 @@ public class UserVerificationSenderComponentImpl implements UserVerificationSend
     private final TemplateEmailService templateEmailService;
     private final String verificationUrlPrefix;
     private final String senderEmail;
+    private final UserEmailSenderComponentPreconditionChecker userEmailSenderComponentPreconditionChecker;
 
-    public UserVerificationSenderComponentImpl(final UserService userService,
-                                               final EmailSenderService emailSenderService,
-                                               final TemplateEmailService templateEmailService,
-                                               @Value("${verification.website.url}") final String verificationUrlPrefix,
-                                               @Value("${verification.email.send.from}") final String senderEmail) {
+    public UserVerificationSenderComponentImpl(
+            final UserService userService,
+            final EmailSenderService emailSenderService,
+            final TemplateEmailService templateEmailService,
+            @Value("${verification.website.url}") final String verificationUrlPrefix,
+            @Value("${verification.email.send.from}") final String senderEmail,
+            final UserEmailSenderComponentPreconditionChecker userEmailSenderComponentPreconditionChecker) {
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
+        this.userEmailSenderComponentPreconditionChecker = userEmailSenderComponentPreconditionChecker;
         this.userService = userService;
         this.emailSenderService = emailSenderService;
         this.templateEmailService = templateEmailService;
@@ -50,11 +55,11 @@ public class UserVerificationSenderComponentImpl implements UserVerificationSend
 
     @Override
     public SendUserVerificationResponse sendVerificationEmail(final SendUserVerificationRequest request) {
-        final Optional<User> userOptional = userService.findByEmail(request.getEmail());
-        if (!userOptional.isPresent()) {
-            return new SendUserVerificationResponse(Collections.singletonList(UserErrorResponseModel.NOT_FOUND_FOR_UUID));
+        final SingleErrorWithStatus<UserErrorResponseModel> errors = userEmailSenderComponentPreconditionChecker.checkUser(request.getEmail());
+        if (errors.isPresent()) {
+            return new SendUserVerificationResponse(Collections.singletonList(errors.getError()));
         }
-        final User user = userOptional.get();
+        final User user = userService.getByEmail(request.getEmail());
         if (Boolean.TRUE.equals(user.getVerified())) {
             return new SendUserVerificationResponse(Collections.singletonList(UserErrorResponseModel.USER_ALREADY_VERIFIED));
         }
