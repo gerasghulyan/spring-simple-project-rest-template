@@ -1,5 +1,6 @@
 package com.vntana.core.rest.facade.user.component.impl
 
+import com.vntana.commons.api.utils.SingleErrorWithStatus
 import com.vntana.core.domain.template.email.TemplateEmail
 import com.vntana.core.domain.template.email.TemplateEmailType
 import com.vntana.core.notification.payload.reset.password.ResetPasswordEmailSendPayload
@@ -38,6 +39,7 @@ class UserResetPasswordEmailSenderSendResetPasswordEmailComponentUnitTest : Abst
         val email = uuid()
         val token = uuid()
         resetAll()
+        expect(userEmailSenderComponentPreconditionChecker.checkUser(email)).andReturn(SingleErrorWithStatus.empty())
         expect(templateEmailService.getByType(TemplateEmailType.FORGOT_PASSWORD)).andReturn(templateEmail)
         expect(emailSenderService.sendEmail(isA(ResetPasswordEmailSendPayload::class.java))).andVoid()
         replayAll()
