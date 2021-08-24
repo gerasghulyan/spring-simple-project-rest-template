@@ -33,9 +33,11 @@ public class UserEmailSenderComponentPreconditionCheckerImpl implements UserEmai
         LOGGER.debug("Processing email sender precondition checker component for user - {}", userEmail);
         final Optional<User> user = userService.findByEmail(userEmail);
         if (!user.isPresent()) {
+            LOGGER.debug("Cannot find user for provided email - {}", userEmail);
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.NOT_FOUND_FOR_UUID);
         }
         if (user.get().getSource().equals(UserSource.EXTERNAL)) {
+            LOGGER.debug("Email cannot be sent to  user with provided email - {}, user is - {}", userEmail, user.get().getSource());
             return SingleErrorWithStatus.of(HttpStatus.SC_UNPROCESSABLE_ENTITY, UserErrorResponseModel.INVALID_USER);
         }
         return SingleErrorWithStatus.empty();
