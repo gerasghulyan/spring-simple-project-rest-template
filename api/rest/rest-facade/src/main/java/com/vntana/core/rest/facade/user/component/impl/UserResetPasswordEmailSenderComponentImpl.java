@@ -51,6 +51,7 @@ public class UserResetPasswordEmailSenderComponentImpl implements UserResetPassw
         hasText(email, "The email should not be null or empty");
         hasText(token, "The token should not be null or empty");
         final SingleErrorWithStatus<UserErrorResponseModel> errors = userEmailSenderComponentPreconditionChecker.checkUser(email);
+        LOGGER.info("Cannot send reset user password email to - {}", email);
         if (errors.isPresent()) {
             return;
         }
