@@ -94,14 +94,14 @@ pipeline {
                         sh 'gcloud container clusters get-credentials development-vntana --zone europe-west4 --project $PROJECT_NAME-development'
 
 
-                        sh ''' if ! helm -n development upgrade --install --wait --atomic --timeout=150s core -f development-configs/vntana/core/values.yaml --set podLabels.version=$GIT_COMMIT development-configs/vntana/core; then
+                        sh ''' if ! helm -n development upgrade --install --wait --atomic --timeout=150s core -f development-configs/vntana/core/values.yaml --set podLabels.version=$GIT_COMMIT --set podLabels.buildID=$BUILD_NUMBER development-configs/vntana/core; then
                                         kubectl -n development describe po -l version=$GIT_COMMIT
                                         kubectl -n development logs --tail=2000 -l version=$GIT_COMMIT -c core
                                         exit 1
                                 fi 
                             '''
 
-                        sh ''' if ! helm -n development upgrade --install --wait --atomic --timeout=150s core-consumer -f development-configs/vntana/core-consumer/values.yaml --set podLabels.version=$GIT_COMMIT development-configs/vntana/core-consumer; then
+                        sh ''' if ! helm -n development upgrade --install --wait --atomic --timeout=150s core-consumer -f development-configs/vntana/core-consumer/values.yaml --set podLabels.version=$GIT_COMMIT --set podLabels.buildID=$BUILD_NUMBER development-configs/vntana/core-consumer; then
                                     kubectl -n development describe po -l version=$GIT_COMMIT
                                     kubectl -n development logs --tail=2000 -l version=$GIT_COMMIT -c core-consumer
                                     exit 1
