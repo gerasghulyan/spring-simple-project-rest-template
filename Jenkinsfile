@@ -3,7 +3,7 @@ pipeline {
         buildDiscarder logRotator(numToKeepStr: '10')
     }
     agent {
-        label "jenkins-slave-jdk-8"
+        label "jenkins-slave-jdk-11"
     }
     environment {
         GIT_COMMIT = """${sh(
@@ -31,27 +31,27 @@ pipeline {
                 }
             }
         }
-//         stage("Quality Analysis") {
-//             steps {
-//                 container("gcloud") {
-//                     withCredentials(
-//                     [
-//                         string(
-//                             credentialsId: 'sonar',
-//                             variable: 'SONAR_TOKEN'
-//                         ),
-//                         usernamePassword(
-//                             credentialsId: 'nexus',
-//                             usernameVariable: 'SONATYPE_USERNAME',
-//                             passwordVariable: 'SONATYPE_PASSWORD'
-//                         )
-//                     ]
-//                     ) {
-//                         sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
-//                     }
-//                 }
-//             }
-//         }
+         stage("Quality Analysis") {
+             steps {
+                 container("gcloud") {
+                     withCredentials(
+                     [
+                         string(
+                             credentialsId: 'sonar',
+                             variable: 'SONAR_TOKEN'
+                         ),
+                         usernamePassword(
+                             credentialsId: 'nexus',
+                             usernameVariable: 'SONATYPE_USERNAME',
+                             passwordVariable: 'SONATYPE_PASSWORD'
+                         )
+                     ]
+                     ) {
+                         sh './gradlew sonarqube -Dsonar.login=$SONAR_TOKEN'
+                     }
+                 }
+             }
+         }
         stage("Upload Maven") {
             steps {
                 container("gcloud") {
