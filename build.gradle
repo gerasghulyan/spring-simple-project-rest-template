@@ -100,18 +100,18 @@ allprojects {
 
     group = platformGroup
     version = environmentPlatformVersion()
-    sourceCompatibility = '1.8'
+    sourceCompatibility = '11'
 
     task makePretty(type: Delete) {
         delete 'out'
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 
     repositories {
@@ -795,7 +795,7 @@ configure(subprojects.findAll {
     apply plugin: 'com.bmuschko.docker-remote-api'
 
     def registry = project.findProperty("dockerRegistry") ?: ""
-    def JAVA_VERSION = project.findProperty("javaVersion") ?: "8"
+    def JAVA_VERSION = project.findProperty("javaVersion") ?: "11"
 
     if (registry) {
         registry += "/"
