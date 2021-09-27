@@ -91,8 +91,8 @@ abstract class AbstractUserMentionedQueueMessageConsumerImplUnitTest : AbstractQ
                 mentionedUserName,
                 userMentionedEntityType,
                 message?.mentionedInEntityUuid,
-                message?.productUuid,
-                message?.productName,
+                message?.entityUuid,
+                message?.entityName,
                 clientSlug,
                 organizationSlug
         )
