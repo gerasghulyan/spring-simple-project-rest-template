@@ -89,8 +89,8 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
         hasText(mentionedUser.getFullName(), "The mentioned user full name should not be null or empty");
         notNull(userMentionedEntityType, "The UserMentionedEntityType should not be null");
         hasText(message.getMentionedInEntityUuid(), "The entityUuid should not be null or empty");
-        hasText(message.getProductUuid(), "The productUuid should not be null or empty");
-        hasText(message.getProductName(), "The productName should not be null or empty");
+        hasText(message.getEntityUuid(), "The getEntityUuid should not be null or empty");
+        hasText(message.getEntityName(), "The getEntityName should not be null or empty");
         hasText(clientSlug, "The clientSlug should not be null or empty");
         hasText(organizationSlug, "The organizationSlug should not be null or empty");
         return new SendUserMentionRequest(
@@ -99,8 +99,8 @@ class UserMentionedQueueMessageConsumerImpl implements UserMentionedQueueMessage
                 mentionedUser.getFullName(),
                 userMentionedEntityType,
                 message.getMentionedInEntityUuid(),
-                message.getProductUuid(),
-                message.getProductName(),
+                message.getEntityUuid(),
+                message.getEntityName(),
                 clientSlug,
                 organizationSlug
         );
