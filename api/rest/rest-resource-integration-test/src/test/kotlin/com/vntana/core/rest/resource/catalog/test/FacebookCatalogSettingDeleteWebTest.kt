@@ -25,13 +25,14 @@ class FacebookCatalogSettingDeleteWebTest : AbstractFacebookCatalogSettingWebTes
         val name = uuid()
         val systemUserToken = uuid()
         val catalogId = uuid()
+        val catalogRequest =
+            facebookCatalogSettingResourceTestHelper.buildSingleFacebookCatalogSetting(name, catalogId)
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val catalogUuid = facebookCatalogSettingResourceTestHelper.persistFacebookCatalogSetting(
             organizationUuid = organizationUuid,
-            name = name,
             systemUserToken = systemUserToken,
-            catalogId = catalogId
-        )?.body?.response()?.uuid
+            catalogs = listOf(catalogRequest)
+        )?.body?.response()?.uuids?.get(0)
 
         val response = facebookCatalogSettingResourceClient.delete(catalogUuid)
         facebookCatalogSettingResourceTestHelper.assertBasicSuccessResultResponse(response.body!!)

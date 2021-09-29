@@ -18,46 +18,42 @@ import java.util.List;
  */
 public class CreateFacebookCatalogSettingRequest extends AbstractRequestModel implements ValidatableRequest<FacebookCatalogSettingErrorResponseModel> {
 
+    @JsonProperty("catalogs")
+    private List<FacebookCatalogSetting> catalogs;
+
     @JsonProperty("systemUserToken")
     private String systemUserToken;
 
     @JsonProperty("organizationUuid")
     private String organizationUuid;
 
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("catalogId")
-    private String catalogId;
-
     public CreateFacebookCatalogSettingRequest() {
     }
 
+    public CreateFacebookCatalogSettingRequest(final List<FacebookCatalogSetting> catalogs) {
+        this.catalogs = catalogs;
+    }
+
     public CreateFacebookCatalogSettingRequest(
+            final List<FacebookCatalogSetting> catalogs,
             final String systemUserToken,
-            final String organizationUuid,
-            final String name,
-            final String catalogId) {
+            final String organizationUuid) {
+        this.catalogs = catalogs;
         this.systemUserToken = systemUserToken;
         this.organizationUuid = organizationUuid;
-        this.name = name;
-        this.catalogId = catalogId;
     }
 
     @Override
     public List<FacebookCatalogSettingErrorResponseModel> validate() {
         final List<FacebookCatalogSettingErrorResponseModel> errors = initializeNew();
+        if (catalogs == null) {
+            errors.add(FacebookCatalogSettingErrorResponseModel.FACEBOOK_CATALOG_SETTINGS_CANNOT_BE_NULL);
+        }
         if (StringUtils.isBlank(systemUserToken)) {
             errors.add(FacebookCatalogSettingErrorResponseModel.MISSING_SYSTEM_USER_TOKEN);
         }
         if (StringUtils.isBlank(organizationUuid)) {
             errors.add(FacebookCatalogSettingErrorResponseModel.MISSING_ORGANIZATION_UUID);
-        }
-        if (StringUtils.isBlank(name)) {
-            errors.add(FacebookCatalogSettingErrorResponseModel.MISSING_NAME);
-        }
-        if (StringUtils.isBlank(catalogId)) {
-            errors.add(FacebookCatalogSettingErrorResponseModel.MISSING_CATALOG_ID);
         }
         return errors;
     }
@@ -72,20 +68,18 @@ public class CreateFacebookCatalogSettingRequest extends AbstractRequestModel im
         }
         final CreateFacebookCatalogSettingRequest that = (CreateFacebookCatalogSettingRequest) o;
         return new EqualsBuilder()
+                .append(catalogs, that.catalogs)
                 .append(systemUserToken, that.systemUserToken)
                 .append(organizationUuid, that.organizationUuid)
-                .append(name, that.name)
-                .append(catalogId, that.catalogId)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .append(catalogs)
                 .append(systemUserToken)
                 .append(organizationUuid)
-                .append(name)
-                .append(catalogId)
                 .toHashCode();
     }
 
@@ -93,11 +87,18 @@ public class CreateFacebookCatalogSettingRequest extends AbstractRequestModel im
     public String toString() {
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
+                .append("catalogs", catalogs)
                 .append("systemUserToken", systemUserToken)
                 .append("organizationUuid", organizationUuid)
-                .append("name", name)
-                .append("catalogId", catalogId)
                 .toString();
+    }
+
+    public List<FacebookCatalogSetting> getCatalogs() {
+        return catalogs;
+    }
+
+    public void setCatalogs(final List<FacebookCatalogSetting> catalogs) {
+        this.catalogs = catalogs;
     }
 
     public String getSystemUserToken() {
@@ -114,21 +115,5 @@ public class CreateFacebookCatalogSettingRequest extends AbstractRequestModel im
 
     public void setOrganizationUuid(final String organizationUuid) {
         this.organizationUuid = organizationUuid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getCatalogId() {
-        return catalogId;
-    }
-
-    public void setCatalogId(final String catalogId) {
-        this.catalogId = catalogId;
     }
 }

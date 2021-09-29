@@ -2,6 +2,7 @@ package com.vntana.core.helper.catalog
 
 import com.vntana.commons.helper.AbstractRestTestHelper
 import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest
+import com.vntana.core.model.catalog.request.FacebookCatalogSetting
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest
 
 /**
@@ -13,11 +14,15 @@ open class FacebookCatalogSettingRestTestHelper : AbstractRestTestHelper() {
 
     fun buildCreateFacebookCatalogSettingRequest(
         organizationUuid: String? = uuid(),
-        name: String? = uuid(),
-        systemUserToken: String? = uuid(),
-        catalogId: String? = uuid()
+        catalogs: List<FacebookCatalogSetting>? = emptyList(),
+        systemUserToken: String? = uuid()
     ): CreateFacebookCatalogSettingRequest =
-        CreateFacebookCatalogSettingRequest(systemUserToken, organizationUuid, name, catalogId)
+        CreateFacebookCatalogSettingRequest(catalogs, systemUserToken, organizationUuid)
+
+    fun buildSingleFacebookCatalogSetting(
+        name: String? = uuid(),
+        catalogId: String? = uuid()
+    ): FacebookCatalogSetting = FacebookCatalogSetting(name, catalogId)
 
     fun buildGetByOrganizationFacebookCatalogSettingRequest(
         organizationUuid: String? = uuid(),

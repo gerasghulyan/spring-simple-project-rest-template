@@ -21,13 +21,8 @@ class FacebookCatalogSettingCreateWebTest : AbstractFacebookCatalogSettingWebTes
         )
         assertBasicErrorResultResponse(
             facebookCatalogSettingResourceClient.create(
-                facebookCatalogSettingResourceTestHelper.buildCreateFacebookCatalogSettingRequest(name = null)
-            ), FacebookCatalogSettingErrorResponseModel.MISSING_NAME
-        )
-        assertBasicErrorResultResponse(
-            facebookCatalogSettingResourceClient.create(
-                facebookCatalogSettingResourceTestHelper.buildCreateFacebookCatalogSettingRequest(catalogId = null)
-            ), FacebookCatalogSettingErrorResponseModel.MISSING_CATALOG_ID
+                facebookCatalogSettingResourceTestHelper.buildCreateFacebookCatalogSettingRequest(catalogs = null)
+            ), FacebookCatalogSettingErrorResponseModel.FACEBOOK_CATALOG_SETTINGS_CANNOT_BE_NULL
         )
         assertBasicErrorResultResponse(
             facebookCatalogSettingResourceClient.create(
@@ -38,18 +33,19 @@ class FacebookCatalogSettingCreateWebTest : AbstractFacebookCatalogSettingWebTes
 
     @Test
     fun `test create`() {
-        val name = uuid()
+        val catalogs = listOf(
+            facebookCatalogSettingResourceTestHelper.buildSingleFacebookCatalogSetting(),
+            facebookCatalogSettingResourceTestHelper.buildSingleFacebookCatalogSetting()
+        )
         val systemUserToken = uuid()
-        val catalogId = uuid()
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val request = facebookCatalogSettingResourceTestHelper.buildCreateFacebookCatalogSettingRequest(
             organizationUuid = organizationUuid,
-            name = name,
             systemUserToken = systemUserToken,
-            catalogId = catalogId
+            catalogs = catalogs
         )
         val response = facebookCatalogSettingResourceClient.create(request)
         facebookCatalogSettingResourceTestHelper.assertBasicSuccessResultResponse(response.body!!)
-        assertThat(response.body!!.response().uuid).isNotBlank()
+        assertThat(response.body!!.response().uuids.size).isEqualTo(catalogs.size)
     }
 }
