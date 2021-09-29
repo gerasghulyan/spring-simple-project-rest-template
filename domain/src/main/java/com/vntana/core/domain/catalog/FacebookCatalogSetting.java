@@ -47,6 +47,19 @@ public class FacebookCatalogSetting extends AbstractUuidAwareDomainEntity {
         this.organization = organization;
     }
 
+    public FacebookCatalogSetting(
+            final String uuid,
+            final String systemUserToken,
+            final String name,
+            final String catalogId,
+            final Organization organization) {
+        super(uuid);
+        this.systemUserToken = systemUserToken;
+        this.name = name;
+        this.catalogId = catalogId;
+        this.organization = organization;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

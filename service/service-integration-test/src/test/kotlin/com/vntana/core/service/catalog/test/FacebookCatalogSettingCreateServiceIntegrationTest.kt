@@ -15,16 +15,16 @@ class FacebookCatalogSettingCreateServiceIntegrationTest : AbstractFacebookCatal
     @Test
     fun `test create`() {
         // given
-        commonTestHelper.buildCreateFacebookCatalogSettingDto().let { dto ->
-            // when
-            facebookCatalogSettingService.create(dto).let { catalogSetting ->
-                // then
-                flushAndClear()
-                assertThat(catalogSetting)
-                    .hasFieldOrPropertyWithValue("name", StringUtils.trim(dto.name))
-                    .hasFieldOrPropertyWithValue("systemUserToken", StringUtils.trim(dto.systemUserToken))
-                    .hasFieldOrPropertyWithValue("catalogId", dto.catalogId)
-            }
+        val organization = organizationIntegrationTestHelper.persistOrganization()
+        val dto = commonTestHelper.buildCreateFacebookCatalogSettingDto(organization = organization)
+        // when
+        facebookCatalogSettingService.create(dto).let { catalogSetting ->
+            // then
+            flushAndClear()
+            assertThat(catalogSetting)
+                .hasFieldOrPropertyWithValue("name", StringUtils.trim(dto.name))
+                .hasFieldOrPropertyWithValue("systemUserToken", StringUtils.trim(dto.systemUserToken))
+                .hasFieldOrPropertyWithValue("catalogId", dto.catalogId)
         }
     }
 }

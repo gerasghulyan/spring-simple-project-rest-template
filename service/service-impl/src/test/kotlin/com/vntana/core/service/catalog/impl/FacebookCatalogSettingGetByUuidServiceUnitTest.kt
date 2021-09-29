@@ -30,7 +30,7 @@ class FacebookCatalogSettingGetByUuidServiceUnitTest : AbstractFacebookCatalogSe
         EasyMock.expect(facebookCatalogSettingRepository.findByUuid(catalog.uuid))
             .andReturn(Optional.of(catalog))
         replayAll()
-        assertThat(facebookCatalogSettingService.findByUuid(catalog.uuid)).isEqualTo(catalog)
+        assertThat(facebookCatalogSettingService.findByUuid(catalog.uuid)).isEqualTo(Optional.of(catalog))
         verifyAll()
     }
 }
