@@ -56,11 +56,16 @@ public class FacebookCatalogSettingServiceFacadeImpl implements FacebookCatalogS
             );
         }
         LOGGER.debug("Creating facebook catalog setting for request - {}", request);
-        final FacebookCatalogSetting facebookCatalogSetting = facebookCatalogSettingService.create(
-                new CreateFacebookCatalogSettingDto(request.getSystemUserToken(), request.getName(), request.getCatalogId(), organizationOptional.get())
-        );
-        LOGGER.debug("Done creating facebook catalog setting with response - {}", facebookCatalogSetting);
-        return new CreateFacebookCatalogSettingResultResponse(facebookCatalogSetting.getUuid());
+        final List<String> catalogUuids = request.getCatalogs().stream().map(
+                catalog -> {
+                    final FacebookCatalogSetting facebookCatalogSetting = facebookCatalogSettingService.create(
+                            new CreateFacebookCatalogSettingDto(request.getSystemUserToken(), catalog.getName(), catalog.getCatalogId(), organizationOptional.get())
+                    );
+                    return facebookCatalogSetting.getUuid();
+                }
+        ).collect(Collectors.toList());
+        LOGGER.debug("Done creating facebook catalog setting with response - {}", catalogUuids);
+        return new CreateFacebookCatalogSettingResultResponse(catalogUuids);
     }
 
     @Override
