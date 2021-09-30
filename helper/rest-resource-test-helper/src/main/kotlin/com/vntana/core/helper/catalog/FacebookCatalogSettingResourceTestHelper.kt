@@ -2,7 +2,7 @@ package com.vntana.core.helper.catalog
 
 import com.vntana.core.helper.organization.OrganizationResourceTestHelper
 import com.vntana.core.model.catalog.request.FacebookCatalogSetting
-import com.vntana.core.model.catalog.response.CreateFacebookCatalogSettingResultResponse
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingCreateResultResponse
 import com.vntana.core.rest.client.catalog.FacebookCatalogSettingResourceClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -26,7 +26,7 @@ class FacebookCatalogSettingResourceTestHelper : FacebookCatalogSettingRestTestH
         organizationUuid: String? = organizationResourceTestHelper.persistOrganization().response().uuid,
         systemUserToken: String? = uuid(),
         catalogs: List<FacebookCatalogSetting>? = listOf(buildSingleFacebookCatalogSetting())
-    ): ResponseEntity<CreateFacebookCatalogSettingResultResponse>? {
+    ): ResponseEntity<FacebookCatalogSettingCreateResultResponse>? {
         val request = buildCreateFacebookCatalogSettingRequest(
             organizationUuid = organizationUuid,
             systemUserToken = systemUserToken,

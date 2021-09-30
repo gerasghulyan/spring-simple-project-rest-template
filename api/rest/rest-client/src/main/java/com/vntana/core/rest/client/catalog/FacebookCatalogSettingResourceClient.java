@@ -1,9 +1,11 @@
 package com.vntana.core.rest.client.catalog;
 
 import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest;
+import com.vntana.core.model.catalog.request.GetByCatalogIdFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest;
-import com.vntana.core.model.catalog.response.CreateFacebookCatalogSettingResultResponse;
 import com.vntana.core.model.catalog.response.DeleteFacebookCatalogSettingResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingCreateResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultResponse;
 import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface FacebookCatalogSettingResourceClient {
 
     @PostMapping
-    ResponseEntity<CreateFacebookCatalogSettingResultResponse> create(@RequestBody final CreateFacebookCatalogSettingRequest request);
+    ResponseEntity<FacebookCatalogSettingCreateResultResponse> create(@RequestBody final CreateFacebookCatalogSettingRequest request);
 
     @PostMapping(path = "/organization")
-    ResponseEntity<GetByOrganizationFacebookCatalogSettingResultResponse> getByOrganization(@RequestBody GetByOrganizationFacebookCatalogSettingRequest request);
+    ResponseEntity<GetByOrganizationFacebookCatalogSettingResultResponse> getByOrganization(@RequestBody final GetByOrganizationFacebookCatalogSettingRequest request);
 
     @DeleteMapping(path = "/{uuid}")
     ResponseEntity<DeleteFacebookCatalogSettingResultResponse> delete(@PathVariable("uuid") final String uuid);
+
+    @PostMapping(path = "/catalogId")
+    ResponseEntity<FacebookCatalogSettingResultResponse> getByCatalogId(@RequestBody final GetByCatalogIdFacebookCatalogSettingRequest request);
 }

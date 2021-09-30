@@ -1,6 +1,7 @@
 package com.vntana.core.service.catalog.impl;
 
 import com.vntana.core.domain.catalog.FacebookCatalogSetting;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.persistence.catalog.FacebookCatalogSettingRepository;
 import com.vntana.core.service.catalog.FacebookCatalogSettingService;
 import com.vntana.core.service.catalog.dto.CreateFacebookCatalogSettingDto;
@@ -71,5 +72,13 @@ public class FacebookCatalogSettingServiceImpl implements FacebookCatalogSetting
         hasText(uuid, "The uuid cannot be null or empty");
         LOGGER.debug("Finding facebook catalog setting by uuid - {}", uuid);
         return facebookCatalogSettingRepository.findByUuid(uuid);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<FacebookCatalogSetting> getByCatalogId(final String catalogId, final Organization organization) {
+        hasText(catalogId, "The catalog id cannot be null or empty");
+        LOGGER.debug("Finding facebook catalog setting by catalogId - {}", catalogId);
+        return facebookCatalogSettingRepository.findByCatalogIdAndOrganization(catalogId, organization);
     }
 }

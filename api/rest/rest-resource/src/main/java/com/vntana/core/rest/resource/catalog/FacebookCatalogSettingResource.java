@@ -2,9 +2,11 @@ package com.vntana.core.rest.resource.catalog;
 
 import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest;
+import com.vntana.core.model.catalog.request.GetByCatalogIdFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest;
-import com.vntana.core.model.catalog.response.CreateFacebookCatalogSettingResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingCreateResultResponse;
 import com.vntana.core.model.catalog.response.DeleteFacebookCatalogSettingResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultResponse;
 import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResultResponse;
 import com.vntana.core.rest.facade.catalog.FacebookCatalogSettingServiceFacade;
 import org.slf4j.Logger;
@@ -32,9 +34,9 @@ public class FacebookCatalogSettingResource {
     }
 
     @PostMapping
-    public ResponseEntity<CreateFacebookCatalogSettingResultResponse> create(@RequestBody final CreateFacebookCatalogSettingRequest request) {
+    public ResponseEntity<FacebookCatalogSettingCreateResultResponse> create(@RequestBody final CreateFacebookCatalogSettingRequest request) {
         LOGGER.debug("Creating facebook catalog setting for request - {}", request);
-        final CreateFacebookCatalogSettingResultResponse resultResponse = facebookCatalogSettingServiceFacade.create(request);
+        final FacebookCatalogSettingCreateResultResponse resultResponse = facebookCatalogSettingServiceFacade.create(request);
         LOGGER.debug("Successfully created facebook catalog setting with response - {}", resultResponse);
         return ResponseEntityUtils.okWithStatusInHeader(resultResponse);
     }
@@ -52,6 +54,14 @@ public class FacebookCatalogSettingResource {
         LOGGER.debug("Deleting facebook catalog setting for uuid - {}", uuid);
         final DeleteFacebookCatalogSettingResultResponse response = facebookCatalogSettingServiceFacade.delete(uuid);
         LOGGER.debug("Successfully deleted facebook catalog setting for uuid - {}", uuid);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @PostMapping(path = "/catalogId")
+    ResponseEntity<FacebookCatalogSettingResultResponse> getByCatalogId(@RequestBody final GetByCatalogIdFacebookCatalogSettingRequest request) {
+        LOGGER.debug("Getting facebook catalog setting for request - {}", request);
+        final FacebookCatalogSettingResultResponse response = facebookCatalogSettingServiceFacade.getByCatalogId(request);
+        LOGGER.debug("Successfully done deleting facebook catalog setting with response - {}", response);
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 }
