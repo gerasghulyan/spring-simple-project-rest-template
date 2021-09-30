@@ -20,4 +20,6 @@ public interface FacebookCatalogSettingRepository extends JpaRepository<Facebook
     Page<FacebookCatalogSetting> getAllByOrganizationAndRemovedIsNull(final Organization organization, final Pageable pageable);
 
     Optional<FacebookCatalogSetting> findByUuid(final String uuid);
+
+    Optional<FacebookCatalogSetting> findByCatalogIdAndOrganization(final String uuid, final Organization organization);
 }

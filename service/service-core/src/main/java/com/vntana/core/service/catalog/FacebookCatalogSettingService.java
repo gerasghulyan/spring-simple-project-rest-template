@@ -1,6 +1,7 @@
 package com.vntana.core.service.catalog;
 
 import com.vntana.core.domain.catalog.FacebookCatalogSetting;
+import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.service.catalog.dto.CreateFacebookCatalogSettingDto;
 import com.vntana.core.service.catalog.dto.GetByOrganizationFacebookCatalogSettingDto;
 import org.springframework.data.domain.Page;
@@ -21,4 +22,6 @@ public interface FacebookCatalogSettingService {
     void delete(final FacebookCatalogSetting facebookCatalogSetting);
 
     Optional<FacebookCatalogSetting> findByUuid(final String uuid);
+
+    Optional<FacebookCatalogSetting> getByCatalogId(final String catalogId, final Organization organization);
 }
