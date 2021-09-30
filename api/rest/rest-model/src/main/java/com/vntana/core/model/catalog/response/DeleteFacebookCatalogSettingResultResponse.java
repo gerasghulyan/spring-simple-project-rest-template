@@ -8,13 +8,13 @@ import com.vntana.core.model.catalog.error.FacebookCatalogSettingErrorResponseMo
  * Date: 9/27/2021
  * Time: 11:35 AM
  */
-public class DeleteFacebookCatalogSettingResultResponse extends AbstractResultResponseModel<FacebookCatalogSettingResponseModel, FacebookCatalogSettingErrorResponseModel> {
+public class DeleteFacebookCatalogSettingResultResponse extends AbstractResultResponseModel<DeleteFacebookCatalogSettingResponseModel, FacebookCatalogSettingErrorResponseModel> {
 
     public DeleteFacebookCatalogSettingResultResponse() {
     }
 
     public DeleteFacebookCatalogSettingResultResponse(final String uuid) {
-        super(new FacebookCatalogSettingResponseModel(uuid));
+        super(new DeleteFacebookCatalogSettingResponseModel(uuid));
     }
 
     public DeleteFacebookCatalogSettingResultResponse(final int httpStatusCode, final FacebookCatalogSettingErrorResponseModel error) {

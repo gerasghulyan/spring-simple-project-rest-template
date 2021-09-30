@@ -27,9 +27,9 @@ class FacebookCatalogSettingGetByOrganizationWebTest : AbstractFacebookCatalogSe
         // given
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
         val catalog1Uuid =
-            facebookCatalogSettingResourceTestHelper.persistFacebookCatalogSetting(organizationUuid = organizationUuid)?.body?.response()?.uuid
+            facebookCatalogSettingResourceTestHelper.persistFacebookCatalogSetting(organizationUuid = organizationUuid)?.body?.response()?.uuids?.get(0)
         val catalog2Uuid =
-            facebookCatalogSettingResourceTestHelper.persistFacebookCatalogSetting(organizationUuid = organizationUuid)?.body?.response()?.uuid
+            facebookCatalogSettingResourceTestHelper.persistFacebookCatalogSetting(organizationUuid = organizationUuid)?.body?.response()?.uuids?.get(0)
 
         val expectedCatalogs = mutableListOf(catalog1Uuid, catalog2Uuid)
         val request =
