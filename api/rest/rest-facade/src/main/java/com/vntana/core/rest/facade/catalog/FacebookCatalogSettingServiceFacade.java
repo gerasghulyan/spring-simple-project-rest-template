@@ -3,8 +3,9 @@ package com.vntana.core.rest.facade.catalog;
 import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByCatalogIdFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest;
-import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultResponse;
 import com.vntana.core.model.catalog.response.DeleteFacebookCatalogSettingResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingCreateResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultResponse;
 import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResultResponse;
 
 /**
@@ -14,7 +15,7 @@ import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSe
  */
 public interface FacebookCatalogSettingServiceFacade {
 
-    FacebookCatalogSettingResultResponse create(final CreateFacebookCatalogSettingRequest request);
+    FacebookCatalogSettingCreateResultResponse create(final CreateFacebookCatalogSettingRequest request);
 
     GetByOrganizationFacebookCatalogSettingResultResponse getByOrganization(final GetByOrganizationFacebookCatalogSettingRequest request);
 

@@ -6,10 +6,7 @@ import com.vntana.core.model.catalog.error.FacebookCatalogSettingErrorResponseMo
 import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByCatalogIdFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest;
-import com.vntana.core.model.catalog.response.DeleteFacebookCatalogSettingResultResponse;
-import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultResponse;
-import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResponseModel;
-import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResultResponse;
+import com.vntana.core.model.catalog.response.*;
 import com.vntana.core.rest.facade.catalog.FacebookCatalogSettingServiceFacade;
 import com.vntana.core.service.catalog.FacebookCatalogSettingService;
 import com.vntana.core.service.catalog.dto.CreateFacebookCatalogSettingDto;
@@ -47,25 +44,26 @@ public class FacebookCatalogSettingServiceFacadeImpl implements FacebookCatalogS
     }
 
     @Override
-    public FacebookCatalogSettingResultResponse create(final CreateFacebookCatalogSettingRequest request) {
+    public FacebookCatalogSettingCreateResultResponse create(final CreateFacebookCatalogSettingRequest request) {
         final Optional<Organization> organizationOptional = organizationService.findByUuid(request.getOrganizationUuid());
         if (organizationOptional.isEmpty()) {
             LOGGER.info("Cannot find organization for uuid - {}", request.getOrganizationUuid());
-            return new FacebookCatalogSettingResultResponse(
+            return new FacebookCatalogSettingCreateResultResponse(
                     HttpStatus.SC_NOT_FOUND,
                     FacebookCatalogSettingErrorResponseModel.ORGANIZATION_NOT_FOUND
             );
         }
         LOGGER.debug("Creating facebook catalog setting for request - {}", request);
-        final FacebookCatalogSetting facebookCatalogSetting = facebookCatalogSettingService.create(
-                new CreateFacebookCatalogSettingDto(request.getSystemUserToken(), request.getName(), request.getCatalogId(), organizationOptional.get())
-        );
-        LOGGER.debug("Done creating facebook catalog setting with response - {}", facebookCatalogSetting);
-        return new FacebookCatalogSettingResultResponse(
-                facebookCatalogSetting.getUuid(),
-                facebookCatalogSetting.getCatalogId(),
-                facebookCatalogSetting.getSystemUserToken(),
-                facebookCatalogSetting.getName());
+        final List<String> catalogUuids = request.getCatalogs().stream().map(
+                catalog -> {
+                    final FacebookCatalogSetting facebookCatalogSetting = facebookCatalogSettingService.create(
+                            new CreateFacebookCatalogSettingDto(request.getSystemUserToken(), catalog.getName(), catalog.getCatalogId(), organizationOptional.get())
+                    );
+                    return facebookCatalogSetting.getUuid();
+                }
+        ).collect(Collectors.toList());
+        LOGGER.debug("Done creating facebook catalog setting with response - {}", catalogUuids);
+        return new FacebookCatalogSettingCreateResultResponse(catalogUuids);
     }
 
     @Override

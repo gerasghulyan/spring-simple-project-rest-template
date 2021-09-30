@@ -4,6 +4,7 @@ import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest
 import com.vntana.core.model.catalog.request.GetByCatalogIdFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.response.DeleteFacebookCatalogSettingResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingCreateResultResponse;
 import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultResponse;
 import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface FacebookCatalogSettingResourceClient {
 
     @PostMapping
-    ResponseEntity<FacebookCatalogSettingResultResponse> create(@RequestBody final CreateFacebookCatalogSettingRequest request);
+    ResponseEntity<FacebookCatalogSettingCreateResultResponse> create(@RequestBody final CreateFacebookCatalogSettingRequest request);
 
     @PostMapping(path = "/organization")
     ResponseEntity<GetByOrganizationFacebookCatalogSettingResultResponse> getByOrganization(@RequestBody final GetByOrganizationFacebookCatalogSettingRequest request);
