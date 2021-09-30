@@ -14,15 +14,6 @@ import org.junit.Test
 class FacebookCatalogSettingGetByCatalogIdWebTest : AbstractFacebookCatalogSettingWebTest() {
 
     @Test
-    fun `test when not found`() {
-        assertBasicErrorResultResponse(
-            facebookCatalogSettingResourceClient.getByCatalogId(
-                GetByCatalogIdFacebookCatalogSettingRequest(uuid(), uuid())
-            ), FacebookCatalogSettingErrorResponseModel.FACEBOOK_CATALOG_SETTING_NOT_FOUND
-        )
-    }
-
-    @Test
     fun `test getAll`() {
         // given
         val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
