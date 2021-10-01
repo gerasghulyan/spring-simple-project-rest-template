@@ -16,7 +16,7 @@ public class GetByOrganizationFacebookCatalogSettingResponseModel extends Abstra
     @JsonProperty("systemUserToken")
     private String systemUserToken;
 
-    @JsonProperty("name")
+    @JsonProperty("catalogName")
     private String name;
 
     @JsonProperty("catalogId")

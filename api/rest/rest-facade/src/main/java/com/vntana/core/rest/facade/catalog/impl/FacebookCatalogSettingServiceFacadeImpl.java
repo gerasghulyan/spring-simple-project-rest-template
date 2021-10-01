@@ -125,6 +125,7 @@ public class FacebookCatalogSettingServiceFacadeImpl implements FacebookCatalogS
                         catalog.getSystemUserToken(),
                         catalog.getName(),
                         catalog.getCatalogId())).collect(Collectors.toList());
-        return new GetByOrganizationFacebookCatalogSettingResultResponse(foundFacebookCatalogSettings.getSize(), responseModels);
+        return new GetByOrganizationFacebookCatalogSettingResultResponse(
+                (int) foundFacebookCatalogSettings.getTotalElements(), responseModels);
     }
 }
