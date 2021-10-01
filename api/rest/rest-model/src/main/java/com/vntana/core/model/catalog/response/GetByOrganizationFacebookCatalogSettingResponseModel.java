@@ -17,7 +17,7 @@ public class GetByOrganizationFacebookCatalogSettingResponseModel extends Abstra
     private String systemUserToken;
 
     @JsonProperty("catalogName")
-    private String name;
+    private String catalogName;
 
     @JsonProperty("catalogId")
     private String catalogId;
@@ -28,11 +28,11 @@ public class GetByOrganizationFacebookCatalogSettingResponseModel extends Abstra
     public GetByOrganizationFacebookCatalogSettingResponseModel(
             final String uuid,
             final String systemUserToken,
-            final String name,
+            final String catalogName,
             final String catalogId) {
         super(uuid);
         this.systemUserToken = systemUserToken;
-        this.name = name;
+        this.catalogName = catalogName;
         this.catalogId = catalogId;
     }
 
@@ -47,7 +47,7 @@ public class GetByOrganizationFacebookCatalogSettingResponseModel extends Abstra
         final GetByOrganizationFacebookCatalogSettingResponseModel that = (GetByOrganizationFacebookCatalogSettingResponseModel) o;
         return new EqualsBuilder()
                 .append(systemUserToken, that.systemUserToken)
-                .append(name, that.name)
+                .append(catalogName, that.catalogName)
                 .append(catalogId, that.catalogId)
                 .isEquals();
     }
@@ -56,7 +56,7 @@ public class GetByOrganizationFacebookCatalogSettingResponseModel extends Abstra
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(systemUserToken)
-                .append(name)
+                .append(catalogName)
                 .append(catalogId)
                 .toHashCode();
     }
@@ -66,7 +66,7 @@ public class GetByOrganizationFacebookCatalogSettingResponseModel extends Abstra
         return new ToStringBuilder(this)
                 .appendSuper(super.toString())
                 .append("systemUserToken", systemUserToken)
-                .append("name", name)
+                .append("catalogName", catalogName)
                 .append("catalogId", catalogId)
                 .toString();
     }
@@ -79,12 +79,12 @@ public class GetByOrganizationFacebookCatalogSettingResponseModel extends Abstra
         this.systemUserToken = systemUserToken;
     }
 
-    public String getName() {
-        return name;
+    public String getCatalogName() {
+        return catalogName;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setCatalogName(final String catalogName) {
+        this.catalogName = catalogName;
     }
 
     public String getCatalogId() {
