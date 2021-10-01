@@ -22,4 +22,7 @@ public interface FacebookCatalogSettingServiceFacade {
     DeleteFacebookCatalogSettingResultResponse delete(final String uuid);
 
     FacebookCatalogSettingResultResponse getByCatalogId(final GetByCatalogIdFacebookCatalogSettingRequest request);
+
+    FacebookCatalogSettingResultResponse getByUuid(final String uuid);
+
 }
