@@ -4,8 +4,8 @@ import com.vntana.commons.web.utils.ResponseEntityUtils;
 import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByCatalogIdFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest;
-import com.vntana.core.model.catalog.response.FacebookCatalogSettingCreateResultResponse;
 import com.vntana.core.model.catalog.response.DeleteFacebookCatalogSettingResultResponse;
+import com.vntana.core.model.catalog.response.FacebookCatalogSettingCreateResultResponse;
 import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultResponse;
 import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResultResponse;
 import com.vntana.core.rest.facade.catalog.FacebookCatalogSettingServiceFacade;
@@ -62,6 +62,12 @@ public class FacebookCatalogSettingResource {
         LOGGER.debug("Getting facebook catalog setting for request - {}", request);
         final FacebookCatalogSettingResultResponse response = facebookCatalogSettingServiceFacade.getByCatalogId(request);
         LOGGER.debug("Successfully done deleting facebook catalog setting with response - {}", response);
+        return ResponseEntityUtils.okWithStatusInHeader(response);
+    }
+
+    @GetMapping(path = "/{uuid}")
+    ResponseEntity<FacebookCatalogSettingResultResponse> getByUuid(@PathVariable("uuid") final String uuid) {
+        final FacebookCatalogSettingResultResponse response = facebookCatalogSettingServiceFacade.getByUuid(uuid);
         return ResponseEntityUtils.okWithStatusInHeader(response);
     }
 }

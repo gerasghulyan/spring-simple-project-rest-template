@@ -9,10 +9,7 @@ import com.vntana.core.model.catalog.response.FacebookCatalogSettingResultRespon
 import com.vntana.core.model.catalog.response.GetByOrganizationFacebookCatalogSettingResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Diana Gevorgyan.
@@ -33,4 +30,7 @@ public interface FacebookCatalogSettingResourceClient {
 
     @PostMapping(path = "/catalogId")
     ResponseEntity<FacebookCatalogSettingResultResponse> getByCatalogId(@RequestBody final GetByCatalogIdFacebookCatalogSettingRequest request);
+
+    @GetMapping(path = "/{uuid}")
+    ResponseEntity<FacebookCatalogSettingResultResponse> getByUuid(@PathVariable("uuid") final String uuid);
 }

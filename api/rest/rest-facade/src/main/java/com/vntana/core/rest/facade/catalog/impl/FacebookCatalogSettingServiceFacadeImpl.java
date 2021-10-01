@@ -118,6 +118,18 @@ public class FacebookCatalogSettingServiceFacadeImpl implements FacebookCatalogS
                 facebookCatalogSettingOptional.get().getName());
     }
 
+    @Override
+    public FacebookCatalogSettingResultResponse getByUuid(final String uuid) {
+        final Optional<FacebookCatalogSetting> catalogOptional = facebookCatalogSettingService.findByUuid(uuid);
+        if (catalogOptional.isEmpty()) {
+            return new FacebookCatalogSettingResultResponse(HttpStatus.SC_NOT_FOUND, FacebookCatalogSettingErrorResponseModel.FACEBOOK_CATALOG_SETTING_NOT_FOUND);
+        }
+        return new FacebookCatalogSettingResultResponse(
+                catalogOptional.get().getUuid(),
+                catalogOptional.get().getCatalogId(),
+                catalogOptional.get().getSystemUserToken(),
+                catalogOptional.get().getName());    }
+
     private GetByOrganizationFacebookCatalogSettingResultResponse constructResultResponse(final Page<FacebookCatalogSetting> foundFacebookCatalogSettings) {
         final List<GetByOrganizationFacebookCatalogSettingResponseModel> responseModels = foundFacebookCatalogSettings.stream()
                 .map(catalog -> new GetByOrganizationFacebookCatalogSettingResponseModel(
