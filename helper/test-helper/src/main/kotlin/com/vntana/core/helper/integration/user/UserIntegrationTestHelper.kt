@@ -45,6 +45,12 @@ class UserIntegrationTestHelper : UserCommonTestHelper() {
         val dto = buildCreateUserDto(fullName = fullName, email = email, password = password)
         return userService.create(dto)
     }
+    
+    fun grantSuperAdminRole(
+            uuid: String? = uuid()
+    ) {
+        userRoleService.grantSuperAdminRole(uuid)
+    }
 
     fun grantOrganizationOwnerRole(
             uuid: String? = uuid(),

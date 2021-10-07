@@ -34,6 +34,7 @@ class UserRoleFetchUpdatedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val request = restTestHelper.buildUserUpdateOrganizationClientRoleRequest(updateClientRoles = updateRolesRequest)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         replayAll()
         userRoleActionItemRetrieverComponent.fetchUpdatedRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(updatedRoles)
@@ -51,6 +52,7 @@ class UserRoleFetchUpdatedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val organizationAdminRole = commonTestHelper.buildUserOrganizationAdminRole()
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         replayAll()
         userRoleActionItemRetrieverComponent.fetchUpdatedRolesFromUpdateRolesRequest(request).let {
             assertThat(it).isEmpty()

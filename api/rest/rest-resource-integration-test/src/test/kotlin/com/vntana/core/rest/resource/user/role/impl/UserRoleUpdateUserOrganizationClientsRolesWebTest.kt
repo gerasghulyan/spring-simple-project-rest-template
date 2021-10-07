@@ -426,4 +426,40 @@ class UserRoleUpdateUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
             }
         }
     }
+
+    @Test
+    fun `test when revoked client roles by super admin`() {
+        val user = userResourceTestHelper.persistUser().response()
+        val requestedUser = userResourceTestHelper.persistUser().response()
+        requestedUser.organizationUuid = user.organizationUuid
+        val clientOrganization1 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
+        val clientOrganization2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
+        val clientOrganization3 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = user.organizationUuid).response()
+        userRoleResourceTestHelper.grantSuperAdmin(userUuid = user.uuid)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = requestedUser.uuid, clientUuid = clientOrganization3.uuid, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        val updateClientRoleRequest1 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization1.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        val updateClientRoleRequest2 = userRoleResourceTestHelper.buildUpdateClientRoleRequest(clientUuid = clientOrganization2.uuid, userRoleModel = UserRoleModel.CLIENT_ORGANIZATION_ADMIN)
+        userRoleResourceClient.updateUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserUpdateOrganizationClientRoleRequest(
+                userUuid = user.uuid,
+                organizationUuid = requestedUser.organizationUuid,
+                requestedUserUuid = requestedUser.uuid,
+                updateClientRoles = listOf(updateClientRoleRequest1, updateClientRoleRequest2)
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(requestedUser.uuid)
+            userResourceClient.getUsersByClientOrganization(clientOrganization1.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest1.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+            userResourceClient.getUsersByClientOrganization(clientOrganization2.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(1)
+                assertThat(this.items()[0].userRoleModel).isEqualTo(updateClientRoleRequest2.clientRole)
+                assertThat(this.items()[0].uuid).isEqualTo(requestedUser.uuid)
+            }
+            userResourceClient.getUsersByClientOrganization(clientOrganization3.uuid)?.body?.response()?.run {
+                assertThat(this.totalCount()).isEqualTo(0)
+            }
+        }
+    }
 }

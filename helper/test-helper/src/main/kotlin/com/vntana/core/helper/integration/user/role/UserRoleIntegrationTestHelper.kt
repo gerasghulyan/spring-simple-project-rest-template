@@ -44,4 +44,7 @@ class UserRoleIntegrationTestHelper : UserRoleCommonTestHelper() {
                               clientOrganization: ClientOrganization = clientOrganizationIntegrationTestHelper.persistClientOrganization(),
                               clientRole: UserRole = UserRole.CLIENT_ORGANIZATION_ADMIN
                               ): AbstractUserRole = userRoleService.grantClientRole(UserGrantClientRoleDto(user.uuid, clientOrganization.uuid, clientRole))
+
+    fun persistUserSuperAdminRole(user: User = userIntegrationTestHelper.persistUser()
+    ): AbstractUserRole = userRoleService.grantSuperAdminRole(user.uuid)
 }

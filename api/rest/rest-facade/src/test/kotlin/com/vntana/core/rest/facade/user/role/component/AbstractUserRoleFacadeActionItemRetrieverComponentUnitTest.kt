@@ -44,6 +44,6 @@ abstract class AbstractUserRoleFacadeActionItemRetrieverComponentUnitTest : Abst
 
     @Before
     fun prepare() {
-        userRoleActionItemRetrieverComponent = UserRoleHelperComponentImpl(userRoleService)
+        userRoleActionItemRetrieverComponent = UserRoleHelperComponentImpl(userRoleService, userService)
     }
 }

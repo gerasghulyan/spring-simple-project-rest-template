@@ -39,7 +39,7 @@ class UserRoleFindAllClientOrganizationRoleByOrganizationAndUserServiceIntegrati
                 persistOrganization.uuid,
                 persistUser.uuid
         )
-        assertThat(result).isNotEmpty()
+        assertThat(result).isNotEmpty
     }
 
     @Test
@@ -54,7 +54,7 @@ class UserRoleFindAllClientOrganizationRoleByOrganizationAndUserServiceIntegrati
                 clientOrganization.organization.uuid,
                 clientAdminRole.user.uuid
         )
-        assertThat(result).isNotEmpty()
+        assertThat(result).isNotEmpty
     }
 
     @Test
@@ -69,7 +69,7 @@ class UserRoleFindAllClientOrganizationRoleByOrganizationAndUserServiceIntegrati
                 clientOrganization.organization.uuid,
                 clientContentManagerRole.user.uuid
         )
-        assertThat(result).isNotEmpty()
+        assertThat(result).isNotEmpty
     }
 
     @Test
@@ -84,6 +84,6 @@ class UserRoleFindAllClientOrganizationRoleByOrganizationAndUserServiceIntegrati
                 clientOrganization.organization.uuid,
                 clientViewerRole.user.uuid
         )
-        assertThat(result).isNotEmpty()
+        assertThat(result).isNotEmpty
     }
 }
