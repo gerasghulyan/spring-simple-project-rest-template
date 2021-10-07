@@ -27,6 +27,7 @@ class UserRoleFetchRevokedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val revokeRoles = listOf(updateClientRole1, updateClientRole2)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         replayAll()
         userRoleActionItemRetrieverComponent.fetchRevokedRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(revokeRoles)
@@ -50,6 +51,7 @@ class UserRoleFetchRevokedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val revokeRoles = listOf(updateClientRole1, updateClientRole2)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         replayAll()
         userRoleActionItemRetrieverComponent.fetchRevokedRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(revokeRoles)
@@ -70,6 +72,7 @@ class UserRoleFetchRevokedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val updateClientRoles = listOf(updateClientRole3)
         val request = restTestHelper.buildUserUpdateOrganizationClientRoleRequest(updateClientRoles = updateClientRoles)
         val revokeRoles = listOf(updateClientRole1)
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.empty())
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(authorizedUsersClientRoles)

@@ -75,6 +75,24 @@ class UserRoleRevokeUserOrganizationClientsRolesWebTest : AbstractUserRoleWebTes
     }
 
     @Test
+    fun `test for super admin`() {
+        val userResponse = userResourceTestHelper.persistUser().response()
+        val revocableUserResponse = userResourceTestHelper.persistUser().response()
+        val clientUuid1 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userResponse.organizationUuid).response().uuid
+        val clientUuid2 = clientOrganizationResourceTestHelper.persistClientOrganization(organizationUuid = userResponse.organizationUuid).response().uuid
+        userRoleResourceTestHelper.grantSuperAdmin(userUuid = userResponse.uuid)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = revocableUserResponse.uuid, clientUuid = clientUuid1, userRole = UserRoleModel.CLIENT_ORGANIZATION_CONTENT_MANAGER)
+        userRoleResourceTestHelper.grantUserClientRole(userUuid = revocableUserResponse.uuid, clientUuid = clientUuid2, userRole = UserRoleModel.CLIENT_ORGANIZATION_VIEWER)
+        userRoleResourceClient.revokeUserOrganizationClientsRoles(userRoleResourceTestHelper.buildUserRoleRevokeOrganizationClientsRequest(
+                organizationUuid = userResponse.organizationUuid,
+                userUuid = revocableUserResponse.uuid
+        )).let {
+            assertBasicSuccessResultResponse(it)
+            assertThat(it.body?.response()?.userUuid).isEqualTo(revocableUserResponse.uuid)
+        }
+    }
+
+    @Test
     fun test() {
         val userResponse = userResourceTestHelper.persistUser().response()
         val revocableUserResponse = userResourceTestHelper.persistUser().response()

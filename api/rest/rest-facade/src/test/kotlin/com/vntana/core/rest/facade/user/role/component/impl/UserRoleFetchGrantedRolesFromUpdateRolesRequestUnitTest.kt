@@ -26,6 +26,7 @@ class UserRoleFetchGrantedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val grantRoles = listOf(updateClientRole1, updateClientRole2)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(listOf())
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         replayAll()
         userRoleActionItemRetrieverComponent.fetchGrantedRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(grantRoles)
@@ -48,6 +49,7 @@ class UserRoleFetchGrantedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val grantRoles = listOf(updateClientRole2)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         replayAll()
         userRoleActionItemRetrieverComponent.fetchGrantedRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(grantRoles)
@@ -71,6 +73,7 @@ class UserRoleFetchGrantedRolesFromUpdateRolesRequestUnitTest : AbstractUserRole
         val grantedRoles = listOf(updateClientRole2)
         expect(userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(request.organizationUuid, request.requestedUserUuid)).andReturn(existedClientRoles)
         expect(userRoleService.findByOrganizationAndUser(request.organizationUuid, request.uuid)).andReturn(Optional.of(organizationAdminRole))
+        expect(userService.getByUuid(request.uuid)).andReturn(userCommonTestHelper.buildUser())
         replayAll()
         userRoleActionItemRetrieverComponent.fetchGrantedRolesFromUpdateRolesRequest(request).let {
             assertThat(it).containsExactlyInAnyOrderElementsOf(grantedRoles)

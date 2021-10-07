@@ -2,11 +2,13 @@ package com.vntana.core.rest.facade.user.role.component.impl;
 
 import com.vntana.core.domain.user.AbstractClientOrganizationAwareUserRole;
 import com.vntana.core.domain.user.AbstractOrganizationAwareUserRole;
+import com.vntana.core.domain.user.User;
 import com.vntana.core.model.auth.response.UserRoleModel;
 import com.vntana.core.model.user.role.request.UpdateClientRoleRequest;
 import com.vntana.core.model.user.role.request.UpdatedClientRoleRequestModel;
 import com.vntana.core.model.user.role.request.UserUpdateOrganizationClientsRolesRequest;
 import com.vntana.core.rest.facade.user.role.component.UserRoleActionItemRetrieverComponent;
+import com.vntana.core.service.user.UserService;
 import com.vntana.core.service.user.role.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +32,13 @@ public class UserRoleHelperComponentImpl implements UserRoleActionItemRetrieverC
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleHelperComponentImpl.class);
 
     private final UserRoleService userRoleService;
+    private final UserService userService;
 
-    public UserRoleHelperComponentImpl(final UserRoleService userRoleService) {
+    public UserRoleHelperComponentImpl(
+            final UserRoleService userRoleService,
+            final UserService userService
+    ) {
+        this.userService = userService;
         LOGGER.debug("Initializing - {}", getClass().getCanonicalName());
         this.userRoleService = userRoleService;
     }
@@ -90,6 +97,10 @@ public class UserRoleHelperComponentImpl implements UserRoleActionItemRetrieverC
 
     private List<AbstractClientOrganizationAwareUserRole> getRequestAndAuthorizedUsersVisibleClientOrganizations(final String organizationUuid, final String requestedUserUuid, final String userUuid) {
         LOGGER.debug("Getting user - {} client organizations visible for authorized user - {}", requestedUserUuid, userUuid);
+        final User user = userService.getByUuid(userUuid);
+        if (user.roleOfSuperAdmin().isPresent()) {
+            return userRoleService.findAllClientsByOrganization(organizationUuid);
+        }
         final List<AbstractClientOrganizationAwareUserRole> existedUserClientsRoles = userRoleService.findAllClientOrganizationRoleByOrganizationAndUser(organizationUuid, requestedUserUuid);
         final Optional<AbstractOrganizationAwareUserRole> organizationRole = userRoleService.findByOrganizationAndUser(organizationUuid, userUuid);
         if (organizationRole.isPresent()) {
