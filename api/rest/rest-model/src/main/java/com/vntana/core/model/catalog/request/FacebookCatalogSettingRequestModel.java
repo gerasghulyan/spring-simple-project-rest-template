@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 9/29/2021
  * Time: 5:33 PM
  */
-public class FacebookCatalogSetting extends AbstractRequestModel implements ValidatableRequest<FacebookCatalogSettingErrorResponseModel> {
+public class FacebookCatalogSettingRequestModel extends AbstractRequestModel implements ValidatableRequest<FacebookCatalogSettingErrorResponseModel> {
 
     @JsonProperty("name")
     private String name;
@@ -24,10 +24,10 @@ public class FacebookCatalogSetting extends AbstractRequestModel implements Vali
     @JsonProperty("catalogId")
     private String catalogId;
 
-    public FacebookCatalogSetting() {
+    public FacebookCatalogSettingRequestModel() {
     }
 
-    public FacebookCatalogSetting(
+    public FacebookCatalogSettingRequestModel(
             final String name,
             final String catalogId) {
         this.name = name;
@@ -51,10 +51,10 @@ public class FacebookCatalogSetting extends AbstractRequestModel implements Vali
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FacebookCatalogSetting)) {
+        if (!(o instanceof FacebookCatalogSettingRequestModel)) {
             return false;
         }
-        final FacebookCatalogSetting that = (FacebookCatalogSetting) o;
+        final FacebookCatalogSettingRequestModel that = (FacebookCatalogSettingRequestModel) o;
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(catalogId, that.catalogId)

@@ -48,4 +48,26 @@ class FacebookCatalogSettingCreateWebTest : AbstractFacebookCatalogSettingWebTes
         facebookCatalogSettingResourceTestHelper.assertBasicSuccessResultResponse(response.body!!)
         assertThat(response.body!!.response().uuids.size).isEqualTo(catalogs.size)
     }
+
+    @Test
+    fun `test create with duplicated catalog and org`() {
+        val catalogs = listOf(
+            facebookCatalogSettingResourceTestHelper.buildSingleFacebookCatalogSetting(),
+            facebookCatalogSettingResourceTestHelper.buildSingleFacebookCatalogSetting()
+        )
+        val systemUserToken = uuid()
+        val organizationUuid = organizationResourceTestHelper.persistOrganization().response().uuid
+        val request = facebookCatalogSettingResourceTestHelper.buildCreateFacebookCatalogSettingRequest(
+            organizationUuid = organizationUuid,
+            systemUserToken = systemUserToken,
+            catalogs = catalogs
+        )
+        facebookCatalogSettingResourceTestHelper.persistFacebookCatalogSetting(
+            organizationUuid = organizationUuid,
+            catalogs = listOf(catalogs[0])
+        )
+        val response = facebookCatalogSettingResourceClient.create(request)
+        facebookCatalogSettingResourceTestHelper.assertBasicSuccessResultResponse(response.body!!)
+        assertThat(response.body!!.response().uuids.size).isEqualTo(catalogs.size - 1)
+    }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 public class CreateFacebookCatalogSettingRequest extends AbstractRequestModel implements ValidatableRequest<FacebookCatalogSettingErrorResponseModel> {
 
     @JsonProperty("catalogs")
-    private List<FacebookCatalogSetting> catalogs;
+    private List<FacebookCatalogSettingRequestModel> catalogs;
 
     @JsonProperty("systemUserToken")
     private String systemUserToken;
@@ -30,12 +30,12 @@ public class CreateFacebookCatalogSettingRequest extends AbstractRequestModel im
     public CreateFacebookCatalogSettingRequest() {
     }
 
-    public CreateFacebookCatalogSettingRequest(final List<FacebookCatalogSetting> catalogs) {
+    public CreateFacebookCatalogSettingRequest(final List<FacebookCatalogSettingRequestModel> catalogs) {
         this.catalogs = catalogs;
     }
 
     public CreateFacebookCatalogSettingRequest(
-            final List<FacebookCatalogSetting> catalogs,
+            final List<FacebookCatalogSettingRequestModel> catalogs,
             final String systemUserToken,
             final String organizationUuid) {
         this.catalogs = catalogs;
@@ -93,11 +93,11 @@ public class CreateFacebookCatalogSettingRequest extends AbstractRequestModel im
                 .toString();
     }
 
-    public List<FacebookCatalogSetting> getCatalogs() {
+    public List<FacebookCatalogSettingRequestModel> getCatalogs() {
         return catalogs;
     }
 
-    public void setCatalogs(final List<FacebookCatalogSetting> catalogs) {
+    public void setCatalogs(final List<FacebookCatalogSettingRequestModel> catalogs) {
         this.catalogs = catalogs;
     }
 

@@ -4,6 +4,7 @@ import com.vntana.core.domain.catalog.FacebookCatalogSetting;
 import com.vntana.core.domain.organization.Organization;
 import com.vntana.core.model.catalog.error.FacebookCatalogSettingErrorResponseModel;
 import com.vntana.core.model.catalog.request.CreateFacebookCatalogSettingRequest;
+import com.vntana.core.model.catalog.request.FacebookCatalogSettingRequestModel;
 import com.vntana.core.model.catalog.request.GetByCatalogIdFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.request.GetByOrganizationFacebookCatalogSettingRequest;
 import com.vntana.core.model.catalog.response.*;
@@ -53,8 +54,14 @@ public class FacebookCatalogSettingServiceFacadeImpl implements FacebookCatalogS
                     FacebookCatalogSettingErrorResponseModel.ORGANIZATION_NOT_FOUND
             );
         }
+        final List<FacebookCatalogSetting> facebookCatalogSettings = facebookCatalogSettingService.getByOrganization(
+                new GetByOrganizationFacebookCatalogSettingDto(0, Integer.MAX_VALUE, organizationOptional.get())
+        ).getContent();
+        final List<FacebookCatalogSettingRequestModel> requestCatalogs = request.getCatalogs().stream()
+                .filter(catalog -> !isExistedCatalog(facebookCatalogSettings, catalog.getCatalogId()))
+                .collect(Collectors.toList());
         LOGGER.debug("Creating facebook catalog setting for request - {}", request);
-        final List<String> catalogUuids = request.getCatalogs().stream().map(
+        final List<String> catalogUuids = requestCatalogs.stream().map(
                 catalog -> {
                     final FacebookCatalogSetting facebookCatalogSetting = facebookCatalogSettingService.create(
                             new CreateFacebookCatalogSettingDto(request.getSystemUserToken(), catalog.getName(), catalog.getCatalogId(), organizationOptional.get())
@@ -128,7 +135,8 @@ public class FacebookCatalogSettingServiceFacadeImpl implements FacebookCatalogS
                 catalogOptional.get().getUuid(),
                 catalogOptional.get().getCatalogId(),
                 catalogOptional.get().getSystemUserToken(),
-                catalogOptional.get().getName());    }
+                catalogOptional.get().getName());
+    }
 
     private GetByOrganizationFacebookCatalogSettingResultResponse constructResultResponse(final Page<FacebookCatalogSetting> foundFacebookCatalogSettings) {
         final List<GetByOrganizationFacebookCatalogSettingResponseModel> responseModels = foundFacebookCatalogSettings.stream()
@@ -139,5 +147,10 @@ public class FacebookCatalogSettingServiceFacadeImpl implements FacebookCatalogS
                         catalog.getCatalogId())).collect(Collectors.toList());
         return new GetByOrganizationFacebookCatalogSettingResultResponse(
                 (int) foundFacebookCatalogSettings.getTotalElements(), responseModels);
+    }
+
+    private boolean isExistedCatalog(final List<FacebookCatalogSetting> catalogs, final String catalogId) {
+        return catalogs.stream()
+                .anyMatch(catalog -> catalog.getCatalogId().equals(catalogId));
     }
 }
