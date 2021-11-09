@@ -1,2 +1,0 @@
-insert into template_email (id, created, removed, updated, uuid, template_name, type)
-VALUES (nextval('template_email_seq'), now(), null, now(), 'ec6fa57b-982f-4ee9-afd3-cc1601d6ec281', 'template_mentioned_user', 'USER_MENTION');

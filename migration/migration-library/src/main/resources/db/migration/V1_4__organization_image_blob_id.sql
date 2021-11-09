@@ -1,1 +1,0 @@
-alter table organization rename image_id to image_blob_id;

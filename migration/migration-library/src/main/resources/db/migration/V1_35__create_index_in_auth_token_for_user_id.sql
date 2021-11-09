@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS idx_token_authentication_user_id ON token_authentication(user_id);
